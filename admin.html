@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Game - Admin Dashboard</title>
+    <meta name="description" content="Admin dashboard for managing Habit Game Tracker users and subscriptions">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCctQ_86VvAlZPTQDQPyGeYjV9zMHLv_Sc",
+            authDomain: "sonnhai-2600f.firebaseapp.com",
+            projectId: "sonnhai-2600f",
+            storageBucket: "sonnhai-2600f.firebasestorage.app",
+            messagingSenderId: "907935883175",
+            appId: "1:907935883175:web:0f356a63e28a45a196a082",
+            measurementId: "G-JXP5V9W6GN"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+</head>
+<body>
+    <!-- Loading -->
+    <div class="admin-loading" id="adminLoading">
+        <div class="admin-loading-spinner"></div>
+        <p>Đang xác thực quyền Admin...</p>
+    </div>
+
+    <!-- Access Denied -->
+    <div class="access-denied" id="accessDenied" style="display:none;">
+        <div class="denied-card">
+            <span class="denied-icon">🚫</span>
+            <h2>Không có quyền truy cập</h2>
+            <p>Tài khoản của bạn không có quyền Admin.</p>
+            <a href="index.html" class="denied-link">← Quay lại ứng dụng</a>
+        </div>
+    </div>
+
+    <!-- Main Admin Dashboard -->
+    <div class="admin-app" id="adminApp" style="display:none;">
+        <!-- Sidebar -->
+        <nav class="admin-sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-star">✦</span>
+                <span class="brand-text">HABIT<br>ADMIN</span>
+            </div>
+            <div class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-section="users">
+                    <span class="nav-icon">👥</span>
+                    <span>Quản lý User</span>
+                </a>
+                <a href="#" class="nav-item" data-section="pending">
+                    <span class="nav-icon">⏳</span>
+                    <span>Chờ duyệt</span>
+                    <span class="nav-badge" id="pendingBadge" style="display:none;">0</span>
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <div class="admin-profile">
+                    <img class="admin-avatar" id="adminAvatar" src="" alt="">
+                    <span class="admin-name" id="adminName">Admin</span>
+                </div>
+                <div class="sidebar-actions">
+                    <a href="index.html" class="nav-item" title="Quay lại app">
+                        <span class="nav-icon">🏠</span>
+                        <span>App</span>
+                    </a>
+                    <a href="#" class="nav-item" id="adminLogout" title="Đăng xuất">
+                        <span class="nav-icon">🚪</span>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <main class="admin-content">
+            <!-- Header -->
+            <header class="admin-header">
+                <h1 id="pageTitle">Dashboard</h1>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="Tìm user...">
+                    </div>
+                    <select id="filterPlan" class="filter-select">
+                        <option value="all">Tất cả gói</option>
+                        <option value="premium">Premium</option>
+                        <option value="trial">Trial</option>
+                        <option value="free">Free</option>
+                    </select>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section class="section" id="sectionDashboard">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="statTotal">0</span>
+                            <span class="stat-label">Tổng User</span>
+                        </div>
+                    </div>
+                    <div class="stat-card accent-green">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="statActive">0</span>
+                            <span class="stat-label">Active (30 ngày)</span>
+                        </div>
+                    </div>
+                    <div class="stat-card accent-gold">
+                        <div class="stat-icon">👑</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="statPremium">0</span>
+                            <span class="stat-label">Premium</span>
+                        </div>
+                    </div>
+                    <div class="stat-card accent-blue">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="statTrial">0</span>
+                            <span class="stat-label">Trial</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3>Hành động nhanh</h3>
+                    <div class="action-grid">
+                        <button class="action-btn" id="btnRefresh">
+                            <span>🔄</span> Làm mới dữ liệu
+                        </button>
+                        <button class="action-btn" id="btnExportUsers">
+                            <span>📥</span> Xuất danh sách CSV
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section class="section" id="sectionUsers" style="display:none;">
+                <div class="table-container">
+                    <table class="user-table" id="userTable">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Gói</th>
+                                <th>Ngày đăng ký</th>
+                                <th>Hoạt động cuối</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                        </tbody>
+                    </table>
+                    <div class="table-empty" id="tableEmpty" style="display:none;">
+                        <span>📭</span>
+                        <p>Không tìm thấy user nào</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pending Section -->
+            <section class="section" id="sectionPending" style="display:none;">
+                <div class="pending-info">
+                    <h3>⏳ Yêu cầu nâng cấp Premium</h3>
+                    <p>Các user đã chuyển khoản và chờ xác nhận.</p>
+                </div>
+                <div class="table-container">
+                    <table class="user-table" id="pendingTable">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Ngày yêu cầu</th>
+                                <th>Ghi chú CK</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingTableBody">
+                        </tbody>
+                    </table>
+                    <div class="table-empty" id="pendingEmpty">
+                        <span>✅</span>
+                        <p>Không có yêu cầu nào đang chờ</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- User Detail Modal -->
+    <div class="modal-overlay" id="userModal" style="display:none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalUserName">User Detail</h3>
+                <button class="modal-close" id="modalClose">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <label>UID</label>
+                        <span id="detailUid" class="mono"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Email</label>
+                        <span id="detailEmail"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Gói hiện tại</label>
+                        <span id="detailPlan"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Role</label>
+                        <span id="detailRole"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Ngày đăng ký</label>
+                        <span id="detailCreated"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Trial hết hạn</label>
+                        <span id="detailTrialExp"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Premium hết hạn</label>
+                        <span id="detailPlanExp"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Hoạt động cuối</label>
+                        <span id="detailLastLogin"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <select id="modalPlanSelect" class="plan-select">
+                    <option value="free">Free</option>
+                    <option value="trial">Trial (14 ngày)</option>
+                    <option value="premium">Premium</option>
+                </select>
+                <button class="btn-action save" id="modalSavePlan">💾 Lưu gói</button>
+                <button class="btn-action toggle" id="modalToggleDisable">🔒 Vô hiệu hóa</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+{
+  "name": "habit-game-tracker",
+  "version": "1.0.0",
+  "description": "Habit Game Tracker - Theo dõi thói quen hàng ngày, xây dựng kỷ luật, đạt mục tiêu",
+  "main": "main.js",
+  "author": "SonnHai",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win",
+    "build:portable": "electron-builder --win portable",
+    "build:all": "electron-builder --win nsis portable"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.sonnhai.habit-game-tracker",
+    "productName": "Habit Game Tracker",
+    "copyright": "Copyright © 2026 SonnHai",
+    "directories": {
+      "output": "../dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "extraFiles": [
+      {
+        "from": "..",
+        "to": "web",
+        "filter": [
+          "index.html",
+          "app.js",
+          "style.css",
+          "auth.html",
+          "auth.js",
+          "auth.css",
+          "admin.html",
+          "admin.js",
+          "admin.css",
+          "icon-192.png",
+          "icon-512.png",
+          "manifest.json",
+          "404.html",
+          "sw.js"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "icon-clean.png",
+      "artifactName": "HabitGameTracker-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Habit Game Tracker",
+      "deleteAppDataOnUninstall": false
+    },
+    "portable": {
+      "artifactName": "HabitGameTracker-Portable-${version}.${ext}"
+    }
+  }
+}

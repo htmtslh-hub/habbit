@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Game - Tracker</title>
+    <meta name="description" content="Track your daily habits, build streaks, and achieve your goals with Habit Game Tracker">
+    <!-- PWA -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#00f5a0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Habit Game">
+    <link rel="apple-touch-icon" href="./icon-512.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=5">
+
+    <!-- Firebase SDK (CDN) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCctQ_86VvAlZPTQDQPyGeYjV9zMHLv_Sc",
+            authDomain: "sonnhai-2600f.firebaseapp.com",
+            projectId: "sonnhai-2600f",
+            storageBucket: "sonnhai-2600f.firebasestorage.app",
+            messagingSenderId: "907935883175",
+            appId: "1:907935883175:web:0f356a63e28a45a196a082",
+            measurementId: "G-JXP5V9W6GN"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+</head>
+<body>
+    <!-- LOADING SCREEN -->
+    <div class="auth-loading" id="authLoading">
+        <div class="auth-loading-spinner"></div>
+        <p>Đang tải...</p>
+    </div>
+
+    <div class="app" id="mainApp" style="display:none;">
+        <!-- GLOBAL NAVBAR -->
+        <header class="navbar">
+            <div class="nav-brand">
+                <span class="nav-star">✦</span>
+                <span class="nav-title" data-i18n="title">HABIT TRACKER</span>
+            </div>
+            <div class="nav-controls">
+                <!-- User Profile -->
+                <div class="user-profile" id="userProfile">
+                    <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
+                    <span class="user-name" id="userName"></span>
+                </div>
+                <button class="nav-action-btn" id="exportBtn" title="Export">📥</button>
+                <button class="nav-action-btn" id="importBtn" title="Import">📤</button>
+                <input type="file" id="importFile" accept=".json">
+                <button class="nav-theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+                <div class="lang-switch" id="langSwitch">
+                    <button class="lang-btn active" data-lang="vi">VI</button>
+                    <button class="lang-btn" data-lang="zh">中</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+                <button class="nav-logout-btn" id="logoutBtn" title="Đăng xuất">🚪</button>
+            </div>
+        </header>
+
+        <!-- TOP SECTION: Calendar + Chart + Stats -->
+        <div class="top-section">
+            <!-- Left: Calendar settings -->
+            <div class="top-left cal-card">
+                <div class="card-header" data-i18n="calSettings">CALENDAR SETTINGS</div>
+                <div class="cal-body">
+                    <div class="cal-row"><label data-i18n="year">Year</label><select id="yearSel"></select></div>
+                    <div class="cal-row"><label data-i18n="month">Month</label><select id="monthSel"></select></div>
+                </div>
+            </div>
+            <!-- Center: Bar Chart -->
+            <div class="top-center chart-card">
+                <canvas id="barChart"></canvas>
+            </div>
+            <!-- Right: Overall Stats -->
+            <div class="top-right stats-card">
+                <div class="card-header" data-i18n="overallStats">Overall Stats</div>
+                <div class="stats-body">
+                    <div class="ring-wrap">
+                        <svg viewBox="0 0 100 100" class="ring-svg">
+                            <circle class="ring-bg" cx="50" cy="50" r="40"/>
+                            <circle class="ring-fg" cx="50" cy="50" r="40" id="ringFg"/>
+                        </svg>
+                        <div class="ring-pct" id="ringPct">0%</div>
+                    </div>
+                    <div class="stats-info">
+                        <div class="si-row"><span data-i18n="completed">Completed</span><b id="sDone">0</b></div>
+                        <div class="si-row"><span data-i18n="left">Left</span><b id="sLeft">0</b></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN GRID: My Habits + Days + Analysis -->
+        <div class="grid-area">
+            <table class="htable" id="htable">
+                <thead id="thead"></thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
+
+        <!-- BOTTOM SECTION: Logo+LineChart | Top10 -->
+        <div class="bottom-section">
+            <div class="bot-left">
+                <div class="logo-box">
+                    <div class="logo-star">✦</div>
+                    <div class="logo-txt">HABIT<br>GAME</div>
+                </div>
+                <div class="line-chart-box"><canvas id="lineChart"></canvas></div>
+            </div>
+            <div class="bot-right">
+                <div class="t10-header"><span data-i18n="top10">TOP 10 HABITS</span> <span>👑</span></div>
+                <div class="t10-body" id="t10Body"></div>
+            </div>
+        </div>
+
+        <!-- MOOD + SLEEP ROW -->
+        <div class="ms-row">
+            <div class="ms-cell">
+                <div class="ms-header" data-i18n="mood">Mood</div>
+                <div class="ms-body mood-body" id="moodBody">
+                    <span class="mopt" data-v="7">😁</span>
+                    <span class="mopt" data-v="6">😊</span>
+                    <span class="mopt" data-v="5">🙂</span>
+                    <span class="mopt" data-v="4">😐</span>
+                    <span class="mopt" data-v="3">😕</span>
+                    <span class="mopt" data-v="2">😞</span>
+                    <span class="mopt" data-v="1">😢</span>
+                    <span class="mood-pct" id="moodPct"></span>
+                </div>
+            </div>
+            <div class="ms-cell">
+                <div class="ms-header" data-i18n="hoursOfSleep">Hours of Sleep</div>
+                <div class="ms-body sleep-body">
+                    <input type="number" id="sleepH" min="0" max="14" step="0.5" value="7">
+                    <span data-i18n="hrs">hrs</span>
+                </div>
+            </div>
+            <div class="ms-cell add-cell">
+                <button class="btn-add" id="btnAdd" data-i18n="addHabit">+ Add Habit</button>
+            </div>
+        </div>
+
+        <!-- DAILY NOTES -->
+        <div class="notes-section">
+            <div class="notes-header">
+                <span data-i18n="dailyNotes">DAILY NOTES</span> <span>📝</span>
+            </div>
+            <div class="notes-body">
+                <span class="notes-date" id="notesDate">2026-07-08</span>
+                <textarea id="dailyNotesText" data-i18n-ph="notesPh" placeholder="Write daily notes..."></textarea>
+            </div>
+        </div>
+
+        <!-- HEATMAP -->
+        <div class="heatmap-section">
+            <div class="hm-header">
+                <span data-i18n="heatmap">ANNUAL ACTIVITY HEATMAP</span> <span>📊</span>
+            </div>
+            <div class="heatmap-body">
+                <div class="hm-container">
+                    <div class="hm-days">
+                        <span></span>
+                        <span data-i18n="dayMon">Mon</span>
+                        <span></span>
+                        <span data-i18n="dayWed">Wed</span>
+                        <span></span>
+                        <span data-i18n="dayFri">Fri</span>
+                        <span></span>
+                    </div>
+                    <div>
+                        <div class="hm-months" id="hmMonths"></div>
+                        <div class="hm-grid" id="hmGrid"></div>
+                    </div>
+                </div>
+                <div class="hm-legend">
+                    <span data-i18n="less">Less</span>
+                    <span class="hm-legend-cell" data-level="0"></span>
+                    <span class="hm-legend-cell" data-level="1"></span>
+                    <span class="hm-legend-cell" data-level="2"></span>
+                    <span class="hm-legend-cell" data-level="3"></span>
+                    <span class="hm-legend-cell" data-level="4"></span>
+                    <span data-i18n="more">More</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-bg" id="modalBg">
+        <div class="modal-box">
+            <div class="modal-title" id="modalTitle" data-i18n="addNewHabit">Add New Habit</div>
+            <input type="text" id="newName" data-i18n-ph="habitNamePh" placeholder="Habit name...">
+            <div class="emoji-row" id="emojiRow">
+                <span data-e="⏰">⏰</span><span data-e="💪">💪</span><span data-e="📖">📖</span>
+                <span data-e="🗓️">🗓️</span><span data-e="💦">💦</span><span data-e="🎯">🎯</span>
+                <span data-e="🍾">🍾</span><span data-e="🌿">🌿</span><span data-e="📔">📔</span>
+                <span data-e="🚿">🚿</span><span data-e="📈">📈</span><span data-e="🧘">🧘</span>
+                <span data-e="🤸">🤸</span><span data-e="🏃">🏃</span><span data-e="🍎">🍎</span>
+                <span data-e="💧">💧</span><span data-e="🎵">🎵</span><span data-e="🧠">🧠</span>
+            </div>
+            <div class="target-row">
+                <label data-i18n="targetLabelModal">Habit Target</label>
+                <input type="number" id="newTarget" min="1" max="31" value="30">
+                <span data-i18n="targetHint">days/month</span>
+            </div>
+            <div class="modal-btns">
+                <button class="mb cancel" id="mCancel" data-i18n="cancel">Cancel</button>
+                <button class="mb save" id="mSave" data-i18n="save">Save</button>
+            </div>
+        </div>
+    </div>
+    <canvas id="confettiCanvas"></canvas>
+    <script src="app.js?v=6"></script>
+    <script>
+      if ('serviceWorker' in navigator && !window.electronAPI) {
+        navigator.serviceWorker.register('./sw.js').then(r => console.log('SW registered:', r.scope)).catch(e => console.warn('SW failed:', e));
+      }
+    </script>
+</body>
+</html>
