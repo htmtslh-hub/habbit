@@ -461,9 +461,9 @@ function openUpgradeModal(){
 // ===== SEPAY PAYMENT CONFIG =====
 const SEPAY_CONFIG = {
     bank: 'VietinBank',
-    bankCode: 'ICB',         // Mã ngân hàng VietinBank cho SePay
+    bankCode: 'VietinBank',  // Mã ngân hàng VietinBank cho SePay QR
     accountNumber: '109887120806',
-    accountName: 'NGUYEN VAN A',
+    accountName: 'DINH VAN TRIEN',
     plans: {
         monthly: { amount: 99000, label: 'Gói Tháng', duration: '1 tháng' },
         yearly:  { amount: 399000, label: 'Gói Năm', duration: '1 năm' },
