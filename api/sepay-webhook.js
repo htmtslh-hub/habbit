@@ -93,7 +93,7 @@ module.exports = async function handler(req, res) {
     console.warn("No order number found in content:", content);
     return res.json({
       success: true,
-      message: "Not a Habit Tracker payment, ignored",
+      message: "Not a Habit Mastery payment, ignored",
     });
   }
 

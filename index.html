@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Habit Game - Tracker</title>
-    <meta name="description" content="Track your daily habits, build streaks, and achieve your goals with Habit Game Tracker">
+    <title>Habit Mastery - Theo dõi thói quen</title>
+    <meta name="description" content="Track your daily habits, build streaks, and achieve your goals with Habit Mastery">
     <!-- PWA -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#00f5a0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Habit Game">
+    <meta name="apple-mobile-web-app-title" content="Habit Mastery">
     <link rel="apple-touch-icon" href="./icon-512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -45,7 +45,7 @@
         <header class="navbar">
             <div class="nav-brand">
                 <span class="nav-star">✦</span>
-                <span class="nav-title" data-i18n="title">HABIT TRACKER</span>
+                <span class="nav-title" data-i18n="title">HABIT MASTERY</span>
             </div>
             <div class="nav-controls">
                 <!-- User Profile -->
@@ -53,9 +53,6 @@
                     <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
                     <span class="user-name" id="userName"></span>
                 </div>
-                <button class="nav-action-btn" id="exportBtn" title="Export">📥</button>
-                <button class="nav-action-btn" id="importBtn" title="Import">📤</button>
-                <input type="file" id="importFile" accept=".json">
                 <button class="nav-theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
                 <div class="lang-switch" id="langSwitch">
                     <button class="lang-btn active" data-lang="vi">VI</button>
@@ -219,11 +216,93 @@
         </div>
     </div>
     <canvas id="confettiCanvas"></canvas>
-    <script src="app.js?v=6"></script>
+
+    <!-- UPDATE NOTIFICATION TOAST -->
+    <div class="update-toast" id="updateToast">
+        <div class="update-toast-content">
+            <div class="update-toast-icon">🚀</div>
+            <div class="update-toast-info">
+                <div class="update-toast-title">Có bản cập nhật mới!</div>
+                <div class="update-toast-desc">Phiên bản mới với cải tiến và sửa lỗi. Cập nhật ngay?</div>
+            </div>
+            <div class="update-toast-actions">
+                <button class="update-btn-later" id="updateLater">Để sau</button>
+                <button class="update-btn-now" id="updateNow">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
     <script>
-      if ('serviceWorker' in navigator && !window.electronAPI) {
-        navigator.serviceWorker.register('./sw.js').then(r => console.log('SW registered:', r.scope)).catch(e => console.warn('SW failed:', e));
+    (function(){
+      if (!('serviceWorker' in navigator) || window.electronAPI) return;
+
+      let _newWorker = null;
+
+      navigator.serviceWorker.register('./sw.js').then(reg => {
+        console.log('SW registered:', reg.scope);
+
+        // Check for updates periodically (every 30 min)
+        setInterval(() => { reg.update(); }, 30 * 60 * 1000);
+
+        // Detect new SW waiting
+        function onNewSW(worker) {
+          _newWorker = worker;
+          showUpdateToast();
+        }
+
+        if (reg.waiting) {
+          onNewSW(reg.waiting);
+        }
+
+        reg.addEventListener('updatefound', () => {
+          const installing = reg.installing;
+          if (!installing) return;
+          installing.addEventListener('statechange', () => {
+            if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+              // New SW installed but waiting — show update prompt
+              onNewSW(installing);
+            }
+          });
+        });
+      }).catch(e => console.warn('SW failed:', e));
+
+      // Listen for SW_UPDATED message (after skipWaiting + activate)
+      navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'SW_UPDATED') {
+          // New version is now active — reload to use it
+          window.location.reload();
+        }
+      });
+
+      // Also handle controllerchange
+      let _refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (_refreshing) return;
+        _refreshing = true;
+        window.location.reload();
+      });
+
+      // Show update toast
+      function showUpdateToast() {
+        const toast = document.getElementById('updateToast');
+        if (toast) toast.classList.add('show');
       }
+
+      // "Update Now" button
+      document.getElementById('updateNow').onclick = () => {
+        const toast = document.getElementById('updateToast');
+        if (toast) toast.classList.remove('show');
+        if (_newWorker) {
+          _newWorker.postMessage({ type: 'SKIP_WAITING' });
+        }
+      };
+
+      // "Later" button
+      document.getElementById('updateLater').onclick = () => {
+        const toast = document.getElementById('updateToast');
+        if (toast) toast.classList.remove('show');
+      };
+    })();
     </script>
-</body>
 </html>

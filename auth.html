@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Habit Game - Đăng nhập</title>
-    <meta name="description" content="Đăng nhập Habit Game Tracker để theo dõi thói quen hàng ngày">
+    <title>Habit Mastery - Đăng nhập</title>
+    <meta name="description" content="Đăng nhập Habit Mastery để theo dõi thói quen hàng ngày">
     <!-- PWA -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#00f5a0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Habit Game">
+    <meta name="apple-mobile-web-app-title" content="Habit Mastery">
     <link rel="apple-touch-icon" href="./icon-512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="auth.css?v=2.0.1">
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -42,7 +42,7 @@
         <div class="auth-brand">
             <div class="brand-content">
                 <div class="brand-icon">✦</div>
-                <h1 class="brand-title">HABIT<br>GAME</h1>
+                <h1 class="brand-title">HABIT<br>MASTERY</h1>
                 <p class="brand-subtitle">Theo dõi thói quen • Xây dựng kỷ luật • Đạt mục tiêu</p>
                 <div class="brand-features">
                     <div class="feature-item">
@@ -81,62 +81,158 @@
 
                 <!-- LOGIN FORM -->
                 <form class="auth-form" id="loginForm">
-                    <div class="form-group">
-                        <label for="loginEmail">Email</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">✉️</span>
-                            <input type="email" id="loginEmail" placeholder="your@email.com" required autocomplete="email">
+                    <!-- Step 1: Email + Password -->
+                    <div id="loginStep1">
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">✉️</span>
+                                <input type="email" id="loginEmail" placeholder="your@email.com" required autocomplete="email">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="loginPassword">Mật khẩu</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">🔒</span>
-                            <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
-                            <button type="button" class="toggle-pass" id="toggleLoginPass">👁️</button>
+                        <div class="form-group">
+                            <label for="loginPassword">Mật khẩu</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+                                <button type="button" class="toggle-pass" id="toggleLoginPass">👁️</button>
+                            </div>
                         </div>
+                        <div class="remember-me">
+                            <label class="remember-label" for="rememberMe">
+                                <input type="checkbox" id="rememberMe" checked>
+                                <span class="checkmark"></span>
+                                <span class="remember-text">Ghi nhớ đăng nhập</span>
+                            </label>
+                            <span class="remember-hint">Duy trì phiên đăng nhập trên thiết bị này</span>
+                        </div>
+                        <button type="button" class="btn-primary" id="btnLogin">
+                            <span class="btn-text">Đăng nhập</span>
+                            <span class="btn-loading" style="display:none;">⏳ Đang xử lý...</span>
+                        </button>
                     </div>
-                    <button type="submit" class="btn-primary" id="btnLogin">
-                        <span class="btn-text">Đăng nhập</span>
-                        <span class="btn-loading" style="display:none;">⏳ Đang xử lý...</span>
-                    </button>
+
+                    <!-- Step 2: Login OTP Verification -->
+                    <div id="loginStep2" style="display:none;">
+                        <div class="otp-header">
+                            <div class="otp-icon">🔐</div>
+                            <h3 class="otp-title">Xác thực 2 bước</h3>
+                            <p class="otp-desc">Mã xác minh 6 số đã gửi đến</p>
+                            <p class="otp-email" id="loginOtpEmailDisplay"></p>
+                        </div>
+
+                        <div class="otp-inputs" id="loginOtpInputs">
+                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="0" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code">
+                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="1" inputmode="numeric" pattern="[0-9]">
+                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="2" inputmode="numeric" pattern="[0-9]">
+                            <span class="otp-dash">—</span>
+                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="3" inputmode="numeric" pattern="[0-9]">
+                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="4" inputmode="numeric" pattern="[0-9]">
+                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="5" inputmode="numeric" pattern="[0-9]">
+                        </div>
+
+                        <div class="otp-timer" id="loginOtpTimer">
+                            <span class="timer-icon">⏱️</span>
+                            <span>Mã hết hạn sau <strong id="loginOtpCountdown">5:00</strong></span>
+                        </div>
+
+                        <button type="button" class="btn-primary" id="btnVerifyLoginOtp">
+                            <span class="btn-text">✅ Xác minh & Đăng nhập</span>
+                            <span class="btn-loading" style="display:none;">⏳ Đang xác minh...</span>
+                        </button>
+
+                        <div class="otp-resend">
+                            <span>Chưa nhận được mã?</span>
+                            <button type="button" class="btn-resend" id="btnResendLoginOtp" disabled>
+                                Gửi lại (<span id="loginResendCountdown">60</span>s)
+                            </button>
+                        </div>
+
+                        <button type="button" class="btn-back" id="btnBackToLogin">
+                            ← Quay lại
+                        </button>
+                    </div>
                 </form>
 
                 <!-- REGISTER FORM -->
                 <form class="auth-form" id="registerForm" style="display:none;">
-                    <div class="form-group">
-                        <label for="regName">Họ và tên</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">👤</span>
-                            <input type="text" id="regName" placeholder="Nguyễn Văn A" required>
+                    <!-- Step 1: User Info -->
+                    <div id="regStep1">
+                        <div class="form-group">
+                            <label for="regName">Họ và tên</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">👤</span>
+                                <input type="text" id="regName" placeholder="Nguyễn Văn A" required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="regEmail">Email</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">✉️</span>
-                            <input type="email" id="regEmail" placeholder="your@email.com" required autocomplete="email">
+                        <div class="form-group">
+                            <label for="regEmail">Email</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">✉️</span>
+                                <input type="email" id="regEmail" placeholder="your@email.com" required autocomplete="email">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="regPassword">Mật khẩu</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">🔒</span>
-                            <input type="password" id="regPassword" placeholder="Tối thiểu 6 ký tự" required minlength="6" autocomplete="new-password">
-                            <button type="button" class="toggle-pass" id="toggleRegPass">👁️</button>
+                        <div class="form-group">
+                            <label for="regPassword">Mật khẩu</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="regPassword" placeholder="Tối thiểu 6 ký tự" required minlength="6" autocomplete="new-password">
+                                <button type="button" class="toggle-pass" id="toggleRegPass">👁️</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="regConfirm">Xác nhận mật khẩu</label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">🔒</span>
-                            <input type="password" id="regConfirm" placeholder="Nhập lại mật khẩu" required minlength="6" autocomplete="new-password">
+                        <div class="form-group">
+                            <label for="regConfirm">Xác nhận mật khẩu</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="regConfirm" placeholder="Nhập lại mật khẩu" required minlength="6" autocomplete="new-password">
+                            </div>
                         </div>
+                        <button type="button" class="btn-primary" id="btnSendOtp">
+                            <span class="btn-text">📧 Gửi mã xác minh</span>
+                            <span class="btn-loading" style="display:none;">⏳ Đang gửi mã...</span>
+                        </button>
                     </div>
-                    <button type="submit" class="btn-primary" id="btnRegister">
-                        <span class="btn-text">Tạo tài khoản</span>
-                        <span class="btn-loading" style="display:none;">⏳ Đang xử lý...</span>
-                    </button>
+
+                    <!-- Step 2: OTP Verification -->
+                    <div id="regStep2" style="display:none;">
+                        <div class="otp-header">
+                            <div class="otp-icon">📬</div>
+                            <h3 class="otp-title">Xác minh email</h3>
+                            <p class="otp-desc">Mã xác minh 6 số đã gửi đến</p>
+                            <p class="otp-email" id="otpEmailDisplay"></p>
+                        </div>
+
+                        <div class="otp-inputs" id="otpInputs">
+                            <input type="text" maxlength="1" class="otp-box" data-index="0" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code">
+                            <input type="text" maxlength="1" class="otp-box" data-index="1" inputmode="numeric" pattern="[0-9]">
+                            <input type="text" maxlength="1" class="otp-box" data-index="2" inputmode="numeric" pattern="[0-9]">
+                            <span class="otp-dash">—</span>
+                            <input type="text" maxlength="1" class="otp-box" data-index="3" inputmode="numeric" pattern="[0-9]">
+                            <input type="text" maxlength="1" class="otp-box" data-index="4" inputmode="numeric" pattern="[0-9]">
+                            <input type="text" maxlength="1" class="otp-box" data-index="5" inputmode="numeric" pattern="[0-9]">
+                        </div>
+
+                        <div class="otp-timer" id="otpTimer">
+                            <span class="timer-icon">⏱️</span>
+                            <span>Mã hết hạn sau <strong id="otpCountdown">5:00</strong></span>
+                        </div>
+
+                        <button type="button" class="btn-primary" id="btnVerifyOtp">
+                            <span class="btn-text">✅ Xác minh & Tạo tài khoản</span>
+                            <span class="btn-loading" style="display:none;">⏳ Đang xác minh...</span>
+                        </button>
+
+                        <div class="otp-resend">
+                            <span id="resendText">Chưa nhận được mã?</span>
+                            <button type="button" class="btn-resend" id="btnResendOtp" disabled>
+                                Gửi lại (<span id="resendCountdown">60</span>s)
+                            </button>
+                        </div>
+
+                        <button type="button" class="btn-back" id="btnBackToReg">
+                            ← Quay lại
+                        </button>
+                    </div>
                 </form>
 
                 <!-- Divider -->
@@ -155,19 +251,75 @@
                     <span>Đăng nhập với Google</span>
                 </button>
 
+                <!-- EXTERNAL GOOGLE LOGIN CONTAINER (For System Browser callback) -->
+                <div id="externalGoogleContainer" style="display: none; animation: otpFadeIn 0.4s ease-out;">
+                    <div class="otp-header">
+                        <div class="otp-icon" style="animation: iconFloat 3s ease-in-out infinite;">🌐</div>
+                        <h3 class="otp-title">Đăng nhập Habit Mastery</h3>
+                        <p class="otp-desc" style="margin-bottom: 20px;">Bạn đang đăng nhập vào ứng dụng trên máy tính.</p>
+                    </div>
+                    
+                    <button class="btn-primary" id="btnGoogleExternal">
+                        <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20" style="margin-right: 10px; vertical-align: middle; display: inline-block;">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                        </svg>
+                        <span class="btn-text" style="display: inline-block; vertical-align: middle;">Tiếp tục với Google</span>
+                        <span class="btn-loading" style="display:none;">⏳ Đang đăng nhập...</span>
+                    </button>
+
+                    <div class="external-status" id="externalStatus" style="margin-top: 20px; text-align: center; color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5;"></div>
+                </div>
+
+                <!-- ELECTRON WAITING CONTAINER (Show in Electron while user is in external browser) -->
+                <div id="electronWaitingContainer" style="display: none; animation: otpFadeIn 0.4s ease-out;">
+                    <div class="otp-header">
+                        <div class="otp-icon" style="animation: otpBounce 2s ease-in-out infinite;">✉️</div>
+                        <h3 class="otp-title">Đăng chờ đăng nhập</h3>
+                        <p class="otp-desc">Vui lòng hoàn tất đăng nhập trên trình duyệt hệ thống...</p>
+                    </div>
+                    <div class="otp-timer" style="border-color: var(--border-focus); background: rgba(0, 245, 160, 0.03); margin-bottom: 24px;">
+                        <span class="timer-icon">⏳</span>
+                        <span style="color: var(--accent); font-weight: 600;">Vui lòng kiểm tra trình duyệt web của bạn</span>
+                    </div>
+                    <button type="button" class="btn-back" id="btnCancelExternalLogin">
+                        ← Quay lại đăng nhập
+                    </button>
+                </div>
+
                 <!-- Footer -->
                 <div class="auth-footer">
-                    <p>© 2026 Habit Game Tracker. All rights reserved.</p>
+                    <p>© 2026 Habit Mastery. All rights reserved.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="auth.js"></script>
+    <script src="auth.js?v=2.0.1"></script>
     <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').then(r => console.log('SW registered:', r.scope)).catch(e => console.warn('SW failed:', e));
-      }
+    (function(){
+      if (!('serviceWorker' in navigator)) return;
+      navigator.serviceWorker.register('./sw.js').then(reg => {
+        console.log('SW registered:', reg.scope);
+        // If a new SW is waiting, auto-activate (auth page doesn't need user prompt)
+        if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+        reg.addEventListener('updatefound', () => {
+          const installing = reg.installing;
+          if (!installing) return;
+          installing.addEventListener('statechange', () => {
+            if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+              installing.postMessage({ type: 'SKIP_WAITING' });
+            }
+          });
+        });
+      }).catch(e => console.warn('SW failed:', e));
+      let _r = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (_r) return; _r = true; window.location.reload();
+      });
+    })();
     </script>
 </body>
 </html>

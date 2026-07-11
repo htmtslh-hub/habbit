@@ -1,7 +1,7 @@
 {
-  "name": "habit-game-tracker",
+  "name": "habit-mastery",
   "version": "1.0.0",
-  "description": "Habit Game Tracker - Theo dõi thói quen hàng ngày, xây dựng kỷ luật, đạt mục tiêu",
+  "description": "Habit Mastery - Theo dõi thói quen hàng ngày, xây dựng kỷ luật, đạt mục tiêu",
   "main": "main.js",
   "author": "SonnHai",
   "license": "MIT",
@@ -16,8 +16,8 @@
     "electron-builder": "^25.1.8"
   },
   "build": {
-    "appId": "com.sonnhai.habit-game-tracker",
-    "productName": "Habit Game Tracker",
+    "appId": "com.sonnhai.habitmastery",
+    "productName": "Habit Mastery",
     "copyright": "Copyright © 2026 SonnHai",
     "directories": {
       "output": "../dist"
@@ -57,7 +57,7 @@
         }
       ],
       "icon": "icon-clean.png",
-      "artifactName": "HabitGameTracker-Setup-${version}.${ext}"
+      "artifactName": "HabitMastery-Setup-${version}.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -65,11 +65,11 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Habit Game Tracker",
+      "shortcutName": "Habit Mastery",
       "deleteAppDataOnUninstall": false
     },
     "portable": {
-      "artifactName": "HabitGameTracker-Portable-${version}.${ext}"
+      "artifactName": "HabitMastery-Portable-${version}.${ext}"
     }
   }
 }

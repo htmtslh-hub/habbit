@@ -1,10 +1,14 @@
-const CACHE_NAME = 'habit-game-v1';
+// ===== HABIT MASTERY - SERVICE WORKER =====
+// Change CACHE_VERSION when deploying updates
+const CACHE_VERSION = '2.0.1';
+const CACHE_NAME = `habit-game-v${CACHE_VERSION}`;
+
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
   '/auth.html',
-  '/style.css?v=5',
-  '/app.js?v=6',
+  '/style.css',
+  '/app.js',
   '/auth.css',
   '/auth.js',
   '/icon-192.png',
@@ -12,17 +16,18 @@ const ASSETS_TO_CACHE = [
   '/manifest.json'
 ];
 
-// Install: cache core assets
+// ===== INSTALL: Cache core assets, DON'T skip waiting =====
+// We wait for user's permission before activating the new SW
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
-  self.skipWaiting();
+  // Do NOT call skipWaiting() here — let the user decide
 });
 
-// Activate: clean old caches
+// ===== ACTIVATE: Clean old caches =====
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
@@ -32,23 +37,37 @@ self.addEventListener('activate', event => {
     })
   );
   self.clients.claim();
+
+  // Notify all clients that the update is now active
+  self.clients.matchAll().then(clients => {
+    clients.forEach(client => {
+      client.postMessage({ type: 'SW_UPDATED', version: CACHE_VERSION });
+    });
+  });
 });
 
-// Fetch: network-first for API calls, cache-first for assets
+// ===== MESSAGE: Handle skip-waiting from client =====
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
+// ===== FETCH: Network-first for app, cache-first for fonts =====
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  // Skip non-GET and Firebase/Google API requests
+  // Skip non-GET and external API requests
   if (event.request.method !== 'GET') return;
-  if (url.hostname.includes('googleapis.com') ||
-      url.hostname.includes('firebaseio.com') ||
+  if (url.hostname.includes('googleapis.com') && !url.hostname.includes('fonts')) return;
+  if (url.hostname.includes('firebaseio.com') ||
       url.hostname.includes('gstatic.com') ||
       url.hostname.includes('google.com') ||
       url.hostname.includes('firebaseapp.com')) {
     return;
   }
 
-  // For Google Fonts, use cache-first
+  // Google Fonts: cache-first
   if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
     event.respondWith(
       caches.match(event.request).then(cached => {

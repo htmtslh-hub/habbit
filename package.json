@@ -1,9 +1,10 @@
 {
   "name": "habit-tracker-api",
   "version": "1.0.0",
-  "description": "SePay webhook API for Habit Game Tracker",
+  "description": "SePay webhook API for Habit Mastery",
   "private": true,
   "dependencies": {
-    "firebase-admin": "^12.0.0"
+    "firebase-admin": "^12.0.0",
+    "nodemailer": "^6.9.0"
   }
 }

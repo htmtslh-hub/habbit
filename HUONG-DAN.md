@@ -1,462 +1,257 @@
-# 📘 TÀI LIỆU HƯỚNG DẪN — HABIT GAME TRACKER
+# 📘 HƯỚNG DẪN SỬ DỤNG — HABIT GAME TRACKER
 
-> **Phiên bản:** 1.0.0 | **Cập nhật:** 10/07/2026 | **Tác giả:** SonnHai
+> **Phiên bản:** 1.0.0 | **Cập nhật:** 10/07/2026
 
 ---
 
 ## MỤC LỤC
 
-1. [Tổng quan dự án](#1-tổng-quan-dự-án)
-2. [Cấu trúc thư mục](#2-cấu-trúc-thư-mục)
-3. [Hướng dẫn Admin](#3-hướng-dẫn-admin---quản-trị-hệ-thống)
-4. [Hệ thống gói dịch vụ](#4-hệ-thống-gói-dịch-vụ)
-5. [Deploy Firebase Hosting](#5-deploy-lên-firebase-hosting)
-6. [Đổi tên miền](#6-đổi-tên-miền)
-7. [Đóng gói Desktop (.exe)](#7-đóng-gói-desktop-exe)
-8. [Tài khoản & Firebase Console](#8-tài-khoản--firebase-console)
-9. [Xử lý sự cố](#9-xử-lý-sự-cố)
+1. [Giới thiệu](#1-giới-thiệu)
+2. [Cài đặt & Truy cập](#2-cài-đặt--truy-cập)
+3. [Đăng ký & Đăng nhập](#3-đăng-ký--đăng-nhập)
+4. [Hướng dẫn sử dụng](#4-hướng-dẫn-sử-dụng)
+5. [Gói dịch vụ & Nâng cấp Premium](#5-gói-dịch-vụ--nâng-cấp-premium)
+6. [Câu hỏi thường gặp (FAQ)](#6-câu-hỏi-thường-gặp)
+7. [Liên hệ hỗ trợ](#7-liên-hệ-hỗ-trợ)
 
 ---
 
-## 1. TỔNG QUAN DỰ ÁN
+## 1. GIỚI THIỆU
 
-**Habit Game Tracker** là ứng dụng theo dõi thói quen hàng ngày với gamification, hỗ trợ:
+**Habit Game Tracker** giúp bạn xây dựng thói quen tốt mỗi ngày thông qua gamification:
 
-- ✅ Theo dõi thói quen với bảng check hàng ngày
-- ✅ Biểu đồ thống kê, heatmap hoạt động cả năm
-- ✅ Streak tracking (chuỗi ngày liên tiếp) 🔥
-- ✅ Ghi chú hàng ngày, kéo-thả sắp xếp thói quen
-- ✅ Đa ngôn ngữ: Tiếng Việt, English, 中文
-- ✅ Đăng nhập Google / Email
-- ✅ Đồng bộ dữ liệu qua Firebase Firestore
-- ✅ Hệ thống quản lý user (Admin Dashboard)
-- ✅ Phân quyền: Free / Trial (14 ngày) / Premium
-
-### Nền tảng triển khai
-
-| Nền tảng | URL / File | Trạng thái |
-|----------|-----------|------------|
-| Web (Production) | `https://habit-tracker-sonnhai.web.app` | ✅ Live |
-| Desktop Windows | `dist/HabitGameTracker-Setup-1.0.0.exe` | ✅ Build xong |
-| Firebase Project | `sonnhai-2600f` | ✅ Active |
+- ✅ **Bảng theo dõi** — Check thói quen hàng ngày trực quan
+- 🔥 **Streak** — Đếm chuỗi ngày liên tiếp hoàn thành
+- 📊 **Biểu đồ & Heatmap** — Thống kê tiến trình cả năm
+- 📝 **Ghi chú** — Viết nhật ký hàng ngày
+- ☁️ **Đồng bộ** — Dữ liệu tự động đồng bộ giữa các thiết bị
+- 🌍 **Đa ngôn ngữ** — Tiếng Việt, English, 中文
 
 ---
 
-## 2. CẤU TRÚC THƯ MỤC
+## 2. CÀI ĐẶT & TRUY CẬP
 
-```
-habit-tracker/
-│
-├── 📄 index.html          ← Trang chính (bảng thói quen)
-├── 📄 app.js              ← Logic ứng dụng chính
-├── 📄 style.css            ← CSS toàn cục
-│
-├── 📄 auth.html            ← Trang đăng nhập / đăng ký
-├── 📄 auth.js              ← Logic xác thực Firebase Auth
-├── 📄 auth.css             ← CSS trang đăng nhập
-│
-├── 📄 admin.html           ← Dashboard quản trị viên
-├── 📄 admin.js             ← Logic quản lý user
-├── 📄 admin.css            ← CSS dashboard admin
-│
-├── 📄 firebase.json        ← Cấu hình Firebase (Hosting + Firestore)
-├── 📄 firestore.rules      ← Quy tắc bảo mật Firestore
-├── 📄 firestore.indexes.json ← Chỉ mục Firestore
-├── 📄 .firebaserc          ← Liên kết project Firebase
-│
-├── 📄 manifest.json        ← PWA manifest
-├── 📄 sw.js                ← Service Worker (cache offline)
-├── 📄 404.html             ← Trang lỗi 404
-├── 🖼️ icon-192.png         ← Icon ứng dụng
-├── 🖼️ icon-512.png         ← Icon ứng dụng (HD)
-│
-├── 📁 electron/            ← Electron wrapper (desktop app)
-│   ├── main.js             ← Main process
-│   ├── preload.js          ← Context bridge
-│   ├── package.json        ← Build config
-│   └── icon-clean.png      ← Icon cho Windows
-│
-└── 📁 dist/                ← File .exe đã build
-    └── HabitGameTracker-Setup-1.0.0.exe
-```
+Bạn có **3 cách** sử dụng ứng dụng:
 
----
+### Cách 1: Dùng trực tiếp trên trình duyệt (Nhanh nhất)
 
-## 3. HƯỚNG DẪN ADMIN — QUẢN TRỊ HỆ THỐNG
+1. Mở trình duyệt (Chrome, Edge, Safari, Firefox)
+2. Truy cập: **https://habitmastery.web.app**
+3. Bắt đầu sử dụng ngay — không cần cài đặt!
 
-### 3.1 Truy cập Admin Dashboard
+> 💡 **Mẹo:** Bookmark trang web để truy cập nhanh hơn.
 
-- **URL:** `https://habit-tracker-sonnhai.web.app/admin.html`
-- **Desktop:** Menu → File → Admin Dashboard (hoặc `Ctrl+Shift+A`)
-- **Tài khoản Admin:** `htmt.slh@gmail.com`
+### Cách 2: Cài như ứng dụng trên điện thoại (PWA)
 
-> ⚠️ Chỉ tài khoản có `role: "admin"` trong Firestore mới truy cập được.
+#### iPhone / iPad:
+1. Mở **Safari** → truy cập `https://habitmastery.web.app`
+2. Nhấn nút **Chia sẻ** (📤) ở thanh dưới
+3. Chọn **"Thêm vào Màn hình chính"** (Add to Home Screen)
+4. Đặt tên → nhấn **"Thêm"**
+5. Icon ứng dụng sẽ xuất hiện trên màn hình chính
 
-### 3.2 Tổng quan Dashboard
+#### Android:
+1. Mở **Chrome** → truy cập `https://habitmastery.web.app`
+2. Nhấn **⋮** (menu 3 chấm) góc phải trên
+3. Chọn **"Thêm vào màn hình chính"** hoặc **"Cài đặt ứng dụng"**
+4. Nhấn **"Cài đặt"**
+5. Ứng dụng xuất hiện như app bình thường
 
-Dashboard hiển thị:
-- **Tổng số user** đã đăng ký
-- **User active** (hoạt động trong 30 ngày gần nhất)
-- **User Premium** (đang sử dụng gói trả phí)
-- **Yêu cầu chờ duyệt** (upgrade Premium)
+### Cách 3: Cài đặt trên máy tính Windows (.exe)
 
-### 3.3 Quản lý tài khoản người dùng
+1. Nhận file **`HabitGameTracker-Setup-1.0.0.exe`** (~78 MB)
+2. Chạy file → Windows SmartScreen có thể cảnh báo:
+   - Nhấn **"More info"** (Thông tin thêm)
+   - Nhấn **"Run anyway"** (Vẫn chạy)
+3. Chọn thư mục cài đặt → nhấn **"Install"**
+4. Sau khi cài xong → icon **Habit Game Tracker** xuất hiện trên Desktop
 
-#### Xem danh sách user
-- Bảng hiển thị: Avatar, Tên, Email, Gói dịch vụ, Ngày đăng ký, Lần đăng nhập cuối, Trạng thái
-- Tìm kiếm theo tên hoặc email
-- Lọc theo gói: All / Free / Trial / Premium
+**Phím tắt hữu ích:**
 
-#### Vô hiệu hóa tài khoản
-1. Click vào nút **"Vô hiệu hóa"** (🚫) bên cạnh user
-2. Xác nhận hành động
-3. User sẽ **không thể đăng nhập** hoặc sử dụng ứng dụng
-4. Trạng thái hiển thị: `Disabled`
+| Phím tắt | Chức năng |
+|----------|-----------|
+| `F11` | Toàn màn hình |
+| `Ctrl + R` | Tải lại trang |
+| `Ctrl + +/-` | Phóng to / Thu nhỏ |
+| `Ctrl + Q` | Thoát hoàn toàn |
 
-#### Kích hoạt lại tài khoản
-1. Click **"Kích hoạt"** (✅) bên cạnh user đang bị vô hiệu hóa
-2. User có thể đăng nhập lại bình thường
-
-#### Duyệt yêu cầu Premium
-1. Tab **"Chờ duyệt"** hiển thị danh sách user yêu cầu nâng cấp
-2. Click **"Duyệt"** → User chuyển sang gói Premium
-3. Click **"Từ chối"** → Yêu cầu bị hủy
-
-### 3.4 Thêm Admin mới
-
-Để thêm admin mới, cập nhật trường `role` trong Firestore:
-
-1. Vào [Firebase Console](https://console.firebase.google.com/project/sonnhai-2600f/firestore)
-2. Collection: `users` → Chọn document của user cần set admin
-3. Thêm/sửa field: `role` = `"admin"`
-4. User đó sẽ có quyền truy cập Admin Dashboard
+> 📌 Khi nhấn nút **X** đóng cửa sổ, ứng dụng sẽ **thu nhỏ xuống khay hệ thống** (System Tray). Click chuột phải vào icon → chọn "Thoát" để tắt hoàn toàn.
 
 ---
 
-## 4. HỆ THỐNG GÓI DỊCH VỤ
+## 3. ĐĂNG KÝ & ĐĂNG NHẬP
 
-### 4.1 Bảng so sánh gói
+### 3.1 Đăng ký tài khoản mới
+
+**Cách A: Đăng nhập bằng Google (Nhanh nhất)**
+
+1. Tại trang đăng nhập, nhấn nút **"Đăng nhập với Google"**
+2. Chọn tài khoản Google của bạn
+3. Xong! Tài khoản tự động được tạo
+
+**Cách B: Đăng ký bằng Email**
+
+1. Tại trang đăng nhập, nhấn tab **"Đăng ký"**
+2. Điền thông tin:
+   - **Họ và tên** — Tên hiển thị trong ứng dụng
+   - **Email** — Email để đăng nhập
+   - **Mật khẩu** — Tối thiểu 6 ký tự
+   - **Xác nhận mật khẩu**
+3. Nhấn **"Tạo tài khoản"**
+
+### 3.2 Đăng nhập
+
+1. Nhập **Email** và **Mật khẩu** đã đăng ký
+2. Nhấn **"Đăng nhập"**
+3. Hoặc nhấn **"Đăng nhập với Google"** nếu dùng tài khoản Google
+
+> 🎁 **Ưu đãi:** Tài khoản mới tự động nhận **14 ngày dùng thử miễn phí** tất cả tính năng Premium!
+
+---
+
+## 4. HƯỚNG DẪN SỬ DỤNG
+
+### 4.1 Thêm thói quen mới
+
+1. Nhấn nút **"+ Thêm thói quen"**
+2. Nhập tên thói quen (VD: "Tập thể dục", "Đọc sách")
+3. Chọn emoji đại diện (tuỳ chọn)
+4. Nhấn **"Lưu"**
+
+### 4.2 Check thói quen hàng ngày
+
+1. Tại bảng theo dõi, nhấn vào **ô vuông** tương ứng với thói quen và ngày
+2. ✅ = Đã hoàn thành | ⬜ = Chưa hoàn thành
+3. Thanh tiến trình phía trên hiển thị **% hoàn thành** trong ngày
+4. Hoàn thành **100%** → 🎉 Hiệu ứng confetti chúc mừng!
+
+### 4.3 Streak — Chuỗi ngày liên tiếp 🔥
+
+- Mỗi thói quen có **bộ đếm streak** riêng
+- Check liên tục nhiều ngày → streak tăng lên → icon 🔥 xuất hiện
+- Bỏ 1 ngày → streak reset về 0
+- **Mẹo:** Giữ streak càng dài càng tạo động lực!
+
+### 4.4 Xem thống kê
+
+- **Biểu đồ cột** — Tỉ lệ hoàn thành theo tuần/tháng *(Premium)*
+- **Heatmap** — Bản đồ nhiệt hoạt động cả năm giống GitHub *(Premium)*
+
+### 4.5 Ghi chú hàng ngày *(Premium)*
+
+1. Nhấn vào ngày muốn ghi chú
+2. Viết nội dung ghi chú
+3. Tự động lưu khi nhấn ra ngoài
+
+### 4.6 Sắp xếp thói quen
+
+- **Kéo thả** để thay đổi thứ tự các thói quen
+
+### 4.7 Đổi ngôn ngữ
+
+1. Nhấn vào biểu tượng **🌍** trên thanh tiêu đề
+2. Chọn: **Tiếng Việt** / **English** / **中文**
+
+### 4.8 Chế độ sáng / tối
+
+- Nhấn biểu tượng **🌙/☀️** trên thanh tiêu đề để chuyển đổi
+
+---
+
+## 5. GÓI DỊCH VỤ & NÂNG CẤP PREMIUM
+
+### 5.1 So sánh các gói
 
 | Tính năng | Free | Trial (14 ngày) | Premium |
 |-----------|:----:|:----------------:|:-------:|
 | Số thói quen tối đa | 3 | Không giới hạn | Không giới hạn |
 | Bảng theo dõi hàng ngày | ✅ | ✅ | ✅ |
-| Streak tracking | ✅ | ✅ | ✅ |
+| Streak tracking 🔥 | ✅ | ✅ | ✅ |
+| Đồng bộ đa thiết bị | ✅ | ✅ | ✅ |
 | Heatmap hoạt động | ❌ | ✅ | ✅ |
 | Ghi chú hàng ngày | ❌ | ✅ | ✅ |
 | Biểu đồ thống kê | ❌ | ✅ | ✅ |
-| Đồng bộ đa thiết bị | ✅ | ✅ | ✅ |
 
-### 4.2 Luồng đăng ký
+### 5.2 Luồng sử dụng
 
 ```
-User mới đăng ký
+Đăng ký mới → Nhận Trial 14 ngày (đầy đủ tính năng)
     ↓
-Tự động nhận gói Trial (14 ngày)
+Hết 14 ngày → Tự động chuyển về gói Free
     ↓
-Hết 14 ngày → Tự động chuyển về Free
+Nâng cấp Premium → Thanh toán qua QR VietinBank
     ↓
-User yêu cầu nâng cấp Premium
-    ↓
-Admin duyệt/từ chối trên Dashboard
-    ↓
-Nếu duyệt → User sử dụng Premium
+Xác nhận tự động → Kích hoạt Premium ngay lập tức ⚡
 ```
 
-### 4.3 Dữ liệu user trong Firestore
+### 5.3 Nâng cấp Premium — Thanh toán VietQR
 
-Collection: `users` → Document ID = UID của user
+**Bảng giá:**
 
-```json
-{
-  "uid": "abc123...",
-  "email": "user@gmail.com",
-  "displayName": "Nguyễn Văn A",
-  "photoURL": "https://...",
-  "provider": "google.com",
-  "plan": "trial",              // "free" | "trial" | "premium"
-  "trialExpiresAt": Timestamp,  // Ngày hết hạn trial
-  "role": "user",               // "user" | "admin"
-  "disabled": false,            // true = bị vô hiệu hóa
-  "createdAt": Timestamp,
-  "lastLoginAt": Timestamp,
-  "habitData": "{ ... }"        // JSON chứa dữ liệu thói quen
-}
-```
+| Gói | Giá | Thời hạn |
+|-----|-----|----------|
+| 💎 Gói Tháng | **99.000₫** | 1 tháng |
+| 👑 Gói Năm | **399.000₫** | 1 năm (tiết kiệm 67%) |
+
+**Các bước thanh toán:**
+
+1. Trong ứng dụng, nhấn **"Nâng cấp Premium"** (hoặc biểu tượng 👑)
+2. Chọn gói: **Tháng** hoặc **Năm**
+3. Nhấn **"Tiếp tục"**
+4. Màn hình hiển thị **mã QR VietinBank**
+5. Mở app ngân hàng trên điện thoại → **Quét mã QR**
+6. Kiểm tra thông tin:
+   - **Ngân hàng:** VietinBank
+   - **Số TK:** 109887120806
+   - **Chủ TK:** DINH VAN TRIEN
+   - **Số tiền:** (theo gói đã chọn)
+   - **Nội dung CK:** `SEVQR HBTxxxxxxxxx` *(tự điền sẵn)*
+7. Xác nhận chuyển khoản
+
+> ⚠️ **QUAN TRỌNG:** Không sửa nội dung chuyển khoản! Nội dung `SEVQR HBT...` dùng để hệ thống tự động xác nhận thanh toán.
+
+8. Sau khi chuyển khoản thành công → hệ thống **tự động kích hoạt Premium** trong vài giây
+9. Màn hình hiển thị **"Thanh toán thành công! ✅"**
+
+### 5.4 Lưu ý thanh toán
+
+- ✅ Hỗ trợ tất cả ngân hàng Việt Nam (quét QR liên ngân hàng VietQR/Napas247)
+- ⏱️ Mã QR có hiệu lực **15 phút** — hết hạn cần tạo lại
+- 🔄 Nếu thanh toán xong mà chưa kích hoạt, vui lòng chờ 1-2 phút hoặc liên hệ hỗ trợ
 
 ---
 
-## 5. DEPLOY LÊN FIREBASE HOSTING
+## 6. CÂU HỎI THƯỜNG GẶP
 
-### 5.1 Yêu cầu
+### ❓ Dữ liệu có bị mất khi đổi thiết bị không?
+**Không.** Tất cả dữ liệu được lưu trên đám mây. Đăng nhập cùng tài khoản trên thiết bị mới → dữ liệu tự động đồng bộ.
 
-- Node.js 18+ đã cài đặt
-- Firebase CLI: `npm install -g firebase-tools`
-- Đã đăng nhập: `firebase login`
+### ❓ Tôi quên mật khẩu, phải làm sao?
+Tại trang đăng nhập, liên hệ admin để được hỗ trợ reset mật khẩu. Hoặc nếu bạn dùng Google → đăng nhập lại bằng Google.
 
-### 5.2 Deploy nhanh
+### ❓ Trial hết hạn, dữ liệu có bị xóa không?
+**Không.** Dữ liệu vẫn được giữ nguyên. Bạn chỉ bị giới hạn tính năng (tối đa 3 thói quen, không có heatmap/biểu đồ). Nâng cấp Premium để mở khóa lại.
 
-```bash
-cd "d:\ghi chú\habit-tracker"
-firebase deploy --only hosting --project sonnhai-2600f
-```
+### ❓ Ứng dụng Desktop báo virus/nguy hiểm?
+Đây là cảnh báo thông thường của Windows SmartScreen vì ứng dụng chưa có chữ ký số (code signing). Nhấn **"More info" → "Run anyway"** để tiếp tục cài đặt an toàn.
 
-### 5.3 Deploy Firestore Rules
+### ❓ Tôi quét QR xong nhưng chưa lên Premium?
+- Kiểm tra nội dung chuyển khoản có đúng `SEVQR HBT...` không
+- Chờ 1-2 phút để hệ thống xử lý
+- Nếu vẫn chưa được, liên hệ hỗ trợ kèm ảnh chụp biên lai chuyển khoản
 
-```bash
-firebase deploy --only firestore:rules --project sonnhai-2600f
-```
-
-### 5.4 Deploy tất cả
-
-```bash
-firebase deploy --project sonnhai-2600f
-```
-
-### 5.5 Cấu hình hiện tại
-
-File `firebase.json` đã được cấu hình:
-- **Site:** `habit-tracker-sonnhai` (tách riêng, không ảnh hưởng site mặc định)
-- **Ignore:** `electron/`, `dist/`, `node_modules/`, config files
-- **Cache:** JS/CSS (1 giờ), ảnh (24 giờ)
-
-> ⚠️ **LƯU Ý:** Config `"site": "habit-tracker-sonnhai"` đảm bảo deploy vào site riêng, không ghi đè site mặc định `sonnhai-2600f.web.app`.
+### ❓ Tôi có thể dùng trên bao nhiêu thiết bị?
+**Không giới hạn.** Đăng nhập cùng tài khoản trên bất kỳ thiết bị nào (điện thoại, máy tính, tablet).
 
 ---
 
-## 6. ĐỔI TÊN MIỀN
+## 7. LIÊN HỆ HỖ TRỢ
 
-### 6.1 Đổi subdomain (.web.app)
-
-Tạo site mới với tên mong muốn:
-
-```bash
-# Tạo site mới
-firebase hosting:sites:create TEN-MOI --project sonnhai-2600f
-
-# Cập nhật firebase.json
-# Sửa "site": "TEN-MOI" trong phần hosting
-
-# Deploy
-firebase deploy --only hosting --project sonnhai-2600f
-```
-
-### 6.2 Kết nối domain riêng
-
-Nếu bạn có domain riêng (ví dụ: `tracker.thuviensonnhai.com`):
-
-```bash
-# Thêm custom domain
-firebase hosting:sites:update habit-tracker-sonnhai --project sonnhai-2600f
-```
-
-Hoặc qua Firebase Console:
-1. Vào [Firebase Console → Hosting](https://console.firebase.google.com/project/sonnhai-2600f/hosting)
-2. Click **"Add custom domain"**
-3. Nhập domain: `tracker.thuviensonnhai.com`
-4. Firebase sẽ yêu cầu thêm bản ghi DNS:
-   - Loại: `CNAME` hoặc `A`
-   - Tên: `tracker`
-   - Giá trị: theo hướng dẫn Firebase
-5. Cập nhật DNS tại nhà cung cấp domain
-6. Chờ xác minh (thường 24-48 giờ)
-
-### 6.3 Xóa site cũ
-
-```bash
-firebase hosting:sites:delete TEN-SITE-CU --project sonnhai-2600f
-```
+| Kênh | Thông tin |
+|------|-----------|
+| 📧 Email | htmt.slh@gmail.com |
+| 💬 Hỗ trợ | Liên hệ qua email để được giải đáp |
 
 ---
 
-## 7. ĐÓNG GÓI DESKTOP (.EXE)
-
-### 7.1 Yêu cầu
-
-- Node.js 18+
-- Windows 10/11
-
-### 7.2 Cài đặt lần đầu
-
-```bash
-cd "d:\ghi chú\habit-tracker\electron"
-npm install
-```
-
-### 7.3 Chạy chế độ phát triển
-
-```bash
-npm start
-```
-
-Ứng dụng sẽ mở cửa sổ desktop với:
-- Local server tại `http://127.0.0.1:17532`
-- Firebase Auth hoạt động bình thường
-- System tray icon
-
-### 7.4 Build file .exe
-
-```bash
-# Build installer (.exe setup)
-npm run build
-
-# Build portable (chạy trực tiếp, không cần cài)
-npm run build:portable
-
-# Build cả hai
-npm run build:all
-```
-
-**File output** nằm trong `habit-tracker/dist/`:
-- `HabitGameTracker-Setup-1.0.0.exe` — File cài đặt (~78 MB)
-- `HabitGameTracker-Portable-1.0.0.exe` — File portable
-
-### 7.5 Cập nhật phiên bản
-
-Khi có bản cập nhật:
-
-1. Sửa code web (index.html, app.js, style.css, v.v.)
-2. Cập nhật version trong `electron/package.json`:
-   ```json
-   "version": "1.1.0"
-   ```
-3. Build lại:
-   ```bash
-   cd electron
-   npm run build
-   ```
-4. Phân phối file `.exe` mới cho người dùng
-
-### 7.6 Tính năng Desktop App
-
-| Tính năng | Phím tắt |
-|-----------|----------|
-| Về trang chính | `Ctrl+Shift+H` |
-| Admin Dashboard | `Ctrl+Shift+A` |
-| Tải lại | `Ctrl+R` |
-| Phóng to/Thu nhỏ | `Ctrl++` / `Ctrl+-` |
-| Toàn màn hình | `F11` |
-| Developer Tools | `Ctrl+Shift+I` |
-| Thoát hoàn toàn | `Ctrl+Q` |
-
-> Khi đóng cửa sổ → ứng dụng **thu nhỏ xuống System Tray** (không thoát). Click phải icon tray → "Thoát" để thoát hoàn toàn.
-
----
-
-## 8. TÀI KHOẢN & FIREBASE CONSOLE
-
-### 8.1 Thông tin Firebase
-
-| Thông tin | Giá trị |
-|-----------|---------|
-| Project ID | `sonnhai-2600f` |
-| Console | [https://console.firebase.google.com/project/sonnhai-2600f](https://console.firebase.google.com/project/sonnhai-2600f) |
-| Admin Email | `htmt.slh@gmail.com` |
-| Admin UID | `PEjFfUwCSgeu2oxG9sgRsLQUB5p2` |
-| Hosting URL | `https://habit-tracker-sonnhai.web.app` |
-
-### 8.2 Firebase Services đang sử dụng
-
-| Service | Mục đích |
-|---------|----------|
-| **Authentication** | Đăng nhập Google + Email/Password |
-| **Cloud Firestore** | Lưu trữ user profiles + habit data |
-| **Hosting** | Deploy web app (site: habit-tracker-sonnhai) |
-
-### 8.3 Firestore Collections
-
-| Collection | Mô tả |
-|------------|-------|
-| `users` | Hồ sơ người dùng (plan, role, habitData, v.v.) |
-
-### 8.4 Authorized Domains
-
-Cần đảm bảo các domain sau được thêm trong Firebase Auth → Settings → Authorized domains:
-- `sonnhai-2600f.firebaseapp.com` (mặc định)
-- `sonnhai-2600f.web.app` (mặc định)
-- `habit-tracker-sonnhai.web.app`
-- `localhost` (cho development + desktop app)
-- Domain tùy chỉnh (nếu có)
-
----
-
-## 9. XỬ LÝ SỰ CỐ
-
-### 9.1 User không đăng nhập được bằng Google
-
-**Nguyên nhân:** Domain chưa được authorize trong Firebase Auth.
-
-**Giải pháp:**
-1. Vào Firebase Console → Authentication → Settings → Authorized domains
-2. Thêm domain hiện tại vào danh sách
-
-### 9.2 Desktop app không mở được
-
-**Nguyên nhân:** Port 17532 đã bị chiếm.
-
-**Giải pháp:** App sẽ tự động thử port tiếp theo (17533). Nếu vẫn lỗi, kiểm tra:
-```bash
-netstat -ano | findstr :17532
-```
-
-### 9.3 Admin Dashboard trả về "Không có quyền"
-
-**Nguyên nhân:** Tài khoản chưa có `role: "admin"` trong Firestore.
-
-**Giải pháp:**
-1. Vào Firestore → Collection `users`
-2. Tìm document theo UID
-3. Thêm field: `role` = `"admin"`
-
-### 9.4 Dữ liệu thói quen không đồng bộ
-
-**Nguyên nhân:** Firestore save bị lỗi do rules hoặc mạng.
-
-**Giải pháp:**
-- Kiểm tra kết nối internet
-- Kiểm tra Firestore Rules cho phép user đọc/ghi document của mình
-- Xem Console → Firestore → Rules playground để test
-
-### 9.5 Build .exe thất bại
-
-**Nguyên nhân phổ biến:**
-- Thiếu quyền tạo symbolic link → Chạy `npx electron-builder --win --config.win.signAndEditExecutable=false`
-- Icon format lỗi → Dùng PNG 256x256 thay vì ICO
-
-### 9.6 Deploy ghi đè site khác
-
-**Phòng tránh:** Luôn đảm bảo `firebase.json` có field `"site"` chỉ định đúng hosting site:
-```json
-{
-  "hosting": {
-    "site": "habit-tracker-sonnhai",
-    ...
-  }
-}
-```
-
----
-
-## PHỤ LỤC: LỆNH THƯỜNG DÙNG
-
-```bash
-# === FIREBASE ===
-firebase login                                          # Đăng nhập
-firebase deploy --only hosting --project sonnhai-2600f   # Deploy web
-firebase deploy --only firestore:rules --project sonnhai-2600f  # Deploy rules
-firebase hosting:sites:list --project sonnhai-2600f      # Liệt kê hosting sites
-firebase hosting:sites:create TEN --project sonnhai-2600f # Tạo site mới
-
-# === ELECTRON ===
-cd electron
-npm start            # Chạy dev
-npm run build        # Build installer
-npm run build:all    # Build installer + portable
-
-# === KIỂM TRA ===
-firebase emulators:start    # Chạy emulator local
-```
-
----
-
-*Tài liệu này được tạo tự động và cập nhật theo tiến trình phát triển dự án.*
+*© 2026 Habit Game Tracker by SonnHai. All rights reserved.*

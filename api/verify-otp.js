@@ -1,0 +1,152 @@
+// ============================================================
+// VERIFY OTP API — Vercel Serverless Function
+// Endpoint: POST /api/verify-otp
+// Kiểm tra mã OTP có khớp + chưa hết hạn
+// ============================================================
+
+const admin = require("firebase-admin");
+
+// Initialize Firebase Admin SDK (singleton)
+if (!admin.apps.length) {
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY
+    ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n")
+    : undefined;
+
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: privateKey,
+    }),
+  });
+}
+
+const db = admin.firestore();
+
+module.exports = async function handler(req, res) {
+  // CORS
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "POST") {
+    return res.status(405).json({ success: false, message: "Method not allowed" });
+  }
+
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    return res.status(400).json({
+      success: false,
+      message: "Thiếu email hoặc mã OTP",
+    });
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const normalizedOtp = otp.trim();
+
+  // Validate OTP format (6 digits)
+  if (!/^\d{6}$/.test(normalizedOtp)) {
+    return res.status(400).json({
+      success: false,
+      message: "Mã OTP phải là 6 chữ số",
+    });
+  }
+
+  try {
+    // ===== BRUTE FORCE PROTECTION =====
+    // Max 5 failed attempts per email in 15 minutes
+    const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
+    const failedAttempts = await db
+      .collection("otp_attempts")
+      .where("email", "==", normalizedEmail)
+      .where("success", "==", false)
+      .where("attemptedAt", ">", admin.firestore.Timestamp.fromDate(fifteenMinutesAgo))
+      .get();
+
+    if (failedAttempts.size >= 5) {
+      return res.status(429).json({
+        success: false,
+        message: "Quá nhiều lần thử sai. Vui lòng đợi 15 phút.",
+      });
+    }
+
+    // ===== FIND MATCHING OTP =====
+    const now = new Date();
+    const otpQuery = await db
+      .collection("otp_codes")
+      .where("email", "==", normalizedEmail)
+      .where("otp", "==", normalizedOtp)
+      .where("used", "==", false)
+      .where("verified", "==", false)
+      .orderBy("createdAt", "desc")
+      .limit(1)
+      .get();
+
+    if (otpQuery.empty) {
+      // Log failed attempt
+      await db.collection("otp_attempts").add({
+        email: normalizedEmail,
+        success: false,
+        attemptedAt: admin.firestore.Timestamp.fromDate(now),
+      });
+
+      return res.status(400).json({
+        success: false,
+        message: "Mã OTP không đúng hoặc đã được sử dụng",
+      });
+    }
+
+    const otpDoc = otpQuery.docs[0];
+    const otpData = otpDoc.data();
+
+    // ===== CHECK EXPIRY =====
+    const expiresAt = otpData.expiresAt.toDate();
+    if (now > expiresAt) {
+      // Mark as used so it can't be tried again
+      await otpDoc.ref.update({ used: true });
+
+      // Log failed attempt
+      await db.collection("otp_attempts").add({
+        email: normalizedEmail,
+        success: false,
+        attemptedAt: admin.firestore.Timestamp.fromDate(now),
+      });
+
+      return res.status(400).json({
+        success: false,
+        message: "Mã OTP đã hết hạn. Vui lòng gửi mã mới.",
+        expired: true,
+      });
+    }
+
+    // ===== SUCCESS: Mark OTP as verified & used =====
+    await otpDoc.ref.update({
+      verified: true,
+      used: true,
+      verifiedAt: admin.firestore.Timestamp.fromDate(now),
+    });
+
+    // Log successful attempt
+    await db.collection("otp_attempts").add({
+      email: normalizedEmail,
+      success: true,
+      attemptedAt: admin.firestore.Timestamp.fromDate(now),
+    });
+
+    console.log(`OTP verified for ${normalizedEmail}`);
+
+    return res.json({
+      success: true,
+      message: "Xác minh thành công!",
+      verified: true,
+    });
+  } catch (err) {
+    console.error("Verify OTP error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Lỗi xác minh. Vui lòng thử lại.",
+    });
+  }
+};

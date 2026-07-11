@@ -1,6 +1,6 @@
 {
-  "name": "Habit Game Tracker",
-  "short_name": "Habit Game",
+  "name": "Habit Mastery",
+  "short_name": "Habit Mastery",
   "description": "Theo dõi thói quen hàng ngày, xây dựng kỷ luật, đạt mục tiêu",
   "start_url": "/auth.html",
   "scope": "/",

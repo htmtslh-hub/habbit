@@ -1,6 +1,6 @@
 {
   "name": "habit-tracker-functions",
-  "description": "SePay webhook handler for Habit Tracker",
+  "description": "SePay webhook handler for Habit Mastery",
   "engines": {
     "node": "18"
   },

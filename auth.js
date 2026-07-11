@@ -4,13 +4,19 @@
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// ===== API BASE URL =====
+const API_BASE = '/api';
+
+// Flag to prevent redirect during OTP credential-check
+let _otpInProgress = false;
+
 // ===== CREATE USER PROFILE =====
 async function createUserProfile(user, isNewUser){
     const userRef = db.collection('users').doc(user.uid);
     const doc = await userRef.get();
     if(!doc.exists || isNewUser){
         const now = new Date();
-        const trialEnd = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days
+        const trialEnd = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
         const profileData = {
             email: user.email || '',
             displayName: user.displayName || '',
@@ -26,13 +32,11 @@ async function createUserProfile(user, isNewUser){
             disabled: false,
         };
         if(doc.exists){
-            // Existing user - only update lastLoginAt and missing fields
             await userRef.set(profileData, {merge: true});
         } else {
             await userRef.set(profileData);
         }
     } else {
-        // Existing user - update last login and profile info
         await userRef.update({
             lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
             email: user.email || doc.data().email || '',
@@ -72,7 +76,6 @@ function initParticles(){
             ctx.fillStyle = `rgba(0, 245, 160, ${p.alpha})`;
             ctx.fill();
         });
-        // Draw connections
         for(let i = 0; i < particles.length; i++){
             for(let j = i+1; j < particles.length; j++){
                 const dx = particles[i].x - particles[j].x;
@@ -103,16 +106,20 @@ function initTabs(){
     tabLogin.onclick = () => {
         tabLogin.classList.add('active');
         tabRegister.classList.remove('active');
-        loginForm.style.display = 'flex';
+        loginForm.style.display = '';
         registerForm.style.display = 'none';
         hideMessages();
+        resetLoginOtp();
+        resetRegOtp();
     };
     tabRegister.onclick = () => {
         tabRegister.classList.add('active');
         tabLogin.classList.remove('active');
-        registerForm.style.display = 'flex';
+        registerForm.style.display = '';
         loginForm.style.display = 'none';
         hideMessages();
+        resetLoginOtp();
+        resetRegOtp();
     };
 }
 
@@ -149,15 +156,16 @@ function hideMessages(){
 }
 
 function setLoading(btn, loading){
+    if(!btn) return;
     const text = btn.querySelector('.btn-text');
     const load = btn.querySelector('.btn-loading');
     if(loading){
-        text.style.display = 'none';
-        load.style.display = 'inline';
+        if(text) text.style.display = 'none';
+        if(load) load.style.display = 'inline';
         btn.disabled = true;
     } else {
-        text.style.display = 'inline';
-        load.style.display = 'none';
+        if(text) text.style.display = 'inline';
+        if(load) load.style.display = 'none';
         btn.disabled = false;
     }
 }
@@ -177,66 +185,551 @@ function translateFirebaseError(code){
     return map[code] || 'Đã xảy ra lỗi. Vui lòng thử lại.';
 }
 
-// ===== EMAIL/PASSWORD LOGIN =====
-function initLogin(){
-    document.getElementById('loginForm').onsubmit = async (e) => {
-        e.preventDefault();
-        hideMessages();
-        const email = document.getElementById('loginEmail').value.trim();
-        const pass = document.getElementById('loginPassword').value;
-        const btn = document.getElementById('btnLogin');
-        setLoading(btn, true);
-        try {
-            const cred = await auth.signInWithEmailAndPassword(email, pass);
-            await createUserProfile(cred.user, false);
-            showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
-            setTimeout(() => { window.location.href = 'index.html'; }, 800);
-        } catch(err) {
-            showError(translateFirebaseError(err.code));
-            setLoading(btn, false);
+// =======================================================================
+// ===== SHARED OTP UTILITIES =====
+// Reusable functions for both login and register OTP flows
+// =======================================================================
+
+function setupOtpBoxes(containerSelector, verifyBtnId){
+    const boxes = document.querySelectorAll(containerSelector);
+    boxes.forEach((box, idx) => {
+        box.oninput = (e) => {
+            const val = e.target.value.replace(/\D/g, '');
+            e.target.value = val;
+            if(val){
+                box.classList.add('filled');
+                box.classList.remove('error');
+                const nextBox = document.querySelector(`${containerSelector}[data-index="${idx + 1}"]`);
+                if(nextBox) nextBox.focus();
+            } else {
+                box.classList.remove('filled');
+            }
+        };
+        box.onkeydown = (e) => {
+            if(e.key === 'Backspace' && !box.value){
+                const prevBox = document.querySelector(`${containerSelector}[data-index="${idx - 1}"]`);
+                if(prevBox){
+                    prevBox.focus();
+                    prevBox.value = '';
+                    prevBox.classList.remove('filled');
+                }
+            }
+            if(e.key === 'Enter'){
+                const btn = document.getElementById(verifyBtnId);
+                if(btn) btn.click();
+            }
+        };
+        box.onpaste = (e) => {
+            e.preventDefault();
+            const pasted = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6);
+            if(pasted.length === 6){
+                pasted.split('').forEach((digit, i) => {
+                    const b = document.querySelector(`${containerSelector}[data-index="${i}"]`);
+                    if(b){ b.value = digit; b.classList.add('filled'); }
+                });
+                const lastBox = document.querySelector(`${containerSelector}[data-index="5"]`);
+                if(lastBox) lastBox.focus();
+            }
+        };
+        box.onfocus = () => box.select();
+    });
+}
+
+function getOtpValue(containerSelector){
+    let otp = '';
+    document.querySelectorAll(containerSelector).forEach(b => { otp += b.value; });
+    return otp;
+}
+
+function clearOtpBoxes(containerSelector){
+    document.querySelectorAll(containerSelector).forEach(b => {
+        b.value = '';
+        b.classList.remove('filled','error','success');
+    });
+}
+
+function shakeOtpBoxes(containerSelector){
+    document.querySelectorAll(containerSelector).forEach(b => {
+        b.classList.add('error');
+        setTimeout(() => b.classList.remove('error'), 600);
+    });
+}
+
+function successOtpBoxes(containerSelector){
+    document.querySelectorAll(containerSelector).forEach(b => {
+        b.classList.add('success');
+    });
+}
+
+// Send OTP API call
+async function sendOtpApi(email){
+    const resp = await fetch(`${API_BASE}/send-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+    });
+    return await resp.json();
+}
+
+// Verify OTP API call
+async function verifyOtpApi(email, otp){
+    const resp = await fetch(`${API_BASE}/verify-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp }),
+    });
+    const data = await resp.json();
+    data._ok = resp.ok;
+    return data;
+}
+
+// Expiry timer manager
+function createExpiryTimer(countdownElId, timerElId){
+    let timerId = null;
+    return {
+        start(){
+            this.stop();
+            let remaining = 5 * 60;
+            const cdEl = document.getElementById(countdownElId);
+            const timerEl = document.getElementById(timerElId);
+            if(timerEl) timerEl.classList.remove('expired');
+
+            const tick = () => {
+                const min = Math.floor(remaining / 60);
+                const sec = remaining % 60;
+                if(cdEl) cdEl.textContent = `${min}:${String(sec).padStart(2,'0')}`;
+                if(remaining <= 0){
+                    clearInterval(timerId); timerId = null;
+                    if(cdEl) cdEl.textContent = 'Hết hạn';
+                    if(timerEl) timerEl.classList.add('expired');
+                    showError('Mã OTP đã hết hạn. Vui lòng gửi mã mới.');
+                }
+                remaining--;
+            };
+            tick();
+            timerId = setInterval(tick, 1000);
+        },
+        stop(){
+            if(timerId){ clearInterval(timerId); timerId = null; }
         }
     };
 }
 
-// ===== EMAIL/PASSWORD REGISTER =====
+// Resend cooldown manager
+function createResendCooldown(btnId, countdownSpanId){
+    let timerId = null;
+    return {
+        start(){
+            this.stop();
+            let cooldown = 60;
+            const btn = document.getElementById(btnId);
+            if(!btn) return;
+            btn.disabled = true;
+            btn.classList.remove('ready');
+            btn.innerHTML = `Gửi lại (<span id="${countdownSpanId}">${cooldown}</span>s)`;
+
+            const tick = () => {
+                cooldown--;
+                const cd = document.getElementById(countdownSpanId);
+                if(cd) cd.textContent = cooldown;
+                if(cooldown <= 0){
+                    clearInterval(timerId); timerId = null;
+                    btn.disabled = false;
+                    btn.classList.add('ready');
+                    btn.textContent = '🔄 Gửi lại mã';
+                }
+            };
+            timerId = setInterval(tick, 1000);
+        },
+        stop(){
+            if(timerId){ clearInterval(timerId); timerId = null; }
+        }
+    };
+}
+
+// =======================================================================
+// ===== LOGIN FLOW (Email/Password + OTP) =====
+// Step 1: Enter email+password → verify credentials → send OTP
+// Step 2: Enter OTP → verify → complete login
+// =======================================================================
+
+let _loginExpiry = createExpiryTimer('loginOtpCountdown', 'loginOtpTimer');
+let _loginResend = createResendCooldown('btnResendLoginOtp', 'loginResendCountdown');
+let _pendingLogin = null; // {email, password}
+
+function resetLoginOtp(){
+    const step1 = document.getElementById('loginStep1');
+    const step2 = document.getElementById('loginStep2');
+    if(step1) step1.style.display = '';
+    if(step2) step2.style.display = 'none';
+    _loginExpiry.stop();
+    _loginResend.stop();
+    clearOtpBoxes('.login-otp-box');
+    _pendingLogin = null;
+}
+
+function initLogin(){
+    const btnLogin = document.getElementById('btnLogin');
+    const btnVerify = document.getElementById('btnVerifyLoginOtp');
+    const btnResend = document.getElementById('btnResendLoginOtp');
+    const btnBack = document.getElementById('btnBackToLogin');
+
+    // Step 1: Verify email+password THEN send OTP
+    btnLogin.onclick = async () => {
+        hideMessages();
+        const email = document.getElementById('loginEmail').value.trim();
+        const pass = document.getElementById('loginPassword').value;
+
+        if(!email || !pass){
+            showError('Vui lòng nhập email và mật khẩu');
+            return;
+        }
+
+        setLoading(btnLogin, true);
+        try {
+            // Set persistence based on "Remember me" checkbox
+            const rememberMe = document.getElementById('rememberMe');
+            const persistence = (rememberMe && rememberMe.checked)
+                ? firebase.auth.Auth.Persistence.LOCAL
+                : firebase.auth.Auth.Persistence.SESSION;
+            await auth.setPersistence(persistence);
+
+            // First verify credentials are correct by signing in
+            _otpInProgress = true;
+            const cred = await auth.signInWithEmailAndPassword(email, pass);
+            // Credentials valid! Sign out immediately (we need OTP first)
+            await auth.signOut();
+            _otpInProgress = false;
+
+            // Store credentials for after OTP
+            _pendingLogin = { email, password: pass };
+
+            // Send OTP
+            const otpResult = await sendOtpApi(email);
+            if(!otpResult.success){
+                showError(otpResult.message || 'Không thể gửi mã OTP');
+                setLoading(btnLogin, false);
+                return;
+            }
+
+            // Go to OTP step
+            showSuccess('✅ Mã xác thực đã gửi đến ' + email);
+            document.getElementById('loginStep1').style.display = 'none';
+            document.getElementById('loginStep2').style.display = '';
+            document.getElementById('loginOtpEmailDisplay').textContent = email;
+            clearOtpBoxes('.login-otp-box');
+            setTimeout(() => {
+                const first = document.querySelector('.login-otp-box[data-index="0"]');
+                if(first) first.focus();
+            }, 300);
+            _loginExpiry.start();
+            _loginResend.start();
+            setLoading(btnLogin, false);
+
+        } catch(err) {
+            _otpInProgress = false;
+            showError(translateFirebaseError(err.code));
+            setLoading(btnLogin, false);
+        }
+    };
+
+    // Step 2: Verify OTP → complete login
+    btnVerify.onclick = async () => {
+        hideMessages();
+        if(!_pendingLogin) return;
+
+        const otp = getOtpValue('.login-otp-box');
+        if(otp.length !== 6){
+            showError('Vui lòng nhập đủ 6 số');
+            shakeOtpBoxes('.login-otp-box');
+            return;
+        }
+
+        setLoading(btnVerify, true);
+        try {
+            const result = await verifyOtpApi(_pendingLogin.email, otp);
+            if(!result._ok || !result.success){
+                showError(result.message || 'Mã OTP không đúng');
+                shakeOtpBoxes('.login-otp-box');
+                setLoading(btnVerify, false);
+                return;
+            }
+
+            // OTP verified! Now actually sign in
+            successOtpBoxes('.login-otp-box');
+            showSuccess('✅ Xác thực thành công! Đang đăng nhập...');
+
+            const cred = await auth.signInWithEmailAndPassword(_pendingLogin.email, _pendingLogin.password);
+            await createUserProfile(cred.user, false);
+
+            _loginExpiry.stop();
+            _loginResend.stop();
+            setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+
+        } catch(err) {
+            showError(err.code ? translateFirebaseError(err.code) : (err.message || 'Lỗi xác thực'));
+            setLoading(btnVerify, false);
+        }
+    };
+
+    // Resend OTP
+    btnResend.onclick = async () => {
+        if(!_pendingLogin) return;
+        hideMessages();
+        btnResend.disabled = true;
+        try {
+            const result = await sendOtpApi(_pendingLogin.email);
+            if(result.success){
+                showSuccess('✅ Mã mới đã gửi đến ' + _pendingLogin.email);
+                clearOtpBoxes('.login-otp-box');
+                _loginExpiry.start();
+            } else {
+                showError(result.message || 'Không thể gửi lại mã');
+            }
+        } catch(err){
+            showError('Lỗi kết nối. Vui lòng thử lại.');
+        }
+        _loginResend.start();
+    };
+
+    // Back button
+    btnBack.onclick = () => {
+        hideMessages();
+        resetLoginOtp();
+    };
+
+    // Setup OTP input boxes for login
+    setupOtpBoxes('.login-otp-box', 'btnVerifyLoginOtp');
+}
+
+// =======================================================================
+// ===== REGISTER FLOW (Info + OTP) =====
+// Step 1: Enter info → send OTP
+// Step 2: Enter OTP → verify → create account
+// =======================================================================
+
+let _regExpiry = createExpiryTimer('otpCountdown', 'otpTimer');
+let _regResend = createResendCooldown('btnResendOtp', 'resendCountdown');
+let _pendingReg = null; // {name, email, password}
+
+function resetRegOtp(){
+    const step1 = document.getElementById('regStep1');
+    const step2 = document.getElementById('regStep2');
+    if(step1) step1.style.display = '';
+    if(step2) step2.style.display = 'none';
+    _regExpiry.stop();
+    _regResend.stop();
+    clearOtpBoxes('#registerForm .otp-box');
+    _pendingReg = null;
+}
+
 function initRegister(){
-    document.getElementById('registerForm').onsubmit = async (e) => {
-        e.preventDefault();
+    const btnSendOtp = document.getElementById('btnSendOtp');
+    const btnVerifyOtp = document.getElementById('btnVerifyOtp');
+    const btnResendOtp = document.getElementById('btnResendOtp');
+    const btnBack = document.getElementById('btnBackToReg');
+
+    // Step 1: Validate info → send OTP
+    btnSendOtp.onclick = async () => {
         hideMessages();
         const name = document.getElementById('regName').value.trim();
         const email = document.getElementById('regEmail').value.trim();
         const pass = document.getElementById('regPassword').value;
         const confirm = document.getElementById('regConfirm').value;
-        const btn = document.getElementById('btnRegister');
 
-        if(pass !== confirm){
-            showError('Mật khẩu xác nhận không khớp');
-            return;
-        }
-        if(pass.length < 6){
-            showError('Mật khẩu phải có ít nhất 6 ký tự');
-            return;
-        }
+        if(!name){ showError('Vui lòng nhập họ và tên'); return; }
+        if(!email){ showError('Vui lòng nhập email'); return; }
+        if(pass.length < 6){ showError('Mật khẩu phải có ít nhất 6 ký tự'); return; }
+        if(pass !== confirm){ showError('Mật khẩu xác nhận không khớp'); return; }
 
-        setLoading(btn, true);
+        _pendingReg = { name, email, password: pass };
+
+        setLoading(btnSendOtp, true);
         try {
-            const cred = await auth.createUserWithEmailAndPassword(email, pass);
-            await cred.user.updateProfile({ displayName: name });
-            await createUserProfile(cred.user, true);
-            showSuccess('Tạo tài khoản thành công! Đang chuyển hướng...');
-            setTimeout(() => { window.location.href = 'index.html'; }, 800);
-        } catch(err) {
-            showError(translateFirebaseError(err.code));
-            setLoading(btn, false);
+            const result = await sendOtpApi(email);
+            if(!result.success){
+                showError(result.message || 'Không thể gửi mã OTP');
+                setLoading(btnSendOtp, false);
+                return;
+            }
+
+            showSuccess('✅ Mã OTP đã gửi đến ' + email);
+            document.getElementById('regStep1').style.display = 'none';
+            document.getElementById('regStep2').style.display = '';
+            document.getElementById('otpEmailDisplay').textContent = email;
+            clearOtpBoxes('#registerForm .otp-box');
+            setTimeout(() => {
+                const first = document.querySelector('#registerForm .otp-box[data-index="0"]');
+                if(first) first.focus();
+            }, 300);
+            _regExpiry.start();
+            _regResend.start();
+            setLoading(btnSendOtp, false);
+
+        } catch(err){
+            showError('Lỗi kết nối. Vui lòng thử lại.');
+            setLoading(btnSendOtp, false);
         }
     };
+
+    // Step 2: Verify OTP → create account
+    btnVerifyOtp.onclick = async () => {
+        hideMessages();
+        if(!_pendingReg) return;
+
+        const otp = getOtpValue('#registerForm .otp-box');
+        if(otp.length !== 6){
+            showError('Vui lòng nhập đủ 6 số');
+            shakeOtpBoxes('#registerForm .otp-box');
+            return;
+        }
+
+        setLoading(btnVerifyOtp, true);
+        try {
+            const result = await verifyOtpApi(_pendingReg.email, otp);
+            if(!result._ok || !result.success){
+                showError(result.message || 'Mã OTP không đúng');
+                shakeOtpBoxes('#registerForm .otp-box');
+                setLoading(btnVerifyOtp, false);
+                return;
+            }
+
+            successOtpBoxes('#registerForm .otp-box');
+            showSuccess('✅ Xác minh thành công! Đang tạo tài khoản...');
+
+            const cred = await auth.createUserWithEmailAndPassword(_pendingReg.email, _pendingReg.password);
+            await cred.user.updateProfile({ displayName: _pendingReg.name });
+            await createUserProfile(cred.user, true);
+
+            _regExpiry.stop();
+            _regResend.stop();
+            setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+
+        } catch(err){
+            if(err.code){
+                showError(translateFirebaseError(err.code));
+            } else {
+                showError(err.message || 'Đã xảy ra lỗi. Vui lòng thử lại.');
+            }
+            setLoading(btnVerifyOtp, false);
+        }
+    };
+
+    // Resend OTP
+    btnResendOtp.onclick = async () => {
+        if(!_pendingReg) return;
+        hideMessages();
+        btnResendOtp.disabled = true;
+        try {
+            const result = await sendOtpApi(_pendingReg.email);
+            if(result.success){
+                showSuccess('✅ Mã mới đã gửi đến ' + _pendingReg.email);
+                clearOtpBoxes('#registerForm .otp-box');
+                _regExpiry.start();
+            } else {
+                showError(result.message || 'Không thể gửi lại mã');
+            }
+        } catch(err){
+            showError('Lỗi kết nối. Vui lòng thử lại.');
+        }
+        _regResend.start();
+    };
+
+    // Back button
+    btnBack.onclick = () => {
+        hideMessages();
+        resetRegOtp();
+    };
+
+    // Setup OTP input boxes for register
+    setupOtpBoxes('#registerForm .otp-box', 'btnVerifyOtp');
 }
 
 // ===== GOOGLE SIGN-IN =====
+function isElectron(){
+    return !!(window.electronAPI && window.electronAPI.isElectron);
+}
+
+// Helper functions for showing/hiding containers during Electron external OAuth
+function showElectronWaiting() {
+    const tabs = document.querySelector('.auth-tabs');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const divider = document.querySelector('.auth-divider');
+    const btnGoogle = document.getElementById('btnGoogle');
+    const waitingContainer = document.getElementById('electronWaitingContainer');
+    
+    if (tabs) tabs.style.display = 'none';
+    if (loginForm) loginForm.style.display = 'none';
+    if (registerForm) registerForm.style.display = 'none';
+    if (divider) divider.style.display = 'none';
+    if (btnGoogle) btnGoogle.style.display = 'none';
+    if (waitingContainer) waitingContainer.style.display = '';
+}
+
+function resetFromWaiting() {
+    const tabs = document.querySelector('.auth-tabs');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const divider = document.querySelector('.auth-divider');
+    const btnGoogle = document.getElementById('btnGoogle');
+    const waitingContainer = document.getElementById('electronWaitingContainer');
+    
+    if (tabs) tabs.style.display = '';
+    if (divider) divider.style.display = '';
+    if (btnGoogle) btnGoogle.style.display = '';
+    if (waitingContainer) waitingContainer.style.display = 'none';
+    
+    // Determine which form to show based on active tab
+    const tabLogin = document.getElementById('tabLogin');
+    if (tabLogin && tabLogin.classList.contains('active')) {
+        if (loginForm) loginForm.style.display = '';
+        if (registerForm) registerForm.style.display = 'none';
+    } else {
+        if (loginForm) loginForm.style.display = 'none';
+        if (registerForm) registerForm.style.display = '';
+    }
+}
+
 function initGoogle(){
-    document.getElementById('btnGoogle').onclick = async () => {
+    const btnGoogle = document.getElementById('btnGoogle');
+    if (!btnGoogle) return;
+
+    btnGoogle.onclick = async () => {
         hideMessages();
         const provider = new firebase.auth.GoogleAuthProvider();
+
+        if (isElectron()) {
+            showElectronWaiting();
+            const port = window.location.port || '17532';
+            const webAuthUrl = `https://habitmastery.web.app/auth.html?mode=desktop&port=${port}`;
+            
+            if (window.electronAPI && window.electronAPI.openExternal) {
+                window.electronAPI.openExternal(webAuthUrl);
+            } else {
+                showError('Không thể mở trình duyệt hệ thống.');
+                resetFromWaiting();
+                return;
+            }
+            
+            if (window.electronAPI && window.electronAPI.onGoogleAuthCallback) {
+                window.electronAPI.onGoogleAuthCallback(async (data) => {
+                    const { idToken, accessToken } = data;
+                    showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
+                    try {
+                        const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
+                        const result = await auth.signInWithCredential(credential);
+                        await createUserProfile(result.user, result.additionalUserInfo?.isNewUser || false);
+                    } catch (err) {
+                        showError(translateFirebaseError(err.code) || err.message);
+                        resetFromWaiting();
+                    }
+                });
+            }
+            return;
+        }
+
+        // Web: use popup normally
         try {
             const result = await auth.signInWithPopup(provider);
             const isNew = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
@@ -249,13 +742,92 @@ function initGoogle(){
             }
         }
     };
+
+    const btnCancelExternalLogin = document.getElementById('btnCancelExternalLogin');
+    if (btnCancelExternalLogin) {
+        btnCancelExternalLogin.onclick = () => {
+            hideMessages();
+            resetFromWaiting();
+        };
+    }
+}
+
+// ===== DESKTOP GATEWAY FOR SYSTEM BROWSER =====
+function initDesktopGateway() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+    const port = urlParams.get('port');
+    
+    if (mode === 'desktop') {
+        const tabs = document.querySelector('.auth-tabs');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const divider = document.querySelector('.auth-divider');
+        const btnGoogle = document.getElementById('btnGoogle');
+        const externalGoogleContainer = document.getElementById('externalGoogleContainer');
+        
+        if (tabs) tabs.style.display = 'none';
+        if (loginForm) loginForm.style.display = 'none';
+        if (registerForm) registerForm.style.display = 'none';
+        if (divider) divider.style.display = 'none';
+        if (btnGoogle) btnGoogle.style.display = 'none';
+        if (externalGoogleContainer) externalGoogleContainer.style.display = '';
+        
+        const btnGoogleExternal = document.getElementById('btnGoogleExternal');
+        const externalStatus = document.getElementById('externalStatus');
+        
+        if (btnGoogleExternal) {
+            btnGoogleExternal.onclick = async () => {
+                setLoading(btnGoogleExternal, true);
+                if (externalStatus) externalStatus.textContent = 'Đang mở cửa sổ đăng nhập Google...';
+                
+                try {
+                    const provider = new firebase.auth.GoogleAuthProvider();
+                    const result = await auth.signInWithPopup(provider);
+                    const credential = result.credential;
+                    if (!credential) {
+                        throw new Error('Không nhận được thông tin xác thực từ Google.');
+                    }
+                    const idToken = credential.idToken;
+                    const accessToken = credential.accessToken;
+                    
+                    if (externalStatus) externalStatus.textContent = 'Đang chuyển thông tin đăng nhập về ứng dụng máy tính...';
+                    
+                    const response = await fetch(`http://127.0.0.1:${port}/api/google-callback?idToken=${encodeURIComponent(idToken)}&accessToken=${encodeURIComponent(accessToken)}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        setLoading(btnGoogleExternal, false);
+                        btnGoogleExternal.disabled = true;
+                        btnGoogleExternal.style.background = 'var(--success)';
+                        btnGoogleExternal.innerHTML = '✓ Đăng nhập thành công';
+                        if (externalStatus) {
+                            externalStatus.innerHTML = '<span style="color: var(--accent); font-weight: 600; font-size: 1.1rem;">Đăng nhập thành công!</span><br>Bạn có thể đóng trình duyệt này và quay lại ứng dụng Habit Mastery.';
+                        }
+                    } else {
+                        throw new Error(data.error || 'Lỗi từ ứng dụng desktop');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    setLoading(btnGoogleExternal, false);
+                    if (externalStatus) {
+                        externalStatus.innerHTML = `<span style="color: var(--error);">Lỗi: ${translateFirebaseError(err.code) || err.message}</span>`;
+                    }
+                }
+            };
+        }
+    }
 }
 
 // ===== AUTH STATE CHECK =====
 function checkAuth(){
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+    if (mode === 'desktop') {
+        return;
+    }
     auth.onAuthStateChanged(user => {
-        if(user){
-            // Already logged in, redirect to app
+        if(user && !_otpInProgress){
             window.location.href = 'index.html';
         }
     });
@@ -269,6 +841,7 @@ function init(){
     initLogin();
     initRegister();
     initGoogle();
+    initDesktopGateway();
     checkAuth();
 }
 

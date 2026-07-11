@@ -6,7 +6,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "site": "habit-tracker-sonnhai",
+    "site": "habitmastery",
     "public": "./",
     "ignore": [
       "firebase.json",
@@ -42,7 +42,7 @@
     "providers": {
       "emailPassword": true,
       "googleSignIn": {
-        "oAuthBrandDisplayName": "Habit Tracker",
+        "oAuthBrandDisplayName": "Habit Mastery",
         "supportEmail": "htmt.slh@gmail.com"
       }
     }

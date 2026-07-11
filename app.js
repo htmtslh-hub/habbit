@@ -48,7 +48,7 @@ const I18N = {
         dayMon:'一',dayWed:'三',dayFri:'五',
     },
     en: {
-        title:'HABIT TRACKER',calSettings:'CALENDAR SETTINGS',year:'Year',month:'Month',
+        title:'HABIT MASTERY',calSettings:'CALENDAR SETTINGS',year:'Year',month:'Month',
         overallStats:'Overall Stats',completed:'Completed',left:'Left',myHabits:'My Habits',
         target:'Target',actual:'Actual',leftCol:'Left',progress:'Progress',
         top10:'TOP 10 HABITS',mood:'Mood',hoursOfSleep:'Hours of Sleep',hrs:'hrs',
@@ -344,7 +344,7 @@ function openUpgradeModal(){
                 <div class="upgrade-header">
                     <span class="upgrade-crown">👑</span>
                     <h2>Nâng cấp Premium</h2>
-                    <p>Mở khóa toàn bộ tính năng Habit Game</p>
+                    <p>Mở khóa toàn bộ tính năng Habit Mastery</p>
                 </div>
 
                 <!-- Step indicators -->

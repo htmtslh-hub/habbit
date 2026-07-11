@@ -73,8 +73,8 @@ exports.sepayWebhook = functions.https.onRequest(async (req, res) => {
   const match = content.match(/HBT\d{10,}/i);
   if (!match) {
     console.warn("No order number found in content:", content);
-    // Không phải giao dịch của Habit Tracker, bỏ qua
-    return res.json({ success: true, message: "Not a Habit Tracker payment, ignored" });
+    // Không phải giao dịch của Habit Mastery, bỏ qua
+    return res.json({ success: true, message: "Not a Habit Mastery payment, ignored" });
   }
 
   const orderNumber = match[0].toUpperCase();

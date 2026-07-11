@@ -1,10 +1,10 @@
-const { app, BrowserWindow, Menu, Tray, shell, dialog, nativeImage } = require('electron');
+const { app, BrowserWindow, Menu, Tray, shell, dialog, nativeImage, ipcMain } = require('electron');
 const path = require('path');
 const http = require('http');
 const fs = require('fs');
 
 // ===== CONSTANTS =====
-const APP_NAME = 'Habit Game Tracker';
+const APP_NAME = 'Habit Mastery';
 const IS_DEV = !app.isPackaged;
 const WEB_DIR = IS_DEV
     ? path.join(__dirname, '..')   // Dev: web files are in parent directory
@@ -55,6 +55,35 @@ function startLocalServer() {
             // Parse URL (remove query strings)
             let reqPath = decodeURIComponent(req.url.split('?')[0]);
             
+            // Intercept Google OAuth Callback
+            if (reqPath === '/api/google-callback') {
+                const urlObj = new URL(req.url, `http://${req.headers.host}`);
+                const idToken = urlObj.searchParams.get('idToken');
+                const accessToken = urlObj.searchParams.get('accessToken');
+
+                res.writeHead(200, {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type',
+                });
+
+                if (req.method === 'OPTIONS') {
+                    res.end();
+                    return;
+                }
+
+                if (idToken) {
+                    if (mainWindow) {
+                        mainWindow.webContents.send('google-auth-callback', { idToken, accessToken });
+                    }
+                    res.end(JSON.stringify({ success: true }));
+                } else {
+                    res.end(JSON.stringify({ success: false, error: 'Missing tokens' }));
+                }
+                return;
+            }
+
             // Default to index.html
             if (reqPath === '/') reqPath = '/index.html';
 
@@ -271,12 +300,12 @@ function createMenu() {
             label: 'Help',
             submenu: [
                 {
-                    label: 'Về Habit Game Tracker',
+                    label: 'Về Habit Mastery',
                     click: () => {
                         dialog.showMessageBox(mainWindow, {
                             type: 'info',
-                            title: 'Habit Game Tracker',
-                            message: 'Habit Game Tracker v1.0.0',
+                            title: 'Habit Mastery',
+                            message: 'Habit Mastery v1.0.0',
                             detail: 'Ứng dụng theo dõi thói quen hàng ngày.\n\n© 2026 SonnHai.\nPowered by Electron + Firebase.',
                         });
                     }
@@ -305,7 +334,7 @@ function createTray() {
 
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: 'Mở Habit Game Tracker',
+            label: 'Mở Habit Mastery',
             click: () => {
                 if (mainWindow) {
                     mainWindow.show();
@@ -332,6 +361,11 @@ function createTray() {
         }
     });
 }
+
+// ===== IPC HANDLERS =====
+ipcMain.on('open-external', (event, url) => {
+    shell.openExternal(url);
+});
 
 // ===== APP LIFECYCLE =====
 app.whenReady().then(async () => {
