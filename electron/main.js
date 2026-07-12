@@ -6,19 +6,18 @@ const fs = require('fs');
 // ===== CONSTANTS =====
 const APP_NAME = 'Habit Mastery';
 const IS_DEV = !app.isPackaged;
-const WEB_DIR = IS_DEV
-    ? path.join(__dirname, '..')   // Dev: web files are in parent directory
-    : path.join(path.dirname(app.getPath('exe')), 'web'); // Packaged: web files in /web/ folder
 const LOCAL_PORT = 17532; // Random high port for local server
 
 let mainWindow = null;
 let tray = null;
 let localServer = null;
+let WEB_DIR = '';
+const activeSockets = new Set();
 
 // ===== SINGLE INSTANCE LOCK =====
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
-    app.quit();
+    app.exit(0); // Exit immediately to prevent executing startLocalServer or killing the first instance
 } else {
     app.on('second-instance', () => {
         if (mainWindow) {
@@ -27,6 +26,47 @@ if (!gotTheLock) {
             mainWindow.focus();
         }
     });
+}
+
+// Helper to find web folder path across different packaging types (Installer vs Portable vs Dev)
+function getWebDir() {
+    console.log('Resolving web directory...');
+    if (IS_DEV) {
+        const devPath = path.join(__dirname, '..');
+        console.log(`Development mode: using ${devPath}`);
+        return devPath;
+    }
+    
+    // 1. Resources folder (for extraResources in both NSIS and Portable)
+    if (process.resourcesPath) {
+        const pathResources = path.join(process.resourcesPath, 'web');
+        console.log(`Checking resources path: ${pathResources}`);
+        if (fs.existsSync(pathResources)) {
+            console.log(`Found web dir at resources: ${pathResources}`);
+            return pathResources;
+        }
+    }
+    
+    // 2. Executable folder (fallback/legacy extraFiles)
+    const exeDir = path.dirname(app.getPath('exe'));
+    const pathExe = path.join(exeDir, 'web');
+    console.log(`Checking exe path: ${pathExe}`);
+    if (fs.existsSync(pathExe)) {
+        console.log(`Found web dir at exe: ${pathExe}`);
+        return pathExe;
+    }
+    
+    // 3. Relative to app.asar location
+    const pathAsar = path.join(__dirname, '..', '..', 'web');
+    console.log(`Checking app.asar sibling: ${pathAsar}`);
+    if (fs.existsSync(pathAsar)) {
+        console.log(`Found web dir at app.asar sibling: ${pathAsar}`);
+        return pathAsar;
+    }
+    
+    // Default fallback
+    console.warn(`No web directory found! Defaulting to: ${pathExe}`);
+    return pathExe;
 }
 
 // ===== MIME TYPES =====
@@ -49,39 +89,47 @@ const MIME_TYPES = {
     '.mp4': 'video/mp4',
 };
 
-// ===== LOCAL HTTP SERVER =====
-function startLocalServer() {
-    return new Promise((resolve, reject) => {
-        localServer = http.createServer((req, res) => {
-            // Parse URL (remove query strings)
-            let reqPath = decodeURIComponent(req.url.split('?')[0]);
+// Track and record sockets to force close on quit
+function trackConnections(server) {
+    server.on('connection', (socket) => {
+        activeSockets.add(socket);
+        socket.on('close', () => {
+            activeSockets.delete(socket);
+        });
+    });
+}
+
+// ===== LOCAL HTTP SERVER HANDLER =====
+function localServerHandler(req, res) {
+    // Parse URL (remove query strings)
+    let reqPath = decodeURIComponent(req.url.split('?')[0]);
+    
+    // Intercept Google OAuth Callback
+    if (reqPath === '/api/google-callback') {
+        const urlObj = new URL(req.url, `http://${req.headers.host}`);
+        const idToken = urlObj.searchParams.get('idToken');
+        const accessToken = urlObj.searchParams.get('accessToken');
+        const isRedirect = urlObj.searchParams.get('redirect') === '1';
+
+        if (req.method === 'OPTIONS') {
+            res.writeHead(200, {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type',
+            });
+            res.end();
+            return;
+        }
+
+        if (idToken) {
+            if (mainWindow) {
+                mainWindow.webContents.send('google-auth-callback', { idToken, accessToken });
+            }
             
-            // Intercept Google OAuth Callback
-            if (reqPath === '/api/google-callback') {
-                const urlObj = new URL(req.url, `http://${req.headers.host}`);
-                const idToken = urlObj.searchParams.get('idToken');
-                const accessToken = urlObj.searchParams.get('accessToken');
-                const isRedirect = urlObj.searchParams.get('redirect') === '1';
-
-                if (req.method === 'OPTIONS') {
-                    res.writeHead(200, {
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-                        'Access-Control-Allow-Headers': 'Content-Type',
-                    });
-                    res.end();
-                    return;
-                }
-
-                if (idToken) {
-                    if (mainWindow) {
-                        mainWindow.webContents.send('google-auth-callback', { idToken, accessToken });
-                    }
-                    
-                    if (isRedirect) {
-                        // System browser redirected here — show a nice HTML success page
-                        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-                        res.end(`<!DOCTYPE html>
+            if (isRedirect) {
+                // System browser redirected here — show a nice HTML success page
+                res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+                res.end(`<!DOCTYPE html>
 <html><head><title>Habit Mastery - Đăng nhập thành công</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -100,56 +148,61 @@ p{color:#a0a0b0;line-height:1.6;margin-bottom:8px}
 </div>
 <script>setTimeout(()=>window.close(),3000)</script>
 </body></html>`);
-                    } else {
-                        res.writeHead(200, {
-                            'Content-Type': 'application/json',
-                            'Access-Control-Allow-Origin': '*',
-                        });
-                        res.end(JSON.stringify({ success: true }));
-                    }
-                } else {
-                    res.writeHead(400, {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
-                    });
-                    res.end(JSON.stringify({ success: false, error: 'Missing tokens' }));
-                }
-                return;
+            } else {
+                res.writeHead(200, {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                });
+                res.end(JSON.stringify({ success: true }));
             }
+        } else {
+            res.writeHead(400, {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            });
+            res.end(JSON.stringify({ success: false, error: 'Missing tokens' }));
+        }
+        return;
+    }
 
-            // Default to index.html
-            if (reqPath === '/') reqPath = '/index.html';
+    // Default to index.html
+    if (reqPath === '/') reqPath = '/index.html';
 
-            // Resolve file path
-            const filePath = path.join(WEB_DIR, reqPath);
+    // Resolve file path
+    const filePath = path.join(WEB_DIR, reqPath);
 
-            // Security: prevent path traversal
-            const normalizedFull = path.resolve(filePath);
-            const normalizedWeb = path.resolve(WEB_DIR);
-            if (!normalizedFull.startsWith(normalizedWeb)) {
-                res.writeHead(403);
-                res.end('Forbidden');
-                return;
-            }
+    // Security: prevent path traversal
+    const normalizedFull = path.resolve(filePath);
+    const normalizedWeb = path.resolve(WEB_DIR);
+    if (!normalizedFull.startsWith(normalizedWeb)) {
+        res.writeHead(403);
+        res.end('Forbidden');
+        return;
+    }
 
-            // Check if file exists
-            if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
-                // Try with .html extension
-                const htmlPath = filePath + '.html';
-                if (fs.existsSync(htmlPath)) {
-                    serveFile(htmlPath, res);
-                    return;
-                }
-                res.writeHead(404);
-                res.end('Not Found');
-                return;
-            }
+    // Check if file exists
+    if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
+        // Try with .html extension
+        const htmlPath = filePath + '.html';
+        if (fs.existsSync(htmlPath)) {
+            serveFile(htmlPath, res);
+            return;
+        }
+        res.writeHead(404);
+        res.end('Not Found');
+        return;
+    }
 
-            serveFile(filePath, res);
-        });
+    serveFile(filePath, res);
+}
 
-        // Try to kill any zombie process on our port first
-        function tryListen(port, attempt) {
+// ===== LOCAL HTTP SERVER =====
+function startLocalServer() {
+    return new Promise((resolve, reject) => {
+        localServer = http.createServer(localServerHandler);
+        trackConnections(localServer);
+
+        function tryListen(port) {
             localServer.listen(port, '127.0.0.1', () => {
                 console.log(`Local server running at http://127.0.0.1:${port}`);
                 resolve();
@@ -158,7 +211,7 @@ p{color:#a0a0b0;line-height:1.6;margin-bottom:8px}
 
         localServer.on('error', (err) => {
             if (err.code === 'EADDRINUSE') {
-                console.warn(`Port ${LOCAL_PORT} in use, killing old process...`);
+                console.warn(`Port ${LOCAL_PORT} in use, checking and killing zombie process...`);
                 // Try to kill old process on that port
                 const { exec } = require('child_process');
                 exec(`netstat -ano | findstr :${LOCAL_PORT}`, (e, stdout) => {
@@ -166,6 +219,8 @@ p{color:#a0a0b0;line-height:1.6;margin-bottom:8px}
                         const lines = stdout.trim().split('\n');
                         const pids = new Set();
                         lines.forEach(line => {
+                            // Only target listening entries, not established client sockets
+                            if (!line.includes('LISTENING')) return;
                             const parts = line.trim().split(/\s+/);
                             const pid = parts[parts.length - 1];
                             if (pid && pid !== '0' && pid !== String(process.pid)) {
@@ -173,21 +228,22 @@ p{color:#a0a0b0;line-height:1.6;margin-bottom:8px}
                             }
                         });
                         pids.forEach(pid => {
+                            console.log(`Killing zombie process with PID ${pid} listening on port ${LOCAL_PORT}`);
                             try { exec(`taskkill /F /PID ${pid}`); } catch(_) {}
                         });
                     }
                     // Wait a bit then retry
                     setTimeout(() => {
-                        localServer = http.createServer(localServer._events.request || (() => {}));
-                        // Re-create server with same handler
-                        const origServer = localServer;
-                        localServer = http.createServer(origServer._events ? origServer._events.request : undefined);
+                        localServer = http.createServer(localServerHandler);
+                        trackConnections(localServer);
                         localServer.listen(LOCAL_PORT, '127.0.0.1', () => {
                             console.log(`Local server running at http://127.0.0.1:${LOCAL_PORT} (retry)`);
                             resolve();
                         });
                         localServer.on('error', () => {
                             // Last resort: use alternative port
+                            localServer = http.createServer(localServerHandler);
+                            trackConnections(localServer);
                             localServer.listen(LOCAL_PORT + 1, '127.0.0.1', () => {
                                 console.log(`Local server running at http://127.0.0.1:${LOCAL_PORT + 1} (alt port)`);
                                 resolve();
@@ -200,7 +256,7 @@ p{color:#a0a0b0;line-height:1.6;margin-bottom:8px}
             }
         });
 
-        tryListen(LOCAL_PORT, 0);
+        tryListen(LOCAL_PORT);
     });
 }
 
@@ -222,7 +278,9 @@ function serveFile(filePath, res) {
 }
 
 function getServerUrl() {
+    if (!localServer) return `http://127.0.0.1:${LOCAL_PORT}`;
     const address = localServer.address();
+    if (!address) return `http://127.0.0.1:${LOCAL_PORT}`;
     return `http://127.0.0.1:${address.port}`;
 }
 
@@ -436,6 +494,7 @@ ipcMain.on('open-external', (event, url) => {
 
 // ===== APP LIFECYCLE =====
 app.whenReady().then(async () => {
+    WEB_DIR = getWebDir();
     try {
         await startLocalServer();
     } catch (err) {
@@ -463,6 +522,13 @@ app.on('activate', () => {
 
 app.on('before-quit', () => {
     app.isQuitting = true;
+    
+    // Destroy all active sockets to allow server to close immediately
+    for (const socket of activeSockets) {
+        try { socket.destroy(); } catch (_) {}
+    }
+    activeSockets.clear();
+
     // Shutdown local server
     if (localServer) {
         try { localServer.close(); } catch (_) {}

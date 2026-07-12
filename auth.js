@@ -418,7 +418,7 @@ function initLogin(){
             // Go to OTP step
             showSuccess('✅ Mã xác thực đã gửi đến ' + email);
             document.getElementById('loginStep1').style.display = 'none';
-            document.getElementById('loginStep2').style.display = '';
+            document.getElementById('loginStep2').style.display = 'block';
             document.getElementById('loginOtpEmailDisplay').textContent = email;
             clearOtpBoxes('.login-otp-box');
             setTimeout(() => {
@@ -558,7 +558,7 @@ function initRegister(){
 
             showSuccess('✅ Mã OTP đã gửi đến ' + email);
             document.getElementById('regStep1').style.display = 'none';
-            document.getElementById('regStep2').style.display = '';
+            document.getElementById('regStep2').style.display = 'block';
             document.getElementById('otpEmailDisplay').textContent = email;
             clearOtpBoxes('#registerForm .otp-box');
             setTimeout(() => {
@@ -667,7 +667,7 @@ function showElectronWaiting() {
     if (registerForm) registerForm.style.display = 'none';
     if (divider) divider.style.display = 'none';
     if (btnGoogle) btnGoogle.style.display = 'none';
-    if (waitingContainer) waitingContainer.style.display = '';
+    if (waitingContainer) waitingContainer.style.display = 'block';
 }
 
 function resetFromWaiting() {
@@ -819,7 +819,7 @@ function initDesktopGateway() {
         if (registerForm) registerForm.style.display = 'none';
         if (divider) divider.style.display = 'none';
         if (btnGoogle) btnGoogle.style.display = 'none';
-        if (externalGoogleContainer) externalGoogleContainer.style.display = '';
+        if (externalGoogleContainer) externalGoogleContainer.style.display = 'block';
         
         const btnGoogleExternal = document.getElementById('btnGoogleExternal');
         const externalStatus = document.getElementById('externalStatus');

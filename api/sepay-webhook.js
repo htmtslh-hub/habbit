@@ -5,6 +5,7 @@
 // ============================================================
 
 const admin = require("firebase-admin");
+const crypto = require("crypto");
 
 // Initialize Firebase Admin SDK (chỉ khởi tạo 1 lần)
 if (!admin.apps.length) {
@@ -23,13 +24,27 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
+// Helper to buffer the request body stream
+async function getRawBody(req) {
+  return new Promise((resolve, reject) => {
+    let body = [];
+    req.on("data", (chunk) => {
+      body.push(chunk);
+    });
+    req.on("end", () => {
+      resolve(Buffer.concat(body));
+    });
+    req.on("error", reject);
+  });
+}
+
 module.exports = async function handler(req, res) {
   // CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, x-api-key"
+    "Content-Type, Authorization, x-api-key, x-sepay-signature, x-sepay-timestamp"
   );
 
   if (req.method === "OPTIONS") {
@@ -40,19 +55,84 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
-  // 1. Verify SePay API Key
+  // 1. Verify SePay Authentication
   const sepayKey = process.env.SEPAY_API_KEY;
-  const incomingKey =
-    req.headers["authorization"]?.replace("Bearer ", "") ||
-    req.headers["x-api-key"] ||
-    req.query.api_key;
-
   if (!sepayKey) {
     console.error("SEPAY_API_KEY not configured!");
     return res.status(500).json({ success: false, message: "Server misconfigured" });
   }
 
-  if (incomingKey !== sepayKey) {
+  // Buffer and read raw body (required for HMAC signature verification)
+  let rawBodyBuffer;
+  try {
+    rawBodyBuffer = await getRawBody(req);
+  } catch (err) {
+    console.error("Error reading raw body:", err);
+    return res.status(400).json({ success: false, message: "Error reading request body" });
+  }
+
+  const rawBody = rawBodyBuffer.toString("utf8");
+
+  // Parse raw body to JSON
+  let body = {};
+  if (rawBody) {
+    try {
+      body = JSON.parse(rawBody);
+    } catch (err) {
+      console.error("Error parsing JSON body:", err, "Raw body was:", rawBody);
+      return res.status(400).json({ success: false, message: "Invalid JSON body" });
+    }
+  }
+  req.body = body; // Keep backward compatibility for subsequent code
+
+  const signatureHeader = req.headers["x-sepay-signature"];
+  const timestampHeader = req.headers["x-sepay-timestamp"];
+
+  let isAuthenticated = false;
+
+  if (signatureHeader && timestampHeader) {
+    // Perform HMAC-SHA256 signature verification
+    try {
+      const dataToSign = `${timestampHeader}.${rawBody}`;
+      const hmac = crypto.createHmac("sha256", sepayKey);
+      hmac.update(dataToSign);
+      const computedSignature = `sha256=${hmac.digest("hex")}`;
+
+      if (
+        signatureHeader.length === computedSignature.length &&
+        crypto.timingSafeEqual(
+          Buffer.from(signatureHeader, "utf8"),
+          Buffer.from(computedSignature, "utf8")
+        )
+      ) {
+        isAuthenticated = true;
+      } else {
+        console.warn("Signature mismatch. Computed:", computedSignature, "Received:", signatureHeader);
+      }
+    } catch (err) {
+      console.error("Error verifying signature:", err);
+    }
+  } else {
+    // Fallback to static API key verification
+    let incomingKey = req.headers["authorization"];
+    if (incomingKey) {
+      if (incomingKey.toLowerCase().startsWith("bearer ")) {
+        incomingKey = incomingKey.slice(7);
+      } else if (incomingKey.toLowerCase().startsWith("apikey ")) {
+        incomingKey = incomingKey.slice(7);
+      }
+    } else {
+      incomingKey = req.headers["x-api-key"] || req.query?.api_key;
+    }
+
+    if (incomingKey && incomingKey === sepayKey) {
+      isAuthenticated = true;
+    } else {
+      console.warn("API Key auth failed or not provided. Incoming:", incomingKey);
+    }
+  }
+
+  if (!isAuthenticated) {
     console.warn("Unauthorized webhook attempt:", {
       ip: req.headers["x-forwarded-for"] || req.socket?.remoteAddress,
       headers: Object.keys(req.headers),
@@ -205,4 +285,11 @@ module.exports = async function handler(req, res) {
     success: true,
     message: `Payment ${orderNumber} confirmed, user ${uid} upgraded to ${plan}`,
   });
+};
+
+// Export config to disable Vercel's default body parsing
+module.exports.config = {
+  api: {
+    bodyParser: false,
+  },
 };

@@ -27,7 +27,7 @@
       "preload.js",
       "package.json"
     ],
-    "extraFiles": [
+    "extraResources": [
       {
         "from": "..",
         "to": "web",
