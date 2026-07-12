@@ -57,15 +57,19 @@ module.exports = async function handler(req, res) {
   try {
     // ===== BRUTE FORCE PROTECTION =====
     // Max 5 failed attempts per email in 15 minutes
-    const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
-    const failedAttempts = await db
+    const failedAttemptsQuery = await db
       .collection("otp_attempts")
       .where("email", "==", normalizedEmail)
       .where("success", "==", false)
-      .where("attemptedAt", ">", admin.firestore.Timestamp.fromDate(fifteenMinutesAgo))
       .get();
 
-    if (failedAttempts.size >= 5) {
+    const fifteenMinutesAgo = Date.now() - 15 * 60 * 1000;
+    const failedAttempts = failedAttemptsQuery.docs.filter(doc => {
+      const data = doc.data();
+      return data.attemptedAt && data.attemptedAt.toDate().getTime() > fifteenMinutesAgo;
+    });
+
+    if (failedAttempts.length >= 5) {
       return res.status(429).json({
         success: false,
         message: "Quá nhiều lần thử sai. Vui lòng đợi 15 phút.",
@@ -80,8 +84,6 @@ module.exports = async function handler(req, res) {
       .where("otp", "==", normalizedOtp)
       .where("used", "==", false)
       .where("verified", "==", false)
-      .orderBy("createdAt", "desc")
-      .limit(1)
       .get();
 
     if (otpQuery.empty) {
@@ -98,7 +100,14 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const otpDoc = otpQuery.docs[0];
+    // Sort in memory to get the latest one just in case
+    const otpDocs = [...otpQuery.docs].sort((a, b) => {
+      const timeA = a.data().createdAt ? a.data().createdAt.toDate().getTime() : 0;
+      const timeB = b.data().createdAt ? b.data().createdAt.toDate().getTime() : 0;
+      return timeB - timeA;
+    });
+
+    const otpDoc = otpDocs[0];
     const otpData = otpDoc.data();
 
     // ===== CHECK EXPIRY =====

@@ -22,6 +22,7 @@ if (!gotTheLock) {
 } else {
     app.on('second-instance', () => {
         if (mainWindow) {
+            mainWindow.show();
             if (mainWindow.isMinimized()) mainWindow.restore();
             mainWindow.focus();
         }
@@ -60,15 +61,14 @@ function startLocalServer() {
                 const urlObj = new URL(req.url, `http://${req.headers.host}`);
                 const idToken = urlObj.searchParams.get('idToken');
                 const accessToken = urlObj.searchParams.get('accessToken');
-
-                res.writeHead(200, {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'GET, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type',
-                });
+                const isRedirect = urlObj.searchParams.get('redirect') === '1';
 
                 if (req.method === 'OPTIONS') {
+                    res.writeHead(200, {
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+                        'Access-Control-Allow-Headers': 'Content-Type',
+                    });
                     res.end();
                     return;
                 }
@@ -77,8 +77,41 @@ function startLocalServer() {
                     if (mainWindow) {
                         mainWindow.webContents.send('google-auth-callback', { idToken, accessToken });
                     }
-                    res.end(JSON.stringify({ success: true }));
+                    
+                    if (isRedirect) {
+                        // System browser redirected here — show a nice HTML success page
+                        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+                        res.end(`<!DOCTYPE html>
+<html><head><title>Habit Mastery - Đăng nhập thành công</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0a0a1a;font-family:'Inter',sans-serif;color:#e0e0e0}
+.card{text-align:center;padding:48px 40px;background:rgba(255,255,255,0.04);border-radius:16px;border:1px solid rgba(0,245,160,0.2);max-width:420px}
+.icon{font-size:64px;margin-bottom:16px}
+h1{color:#00f5a0;font-size:1.5rem;margin-bottom:12px}
+p{color:#a0a0b0;line-height:1.6;margin-bottom:8px}
+.hint{font-size:0.85rem;color:#606070;margin-top:16px}
+</style></head><body>
+<div class="card">
+<div class="icon">✅</div>
+<h1>Đăng nhập thành công!</h1>
+<p>Bạn có thể đóng tab này và quay lại ứng dụng <strong>Habit Mastery</strong> trên máy tính.</p>
+<p class="hint">Tab này sẽ tự động đóng sau vài giây...</p>
+</div>
+<script>setTimeout(()=>window.close(),3000)</script>
+</body></html>`);
+                    } else {
+                        res.writeHead(200, {
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*',
+                        });
+                        res.end(JSON.stringify({ success: true }));
+                    }
                 } else {
+                    res.writeHead(400, {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                    });
                     res.end(JSON.stringify({ success: false, error: 'Missing tokens' }));
                 }
                 return;
@@ -115,23 +148,59 @@ function startLocalServer() {
             serveFile(filePath, res);
         });
 
-        localServer.listen(LOCAL_PORT, '127.0.0.1', () => {
-            console.log(`Local server running at http://127.0.0.1:${LOCAL_PORT}`);
-            resolve();
-        });
+        // Try to kill any zombie process on our port first
+        function tryListen(port, attempt) {
+            localServer.listen(port, '127.0.0.1', () => {
+                console.log(`Local server running at http://127.0.0.1:${port}`);
+                resolve();
+            });
+        }
 
         localServer.on('error', (err) => {
             if (err.code === 'EADDRINUSE') {
-                // Port in use, try next
-                console.warn(`Port ${LOCAL_PORT} in use, trying ${LOCAL_PORT + 1}`);
-                localServer.listen(LOCAL_PORT + 1, '127.0.0.1', () => {
-                    console.log(`Local server running at http://127.0.0.1:${LOCAL_PORT + 1}`);
-                    resolve();
+                console.warn(`Port ${LOCAL_PORT} in use, killing old process...`);
+                // Try to kill old process on that port
+                const { exec } = require('child_process');
+                exec(`netstat -ano | findstr :${LOCAL_PORT}`, (e, stdout) => {
+                    if (!e && stdout) {
+                        const lines = stdout.trim().split('\n');
+                        const pids = new Set();
+                        lines.forEach(line => {
+                            const parts = line.trim().split(/\s+/);
+                            const pid = parts[parts.length - 1];
+                            if (pid && pid !== '0' && pid !== String(process.pid)) {
+                                pids.add(pid);
+                            }
+                        });
+                        pids.forEach(pid => {
+                            try { exec(`taskkill /F /PID ${pid}`); } catch(_) {}
+                        });
+                    }
+                    // Wait a bit then retry
+                    setTimeout(() => {
+                        localServer = http.createServer(localServer._events.request || (() => {}));
+                        // Re-create server with same handler
+                        const origServer = localServer;
+                        localServer = http.createServer(origServer._events ? origServer._events.request : undefined);
+                        localServer.listen(LOCAL_PORT, '127.0.0.1', () => {
+                            console.log(`Local server running at http://127.0.0.1:${LOCAL_PORT} (retry)`);
+                            resolve();
+                        });
+                        localServer.on('error', () => {
+                            // Last resort: use alternative port
+                            localServer.listen(LOCAL_PORT + 1, '127.0.0.1', () => {
+                                console.log(`Local server running at http://127.0.0.1:${LOCAL_PORT + 1} (alt port)`);
+                                resolve();
+                            });
+                        });
+                    }, 1500);
                 });
             } else {
                 reject(err);
             }
         });
+
+        tryListen(LOCAL_PORT, 0);
     });
 }
 
@@ -221,12 +290,10 @@ function createWindow() {
         return { action: 'deny' };
     });
 
-    // Handle window close → minimize to tray
-    mainWindow.on('close', (event) => {
-        if (!app.isQuitting) {
-            event.preventDefault();
-            mainWindow.hide();
-        }
+    // Handle window close → quit the app completely
+    // (no more hiding to tray by default — this caused "can't reopen" bugs)
+    mainWindow.on('close', () => {
+        app.isQuitting = true;
     });
 
     mainWindow.on('closed', () => {
@@ -369,16 +436,21 @@ ipcMain.on('open-external', (event, url) => {
 
 // ===== APP LIFECYCLE =====
 app.whenReady().then(async () => {
-    await startLocalServer();
+    try {
+        await startLocalServer();
+    } catch (err) {
+        console.error('Failed to start local server:', err);
+        dialog.showErrorBox('Lỗi khởi động', 'Không thể khởi động server nội bộ.\n\n' + err.message);
+        app.quit();
+        return;
+    }
     createMenu();
     createWindow();
     createTray();
 });
 
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    app.quit();
 });
 
 app.on('activate', () => {
@@ -393,6 +465,11 @@ app.on('before-quit', () => {
     app.isQuitting = true;
     // Shutdown local server
     if (localServer) {
-        localServer.close();
+        try { localServer.close(); } catch (_) {}
+    }
+    // Destroy tray
+    if (tray) {
+        try { tray.destroy(); } catch (_) {}
+        tray = null;
     }
 });

@@ -65,16 +65,18 @@ module.exports = async function handler(req, res) {
   const normalizedEmail = email.trim().toLowerCase();
 
   try {
-    // ===== RATE LIMITING =====
-    // Max 3 OTP per email in 10 minutes
-    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
-    const recentOtps = await db
+    const recentOtpsQuery = await db
       .collection("otp_codes")
       .where("email", "==", normalizedEmail)
-      .where("createdAt", ">", admin.firestore.Timestamp.fromDate(tenMinutesAgo))
       .get();
 
-    if (recentOtps.size >= 3) {
+    const tenMinutesAgo = Date.now() - 10 * 60 * 1000;
+    const recentOtps = recentOtpsQuery.docs.filter(doc => {
+      const data = doc.data();
+      return data.createdAt && data.createdAt.toDate().getTime() > tenMinutesAgo;
+    });
+
+    if (recentOtps.length >= 3) {
       return res.status(429).json({
         success: false,
         message: "Bạn đã gửi quá nhiều mã OTP. Vui lòng đợi 10 phút.",

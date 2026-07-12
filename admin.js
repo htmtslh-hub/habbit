@@ -6,6 +6,7 @@ const db = firebase.firestore();
 let currentAdmin = null;
 let allUsers = [];
 let currentModalUid = null;
+let usersUnsubscribe = null; // Real-time listener handle
 
 // ===== HELPERS =====
 function formatDate(ts){
@@ -77,7 +78,7 @@ function initAuth(){
             const nm = document.getElementById('adminName');
             if(nm) nm.textContent = user.displayName || user.email || 'Admin';
 
-            await loadUsers();
+            startRealtimeListener();
             initNavigation();
             initSearch();
             initActions();
@@ -90,7 +91,37 @@ function initAuth(){
     });
 }
 
-// ===== LOAD USERS =====
+// ===== REAL-TIME LISTENER =====
+function startRealtimeListener() {
+    // Unsubscribe previous listener if any
+    if (usersUnsubscribe) usersUnsubscribe();
+
+    usersUnsubscribe = db.collection('users').onSnapshot((snap) => {
+        allUsers = [];
+        snap.forEach(doc => {
+            allUsers.push({ uid: doc.id, ...doc.data() });
+        });
+        updateStats();
+        renderUsers(
+            document.getElementById('filterPlan')?.value,
+            document.getElementById('searchInput')?.value?.trim()
+        );
+        renderPending();
+
+        // Flash the refresh button to indicate live update
+        const btn = document.getElementById('btnRefresh');
+        if (btn) {
+            btn.classList.add('pulse');
+            setTimeout(() => btn.classList.remove('pulse'), 1000);
+        }
+    }, (err) => {
+        console.error('Real-time listener error:', err);
+        // Fallback to one-time load
+        loadUsers();
+    });
+}
+
+// Fallback one-time load
 async function loadUsers(){
     try {
         const snap = await db.collection('users').get();

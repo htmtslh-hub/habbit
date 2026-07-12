@@ -698,8 +698,28 @@ function initGoogle(){
     btnGoogle.onclick = async () => {
         hideMessages();
         const provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('profile');
+        provider.addScope('email');
 
         if (isElectron()) {
+            // === APPROACH 1: Try signInWithPopup directly in Electron ===
+            // Electron loads via http://127.0.0.1:PORT which should allow Google OAuth popup
+            try {
+                console.log('[Electron Auth] Trying direct signInWithPopup...');
+                const result = await auth.signInWithPopup(provider);
+                const isNew = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
+                await createUserProfile(result.user, isNew);
+                showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
+                setTimeout(() => { window.location.href = 'index.html'; }, 800);
+                return;
+            } catch (popupErr) {
+                console.warn('[Electron Auth] Direct popup failed:', popupErr.code, popupErr.message);
+                // If popup was closed by user, don't fall back
+                if (popupErr.code === 'auth/popup-closed-by-user') return;
+            }
+
+            // === APPROACH 2: System browser gateway (fallback) ===
+            console.log('[Electron Auth] Falling back to system browser gateway...');
             showElectronWaiting();
             const port = window.location.port || '17532';
             const webAuthUrl = `https://habitmastery.web.app/auth.html?mode=desktop&port=${port}`;
@@ -715,12 +735,37 @@ function initGoogle(){
             if (window.electronAPI && window.electronAPI.onGoogleAuthCallback) {
                 window.electronAPI.onGoogleAuthCallback(async (data) => {
                     const { idToken, accessToken } = data;
-                    showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
                     try {
-                        const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
-                        const result = await auth.signInWithCredential(credential);
-                        await createUserProfile(result.user, result.additionalUserInfo?.isNewUser || false);
+                        console.log('[Electron Auth] Received tokens from gateway, accessToken type:', accessToken === 'FIREBASE_TOKEN' ? 'Firebase' : 'Google OAuth');
+                        
+                        if (accessToken === 'FIREBASE_TOKEN') {
+                            // Gateway couldn't get Google OAuth credential, sent Firebase ID token instead
+                            // We can't use signInWithCredential with a Firebase token
+                            // Instead, the user is already signed in on the gateway — we sign in again here
+                            // by verifying the token through our own server
+                            console.log('[Electron Auth] Received Firebase token, attempting direct Google sign-in...');
+                            
+                            // Try signInWithPopup one more time from Electron
+                            try {
+                                const result = await auth.signInWithPopup(provider);
+                                const isNew = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
+                                await createUserProfile(result.user, isNew);
+                                showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
+                                setTimeout(() => { window.location.href = 'index.html'; }, 800);
+                            } catch(retryErr) {
+                                showError('Đăng nhập không thành công. Vui lòng thử lại.');
+                                resetFromWaiting();
+                            }
+                        } else {
+                            // Got proper Google OAuth tokens — use signInWithCredential
+                            showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
+                            const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken || null);
+                            const result = await auth.signInWithCredential(credential);
+                            await createUserProfile(result.user, result.additionalUserInfo?.isNewUser || false);
+                            setTimeout(() => { window.location.href = 'index.html'; }, 800);
+                        }
                     } catch (err) {
+                        console.error('[Electron Auth] signInWithCredential error:', err);
                         showError(translateFirebaseError(err.code) || err.message);
                         resetFromWaiting();
                     }
@@ -783,32 +828,48 @@ function initDesktopGateway() {
                 
                 try {
                     const provider = new firebase.auth.GoogleAuthProvider();
+                    provider.addScope('profile');
+                    provider.addScope('email');
                     const result = await auth.signInWithPopup(provider);
-                    const credential = result.credential;
-                    if (!credential) {
-                        throw new Error('Không nhận được thông tin xác thực từ Google.');
+                    
+                    console.log('[Desktop Gateway] signInWithPopup success:', result.user.email);
+                    
+                    // Extract Google OAuth credential
+                    let idToken = null, accessToken = null;
+                    
+                    // Method 1: Direct credential from result (compat SDK)
+                    if (result.credential && result.credential.idToken) {
+                        idToken = result.credential.idToken;
+                        accessToken = result.credential.accessToken || '';
+                        console.log('[Desktop Gateway] Got tokens from result.credential');
                     }
-                    const idToken = credential.idToken;
-                    const accessToken = credential.accessToken;
+                    
+                    // Method 2: credentialFromResult static method (newer SDK)
+                    if (!idToken && firebase.auth.GoogleAuthProvider.credentialFromResult) {
+                        try {
+                            const cred = firebase.auth.GoogleAuthProvider.credentialFromResult(result);
+                            if (cred && cred.idToken) {
+                                idToken = cred.idToken;
+                                accessToken = cred.accessToken || '';
+                                console.log('[Desktop Gateway] Got tokens from credentialFromResult');
+                            }
+                        } catch(e) { console.warn('credentialFromResult failed:', e); }
+                    }
+                    
+                    // Method 3: Use Firebase ID token as fallback (works with signInWithCredential on Electron side using a different approach)
+                    if (!idToken) {
+                        console.log('[Desktop Gateway] No OAuth credential, using Firebase ID token');
+                        idToken = await result.user.getIdToken(true);
+                        accessToken = 'FIREBASE_TOKEN'; // Flag to tell Electron this is a Firebase token, not Google OAuth
+                    }
                     
                     if (externalStatus) externalStatus.textContent = 'Đang chuyển thông tin đăng nhập về ứng dụng máy tính...';
                     
-                    const response = await fetch(`http://127.0.0.1:${port}/api/google-callback?idToken=${encodeURIComponent(idToken)}&accessToken=${encodeURIComponent(accessToken)}`);
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        setLoading(btnGoogleExternal, false);
-                        btnGoogleExternal.disabled = true;
-                        btnGoogleExternal.style.background = 'var(--success)';
-                        btnGoogleExternal.innerHTML = '✓ Đăng nhập thành công';
-                        if (externalStatus) {
-                            externalStatus.innerHTML = '<span style="color: var(--accent); font-weight: 600; font-size: 1.1rem;">Đăng nhập thành công!</span><br>Bạn có thể đóng trình duyệt này và quay lại ứng dụng Habit Mastery.';
-                        }
-                    } else {
-                        throw new Error(data.error || 'Lỗi từ ứng dụng desktop');
-                    }
+                    // Redirect browser to Electron's local server to deliver tokens
+                    const callbackUrl = `http://127.0.0.1:${port}/api/google-callback?idToken=${encodeURIComponent(idToken)}&accessToken=${encodeURIComponent(accessToken)}&redirect=1`;
+                    window.location.href = callbackUrl;
                 } catch (err) {
-                    console.error(err);
+                    console.error('[Desktop Gateway] Error:', err);
                     setLoading(btnGoogleExternal, false);
                     if (externalStatus) {
                         externalStatus.innerHTML = `<span style="color: var(--error);">Lỗi: ${translateFirebaseError(err.code) || err.message}</span>`;
