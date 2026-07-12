@@ -5,7 +5,10 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 // ===== API BASE URL =====
-const API_BASE = '/api';
+const API_BASE = (window.location.hostname.endsWith('.vercel.app'))
+    ? '/api'
+    : 'https://habbit-opal.vercel.app/api';
+
 
 // Flag to prevent redirect during OTP credential-check
 let _otpInProgress = false;
