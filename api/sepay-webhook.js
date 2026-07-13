@@ -168,7 +168,9 @@ module.exports = async function handler(req, res) {
 
   // 3. Extract order number from transfer content
   // Format: "SEVQR HBTxxxxxxxxxx" hoặc chứa "HBTxxxxxxxxxx"
-  const match = content.match(/HBT\d{10,}/i);
+  // Remove all spaces to handle manual typing or bank spacing discrepancies, then match HBT followed by exactly 13 digits of Date.now()
+  const cleanContent = content.replace(/\s+/g, "");
+  const match = cleanContent.match(/HBT\d{13}/i);
   if (!match) {
     console.warn("No order number found in content:", content);
     return res.json({
