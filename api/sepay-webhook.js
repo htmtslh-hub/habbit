@@ -89,46 +89,71 @@ module.exports = async function handler(req, res) {
   const timestampHeader = req.headers["x-sepay-timestamp"];
 
   let isAuthenticated = false;
+  let authMethodAttempted = "none";
+  let incomingKeyForLog = "none";
+
+  const maskKey = (key) => {
+    if (!key) return "undefined/empty";
+    if (key.length <= 6) return "***";
+    return `${key.slice(0, 3)}...${key.slice(-3)} (len: ${key.length})`;
+  };
 
   if (signatureHeader && timestampHeader) {
+    authMethodAttempted = "signature";
     // Perform HMAC-SHA256 signature verification
     try {
       const dataToSign = `${timestampHeader}.${rawBody}`;
       const hmac = crypto.createHmac("sha256", sepayKey);
       hmac.update(dataToSign);
-      const computedSignature = `sha256=${hmac.digest("hex")}`;
+      const computedHash = hmac.digest("hex");
+      
+      // SePay signature can be "sha256={hash}" or just "{hash}"
+      let receivedHash = signatureHeader;
+      if (receivedHash.toLowerCase().startsWith("sha256=")) {
+        receivedHash = receivedHash.slice(7);
+      }
 
       if (
-        signatureHeader.length === computedSignature.length &&
+        receivedHash.length === computedHash.length &&
         crypto.timingSafeEqual(
-          Buffer.from(signatureHeader, "utf8"),
-          Buffer.from(computedSignature, "utf8")
+          Buffer.from(receivedHash, "utf8"),
+          Buffer.from(computedHash, "utf8")
         )
       ) {
         isAuthenticated = true;
       } else {
-        console.warn("Signature mismatch. Computed:", computedSignature, "Received:", signatureHeader);
+        console.warn("Signature verification failed.", {
+          receivedHashMasked: maskKey(receivedHash),
+          computedHashMasked: maskKey(computedHash),
+          timestampHeader,
+        });
       }
     } catch (err) {
       console.error("Error verifying signature:", err);
     }
   } else {
+    authMethodAttempted = "api-key";
     // Fallback to static API key verification
     let incomingKey = req.headers["authorization"];
     if (incomingKey) {
-      if (incomingKey.toLowerCase().startsWith("bearer ")) {
-        incomingKey = incomingKey.slice(7);
-      } else if (incomingKey.toLowerCase().startsWith("apikey ")) {
-        incomingKey = incomingKey.slice(7);
+      incomingKey = incomingKey.trim();
+      const parts = incomingKey.split(/\s+/);
+      if (parts.length === 2 && (parts[0].toLowerCase() === "bearer" || parts[0].toLowerCase() === "apikey")) {
+        incomingKey = parts[1];
       }
     } else {
       incomingKey = req.headers["x-api-key"] || req.query?.api_key;
     }
 
+    incomingKeyForLog = incomingKey;
+
     if (incomingKey && incomingKey === sepayKey) {
       isAuthenticated = true;
     } else {
-      console.warn("API Key auth failed or not provided. Incoming:", incomingKey);
+      console.warn("API Key comparison failed.", {
+        incomingKeyMasked: maskKey(incomingKey),
+        expectedKeyMasked: maskKey(sepayKey),
+      });
     }
   }
 
@@ -136,8 +161,16 @@ module.exports = async function handler(req, res) {
     console.warn("Unauthorized webhook attempt:", {
       ip: req.headers["x-forwarded-for"] || req.socket?.remoteAddress,
       headers: Object.keys(req.headers),
+      authMethodAttempted,
     });
-    return res.status(401).json({ success: false, message: "Unauthorized" });
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+      diagnostics: {
+        authMethod: authMethodAttempted,
+        configuredKeyConfigured: !!sepayKey,
+      }
+    });
   }
 
   // 2. Parse transaction data from SePay

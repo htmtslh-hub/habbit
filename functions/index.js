@@ -1,5 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const crypto = require("crypto");
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -23,23 +24,100 @@ exports.sepayWebhook = functions.https.onRequest(async (req, res) => {
     return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
-  // 1. Verify SePay API Key
+  // 1. Verify SePay Authentication
   const sepayKey = functions.config().sepay?.api_key || process.env.SEPAY_API_KEY;
-  const incomingKey = req.headers["authorization"]?.replace("Bearer ", "")
-    || req.headers["x-api-key"]
-    || req.query.api_key;
-
   if (!sepayKey) {
     console.error("SEPAY_API_KEY not configured!");
     return res.status(500).json({ success: false, message: "Server misconfigured" });
   }
 
-  if (incomingKey !== sepayKey) {
+  const signatureHeader = req.headers["x-sepay-signature"];
+  const timestampHeader = req.headers["x-sepay-timestamp"];
+
+  let isAuthenticated = false;
+  let authMethodAttempted = "none";
+  let incomingKeyForLog = "none";
+
+  const maskKey = (key) => {
+    if (!key) return "undefined/empty";
+    if (key.length <= 6) return "***";
+    return `${key.slice(0, 3)}...${key.slice(-3)} (len: ${key.length})`;
+  };
+
+  if (signatureHeader && timestampHeader) {
+    authMethodAttempted = "signature";
+    // Perform HMAC-SHA256 signature verification
+    try {
+      const rawBody = req.rawBody ? req.rawBody.toString("utf8") : "";
+      const dataToSign = `${timestampHeader}.${rawBody}`;
+      const hmac = crypto.createHmac("sha256", sepayKey);
+      hmac.update(dataToSign);
+      const computedHash = hmac.digest("hex");
+      
+      // SePay signature can be "sha256={hash}" or just "{hash}"
+      let receivedHash = signatureHeader;
+      if (receivedHash.toLowerCase().startsWith("sha256=")) {
+        receivedHash = receivedHash.slice(7);
+      }
+
+      if (
+        receivedHash.length === computedHash.length &&
+        crypto.timingSafeEqual(
+          Buffer.from(receivedHash, "utf8"),
+          Buffer.from(computedHash, "utf8")
+        )
+      ) {
+        isAuthenticated = true;
+      } else {
+        console.warn("Signature verification failed.", {
+          receivedHashMasked: maskKey(receivedHash),
+          computedHashMasked: maskKey(computedHash),
+          timestampHeader,
+        });
+      }
+    } catch (err) {
+      console.error("Error verifying signature:", err);
+    }
+  } else {
+    authMethodAttempted = "api-key";
+    // Fallback to static API key verification
+    let incomingKey = req.headers["authorization"];
+    if (incomingKey) {
+      incomingKey = incomingKey.trim();
+      const parts = incomingKey.split(/\s+/);
+      if (parts.length === 2 && (parts[0].toLowerCase() === "bearer" || parts[0].toLowerCase() === "apikey")) {
+        incomingKey = parts[1];
+      }
+    } else {
+      incomingKey = req.headers["x-api-key"] || req.query?.api_key;
+    }
+
+    incomingKeyForLog = incomingKey;
+
+    if (incomingKey && incomingKey === sepayKey) {
+      isAuthenticated = true;
+    } else {
+      console.warn("API Key comparison failed.", {
+        incomingKeyMasked: maskKey(incomingKey),
+        expectedKeyMasked: maskKey(sepayKey),
+      });
+    }
+  }
+
+  if (!isAuthenticated) {
     console.warn("Unauthorized webhook attempt:", {
-      ip: req.ip,
+      ip: req.ip || req.headers["x-forwarded-for"] || req.socket?.remoteAddress,
       headers: Object.keys(req.headers),
+      authMethodAttempted,
     });
-    return res.status(401).json({ success: false, message: "Unauthorized" });
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+      diagnostics: {
+        authMethod: authMethodAttempted,
+        configuredKeyConfigured: !!sepayKey,
+      }
+    });
   }
 
   // 2. Parse transaction data from SePay
