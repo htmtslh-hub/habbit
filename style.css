@@ -2469,9 +2469,12 @@ body {
         padding: 10px 12px !important;
     }
 
-    /* Hide update toast on mobile devices */
+    /* Reposition update toast on mobile devices to prevent overlap with bottom nav bar */
     .update-toast {
-        display: none !important;
+        bottom: -240px; /* Ensure it is fully off-screen when hidden */
+    }
+    .update-toast.show {
+        bottom: 80px; /* 64px bottom nav bar height + 16px gap */
     }
 
     /* Hide all main panels by default on mobile */
