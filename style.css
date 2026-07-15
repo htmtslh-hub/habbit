@@ -175,6 +175,37 @@ body {
     box-shadow: var(--shadow-sm);
 }
 
+.ime-switch {
+    display: flex;
+    background: var(--bg-app);
+    border: 1px solid var(--border-color);
+    padding: 2px;
+    border-radius: 8px;
+}
+
+.ime-btn {
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 6px;
+    font-family: var(--font-heading);
+    transition: all 0.2s;
+}
+
+.ime-btn:hover {
+    color: var(--text-main);
+}
+
+.ime-btn.active {
+    background: var(--bg-card);
+    color: var(--accent);
+    box-shadow: var(--shadow-sm);
+}
+
 #importFile {
     display: none;
 }
@@ -2421,5 +2452,197 @@ body {
     .update-btn-later, .update-btn-now {
         flex: 1;
         padding: 10px;
+    }
+}
+
+/* ===== MOBILE BOTTOM NAVIGATION ===== */
+.mobile-nav-bar {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 74px !important;
+    }
+    
+    .navbar {
+        padding: 10px 12px !important;
+    }
+
+    /* Hide update toast on mobile devices */
+    .update-toast {
+        display: none !important;
+    }
+
+    /* Hide all main panels by default on mobile */
+    .top-section,
+    .grid-area,
+    .bottom-section,
+    .ms-row,
+    .notes-section,
+    .heatmap-section {
+        display: none !important;
+    }
+
+    /* 1. Mobile bottom navigation bar layout and design */
+    .mobile-nav-bar {
+        display: flex !important;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 64px;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-color);
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+        justify-content: space-around;
+        align-items: center;
+        z-index: 9999;
+        padding: 0 8px;
+        transition: background 0.3s, border-color 0.3s;
+    }
+
+    .mobile-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        height: 100%;
+        flex: 1;
+        padding: 8px 0;
+        gap: 4px;
+        transition: all 0.2s ease-in-out;
+        text-decoration: none;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .mobile-nav-item:active {
+        background: var(--accent-light);
+    }
+
+    .mobile-nav-icon {
+        font-size: 1.3rem;
+        transition: transform 0.2s ease;
+    }
+
+    .mobile-nav-text {
+        font-size: 0.65rem;
+        font-weight: 700;
+        font-family: var(--font-heading);
+        letter-spacing: 0.2px;
+        transition: color 0.2s;
+    }
+
+    .mobile-nav-item.active {
+        color: var(--accent);
+    }
+
+    .mobile-nav-item.active .mobile-nav-icon {
+        transform: translateY(-2px);
+    }
+
+    /* 2. Show appropriate sections/cards based on active tab */
+
+    /* TABS: HABITS */
+    [data-active-tab="habits"] .top-section {
+        display: flex !important;
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 16px;
+    }
+    [data-active-tab="habits"] .top-section .top-left,
+    [data-active-tab="habits"] .top-section .top-right {
+        display: flex !important;
+        width: 100%;
+        height: 170px;
+    }
+    [data-active-tab="habits"] .top-section .top-center {
+        display: none !important;
+    }
+    [data-active-tab="habits"] .grid-area {
+        display: block !important;
+        padding: 0 16px 12px 16px;
+    }
+    [data-active-tab="habits"] .ms-row {
+        display: flex !important;
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 16px;
+    }
+    [data-active-tab="habits"] .ms-row .ms-cell {
+        width: 100% !important;
+    }
+    [data-active-tab="habits"] .ms-row .add-cell {
+        display: flex !important;
+        justify-content: center;
+    }
+
+    /* TABS: CHARTS */
+    [data-active-tab="charts"] .top-section {
+        display: block !important;
+        padding: 12px 16px;
+    }
+    [data-active-tab="charts"] .top-section .top-center {
+        display: block !important;
+        width: 100%;
+        height: 220px;
+    }
+    [data-active-tab="charts"] .top-section .top-left,
+    [data-active-tab="charts"] .top-section .top-right {
+        display: none !important;
+    }
+    
+    [data-active-tab="charts"] .bottom-section {
+        display: block !important;
+        padding: 12px 16px;
+    }
+    [data-active-tab="charts"] .bottom-section .bot-left {
+        display: block !important;
+        width: 100%;
+        height: 220px;
+    }
+    [data-active-tab="charts"] .bottom-section .bot-left .logo-box {
+        display: none !important;
+    }
+    [data-active-tab="charts"] .bottom-section .bot-left .line-chart-box {
+        height: 100%;
+        width: 100%;
+    }
+    [data-active-tab="charts"] .bottom-section .bot-right {
+        display: none !important;
+    }
+
+    /* TABS: HEATMAP */
+    [data-active-tab="heatmap"] .heatmap-section {
+        display: block !important;
+        padding: 12px 16px;
+    }
+    [data-active-tab="heatmap"] .heatmap-body {
+        overflow-x: auto;
+        padding: 8px 0;
+    }
+
+    /* TABS: NOTES */
+    [data-active-tab="notes"] .notes-section {
+        display: block !important;
+        padding: 12px 16px;
+    }
+
+    /* TABS: TOP 10 */
+    [data-active-tab="top10"] .bottom-section {
+        display: block !important;
+        padding: 12px 16px;
+    }
+    [data-active-tab="top10"] .bottom-section .bot-right {
+        display: block !important;
+        width: 100%;
+    }
+    [data-active-tab="top10"] .bottom-section .bot-left {
+        display: none !important;
     }
 }

@@ -59,6 +59,11 @@
                     <button class="lang-btn" data-lang="zh">中</button>
                     <button class="lang-btn" data-lang="en">EN</button>
                 </div>
+                <div class="ime-switch" id="imeSwitch">
+                    <button class="ime-btn active" data-ime="telex" title="Bộ gõ Telex">Telex</button>
+                    <button class="ime-btn" data-ime="vni" title="Bộ gõ VNI">VNI</button>
+                    <button class="ime-btn" data-ime="off" title="Tắt bộ gõ">Tắt</button>
+                </div>
                 <button class="nav-logout-btn" id="logoutBtn" title="Đăng xuất">🚪</button>
             </div>
         </header>
@@ -189,6 +194,30 @@
                 </div>
             </div>
         </div>
+
+        <!-- MOBILE BOTTOM NAVBAR -->
+        <div class="mobile-nav-bar">
+            <button class="mobile-nav-item active" data-tab="habits">
+                <span class="mobile-nav-icon">📋</span>
+                <span class="mobile-nav-text" data-i18n="tabHabits">Thói quen</span>
+            </button>
+            <button class="mobile-nav-item" data-tab="charts">
+                <span class="mobile-nav-icon">📈</span>
+                <span class="mobile-nav-text" data-i18n="tabCharts">Biểu đồ</span>
+            </button>
+            <button class="mobile-nav-item" data-tab="heatmap">
+                <span class="mobile-nav-icon">📊</span>
+                <span class="mobile-nav-text" data-i18n="tabHeatmap">Mật độ</span>
+            </button>
+            <button class="mobile-nav-item" data-tab="notes">
+                <span class="mobile-nav-icon">📝</span>
+                <span class="mobile-nav-text" data-i18n="tabNotes">Ghi chú</span>
+            </button>
+            <button class="mobile-nav-item" data-tab="top10">
+                <span class="mobile-nav-icon">👑</span>
+                <span class="mobile-nav-text" data-i18n="tabTop10">Top 10</span>
+            </button>
+        </div>
     </div>
 
     <!-- Modal -->
@@ -232,6 +261,7 @@
         </div>
     </div>
 
+    <script src="gotiengviet.js"></script>
     <script src="app.js"></script>
     <script>
     (function(){
@@ -285,6 +315,7 @@
 
       // Show update toast
       function showUpdateToast() {
+        if (window.innerWidth <= 768) return;
         const toast = document.getElementById('updateToast');
         if (toast) toast.classList.add('show');
       }

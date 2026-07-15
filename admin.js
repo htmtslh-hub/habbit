@@ -83,6 +83,14 @@ function initAuth(){
             initSearch();
             initActions();
             initModal();
+
+            // Initialize Vietnamese Input Method Editor (default to Telex, active on admin management/search fields)
+            if(typeof GoTiengViet !== 'undefined' && GoTiengViet.VietnameseInput){
+                GoTiengViet.VietnameseInput.getInstance({
+                    inputMethod: 'telex',
+                    enabled: true
+                });
+            }
         } catch(err) {
             console.error('Admin auth error:', err);
             loading.style.display = 'none';

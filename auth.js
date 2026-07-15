@@ -907,6 +907,14 @@ function init(){
     initGoogle();
     initDesktopGateway();
     checkAuth();
+    
+    // Initialize Vietnamese Input Method Editor (default to Telex, active by default on login/register fields)
+    if(typeof GoTiengViet !== 'undefined' && GoTiengViet.VietnameseInput){
+        GoTiengViet.VietnameseInput.getInstance({
+            inputMethod: 'telex',
+            enabled: true
+        });
+    }
 }
 
 document.readyState === 'loading' 

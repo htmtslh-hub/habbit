@@ -34,6 +34,7 @@
         "filter": [
           "index.html",
           "app.js",
+          "gotiengviet.js",
           "style.css",
           "auth.html",
           "auth.js",

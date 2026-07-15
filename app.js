@@ -30,6 +30,7 @@ const I18N = {
         heatmap:'Mật độ hoạt động cả năm',less:'Ít',more:'Nhiều',
         targetLabelModal:'Mục tiêu thói quen',targetHint:'ngày/tháng',
         dayMon:'T2',dayWed:'T4',dayFri:'T6',
+        tabHabits:'Thói quen',tabCharts:'Biểu đồ',tabHeatmap:'Mật độ',tabNotes:'Ghi chú',tabTop10:'Top 10',
     },
     zh: {
         title:'习惯追踪器',calSettings:'日历设置',year:'年',month:'月',
@@ -46,6 +47,7 @@ const I18N = {
         heatmap:'年度活动热力图',less:'少',more:'多',
         targetLabelModal:'习惯目标',targetHint:'天/月',
         dayMon:'一',dayWed:'三',dayFri:'五',
+        tabHabits:'习惯',tabCharts:'图表',tabHeatmap:'热力图',tabNotes:'笔记',tabTop10:'前十',
     },
     en: {
         title:'HABIT MASTERY',calSettings:'CALENDAR SETTINGS',year:'Year',month:'Month',
@@ -62,6 +64,7 @@ const I18N = {
         heatmap:'Annual Activity Heatmap',less:'Less',more:'More',
         targetLabelModal:'Habit Target',targetHint:'days/month',
         dayMon:'Mon',dayWed:'Wed',dayFri:'Fri',
+        tabHabits:'Habits',tabCharts:'Charts',tabHeatmap:'Heatmap',tabNotes:'Notes',tabTop10:'Top 10',
     }
 };
 
@@ -765,7 +768,38 @@ function initCal(){
     ys.value=cY;ys.onchange=()=>{cY=+ys.value;renderAll()};
     $('#monthSel').onchange=()=>{cM=+$('#monthSel').value;renderAll()};
 }
-function initLang(){$$('.lang-btn').forEach(b=>{b.onclick=()=>{curLang=b.dataset.lang;localStorage.setItem('hg_lang',curLang);applyI18n();renderAll()}})}
+function initLang(){$$('.lang-btn').forEach(b=>{b.onclick=()=>{curLang=b.dataset.lang;localStorage.setItem('hg_lang',curLang);applyI18n();applyIme();renderAll()}})}
+let vietnameseInput=null;
+let curIme=localStorage.getItem('hg_ime')||'telex';
+function initIme(){
+    if(typeof GoTiengViet!=='undefined'&&GoTiengViet.VietnameseInput){
+        vietnameseInput=GoTiengViet.VietnameseInput.getInstance({
+            inputMethod:curIme==='off'?'telex':curIme,
+            enabled:curLang==='vi'&&curIme!=='off'
+        });
+    }
+    $$('.ime-btn').forEach(b=>{
+        b.onclick=()=>{
+            curIme=b.dataset.ime;
+            localStorage.setItem('hg_ime',curIme);
+            applyIme();
+        }
+    });
+    applyIme();
+}
+function applyIme(){
+    const s=$('#imeSwitch');
+    if(s)s.style.display=curLang==='vi'?'flex':'none';
+    $$('.ime-btn').forEach(b=>{b.classList.toggle('active',b.dataset.ime===curIme)});
+    if(vietnameseInput){
+        if(curLang==='vi'&&curIme!=='off'){
+            vietnameseInput.setInputMethod(curIme);
+            vietnameseInput.enable();
+        }else{
+            vietnameseInput.disable();
+        }
+    }
+}
 function initTheme(){applyTheme();const b=$('#themeBtn');if(b)b.onclick=toggleTheme}
 function initExportImport(){
     const eb=$('#exportBtn'),ib=$('#importBtn'),f=$('#importFile');
@@ -1293,6 +1327,33 @@ function initDragAndDrop() {
     });
 }
 
+function initMobileTabs() {
+    const mainApp = document.getElementById('mainApp');
+    const navItems = document.querySelectorAll('.mobile-nav-bar .mobile-nav-item');
+    
+    if (!mainApp.getAttribute('data-active-tab')) {
+        mainApp.setAttribute('data-active-tab', 'habits');
+    }
+    
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const tabId = item.getAttribute('data-tab');
+            
+            navItems.forEach(btn => btn.classList.remove('active'));
+            item.classList.add('active');
+            
+            mainApp.setAttribute('data-active-tab', tabId);
+            
+            if (tabId === 'charts') {
+                requestAnimationFrame(() => {
+                    renderBar();
+                    renderLine();
+                });
+            }
+        });
+    });
+}
+
 function renderAll(){
     applyTheme();
     applyI18n();
@@ -1339,6 +1400,7 @@ async function startApp(user){
         selectedDay = (cM === todayM && cY === todayY) ? todayD : 1;
         initCal();
         initLang();
+        initIme();
         initTheme();
         initExportImport();
         initModal();
@@ -1346,6 +1408,7 @@ async function startApp(user){
         initSleep();
         initNotes();
         initDragAndDrop();
+        initMobileTabs();
         renderAll();
         // Apply premium UI
         renderPremiumBanner();

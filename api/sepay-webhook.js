@@ -125,6 +125,7 @@ module.exports = async function handler(req, res) {
         console.warn("Signature verification failed.", {
           receivedHashMasked: maskKey(receivedHash),
           computedHashMasked: maskKey(computedHash),
+          configuredKeyMasked: maskKey(sepayKey),
           timestampHeader,
         });
       }
