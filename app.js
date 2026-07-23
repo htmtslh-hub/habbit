@@ -1413,11 +1413,48 @@ async function startApp(user){
         // Apply premium UI
         renderPremiumBanner();
         applyPremiumGate();
+        initUniversalSpotlight();
         window.onresize=()=>{renderBar();renderLine()};
     } catch(err) {
         console.error('Init error:', err);
     }
 }
+
+// ==================== UNIVERSAL MOUSE SPOTLIGHT EFFECT ====================
+function initUniversalSpotlight() {
+    const selector = '.cal-card, .chart-card, .stats-card, .bot-left, .bot-right, .ms-cell, .notes-section, .heatmap-section, .price-card, .testimonial-card, .option-card, .user-profile, .btn-add, .nav-brand, .lang-btn, .ime-btn, .tab-btn, .step-box';
+    
+    document.querySelectorAll(selector).forEach(el => {
+        if (el.dataset.spotlightInit) return;
+        el.dataset.spotlightInit = 'true';
+
+        let glow = el.querySelector('.spotlight-glow');
+        if (!glow) {
+            glow = document.createElement('div');
+            glow.className = 'spotlight-glow';
+            el.appendChild(glow);
+        }
+
+        let bounds;
+        el.addEventListener('mouseenter', () => {
+            bounds = el.getBoundingClientRect();
+            glow.style.opacity = '1';
+        });
+
+        el.addEventListener('mousemove', (e) => {
+            if (!bounds) bounds = el.getBoundingClientRect();
+            const x = e.clientX - bounds.left;
+            const y = e.clientY - bounds.top;
+            glow.style.setProperty('--mouse-x', `${x}px`);
+            glow.style.setProperty('--mouse-y', `${y}px`);
+        });
+
+        el.addEventListener('mouseleave', () => {
+            glow.style.opacity = '0';
+        });
+    });
+}
+
 function initAuthGuard(){
     const loading = document.getElementById('authLoading');
     const app = document.getElementById('mainApp');
@@ -1428,6 +1465,8 @@ function initAuthGuard(){
             if(loading) loading.style.display = 'none';
             if(app) app.style.display = 'block';
             startApp(user);
+            setTimeout(initUniversalSpotlight, 200);
+            setTimeout(initUniversalSpotlight, 1000);
         } else {
             window.location.href = 'auth.html';
         }
