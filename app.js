@@ -31,6 +31,8 @@ const I18N = {
         targetLabelModal:'Mục tiêu thói quen',targetHint:'ngày/tháng',
         dayMon:'T2',dayWed:'T4',dayFri:'T6',
         tabHabits:'Thói quen',tabCharts:'Biểu đồ',tabHeatmap:'Mật độ',tabNotes:'Ghi chú',tabTop10:'Top 10',
+        freezeCol:'Đóng băng cột (Ghim)',unfreezeCol:'Bỏ đóng băng cột',
+        collapseCol:'Thu gọn cột',expandCol:'Mở rộng cột',
     },
     zh: {
         title:'习惯追踪器',calSettings:'日历设置',year:'年',month:'月',
@@ -48,6 +50,8 @@ const I18N = {
         targetLabelModal:'习惯目标',targetHint:'天/月',
         dayMon:'一',dayWed:'三',dayFri:'五',
         tabHabits:'习惯',tabCharts:'图表',tabHeatmap:'热力图',tabNotes:'笔记',tabTop10:'前十',
+        freezeCol:'冻结列',unfreezeCol:'解冻列',
+        collapseCol:'折叠列',expandCol:'展开列',
     },
     en: {
         title:'HABIT MASTERY',calSettings:'CALENDAR SETTINGS',year:'Year',month:'Month',
@@ -65,6 +69,8 @@ const I18N = {
         targetLabelModal:'Habit Target',targetHint:'days/month',
         dayMon:'Mon',dayWed:'Wed',dayFri:'Fri',
         tabHabits:'Habits',tabCharts:'Charts',tabHeatmap:'Heatmap',tabNotes:'Notes',tabTop10:'Top 10',
+        freezeCol:'Freeze column',unfreezeCol:'Unfreeze column',
+        collapseCol:'Collapse column',expandCol:'Expand column',
     }
 };
 
@@ -90,6 +96,8 @@ const DEF=[
 ];
 let S={h:[...DEF],c:{},mo:{},sl:{},ni:14,notes:{}};
 let cM=new Date().getMonth(),cY=new Date().getFullYear(),sE='💪',selectedDay=new Date().getDate();
+let isColumnFrozen = localStorage.getItem('hg_col_frozen') !== 'false';
+let isColumnCollapsed = localStorage.getItem('hg_col_collapsed') === 'true';
 function ld(){try{const r=localStorage.getItem(SK);if(r){const res=JSON.parse(r);res.notes=res.notes||{};return res}}catch(e){}return{h:[...DEF],c:{},mo:{},sl:{},ni:14,notes:{}}}
 function sv(){
     localStorage.setItem(SK,JSON.stringify(S));
@@ -819,7 +827,24 @@ function renderStats(){
 function renderGrid(){
     const days=dim(cM,cY),DA=t('days');
     selectedDay = Math.min(selectedDay, days);
-    let hh=`<tr><th class="h-name">${t('myHabits')}</th>`;
+
+    const freezeClass = isColumnFrozen ? ' frozen-col' : '';
+    const collapseClass = isColumnCollapsed ? ' collapsed-col' : '';
+
+    const freezeIcon = isColumnFrozen ? '❄️' : '🔓';
+    const freezeTitle = isColumnFrozen ? t('unfreezeCol') : t('freezeCol');
+    const collapseIcon = isColumnCollapsed ? '▶' : '◀';
+    const collapseTitle = isColumnCollapsed ? t('expandCol') : t('collapseCol');
+
+    let hh=`<tr><th class="h-name${freezeClass}${collapseClass}">
+        <div class="h-name-header">
+            <span class="h-name-title">${t('myHabits')}</span>
+            <div class="h-name-actions">
+                <button type="button" class="btn-col-action btn-freeze-col" title="${freezeTitle}">${freezeIcon}</button>
+                <button type="button" class="btn-col-action btn-collapse-col" title="${collapseTitle}">${collapseIcon}</button>
+            </div>
+        </div>
+    </th>`;
     for(let d=1;d<=days;d++){
         const dow=new Date(cY,cM,d).getDay();
         const tc=isToday(d)?' today':'';
@@ -840,7 +865,7 @@ function renderGrid(){
 
         const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         bb+=`<tr draggable="true" data-id="${h.id}">`;
-        bb+=`<td class="td-name" title="${esc(h.emoji+' '+h.name)}"><span class="drag-handle">☰</span><span class="hname">${esc(h.emoji)} ${esc(h.name)}</span>${streakHtml}<button class="he" data-id="${h.id}">✏️</button><button class="hd" data-id="${h.id}">✕</button></td>`;
+        bb+=`<td class="td-name${freezeClass}${collapseClass}" title="${esc(h.emoji+' '+h.name)}"><div class="td-name-content"><span class="drag-handle">☰</span><span class="hname">${esc(h.emoji)} <span class="hname-text">${esc(h.name)}</span></span>${streakHtml}<button class="he" data-id="${h.id}">✏️</button><button class="hd" data-id="${h.id}">✕</button></div></td>`;
         for(let d=1;d<=days;d++){
             const on=S.c[ck(h.id,d)];if(on)dn++;
             const tc=isToday(d)?' today':'';
@@ -856,6 +881,26 @@ function renderGrid(){
         bb+='</tr>';
     });
     $('#tbody').innerHTML=bb;
+
+    // Freeze & Collapse column button handlers
+    const freezeBtn = $('.btn-freeze-col');
+    if(freezeBtn){
+        freezeBtn.onclick = (e) => {
+            e.stopPropagation();
+            isColumnFrozen = !isColumnFrozen;
+            localStorage.setItem('hg_col_frozen', isColumnFrozen);
+            renderGrid();
+        };
+    }
+    const collapseBtn = $('.btn-collapse-col');
+    if(collapseBtn){
+        collapseBtn.onclick = (e) => {
+            e.stopPropagation();
+            isColumnCollapsed = !isColumnCollapsed;
+            localStorage.setItem('hg_col_collapsed', isColumnCollapsed);
+            renderGrid();
+        };
+    }
 
     // Click handler for day headers
     $$('.htable th.h-day').forEach(th => {
@@ -893,9 +938,10 @@ function renderGrid(){
                     const cls=streak>=7?'hot':streak>=3?'warm':'cool';
                     const badge=document.createElement('span');
                     badge.className='streak-badge '+cls;badge.textContent='🔥'+streak;
-                    const nameCell=tr.querySelector('.td-name');
+                    const nameCell=tr.querySelector('.td-name-content') || tr.querySelector('.td-name');
                     const editBtn=nameCell.querySelector('.he');
-                    nameCell.insertBefore(badge,editBtn);
+                    if(editBtn) nameCell.insertBefore(badge,editBtn);
+                    else nameCell.appendChild(badge);
                 }
             }
         };
@@ -1266,10 +1312,11 @@ function initDragAndDrop() {
     let dragSrcEl = null;
 
     tbody.addEventListener('mousedown', (e) => {
-        const handle = e.target.closest('.drag-handle');
         const tr = e.target.closest('tr');
+        const isBtn = e.target.closest('.he, .hd, .btn-col-action');
+        const tdName = e.target.closest('.td-name, .drag-handle');
         if (tr) {
-            if (handle) {
+            if (tdName && !isBtn) {
                 tr.setAttribute('draggable', 'true');
             } else {
                 tr.setAttribute('draggable', 'false');
