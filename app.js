@@ -1589,12 +1589,14 @@ function getRankProgressInfo(dp) {
 }
 
 // ==================== SCORING ENGINE ====================
-function calculateUserDPAndStreak() {
+function calculateUserDPAndStreak(sData = S) {
     let totalChecks = 0;
     let weeklyChecks = 0;
     let perfectDays = 0;
     let maxStreak = 0;
     let currentStreak = 0;
+
+    if (!sData) return { totalDP: 0, weeklyDP: 0, totalChecks: 0, weeklyChecks: 0, currentStreak: 0, maxStreak: 0, perfectDays: 0, questDP: 0 };
 
     const now = new Date();
     const thisYear = now.getFullYear();
@@ -1607,7 +1609,9 @@ function calculateUserDPAndStreak() {
 
     // Parse all checks
     const dailyStats = {}; // 'YYYY-MM-DD' -> { checked, total }
-    const checkKeys = Object.keys(S.c || {}).filter(k => S.c[k]);
+    const habitsList = Array.isArray(sData.h) ? sData.h : [];
+    const checkMap = sData.c || {};
+    const checkKeys = Object.keys(checkMap).filter(k => checkMap[k]);
 
     checkKeys.forEach(k => {
         const parts = k.includes('_') ? k.split('_') : k.split('-');
@@ -1617,7 +1621,7 @@ function calculateUserDPAndStreak() {
 
         totalChecks++;
         const dateKey = `${yr}-${String(mo).padStart(2,'0')}-${String(dy).padStart(2,'0')}`;
-        if (!dailyStats[dateKey]) dailyStats[dateKey] = { checked: 0, total: S.h.length };
+        if (!dailyStats[dateKey]) dailyStats[dateKey] = { checked: 0, total: habitsList.length || 1 };
         dailyStats[dateKey].checked++;
 
         // Weekly check
@@ -1660,7 +1664,7 @@ function calculateUserDPAndStreak() {
     if (maxStreak >= 30) totalDP += 500;
     if (maxStreak >= 100) totalDP += 2000;
     // Quest DP
-    const questDP = (S.questData && S.questData.totalDP) || 0;
+    const questDP = (sData.questData && sData.questData.totalDP) || 0;
     totalDP += questDP;
 
     // Weekly DP for leaderboard
@@ -1685,10 +1689,13 @@ async function syncUserLeaderboard() {
         const finalDP = isAdmin ? 999999 : stats.totalDP;
         const finalWeekly = isAdmin ? 99999 : stats.weeklyDP;
 
+        const displayName = userData.displayName || currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
+        const photoURL = userData.photoURL || currentUser.photoURL || '';
+
         await db.collection('leaderboard').doc(currentUser.uid).set({
             uid: currentUser.uid,
-            displayName: currentUser.displayName || currentUser.email?.split('@')[0] || 'User',
-            photoURL: currentUser.photoURL || '',
+            displayName: displayName,
+            photoURL: photoURL,
             totalDP: finalDP,
             weeklyDP: finalWeekly,
             streak: stats.currentStreak,
@@ -1706,6 +1713,78 @@ async function syncUserLeaderboard() {
 async function loadLeaderboard() {
     if (!db) return [];
     try {
+        // Sync current logged in user first
+        if (currentUser) {
+            await syncUserLeaderboard();
+        }
+
+        // Fetch users from users collection and sync any missing or out-of-date users
+        const usersSnap = await db.collection('users').get();
+        const lbSnap = await db.collection('leaderboard').get();
+        const lbMap = {};
+        lbSnap.forEach(doc => { lbMap[doc.id] = doc.data(); });
+
+        const syncPromises = [];
+
+        usersSnap.forEach(userDoc => {
+            const uid = userDoc.id;
+            const uData = userDoc.data() || {};
+
+            if (currentUser && uid === currentUser.uid) return;
+
+            let userDP = 0;
+            let userWeekly = 0;
+            let userStreak = 0;
+            let maxStreak = 0;
+            let totalChecks = 0;
+            let perfectDays = 0;
+
+            if (uData.habitData) {
+                try {
+                    const parsed = typeof uData.habitData === 'string' ? JSON.parse(uData.habitData) : uData.habitData;
+                    const computed = calculateUserDPAndStreak(parsed);
+                    userDP = computed.totalDP;
+                    userWeekly = computed.weeklyDP;
+                    userStreak = computed.currentStreak;
+                    maxStreak = computed.maxStreak;
+                    totalChecks = computed.totalChecks;
+                    perfectDays = computed.perfectDays;
+                } catch (err) {}
+            }
+
+            const existingLb = lbMap[uid];
+            const isAdmin = uData.role === 'admin';
+            
+            const displayName = uData.displayName || (existingLb && existingLb.displayName) || uData.email?.split('@')[0] || 'User';
+            const photoURL = uData.photoURL || (existingLb && existingLb.photoURL) || '';
+            const finalDP = isAdmin ? 999999 : Math.max(existingLb?.totalDP || 0, userDP);
+            const finalWeekly = isAdmin ? 99999 : Math.max(existingLb?.weeklyDP || 0, userWeekly);
+            const finalStreak = Math.max(existingLb?.streak || 0, userStreak);
+            const finalMaxStreak = Math.max(existingLb?.maxStreak || 0, maxStreak);
+
+            if (!existingLb || existingLb.displayName !== displayName || existingLb.photoURL !== photoURL || existingLb.totalDP !== finalDP || existingLb.streak !== finalStreak) {
+                syncPromises.push(
+                    db.collection('leaderboard').doc(uid).set({
+                        uid: uid,
+                        displayName: displayName,
+                        photoURL: photoURL,
+                        totalDP: finalDP,
+                        weeklyDP: finalWeekly,
+                        streak: finalStreak,
+                        maxStreak: finalMaxStreak,
+                        totalChecks: totalChecks || existingLb?.totalChecks || 0,
+                        perfectDays: perfectDays || existingLb?.perfectDays || 0,
+                        isAdmin: isAdmin || false,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    }, { merge: true })
+                );
+            }
+        });
+
+        if (syncPromises.length > 0) {
+            await Promise.all(syncPromises);
+        }
+
         const snap = await db.collection('leaderboard').orderBy('totalDP', 'desc').limit(50).get();
         leaderboardCache = [];
         snap.forEach(doc => leaderboardCache.push({ uid: doc.id, ...doc.data() }));
@@ -1722,6 +1801,22 @@ function renderLeaderboard() {
     
     const myStats = calculateUserDPAndStreak();
     const progInfo = getRankProgressInfo(myStats.totalDP);
+
+    // Make sure local current user stats reflect in leaderboardCache
+    if (currentUser && leaderboardCache.length > 0) {
+        const meIndex = leaderboardCache.findIndex(e => e.uid === currentUser.uid);
+        if (meIndex !== -1) {
+            const isAdmin = userPlan && userPlan.role === 'admin';
+            if (!isAdmin) {
+                leaderboardCache[meIndex].totalDP = myStats.totalDP;
+                leaderboardCache[meIndex].weeklyDP = myStats.weeklyDP;
+                leaderboardCache[meIndex].streak = myStats.currentStreak;
+            }
+            if (currentUser.displayName) leaderboardCache[meIndex].displayName = currentUser.displayName;
+            if (currentUser.photoURL) leaderboardCache[meIndex].photoURL = currentUser.photoURL;
+        }
+        leaderboardCache.sort((a, b) => (b.totalDP || 0) - (a.totalDP || 0));
+    }
 
     // Summary
     const summary = document.getElementById('lbSummary');
@@ -1780,7 +1875,7 @@ window._giveKudos = (uid) => {
     renderLeaderboard();
 };
 
-function openLeaderboardModal(defaultTab = 'leaderboard') {
+async function openLeaderboardModal(defaultTab = 'leaderboard') {
     const modal = document.getElementById('lbModalBg');
     if (!modal) return;
     modal.classList.add('show');
@@ -1793,11 +1888,10 @@ function openLeaderboardModal(defaultTab = 'leaderboard') {
     const panel = document.getElementById(`lbPanel${defaultTab.charAt(0).toUpperCase() + defaultTab.slice(1)}`);
     if (panel) panel.style.display = 'block';
 
-    loadLeaderboard().then(() => {
-        if (defaultTab === 'leaderboard') renderLeaderboard();
-        if (defaultTab === 'community') renderCommunity();
-        if (defaultTab === 'ranks') renderRankTiersShowcase();
-    });
+    await loadLeaderboard();
+    if (defaultTab === 'leaderboard') renderLeaderboard();
+    if (defaultTab === 'community') renderCommunity();
+    if (defaultTab === 'ranks') renderRankTiersShowcase();
 }
 
 function closeLeaderboardModal() {
