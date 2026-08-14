@@ -3347,20 +3347,23 @@ body {
 
 /* Light mode capsule backdrop for character cards */
 [data-theme="light"] .rank-card-wrapper {
-    background: #090d16;
+    background: #f6f4ef;
+    background-image: radial-gradient(1200px 720px at 24% 0%, #fffdf9, #efece5 74%);
     border: 1px solid #cbd5e1;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 [data-theme="light"] .rank-card-requirement {
-    color: #cbd5e1;
+    color: #475569;
 }
 
 [data-theme="light"] .profile-avatar-area {
-    background: #090d16;
+    background: #f6f4ef;
+    background-image: radial-gradient(1200px 720px at 24% 0%, #fffdf9, #efece5 74%);
+    border: 1px solid #cbd5e1;
     border-radius: 20px;
     padding: 16px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 }
 
 /* ==================== RESPONSIVE ==================== */
@@ -3486,9 +3489,34 @@ body {
 }
 
 [data-theme="light"] .frame-preview {
-    background: #090d16;
+    background: #f8fafc;
     border-color: #cbd5e1;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+[data-theme="light"] .frame-preview:hover {
+    background: #ffffff;
+    border-color: #10b981;
+}
+[data-theme="light"] .frame-preview.current {
+    background: #ffffff;
+    border-color: #10b981;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+}
+[data-theme="light"] .frame-lv {
+    color: #64748b;
+}
+[data-theme="light"] .av-upload-btn {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    color: #334155;
+}
+[data-theme="light"] .av-upload-btn:hover {
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+    border-color: #10b981;
+}
+[data-theme="light"] .profile-frames-preview h4 {
+    color: #475569;
 }
 
 
