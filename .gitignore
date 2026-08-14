@@ -26,3 +26,6 @@ serviceAccountKey.json
 .env*
 skills/
 traffice/
+.thumbnail
+*.zip
+

@@ -260,3 +260,127 @@ exports.sepayWebhook = functions.https.onRequest(async (req, res) => {
     message: `Payment ${orderNumber} confirmed, user ${uid} upgraded to ${plan}`,
   });
 });
+
+// ============================================================
+// ADMIN DELETE USER
+// Callable function: only admin can invoke
+// Deletes Firebase Auth account + Firestore user doc & subcollections
+// ============================================================
+exports.adminDeleteUser = functions.https.onCall(async (data, context) => {
+  // 1. Verify caller is authenticated
+  if (!context.auth) {
+    throw new functions.https.HttpsError(
+      "unauthenticated",
+      "Bạn phải đăng nhập để thực hiện thao tác này."
+    );
+  }
+
+  // 2. Verify caller is admin
+  const callerUid = context.auth.uid;
+  const callerDoc = await db.collection("users").doc(callerUid).get();
+  if (!callerDoc.exists || callerDoc.data().role !== "admin") {
+    throw new functions.https.HttpsError(
+      "permission-denied",
+      "Chỉ admin mới có quyền xóa tài khoản."
+    );
+  }
+
+  // 3. Get target user UID
+  const targetUid = data.uid;
+  if (!targetUid || typeof targetUid !== "string") {
+    throw new functions.https.HttpsError(
+      "invalid-argument",
+      "Thiếu UID của user cần xóa."
+    );
+  }
+
+  // 4. Prevent admin from deleting themselves
+  if (targetUid === callerUid) {
+    throw new functions.https.HttpsError(
+      "failed-precondition",
+      "Không thể xóa tài khoản admin của chính mình."
+    );
+  }
+
+  // 5. Prevent deleting other admins
+  const targetDoc = await db.collection("users").doc(targetUid).get();
+  if (targetDoc.exists && targetDoc.data().role === "admin") {
+    throw new functions.https.HttpsError(
+      "failed-precondition",
+      "Không thể xóa tài khoản admin khác."
+    );
+  }
+
+  console.log(`Admin ${callerUid} is deleting user ${targetUid}`);
+
+  // 6. Delete all subcollections of the user document
+  const userRef = db.collection("users").doc(targetUid);
+  try {
+    const subcollections = await userRef.listCollections();
+    for (const subcol of subcollections) {
+      const docs = await subcol.listDocuments();
+      const batch = db.batch();
+      for (const doc of docs) {
+        batch.delete(doc);
+      }
+      if (docs.length > 0) {
+        await batch.commit();
+      }
+      console.log(`Deleted subcollection ${subcol.id} (${docs.length} docs)`);
+    }
+  } catch (err) {
+    console.error("Error deleting subcollections:", err);
+  }
+
+  // 7. Delete user document from Firestore
+  try {
+    await userRef.delete();
+    console.log(`Deleted Firestore doc for user ${targetUid}`);
+  } catch (err) {
+    console.error("Error deleting user doc:", err);
+  }
+
+  // 8. Delete related payments
+  try {
+    const payments = await db.collection("payments")
+      .where("uid", "==", targetUid)
+      .get();
+    if (!payments.empty) {
+      const batch = db.batch();
+      payments.forEach((doc) => batch.delete(doc.ref));
+      await batch.commit();
+      console.log(`Deleted ${payments.size} payment(s) for user ${targetUid}`);
+    }
+  } catch (err) {
+    console.error("Error deleting payments:", err);
+  }
+
+  // 9. Delete leaderboard entry
+  try {
+    await db.collection("leaderboard").doc(targetUid).delete();
+  } catch (err) {
+    console.error("Error deleting leaderboard:", err);
+  }
+
+  // 10. Delete Firebase Auth account
+  try {
+    await admin.auth().deleteUser(targetUid);
+    console.log(`Deleted Auth account for user ${targetUid}`);
+  } catch (err) {
+    // User might not exist in Auth (e.g. already deleted)
+    if (err.code === "auth/user-not-found") {
+      console.warn(`Auth user ${targetUid} not found, skipping.`);
+    } else {
+      console.error("Error deleting Auth user:", err);
+      throw new functions.https.HttpsError(
+        "internal",
+        "Lỗi khi xóa tài khoản Auth: " + err.message
+      );
+    }
+  }
+
+  return {
+    success: true,
+    message: `Đã xóa tài khoản ${targetUid} thành công.`,
+  };
+});

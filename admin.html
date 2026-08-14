@@ -65,6 +65,11 @@
                     <span>Chờ duyệt</span>
                     <span class="nav-badge" id="pendingBadge" style="display:none;">0</span>
                 </a>
+                <a href="#" class="nav-item" data-section="quests">
+                    <span class="nav-icon">⚡</span>
+                    <span>Nhiệm vụ</span>
+                    <span class="nav-badge" id="questBadge" style="display:none;">0</span>
+                </a>
             </div>
             <div class="sidebar-footer">
                 <div class="admin-profile">
@@ -201,6 +206,40 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Quest Management Section -->
+            <section class="section" id="sectionQuests" style="display:none;">
+                <div class="pending-info">
+                    <h3>⚡ Quản lý Nhiệm vụ Đột xuất</h3>
+                    <p>Tạo nhiệm vụ, theo dõi hoàn thành, tặng điểm DP.</p>
+                </div>
+
+                <!-- Create Quest Form -->
+                <div class="quest-create-form">
+                    <h4>📝 Tạo Nhiệm Vụ Mới</h4>
+                    <div class="form-row">
+                        <input type="text" id="questTitle" placeholder="Tên nhiệm vụ..." class="form-input">
+                        <input type="number" id="questRewardDP" placeholder="DP thưởng" class="form-input small" value="100">
+                    </div>
+                    <textarea id="questDescription" placeholder="Mô tả nhiệm vụ (VD: Chạy bộ 3km, chụp ảnh bằng chứng)" rows="2" class="form-input"></textarea>
+                    <div class="form-row">
+                        <input type="date" id="questDeadline" class="form-input">
+                        <button class="btn-action save" id="btnCreateQuest">⚡ Tạo Nhiệm Vụ</button>
+                    </div>
+                </div>
+
+                <!-- Active Quests List -->
+                <div class="table-container" style="margin-top:16px;">
+                    <h4>📊 Nhiệm vụ đang mở</h4>
+                    <div id="activeQuestsList"></div>
+                </div>
+
+                <!-- Submissions -->
+                <div class="table-container" style="margin-top:16px;">
+                    <h4>📥 Báo cáo hoàn thành chờ duyệt</h4>
+                    <div id="questSubmissionsList"></div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -255,6 +294,53 @@
                 </select>
                 <button class="btn-action save" id="modalSavePlan">💾 Lưu gói</button>
                 <button class="btn-action toggle" id="modalToggleDisable">🔒 Vô hiệu hóa</button>
+                <div class="modal-actions-spacer"></div>
+                <div class="dp-grant-section">
+                    <h4>🎁 Tặng điểm DP</h4>
+                    <div class="form-row">
+                        <input type="number" id="modalDPAmount" placeholder="Số DP" class="form-input small" value="100">
+                        <input type="text" id="modalDPReason" placeholder="Lý do (VD: Hoàn thành thử thách)" class="form-input">
+                        <button class="btn-action save" id="modalGrantDP">🎁 Tặng DP</button>
+                    </div>
+                </div>
+                <div class="modal-actions-spacer"></div>
+                <button class="btn-action delete" id="modalDeleteUser">🗑️ Xóa tài khoản</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteConfirmModal" style="display:none;">
+        <div class="modal-card delete-confirm-card">
+            <div class="modal-header delete-header">
+                <h3>⚠️ Xác nhận xóa tài khoản</h3>
+                <button class="modal-close" id="deleteConfirmClose">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="delete-warning">
+                    <div class="delete-warning-icon">🗑️</div>
+                    <p class="delete-warning-text">Bạn sắp <strong>xóa vĩnh viễn</strong> tài khoản:</p>
+                    <div class="delete-user-info">
+                        <span class="delete-user-name" id="deleteUserName">—</span>
+                        <span class="delete-user-email" id="deleteUserEmail">—</span>
+                    </div>
+                    <p class="delete-warning-detail">Hành động này sẽ xóa toàn bộ:</p>
+                    <ul class="delete-items-list">
+                        <li>🔑 Tài khoản đăng nhập (Firebase Auth)</li>
+                        <li>📄 Dữ liệu cá nhân (Firestore)</li>
+                        <li>💳 Lịch sử thanh toán</li>
+                        <li>🏆 Bảng xếp hạng</li>
+                        <li>📊 Tất cả dữ liệu liên quan</li>
+                    </ul>
+                    <div class="delete-confirm-input-wrapper">
+                        <label>Nhập <strong>XÓA</strong> để xác nhận:</label>
+                        <input type="text" id="deleteConfirmInput" placeholder="Nhập XÓA" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions delete-actions">
+                <button class="btn-action cancel" id="deleteConfirmCancel">Hủy bỏ</button>
+                <button class="btn-action confirm-delete" id="deleteConfirmBtn" disabled>🗑️ Xóa vĩnh viễn</button>
             </div>
         </div>
     </div>

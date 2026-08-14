@@ -13,8 +13,8 @@
     <meta name="apple-mobile-web-app-title" content="Habit Mastery">
     <link rel="apple-touch-icon" href="./icon-512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=5">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=6">
 
     <!-- Firebase SDK (CDN) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -41,23 +41,7 @@
     </div>
 
     <div class="app" id="mainApp" style="display:none;">
-        <!-- DYNAMIC ISLAND SOCIAL BAR (iPhone 15 Style) -->
-        <div class="social-sidebar social-island" id="socialIsland">
-            <div class="island-content">
-                <a href="https://www.facebook.com/profile.php?id=61592318730811" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="island-link fb">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                    <span class="island-label">Facebook</span>
-                </a>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="island-link ig">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5"/></svg>
-                    <span class="island-label">Instagram</span>
-                </a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="island-link tw">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
-                    <span class="island-label">Twitter</span>
-                </a>
-            </div>
-        </div>
+
 
         <!-- GLOBAL NAVBAR -->
         <header class="navbar">
@@ -67,21 +51,20 @@
             </div>
             <div class="nav-controls">
                 <!-- User Profile -->
-                <div class="user-profile" id="userProfile">
-                    <img class="user-avatar" id="userAvatar" src="" alt="Avatar">
+                <div class="user-profile" id="userProfile" onclick="window._openProfile()">
+                    <div class="av-frame" id="navAvatarFrame" data-level="1">
+                        <div class="av-ring"></div>
+                        <div class="av-ring-inner"></div>
+                        <div class="av-spin"></div>
+                        <img class="av-img" id="userAvatar" src="" alt="Avatar">
+                    </div>
                     <span class="user-name" id="userName"></span>
                 </div>
                 <button class="nav-theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
-                <div class="lang-switch" id="langSwitch">
-                    <button class="lang-btn active" data-lang="vi">VI</button>
-                    <button class="lang-btn" data-lang="zh">中</button>
-                    <button class="lang-btn" data-lang="en">EN</button>
-                </div>
-                <div class="ime-switch" id="imeSwitch">
-                    <button class="ime-btn active" data-ime="telex" title="Bộ gõ Telex">Telex</button>
-                    <button class="ime-btn" data-ime="vni" title="Bộ gõ VNI">VNI</button>
-                    <button class="ime-btn" data-ime="off" title="Tắt bộ gõ">Tắt</button>
-                </div>
+                <button class="nav-lang-btn" id="langToggleBtn" title="Chuyển ngôn ngữ">🌐 VI</button>
+                <button class="nav-action-btn" id="communityBtn" title="Cộng đồng"><span data-i18n="tabCommunity">Cộng đồng</span></button>
+                <button class="nav-action-btn" id="leaderboardBtn" title="Bảng Xếp Hạng"><span data-i18n="tabLeaderboard">BXH</span></button>
+                <button class="nav-action-btn quest-btn" id="questBtn" title="Nhiệm vụ rèn luyện">⚔️ <span data-i18n="tabQuests">Nhiệm vụ</span></button>
                 <button class="nav-logout-btn" id="logoutBtn" title="Đăng xuất">🚪</button>
             </div>
         </header>
@@ -235,6 +218,18 @@
                 <span class="mobile-nav-icon">👑</span>
                 <span class="mobile-nav-text" data-i18n="tabTop10">Top 10</span>
             </button>
+            <button class="mobile-nav-item" data-tab="community" id="mobileCommunityBtn">
+                <span class="mobile-nav-icon">💬</span>
+                <span class="mobile-nav-text" data-i18n="tabCommunity">Cộng đồng</span>
+            </button>
+            <button class="mobile-nav-item" data-tab="leaderboard" id="mobileLbBtn">
+                <span class="mobile-nav-icon">🏆</span>
+                <span class="mobile-nav-text" data-i18n="tabLeaderboard">BXH</span>
+            </button>
+            <button class="mobile-nav-item" data-tab="quests" id="mobileQuestBtn">
+                <span class="mobile-nav-icon">⚔️</span>
+                <span class="mobile-nav-text" data-i18n="tabQuests">Nhiệm vụ</span>
+            </button>
         </div>
     </div>
 
@@ -280,7 +275,8 @@
     </div>
 
     <script src="gotiengviet.js"></script>
-    <script src="app.js"></script>
+    <script src="avatar_frames.js?v=1"></script>
+    <script src="app.js?v=8"></script>
     <script>
     (function(){
       if (!('serviceWorker' in navigator) || window.electronAPI) return;
@@ -353,4 +349,84 @@
       };
     })();
     </script>
+    <!-- LEADERBOARD MODAL -->
+    <div class="modal-bg" id="lbModalBg">
+        <div class="lb-modal">
+            <div class="lb-modal-header">
+                <h2 data-i18n="lbTitle">BẢNG XẾP HẠNG CỘNG ĐỒNG</h2>
+                <button class="lb-close-btn" id="lbCloseBtn">✕</button>
+            </div>
+            <div class="lb-summary" id="lbSummary"></div>
+            <div class="lb-tabs">
+                <button class="lb-tab-btn active" data-tab="leaderboard"><span data-i18n="topPlayers">Top 50</span></button>
+                <button class="lb-tab-btn" data-tab="community"><span data-i18n="tabCommunity">Cộng đồng</span></button>
+                <button class="lb-tab-btn" data-tab="ranks"><span data-i18n="rankTiers">Cấp bậc</span></button>
+            </div>
+            <div class="lb-tab-panel" id="lbPanelLeaderboard">
+                <div class="lb-feed-container" id="lbFeedContainer"></div>
+            </div>
+            <div class="lb-tab-panel" id="lbPanelCommunity" style="display:none">
+                <div class="cm-post-form">
+                    <textarea id="cmPostInput" placeholder="Chia sẻ hành trình rèn luyện của bạn..." rows="3"></textarea>
+                    <button class="cm-post-submit" onclick="window._submitCmPost()">Đăng bài</button>
+                </div>
+                <div class="lb-feed-container" id="communityFeedContainer"></div>
+            </div>
+            <div class="lb-tab-panel" id="lbPanelRanks" style="display:none">
+                <div id="rankTiersContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUEST MODAL -->
+    <div class="modal-bg quest-modal-bg" id="questModalBg">
+        <div class="lb-modal quest-modal">
+            <div class="lb-modal-header">
+                <h2 data-i18n="questTitle">NHIỆM VỤ RÈN LUYỆN</h2>
+                <button class="lb-close-btn" id="questCloseBtn">✕</button>
+            </div>
+            <div class="quest-summary" id="questSummary"></div>
+            <div class="lb-tabs quest-tabs">
+                <button class="lb-tab-btn quest-tab-btn active" data-filter="daily">🌅 <span data-i18n="questDaily">Hàng ngày</span></button>
+                <button class="lb-tab-btn quest-tab-btn" data-filter="weekly">📅 <span data-i18n="questWeekly">Hàng tuần</span></button>
+                <button class="lb-tab-btn quest-tab-btn" data-filter="achievement">🏅 <span data-i18n="questAchievement">Thành tích</span></button>
+                <button class="lb-tab-btn quest-tab-btn" data-filter="surprise">⚡ <span data-i18n="questSurprise">Đột xuất</span></button>
+            </div>
+            <div class="quest-feed-container" id="questFeedContainer"></div>
+        </div>
+    </div>
+
+    <!-- PROFILE MODAL -->
+    <div class="modal-bg" id="profileModalBg">
+        <div class="lb-modal profile-modal">
+            <div class="lb-modal-header">
+                <h2>HỒ SƠ NHÂN VẬT</h2>
+                <button class="lb-close-btn" id="profileCloseBtn">✕</button>
+            </div>
+            <div class="profile-body">
+                <div class="profile-avatar-area">
+                    <div id="profileAvatarFrame"></div>
+                    <button class="av-upload-btn" id="avatarUploadBtn">📷 Đổi ảnh đại diện</button>
+                    <input type="file" id="avatarFileInput" accept="image/*" style="display:none">
+                </div>
+                <div class="profile-info" style="display:flex; justify-content:center; gap:16px; margin:10px 0 16px;">
+                    <div style="display:none;" id="profileName"></div>
+                    <div style="display:none;" id="profileLevel"></div>
+                    <div class="profile-dp">DP: <span id="profileDP">0</span></div>
+                    <div class="profile-streak">🔥 Streak: <span id="profileStreak">0</span> ngày</div>
+                </div>
+                <div class="profile-frames-preview">
+                    <h4>Khung cấp bậc</h4>
+                    <div class="frames-grid" id="framesGrid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="gotiengviet.js"></script>
+    <script src="nameplate_templates.js"></script>
+    <script src="avatar_frames.js"></script>
+    <script src="app.js"></script>
+</body>
 </html>

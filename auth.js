@@ -138,6 +138,138 @@ function initPassToggle(){
         inp.type = inp.type === 'password' ? 'text' : 'password';
         this.textContent = inp.type === 'password' ? '👁️' : '🙈';
     };
+
+    // Disable Vietnamese IME on password fields
+    disableVietnameseIME('loginPassword');
+    disableVietnameseIME('regPassword');
+    disableVietnameseIME('regConfirm');
+}
+
+// ===== DISABLE VIETNAMESE IME FOR PASSWORD =====
+// Unikey/GoTiengViet works at OS level — sends Backspace + composed char
+// BEFORE the browser processes input. Only way to fully block:
+// Intercept at keydown using e.code (physical key, IME-independent),
+// preventDefault, and manually insert the raw ASCII character.
+function disableVietnameseIME(inputId) {
+    const inp = document.getElementById(inputId);
+    if (!inp) return;
+
+    // Map physical key codes to ASCII characters
+    const codeMap = {};
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(c => {
+        codeMap['Key' + c] = { normal: c.toLowerCase(), shift: c };
+    });
+    '0123456789'.split('').forEach((c, i) => {
+        codeMap['Digit' + c] = { normal: c, shift: ')!@#$%^&*('.charAt(i) };
+    });
+    // Special character keys
+    Object.assign(codeMap, {
+        'Backquote':    { normal: '`', shift: '~' },
+        'Minus':        { normal: '-', shift: '_' },
+        'Equal':        { normal: '=', shift: '+' },
+        'BracketLeft':  { normal: '[', shift: '{' },
+        'BracketRight': { normal: ']', shift: '}' },
+        'Backslash':    { normal: '\\', shift: '|' },
+        'Semicolon':    { normal: ';', shift: ':' },
+        'Quote':        { normal: "'", shift: '"' },
+        'Comma':        { normal: ',', shift: '<' },
+        'Period':       { normal: '.', shift: '>' },
+        'Slash':        { normal: '/', shift: '?' },
+        'Space':        { normal: ' ', shift: ' ' },
+    });
+
+    // Block ALL default key input — we handle insertion manually
+    inp.addEventListener('keydown', (e) => {
+        // Allow Tab, Enter, Escape
+        if (['Tab', 'Enter', 'Escape'].includes(e.key)) return;
+
+        // Allow Ctrl/Cmd combos (Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+Z)
+        if (e.ctrlKey || e.metaKey) return;
+
+        // Handle Backspace
+        if (e.key === 'Backspace') {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            const start = inp.selectionStart;
+            const end = inp.selectionEnd;
+            if (start !== end) {
+                inp.value = inp.value.slice(0, start) + inp.value.slice(end);
+                inp.setSelectionRange(start, start);
+            } else if (start > 0) {
+                inp.value = inp.value.slice(0, start - 1) + inp.value.slice(start);
+                inp.setSelectionRange(start - 1, start - 1);
+            }
+            return;
+        }
+
+        // Handle Delete
+        if (e.key === 'Delete') {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            const start = inp.selectionStart;
+            const end = inp.selectionEnd;
+            if (start !== end) {
+                inp.value = inp.value.slice(0, start) + inp.value.slice(end);
+            } else {
+                inp.value = inp.value.slice(0, start) + inp.value.slice(start + 1);
+            }
+            inp.setSelectionRange(start, start);
+            return;
+        }
+
+        // Handle arrow keys, Home, End
+        if (e.key.startsWith('Arrow') || e.key === 'Home' || e.key === 'End') return;
+
+        // Map physical key code to ASCII character
+        const mapping = codeMap[e.code];
+        if (mapping) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            const char = e.shiftKey ? mapping.shift : mapping.normal;
+            const start = inp.selectionStart;
+            const end = inp.selectionEnd;
+            inp.value = inp.value.slice(0, start) + char + inp.value.slice(end);
+            inp.setSelectionRange(start + 1, start + 1);
+            return;
+        }
+
+        // Block any unknown key to prevent IME injection
+        if (e.key.length === 1) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        }
+    });
+
+    // Block composition events entirely
+    ['compositionstart', 'compositionupdate', 'compositionend'].forEach(evt => {
+        inp.addEventListener(evt, (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        });
+    });
+
+    // Safety: strip any Vietnamese chars that somehow get through (e.g. autofill)
+    inp.addEventListener('input', (e) => {
+        const cleaned = inp.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                        .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+        if (cleaned !== inp.value) {
+            const pos = Math.max(0, (inp.selectionStart || 0) - (inp.value.length - cleaned.length));
+            inp.value = cleaned;
+            try { inp.setSelectionRange(pos, pos); } catch(ex) {}
+        }
+    });
+
+    // Handle paste — strip Vietnamese from pasted text
+    inp.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text');
+        const cleaned = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                        .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+        const start = inp.selectionStart;
+        const end = inp.selectionEnd;
+        inp.value = inp.value.slice(0, start) + cleaned + inp.value.slice(end);
+        inp.setSelectionRange(start + cleaned.length, start + cleaned.length);
+    });
 }
 
 // ===== MESSAGE HELPERS =====

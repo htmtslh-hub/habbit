@@ -1,6 +1,6 @@
 // ===== HABIT MASTERY - SERVICE WORKER =====
 // Change CACHE_VERSION when deploying updates
-const CACHE_VERSION = '2.0.2';
+const CACHE_VERSION = '3.0.0';
 const CACHE_NAME = `habit-game-v${CACHE_VERSION}`;
 
 const ASSETS_TO_CACHE = [
@@ -16,15 +16,14 @@ const ASSETS_TO_CACHE = [
   '/manifest.json'
 ];
 
-// ===== INSTALL: Cache core assets, DON'T skip waiting =====
-// We wait for user's permission before activating the new SW
+// ===== INSTALL: Cache core assets and skip waiting =====
 self.addEventListener('install', event => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
-  // Do NOT call skipWaiting() here — let the user decide
 });
 
 // ===== ACTIVATE: Clean old caches =====

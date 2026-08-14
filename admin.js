@@ -83,6 +83,8 @@ function initAuth(){
             initSearch();
             initActions();
             initModal();
+            initDeleteConfirmModal();
+            initQuestManagement();
 
             // Initialize Vietnamese Input Method Editor (default to Telex, active on admin management/search fields)
             if(typeof GoTiengViet !== 'undefined' && GoTiengViet.VietnameseInput){
@@ -213,6 +215,7 @@ function renderUsers(filter, search){
             <td>
                 <button class="btn-sm" onclick="window._adminViewUser('${u.uid}')" title="Chi tiết">👁️</button>
                 ${plan !== 'premium' ? `<button class="btn-sm upgrade" onclick="window._adminQuickUpgrade('${u.uid}')" title="Upgrade Premium">👑</button>` : ''}
+                ${u.role !== 'admin' ? `<button class="btn-sm danger" onclick="window._adminDeleteUser('${u.uid}')" title="Xóa tài khoản">🗑️</button>` : ''}
             </td>
         </tr>`;
     }).join('');
@@ -281,7 +284,7 @@ function initNavigation(){
             if(target) target.style.display = 'block';
             
             // Update title
-            const titles = { dashboard: 'Dashboard', users: 'Quản lý User', pending: 'Chờ duyệt' };
+            const titles = { dashboard: 'Dashboard', users: 'Quản lý User', pending: 'Chờ duyệt', quests: 'Nhiệm vụ Đột xuất' };
             document.getElementById('pageTitle').textContent = titles[section] || 'Dashboard';
         };
     });
@@ -394,6 +397,44 @@ function initModal(){
             alert('Lỗi: ' + err.message);
         }
     };
+
+    // DP Grant handler
+    document.getElementById('modalGrantDP').onclick = async () => {
+        if(!currentModalUid) return;
+        const amount = parseInt(document.getElementById('modalDPAmount').value);
+        const reason = document.getElementById('modalDPReason').value.trim();
+        if(!amount || amount <= 0) { alert('Số DP phải lớn hơn 0'); return; }
+        if(!reason) { alert('Vui lòng nhập lý do'); return; }
+
+        try {
+            // Update leaderboard DP
+            await db.collection('leaderboard').doc(currentModalUid).set({
+                totalDP: firebase.firestore.FieldValue.increment(amount),
+            }, { merge: true });
+
+            // Log the grant
+            await db.collection('dp_grants').add({
+                uid: currentModalUid,
+                amount: amount,
+                reason: reason,
+                grantedBy: firebase.auth().currentUser.uid,
+                grantedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+
+            alert(`✅ Đã tặng ${amount} DP cho user!`);
+            document.getElementById('modalDPAmount').value = '100';
+            document.getElementById('modalDPReason').value = '';
+        } catch(err) {
+            console.error('DP grant error:', err);
+            alert('Lỗi: ' + err.message);
+        }
+    };
+
+    // Delete user button in modal
+    document.getElementById('modalDeleteUser').onclick = () => {
+        if(!currentModalUid) return;
+        openDeleteConfirmModal(currentModalUid);
+    };
 }
 
 function openUserModal(uid){
@@ -417,6 +458,12 @@ function openUserModal(uid){
 
     const toggleBtn = document.getElementById('modalToggleDisable');
     toggleBtn.textContent = user.disabled ? '🔓 Kích hoạt' : '🔒 Vô hiệu hóa';
+
+    // Show/hide delete button based on role
+    const deleteBtn = document.getElementById('modalDeleteUser');
+    if(deleteBtn){
+        deleteBtn.style.display = user.role === 'admin' ? 'none' : 'inline-flex';
+    }
 
     document.getElementById('userModal').style.display = 'flex';
 }
@@ -466,6 +513,266 @@ window._adminRejectPending = async (uid) => {
     } catch(err) {
         alert('Lỗi: ' + err.message);
     }
+};
+
+// ===== DELETE USER =====
+let pendingDeleteUid = null;
+
+function openDeleteConfirmModal(uid){
+    const user = allUsers.find(u => u.uid === uid);
+    if(!user) return;
+    if(user.role === 'admin'){
+        alert('Không thể xóa tài khoản admin!');
+        return;
+    }
+    pendingDeleteUid = uid;
+
+    document.getElementById('deleteUserName').textContent = user.displayName || user.email?.split('@')[0] || 'Unknown';
+    document.getElementById('deleteUserEmail').textContent = user.email || '—';
+
+    const input = document.getElementById('deleteConfirmInput');
+    input.value = '';
+    document.getElementById('deleteConfirmBtn').disabled = true;
+
+    // Close user modal if open
+    document.getElementById('userModal').style.display = 'none';
+
+    document.getElementById('deleteConfirmModal').style.display = 'flex';
+    input.focus();
+}
+
+function initDeleteConfirmModal(){
+    const modal = document.getElementById('deleteConfirmModal');
+    const input = document.getElementById('deleteConfirmInput');
+    const confirmBtn = document.getElementById('deleteConfirmBtn');
+    const cancelBtn = document.getElementById('deleteConfirmCancel');
+    const closeBtn = document.getElementById('deleteConfirmClose');
+
+    const closeModal = () => {
+        modal.style.display = 'none';
+        input.value = '';
+        confirmBtn.disabled = true;
+        pendingDeleteUid = null;
+    };
+
+    closeBtn.onclick = closeModal;
+    cancelBtn.onclick = closeModal;
+    modal.onclick = (e) => { if(e.target === modal) closeModal(); };
+
+    input.oninput = () => {
+        const val = input.value.trim().toUpperCase();
+        confirmBtn.disabled = (val !== 'XÓA' && val !== 'XOA');
+    };
+
+    confirmBtn.onclick = async () => {
+        if(!pendingDeleteUid) return;
+        const val = input.value.trim().toUpperCase();
+        if(val !== 'XÓA' && val !== 'XOA') return;
+
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = '⏳ Đang xóa...';
+
+        try {
+            const uid = pendingDeleteUid;
+            const userRef = db.collection('users').doc(uid);
+
+            // 1. Delete known subcollections under user doc
+            const knownSubcollections = ['habits', 'notes', 'tasks', 'journal', 'achievements', 'settings', 'streaks'];
+            for(const subName of knownSubcollections){
+                try {
+                    const subSnap = await userRef.collection(subName).get();
+                    const batch = db.batch();
+                    subSnap.forEach(doc => batch.delete(doc.ref));
+                    if(!subSnap.empty) await batch.commit();
+                } catch(e) { /* subcollection might not exist, skip */ }
+            }
+
+            // 2. Delete user document
+            await userRef.delete();
+
+            // 3. Delete related payments
+            try {
+                const payments = await db.collection('payments').where('uid', '==', uid).get();
+                if(!payments.empty){
+                    const batch = db.batch();
+                    payments.forEach(doc => batch.delete(doc.ref));
+                    await batch.commit();
+                }
+            } catch(e) { console.warn('Skip payments delete:', e); }
+
+            // 4. Delete leaderboard entry
+            try {
+                await db.collection('leaderboard').doc(uid).delete();
+            } catch(e) { /* skip */ }
+
+            // 5. Delete community posts
+            try {
+                const posts = await db.collection('community_posts').where('uid', '==', uid).get();
+                if(!posts.empty){
+                    const batch = db.batch();
+                    posts.forEach(doc => batch.delete(doc.ref));
+                    await batch.commit();
+                }
+            } catch(e) { console.warn('Skip posts delete:', e); }
+
+            closeModal();
+            alert('✅ Đã xóa tài khoản thành công!\n\n⚠️ Lưu ý: Tài khoản đăng nhập (Auth) chỉ xóa được khi nâng lên gói Blaze.');
+        } catch(err) {
+            console.error('Delete user error:', err);
+            alert('❌ Lỗi: ' + (err.message || 'Không thể xóa tài khoản'));
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = '🗑️ Xóa vĩnh viễn';
+        }
+    };
+}
+
+window._adminDeleteUser = (uid) => { openDeleteConfirmModal(uid); };
+
+// ===== QUEST MANAGEMENT =====
+async function initQuestManagement() {
+    const btnCreate = document.getElementById('btnCreateQuest');
+    if (btnCreate) {
+        btnCreate.onclick = async () => {
+            const title = document.getElementById('questTitle').value.trim();
+            const desc = document.getElementById('questDescription').value.trim();
+            const dp = parseInt(document.getElementById('questRewardDP').value) || 100;
+            const deadlineStr = document.getElementById('questDeadline').value;
+
+            if (!title) { alert('Vui lòng nhập tên nhiệm vụ'); return; }
+
+            try {
+                const questData = {
+                    title,
+                    description: desc,
+                    rewardDP: dp,
+                    status: 'active',
+                    createdBy: firebase.auth().currentUser.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                };
+                if (deadlineStr) {
+                    questData.deadline = firebase.firestore.Timestamp.fromDate(new Date(deadlineStr));
+                }
+                await db.collection('surprise_quests').add(questData);
+                alert('✅ Đã tạo nhiệm vụ!');
+                document.getElementById('questTitle').value = '';
+                document.getElementById('questDescription').value = '';
+                document.getElementById('questRewardDP').value = '100';
+                document.getElementById('questDeadline').value = '';
+                loadAdminQuests();
+            } catch (e) {
+                alert('Lỗi: ' + e.message);
+            }
+        };
+    }
+    loadAdminQuests();
+}
+
+async function loadAdminQuests() {
+    const container = document.getElementById('activeQuestsList');
+    const subContainer = document.getElementById('questSubmissionsList');
+    if (!container) return;
+
+    try {
+        const snap = await db.collection('surprise_quests').orderBy('createdAt', 'desc').limit(20).get();
+        if (snap.empty) {
+            container.innerHTML = '<p style="color:#64748b;padding:12px;">Chưa có nhiệm vụ nào</p>';
+        } else {
+            let html = '';
+            snap.forEach(doc => {
+                const q = doc.data();
+                const deadline = q.deadline ? new Date(q.deadline.toDate()).toLocaleDateString('vi-VN') : 'Không';
+                const statusColor = q.status === 'active' ? '#10b981' : '#64748b';
+                html += `<div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;margin-bottom:8px;">
+                    <div style="flex:1;">
+                        <div style="font-weight:600;color:#f1f5f9;">⚡ ${escapeHtml(q.title || '')}</div>
+                        <div style="font-size:12px;color:#94a3b8;margin-top:2px;">${escapeHtml(q.description || '')} | +${q.rewardDP || 0} DP | Hạn: ${deadline}</div>
+                    </div>
+                    <span style="color:${statusColor};font-size:12px;font-weight:600;">${q.status === 'active' ? 'Đang mở' : 'Đã đóng'}</span>
+                    ${q.status === 'active' ? `<button onclick="window._deactivateQuest('${doc.id}')" style="background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.2);padding:4px 10px;border-radius:8px;cursor:pointer;font-size:11px;">Đóng</button>` : ''}
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // Load submissions
+        let subHtml = '';
+        let pendingCount = 0;
+        for (const doc of snap.docs) {
+            const q = doc.data();
+            if (q.status !== 'active') continue;
+            try {
+                const subs = await db.collection('surprise_quests').doc(doc.id).collection('submissions')
+                    .where('status', '==', 'pending').get();
+                subs.forEach(sub => {
+                    const s = sub.data();
+                    pendingCount++;
+                    subHtml += `<div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.15);border-radius:12px;margin-bottom:8px;">
+                        <div style="flex:1;">
+                            <div style="font-weight:600;color:#f1f5f9;">${escapeHtml(s.displayName || 'User')}</div>
+                            <div style="font-size:12px;color:#94a3b8;">⚡ ${escapeHtml(q.title || '')} | +${q.rewardDP || 0} DP</div>
+                        </div>
+                        <button onclick="window._approveSubmission('${doc.id}','${sub.id}','${sub.data().uid}',${q.rewardDP || 0})" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;">✅ Duyệt</button>
+                        <button onclick="window._rejectSubmission('${doc.id}','${sub.id}')" style="background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.2);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;">❌ Từ chối</button>
+                    </div>`;
+                });
+            } catch (e) { console.warn('Load submissions error:', e); }
+        }
+
+        if (subContainer) {
+            subContainer.innerHTML = subHtml || '<p style="color:#64748b;padding:12px;">Không có báo cáo chờ duyệt</p>';
+        }
+
+        // Update badge
+        const badge = document.getElementById('questBadge');
+        if (badge) {
+            if (pendingCount > 0) {
+                badge.textContent = pendingCount;
+                badge.style.display = 'inline-flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+    } catch (e) {
+        console.error('Load quests error:', e);
+        container.innerHTML = '<p style="color:#ef4444;">Lỗi tải dữ liệu</p>';
+    }
+}
+
+window._deactivateQuest = async (questId) => {
+    if (!confirm('Đóng nhiệm vụ này?')) return;
+    try {
+        await db.collection('surprise_quests').doc(questId).update({ status: 'closed' });
+        loadAdminQuests();
+    } catch (e) { alert('Lỗi: ' + e.message); }
+};
+
+window._approveSubmission = async (questId, subId, uid, dp) => {
+    try {
+        // Mark submission approved
+        await db.collection('surprise_quests').doc(questId).collection('submissions').doc(subId).update({ status: 'approved' });
+        // Grant DP
+        await db.collection('leaderboard').doc(uid).set({
+            totalDP: firebase.firestore.FieldValue.increment(dp),
+        }, { merge: true });
+        // Log
+        await db.collection('dp_grants').add({
+            uid,
+            amount: dp,
+            reason: 'Nhiệm vụ đột xuất được duyệt',
+            questId,
+            grantedBy: firebase.auth().currentUser.uid,
+            grantedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        alert(`✅ Đã duyệt và tặng ${dp} DP!`);
+        loadAdminQuests();
+    } catch (e) { alert('Lỗi: ' + e.message); }
+};
+
+window._rejectSubmission = async (questId, subId) => {
+    try {
+        await db.collection('surprise_quests').doc(questId).collection('submissions').doc(subId).update({ status: 'rejected' });
+        loadAdminQuests();
+    } catch (e) { alert('Lỗi: ' + e.message); }
 };
 
 // ===== INIT =====

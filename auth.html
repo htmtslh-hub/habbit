@@ -94,9 +94,10 @@
                             <label for="loginPassword">Mật khẩu</label>
                             <div class="input-wrapper">
                                 <span class="input-icon">🔒</span>
-                                <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+                                <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-form-type="other">
                                 <button type="button" class="toggle-pass" id="toggleLoginPass">👁️</button>
                             </div>
+                            <span class="input-hint">⚠️ Tắt bộ gõ tiếng Việt (Telex/VNI) khi nhập mật khẩu</span>
                         </div>
                         <div class="remember-me">
                             <label class="remember-label" for="rememberMe">
@@ -176,7 +177,7 @@
                             <label for="regPassword">Mật khẩu</label>
                             <div class="input-wrapper">
                                 <span class="input-icon">🔒</span>
-                                <input type="password" id="regPassword" placeholder="Tối thiểu 6 ký tự" required minlength="6" autocomplete="new-password">
+                                <input type="password" id="regPassword" placeholder="Tối thiểu 6 ký tự" required minlength="6" autocomplete="new-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-form-type="other">
                                 <button type="button" class="toggle-pass" id="toggleRegPass">👁️</button>
                             </div>
                         </div>
@@ -184,7 +185,7 @@
                             <label for="regConfirm">Xác nhận mật khẩu</label>
                             <div class="input-wrapper">
                                 <span class="input-icon">🔒</span>
-                                <input type="password" id="regConfirm" placeholder="Nhập lại mật khẩu" required minlength="6" autocomplete="new-password">
+                                <input type="password" id="regConfirm" placeholder="Nhập lại mật khẩu" required minlength="6" autocomplete="new-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-form-type="other">
                             </div>
                         </div>
                         <button type="button" class="btn-primary" id="btnSendOtp">

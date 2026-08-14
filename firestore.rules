@@ -65,5 +65,46 @@ service cloud.firestore {
     match /otp_attempts/{attemptId} {
       allow read, write: if false;
     }
+
+    // ===== COMMUNITY POSTS COLLECTION =====
+    match /community_posts/{postId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      allow update: if request.auth != null;
+      allow delete: if request.auth != null && (resource.data.uid == request.auth.uid || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+    }
+
+    // ===== LEADERBOARD COLLECTION =====
+    match /leaderboard/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+      // Admin can write to any leaderboard entry (for DP grants)
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // ===== SURPRISE QUESTS COLLECTION =====
+    match /surprise_quests/{questId} {
+      allow read: if request.auth != null;
+      // Only admin can create/update/delete quests
+      allow create, update, delete: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      
+      // Submissions subcollection
+      match /submissions/{subId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null && request.auth.uid == subId;
+        allow update: if request.auth != null && 
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      }
+    }
+
+    // ===== DP GRANTS LOG =====
+    match /dp_grants/{grantId} {
+      allow read: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow create: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
   }
 }
