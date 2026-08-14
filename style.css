@@ -1994,9 +1994,9 @@ body {
 .frame-preview .av-frame .av-img { background: rgba(255,255,255,.05); }
 .frame-lv { font-size: 10px; color: #64748b; font-weight: 600; }
 
-[data-theme="light"] .profile-name { color: #1e293b; }
-[data-theme="light"] .user-profile { background: rgba(0,0,0,.04); border-color: rgba(0,0,0,.08); }
-[data-theme="light"] .user-profile:hover { background: rgba(0,0,0,.08); }
+[data-theme="light"] .profile-name { color: #1f242e; }
+[data-theme="light"] .user-profile { background: #fffdf9; border: 1px solid #e2ddd3; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+[data-theme="light"] .user-profile:hover { background: #efece5; border-color: #dcd5c9; }
 
 .nav-logout-btn {
     background: var(--bg-card);
@@ -3399,9 +3399,35 @@ body {
     box-shadow: 0 0 10px rgba(0, 245, 160, 0.25);
 }
 [data-theme="light"] .nav-lang-btn {
-    background: #f1f5f9;
-    border-color: #cbd5e1;
-    color: #1e293b;
+    background: #fffdf9;
+    border-color: #e2ddd3;
+    color: #1f242e;
+}
+[data-theme="light"] .nav-lang-btn:hover {
+    background: #efece5;
+    border-color: #dcd5c9;
+}
+[data-theme="light"] .nav-action-btn,
+[data-theme="light"] .nav-theme-btn,
+[data-theme="light"] .nav-logout-btn {
+    background: #fffdf9;
+    border-color: #e2ddd3;
+    color: #1f242e;
+}
+[data-theme="light"] .nav-action-btn:hover,
+[data-theme="light"] .nav-theme-btn:hover,
+[data-theme="light"] .nav-logout-btn:hover {
+    background: #efece5;
+    border-color: #dcd5c9;
+}
+[data-theme="light"] .nav-action-btn.quest-btn {
+    background: rgba(217, 119, 6, 0.1);
+    border-color: rgba(217, 119, 6, 0.3);
+    color: #b45309;
+}
+[data-theme="light"] .nav-action-btn.quest-btn:hover {
+    background: rgba(217, 119, 6, 0.18);
+    border-color: rgba(217, 119, 6, 0.45);
 }
 
 /* ==================== AVATAR FRAMES ANIMATIONS (from Avatar Level Frames.dc.html) ==================== */
