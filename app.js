@@ -1846,27 +1846,94 @@ function renderLeaderboard() {
         return;
     }
 
-    container.innerHTML = leaderboardCache.map((entry, i) => {
-        const rank = i + 1;
+    const top3 = leaderboardCache.slice(0, 3);
+    const rest = leaderboardCache.slice(3);
+
+    // Helper for rendering a single podium slot
+    const renderPodiumSlot = (entry, rank) => {
+        if (!entry) return `<div class="lb-podium-col rank-${rank} empty"></div>`;
         const tier = getRankLevel(entry.totalDP);
         const isMe = entry.uid === currentUser?.uid;
-        const medal = `#${rank}`;
         const hasKudos = kudosSet.has(entry.uid);
         const adminBadge = entry.isAdmin ? ' [Admin]' : '';
+        const meBadge = isMe ? ' (Bạn)' : '';
+        const avatarSrc = entry.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(entry.displayName || 'U')}&background=0d1117&color=10b981&bold=true`;
+        
+        let crownOrBadge = `<div class="lb-crown">👑</div><div class="lb-podium-badge rank-1">1</div>`;
+        if (rank === 2) {
+            crownOrBadge = `<div class="lb-podium-badge rank-2">2</div>`;
+        } else if (rank === 3) {
+            crownOrBadge = `<div class="lb-podium-badge rank-3">3</div>`;
+        }
 
-        return `<div class="lb-card ${isMe ? 'lb-me' : ''}" style="--rank-color:${tier.color}">
-            <div class="lb-rank-num">${medal}</div>
-            <img class="lb-avatar" src="${entry.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(entry.displayName || 'U')}&background=0d1117&color=10b981&bold=true`}" alt="" onerror="this.src='https://ui-avatars.com/api/?name=U&background=0d1117&color=10b981'">
-            <div class="lb-info">
-                <div class="lb-name">${escHtml(entry.displayName || 'User')}${adminBadge}</div>
-                <div class="lb-tier">${getRankTierName(tier)} · ${entry.totalDP?.toLocaleString() || 0} DP</div>
-            </div>
-            <div class="lb-stats">
-                <span class="lb-streak">Streak: ${entry.streak || 0}</span>
-                ${!isMe ? `<button class="lb-kudos-btn ${hasKudos ? 'given' : ''}" onclick="window._giveKudos('${entry.uid}')" ${hasKudos ? 'disabled' : ''}>Kudos</button>` : ''}
-            </div>
+        return `
+            <div class="lb-podium-col rank-${rank} ${isMe ? 'lb-me-podium' : ''}" style="--rank-color:${tier.color}">
+                <div class="lb-podium-user">
+                    <div class="lb-avatar-wrap rank-${rank}">
+                        ${crownOrBadge}
+                        <img class="lb-podium-avatar" src="${avatarSrc}" alt="" onerror="this.src='https://ui-avatars.com/api/?name=U&background=0d1117&color=10b981'">
+                    </div>
+                    <div class="lb-podium-name" title="${escHtml(entry.displayName || 'User')}">${escHtml(entry.displayName || 'User')}${adminBadge}${meBadge}</div>
+                    <div class="lb-podium-tier" style="color:${tier.color}">${getRankTierName(tier)}</div>
+                    <div class="lb-podium-dp">${(entry.totalDP || 0).toLocaleString()} DP</div>
+                    <div class="lb-podium-streak">🔥 ${entry.streak || 0}</div>
+                    ${!isMe ? `<button class="lb-kudos-btn lb-podium-kudos ${hasKudos ? 'given' : ''}" onclick="window._giveKudos('${entry.uid}')" ${hasKudos ? 'disabled' : ''} title="Kudos">${hasKudos ? '❤️' : '👏'}</button>` : ''}
+                </div>
+                <div class="lb-podium-step rank-${rank}">
+                    <div class="lb-step-glow"></div>
+                    <span class="lb-step-num">${rank}</span>
+                </div>
+            </div>`;
+    };
+
+    // Render podium order: Rank 2 (Left), Rank 1 (Center, highest), Rank 3 (Right, lowest)
+    const rank1 = top3[0] || null;
+    const rank2 = top3[1] || null;
+    const rank3 = top3[2] || null;
+
+    let podiumHtml = `
+        <div class="lb-podium-wrap">
+            ${rank2 ? renderPodiumSlot(rank2, 2) : (top3.length > 1 ? renderPodiumSlot(null, 2) : '')}
+            ${rank1 ? renderPodiumSlot(rank1, 1) : ''}
+            ${rank3 ? renderPodiumSlot(rank3, 3) : (top3.length > 2 ? renderPodiumSlot(null, 3) : '')}
         </div>`;
-    }).join('');
+
+    // Render bottom list for Top 4+
+    let listHtml = '';
+    if (rest.length > 0) {
+        listHtml = `
+            <div class="lb-list-wrap">
+                <div class="lb-list-header">
+                    <span>XẾP HẠNG TOP 4 - 50</span>
+                </div>
+                <div class="lb-list-items">
+                    ${rest.map((entry, idx) => {
+                        const rank = idx + 4;
+                        const tier = getRankLevel(entry.totalDP);
+                        const isMe = entry.uid === currentUser?.uid;
+                        const medal = `#${rank}`;
+                        const hasKudos = kudosSet.has(entry.uid);
+                        const adminBadge = entry.isAdmin ? ' [Admin]' : '';
+                        const meBadge = isMe ? ' (Bạn)' : '';
+
+                        return `<div class="lb-card ${isMe ? 'lb-me' : ''}" style="--rank-color:${tier.color}">
+                            <div class="lb-rank-num">${medal}</div>
+                            <img class="lb-avatar" src="${entry.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(entry.displayName || 'U')}&background=0d1117&color=10b981&bold=true`}" alt="" onerror="this.src='https://ui-avatars.com/api/?name=U&background=0d1117&color=10b981'">
+                            <div class="lb-info">
+                                <div class="lb-name">${escHtml(entry.displayName || 'User')}${adminBadge}${meBadge}</div>
+                                <div class="lb-tier">${getRankTierName(tier)} · ${(entry.totalDP || 0).toLocaleString()} DP</div>
+                            </div>
+                            <div class="lb-stats">
+                                <span class="lb-streak">Streak: ${entry.streak || 0}</span>
+                                ${!isMe ? `<button class="lb-kudos-btn ${hasKudos ? 'given' : ''}" onclick="window._giveKudos('${entry.uid}')" ${hasKudos ? 'disabled' : ''}>Kudos</button>` : ''}
+                            </div>
+                        </div>`;
+                    }).join('')}
+                </div>
+            </div>`;
+    }
+
+    container.innerHTML = podiumHtml + listHtml;
 }
 
 window._giveKudos = (uid) => {

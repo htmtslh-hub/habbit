@@ -3203,6 +3203,272 @@ body {
 .lb-feed-container, .quest-feed-container { overflow-y:auto; max-height:50vh; padding:12px 18px; display:flex; flex-direction:column; gap:8px; }
 .lb-empty { text-align:center; padding:40px 20px; color:#64748b; font-size:14px; }
 
+/* ==================== PODIUM TOP 3 (TRIANGLE LAYOUT) ==================== */
+.lb-podium-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 24px 10px 14px;
+    margin-bottom: 14px;
+    background: radial-gradient(ellipse at top, rgba(245, 158, 11, 0.08) 0%, rgba(255, 255, 255, 0.02) 60%, rgba(13, 17, 23, 0) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    position: relative;
+}
+
+.lb-podium-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    max-width: 140px;
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.lb-podium-col:hover {
+    transform: translateY(-2px);
+}
+
+.lb-podium-col.empty {
+    visibility: hidden;
+}
+
+.lb-podium-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.lb-avatar-wrap {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.lb-podium-avatar {
+    border-radius: 50%;
+    object-fit: cover;
+    background: #0d1117;
+    transition: all 0.2s ease;
+}
+
+/* Rank 1 (Gold Peak - Center) */
+.lb-avatar-wrap.rank-1 .lb-podium-avatar {
+    width: 66px;
+    height: 66px;
+    border: 3px solid #fbbf24;
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.5), inset 0 0 8px rgba(251, 191, 36, 0.3);
+}
+
+.lb-crown {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 22px;
+    filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.8));
+    animation: floatCrown 2.5s ease-in-out infinite;
+    z-index: 5;
+    pointer-events: none;
+}
+
+@keyframes floatCrown {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-5px); }
+}
+
+/* Rank 2 (Silver - Left) */
+.lb-avatar-wrap.rank-2 .lb-podium-avatar {
+    width: 56px;
+    height: 56px;
+    border: 2.5px solid #cbd5e1;
+    box-shadow: 0 0 14px rgba(203, 213, 225, 0.4);
+}
+
+/* Rank 3 (Bronze - Right) */
+.lb-avatar-wrap.rank-3 .lb-podium-avatar {
+    width: 50px;
+    height: 50px;
+    border: 2.5px solid #f97316;
+    box-shadow: 0 0 12px rgba(249, 115, 22, 0.35);
+}
+
+/* Rank Badge Overlays */
+.lb-podium-badge {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    font-family: Outfit, sans-serif;
+    color: #fff;
+    border: 2px solid #0d1117;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+.lb-podium-badge.rank-1 {
+    background: linear-gradient(135deg, #fbbf24, #d97706);
+}
+
+.lb-podium-badge.rank-2 {
+    background: linear-gradient(135deg, #e2e8f0, #64748b);
+}
+
+.lb-podium-badge.rank-3 {
+    background: linear-gradient(135deg, #fb923c, #c2410c);
+}
+
+/* Podium Typography */
+.lb-podium-name {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #f1f5f9;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 2px;
+}
+
+.rank-1 .lb-podium-name {
+    color: #fef08a;
+    font-size: 13.5px;
+}
+
+.lb-podium-tier {
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 1px;
+}
+
+.lb-podium-dp {
+    font-size: 12px;
+    font-weight: 800;
+    color: #10b981;
+    font-family: Outfit, sans-serif;
+    margin-top: 2px;
+}
+
+.rank-1 .lb-podium-dp {
+    color: #fbbf24;
+    font-size: 13px;
+}
+
+.lb-podium-streak {
+    font-size: 11px;
+    color: #f97316;
+    font-weight: 600;
+    margin-top: 1px;
+}
+
+.lb-podium-kudos {
+    margin-top: 5px;
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+    border-radius: 8px;
+}
+
+/* Podium Steps (Pedestals) */
+.lb-podium-step {
+    width: 100%;
+    border-radius: 12px 12px 6px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.lb-podium-step.rank-1 {
+    height: 105px;
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.35) 0%, rgba(217, 119, 6, 0.12) 100%);
+    border: 1.5px solid rgba(245, 158, 11, 0.5);
+    box-shadow: 0 0 24px rgba(245, 158, 11, 0.18), inset 0 2px 6px rgba(255, 255, 255, 0.2);
+}
+
+.lb-podium-step.rank-2 {
+    height: 80px;
+    background: linear-gradient(180deg, rgba(148, 163, 184, 0.3) 0%, rgba(100, 116, 139, 0.1) 100%);
+    border: 1.5px solid rgba(148, 163, 184, 0.45);
+    box-shadow: 0 0 16px rgba(148, 163, 184, 0.12), inset 0 2px 6px rgba(255, 255, 255, 0.15);
+}
+
+.lb-podium-step.rank-3 {
+    height: 58px;
+    background: linear-gradient(180deg, rgba(217, 119, 6, 0.25) 0%, rgba(180, 83, 9, 0.08) 100%);
+    border: 1.5px solid rgba(217, 119, 6, 0.4);
+    box-shadow: 0 0 14px rgba(217, 119, 6, 0.1), inset 0 2px 6px rgba(255, 255, 255, 0.12);
+}
+
+.lb-step-num {
+    font-family: Outfit, sans-serif;
+    font-weight: 900;
+}
+
+.rank-1 .lb-step-num {
+    color: #fbbf24;
+    font-size: 38px;
+    text-shadow: 0 2px 12px rgba(245, 158, 11, 0.6);
+}
+
+.rank-2 .lb-step-num {
+    color: #e2e8f0;
+    font-size: 30px;
+    text-shadow: 0 2px 10px rgba(226, 232, 240, 0.5);
+}
+
+.rank-3 .lb-step-num {
+    color: #fb923c;
+    font-size: 26px;
+    text-shadow: 0 2px 10px rgba(251, 146, 60, 0.5);
+}
+
+/* User highlighting on podium */
+.lb-me-podium .lb-podium-name {
+    color: #10b981 !important;
+}
+
+/* Bottom list (Rank 4+) */
+.lb-list-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lb-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 4px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: Outfit, sans-serif;
+}
+
+.lb-list-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .lb-card { display:flex; align-items:center; gap:12px; padding:12px 14px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06); border-radius:14px; transition:all .2s; }
 .lb-card:hover { background:rgba(255,255,255,.06); border-color:var(--rank-color,rgba(255,255,255,.1)); }
 .lb-card.lb-me { background:rgba(16,185,129,.08); border-color:rgba(16,185,129,.2); }
@@ -3338,6 +3604,18 @@ body {
 [data-theme="light"] .lb-card:hover { background:#efece5; }
 [data-theme="light"] .lb-card.lb-me { background:rgba(16,185,129,.08); }
 [data-theme="light"] .lb-name, [data-theme="light"] .lb-rank-num { color:#1f242e; }
+[data-theme="light"] .lb-podium-wrap { background:#f6f4ef; border-color:#e2ddd3; box-shadow:0 4px 16px rgba(0,0,0,0.04); }
+[data-theme="light"] .lb-podium-name { color:#1f242e; }
+[data-theme="light"] .rank-1 .lb-podium-name { color:#b45309; }
+[data-theme="light"] .lb-podium-badge { border-color:#fffdf9; }
+[data-theme="light"] .lb-podium-avatar { background:#f6f4ef; }
+[data-theme="light"] .lb-podium-step.rank-1 { background:linear-gradient(180deg, #fef3c7 0%, #fde68a 100%); border-color:#f59e0b; box-shadow:0 4px 12px rgba(245,158,11,0.2); }
+[data-theme="light"] .lb-podium-step.rank-2 { background:linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%); border-color:#cbd5e1; box-shadow:0 4px 12px rgba(148,163,184,0.2); }
+[data-theme="light"] .lb-podium-step.rank-3 { background:linear-gradient(180deg, #ffedd5 0%, #fed7aa 100%); border-color:#fb923c; box-shadow:0 4px 12px rgba(251,146,60,0.2); }
+[data-theme="light"] .rank-1 .lb-step-num { color:#b45309; text-shadow:none; }
+[data-theme="light"] .rank-2 .lb-step-num { color:#475569; text-shadow:none; }
+[data-theme="light"] .rank-3 .lb-step-num { color:#c2410c; text-shadow:none; }
+[data-theme="light"] .lb-list-header { color:#64748b; }
 [data-theme="light"] .quest-card { background:#f6f4ef; border-color:#e2ddd3; }
 [data-theme="light"] .quest-name { color:#1f242e; }
 [data-theme="light"] .cm-post-form textarea { background:#f6f4ef; border-color:#e2ddd3; color:#1f242e; }
@@ -3375,6 +3653,26 @@ body {
     .lb-tabs { padding:8px 12px; }
     .lb-feed-container, .quest-feed-container { max-height:calc(100vh - 260px); padding:8px 12px; }
     .lb-tab-panel { max-height: calc(100vh - 200px); }
+}
+
+@media (max-width: 480px) {
+    .lb-podium-wrap { gap: 6px; padding: 18px 4px 10px; }
+    .lb-avatar-wrap.rank-1 .lb-podium-avatar { width: 52px; height: 52px; }
+    .lb-avatar-wrap.rank-2 .lb-podium-avatar { width: 44px; height: 44px; }
+    .lb-avatar-wrap.rank-3 .lb-podium-avatar { width: 40px; height: 40px; }
+    .lb-crown { top: -15px; font-size: 18px; }
+    .lb-podium-name { font-size: 11px; }
+    .rank-1 .lb-podium-name { font-size: 12px; }
+    .lb-podium-tier { font-size: 9.5px; }
+    .lb-podium-dp { font-size: 10.5px; }
+    .rank-1 .lb-podium-dp { font-size: 11px; }
+    .lb-podium-streak { font-size: 10px; }
+    .lb-podium-step.rank-1 { height: 90px; }
+    .lb-podium-step.rank-2 { height: 68px; }
+    .lb-podium-step.rank-3 { height: 50px; }
+    .rank-1 .lb-step-num { font-size: 30px; }
+    .rank-2 .lb-step-num { font-size: 24px; }
+    .rank-3 .lb-step-num { font-size: 20px; }
 }
 
 /* Cycling Language Button */
