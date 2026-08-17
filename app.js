@@ -3027,6 +3027,18 @@ function initProfileModal() {
             }
         };
     }
+
+    // Profile Logout Handler
+    const profileLogoutBtn = document.getElementById('profileLogoutBtn');
+    if (profileLogoutBtn) {
+        profileLogoutBtn.onclick = () => {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất tài khoản không?')) {
+                auth.signOut().then(() => {
+                    window.location.href = 'auth.html';
+                });
+            }
+        };
+    }
 }
 
 function renderFramesGrid(currentLevel, imgUrl = '') {
