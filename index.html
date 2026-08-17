@@ -395,10 +395,25 @@
             <div class="profile-body">
                 <div class="profile-avatar-area">
                     <div id="profileAvatarFrame"></div>
-                    <button class="av-upload-btn" id="avatarUploadBtn">📷 Đổi ảnh đại diện</button>
-                    <input type="file" id="avatarFileInput" accept="image/*" style="display:none">
+                    <div class="profile-actions-row" style="display:flex; justify-content:center; gap:10px; margin-top:14px; flex-wrap:wrap;">
+                        <button class="av-upload-btn" id="avatarUploadBtn">📷 Đổi ảnh đại diện</button>
+                        <button class="av-upload-btn" id="changeNameBtn">✏️ Đổi tên hiển thị</button>
+                        <input type="file" id="avatarFileInput" accept="image/*" style="display:none">
+                    </div>
                 </div>
-                <div class="profile-info" style="display:flex; justify-content:center; gap:16px; margin:10px 0 16px;">
+
+                <!-- INLINE CHANGE NAME FORM -->
+                <div class="profile-name-edit-box" id="profileNameEditBox" style="display:none; margin: 14px auto 8px; max-width: 360px; padding: 14px; background: rgba(0,0,0,0.03); border: 1px dashed var(--border-color); border-radius: 14px;">
+                    <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; text-align: left;">Đổi tên hiển thị nhân vật:</div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <input type="text" id="profileNewNameInput" class="profile-input" placeholder="Nhập tên mới (2 - 30 ký tự)..." maxlength="30" style="flex:1; padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-card); color:var(--text-main); font-family:var(--font-heading); font-size:14px; font-weight:600; outline:none;">
+                        <button id="saveNameBtn" class="nav-action-btn" style="background:var(--accent); color:#fff; border-color:var(--accent); font-weight:700; padding:8px 14px; cursor:pointer;">Lưu</button>
+                        <button id="cancelNameBtn" class="nav-action-btn" style="padding:8px 12px; cursor:pointer;">✕</button>
+                    </div>
+                    <div id="profileNameError" style="font-size:12px; color:#ef4444; text-align:left; margin-top:6px; display:none;"></div>
+                </div>
+
+                <div class="profile-info" style="display:flex; justify-content:center; gap:16px; margin:12px 0 16px;">
                     <div style="display:none;" id="profileName"></div>
                     <div style="display:none;" id="profileLevel"></div>
                     <div class="profile-dp">DP: <span id="profileDP">0</span></div>

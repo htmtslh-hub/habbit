@@ -47,26 +47,29 @@ function getCurrentNameplateThemeMode() {
 window.getNameplateCardHTML = function(level, imgUrl, scale = 0.6, displayName = '', subText = '', mode = null) {
     const activeMode = mode || getCurrentNameplateThemeMode();
     const templates = (activeMode === 'dark') ? NAMEPLATE_LEVEL_TEMPLATES_DARK : NAMEPLATE_LEVEL_TEMPLATES_LIGHT;
-    let tpl = templates[level] || templates[1];
+    const lvl = Math.max(1, Math.min(10, parseInt(level, 10) || 1));
+    let tpl = templates[lvl] || templates[1];
     const defaultNames = ['Tân Binh', 'Chiến Binh', 'Dũng Sĩ', 'Kiếm Sĩ', 'Cao Thủ', 'Đại Sư', 'Chiến Thần', 'Bất Tử', 'Huyền Thoại', 'Thần Thoại'];
-    const defaultName = defaultNames[level - 1] || 'Tân Binh';
-    const defaultSub = 'Lv ' + String(level).padStart(2, '0');
+    const defaultName = defaultNames[lvl - 1] || 'Tân Binh';
+    const defaultSub = 'Lv ' + String(lvl).padStart(2, '0');
 
     const finalName = displayName || defaultName;
     const finalSub = subText || defaultSub;
 
-    // Adjust font size dynamically based on name length to prevent overflowing the nameplate
-    let nameFontSize = '23px';
+    // Adjust font size dynamically based on name length to ensure prominent and crystal-clear text
+    let nameFontSize = '30px';
     const nameLen = finalName.length;
-    if (nameLen > 22) nameFontSize = '13px';
-    else if (nameLen > 18) nameFontSize = '15px';
-    else if (nameLen > 14) nameFontSize = '17px';
-    else if (nameLen > 10) nameFontSize = '19px';
+    if (nameLen > 24) nameFontSize = '20px';
+    else if (nameLen > 18) nameFontSize = '24px';
+    else if (nameLen > 14) nameFontSize = '27px';
+    else if (nameLen > 10) nameFontSize = '29px';
 
-    const imgTag = '<img src="' + imgUrl + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>\';">';
+    const safeUrl = imgUrl || `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>`;
+    const imgTag = '<img src="' + safeUrl + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>\';">';
 
-    // Apply truncation and font size adjustment
-    tpl = tpl.replace(/white-space:nowrap;/g, 'white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:210px; display:block; font-size:' + nameFontSize + ' !important;');
+    // Apply truncation and font size adjustment with prominent bold typography
+    tpl = tpl.replace(/white-space:nowrap;/g, 'white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px; display:block; font-size:' + nameFontSize + ' !important; font-weight:800; line-height:1.2;');
+    tpl = tpl.replace(/font-size:11px;letter-spacing:\.34em;/g, 'font-size:13.5px;letter-spacing:0.18em;font-weight:700;');
     tpl = tpl.replace(/__NAME__/g, finalName);
     tpl = tpl.replace(/__SCORE__/g, finalSub);
     tpl = tpl.replace(/__AVATAR_IMG__/g, imgTag);

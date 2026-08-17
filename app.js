@@ -180,7 +180,7 @@ function showUserProfile(user){
 
     if(userProfileEl) {
         if(typeof window.getNameplateCardHTML === 'function') {
-            userProfileEl.innerHTML = window.getNameplateCardHTML(rank.level, imgUrl, 0.32, displayName, subText);
+            userProfileEl.innerHTML = window.getNameplateCardHTML(rank.level, imgUrl, 0.36, displayName, subText);
         } else if(typeof window.getAvatarHTML === 'function') {
             userProfileEl.innerHTML = `<div style="display:flex;align-items:center;gap:6px;">${window.getAvatarHTML(rank.level, imgUrl, 40)}<span style="font-weight:700;font-size:0.85rem;">${escHtml(displayName)}</span></div>`;
         }
@@ -2510,6 +2510,90 @@ function initProfileModal() {
     if (uploadBtn && fileInput) {
         uploadBtn.onclick = () => fileInput.click();
         fileInput.onchange = handleAvatarUpload;
+    }
+
+    // Change Display Name handlers
+    const changeNameBtn = document.getElementById('changeNameBtn');
+    const editBox = document.getElementById('profileNameEditBox');
+    const nameInput = document.getElementById('profileNewNameInput');
+    const saveNameBtn = document.getElementById('saveNameBtn');
+    const cancelNameBtn = document.getElementById('cancelNameBtn');
+    const nameErr = document.getElementById('profileNameError');
+
+    if (changeNameBtn && editBox && nameInput) {
+        changeNameBtn.onclick = () => {
+            const isHidden = editBox.style.display === 'none' || !editBox.style.display;
+            editBox.style.display = isHidden ? 'block' : 'none';
+            if (isHidden) {
+                nameInput.value = currentUser?.displayName || currentUser?.email?.split('@')[0] || '';
+                nameInput.focus();
+                nameInput.select();
+                if (nameErr) nameErr.style.display = 'none';
+            }
+        };
+
+        if (cancelNameBtn) {
+            cancelNameBtn.onclick = () => {
+                editBox.style.display = 'none';
+                if (nameErr) nameErr.style.display = 'none';
+            };
+        }
+
+        const doSaveName = async () => {
+            const val = nameInput.value.trim();
+            if (!val) {
+                if (nameErr) { nameErr.textContent = 'Vui lòng nhập tên hiển thị!'; nameErr.style.display = 'block'; }
+                return;
+            }
+            if (val.length < 2 || val.length > 30) {
+                if (nameErr) { nameErr.textContent = 'Tên phải từ 2 đến 30 ký tự!'; nameErr.style.display = 'block'; }
+                return;
+            }
+            if (val === currentUser?.displayName) {
+                editBox.style.display = 'none';
+                return;
+            }
+
+            if (saveNameBtn) {
+                saveNameBtn.textContent = '⏳...';
+                saveNameBtn.disabled = true;
+            }
+            if (nameErr) nameErr.style.display = 'none';
+
+            try {
+                if (currentUser) {
+                    await currentUser.updateProfile({ displayName: val });
+                }
+                if (userDocRef) {
+                    await userDocRef.update({ displayName: val });
+                }
+                if (db && currentUser) {
+                    await db.collection('leaderboard').doc(currentUser.uid).set({ displayName: val }, { merge: true });
+                }
+                showUserProfile(currentUser);
+                if (window._updateProfileModalUI) window._updateProfileModalUI();
+                editBox.style.display = 'none';
+            } catch (err) {
+                console.error('Update name error:', err);
+                if (nameErr) { nameErr.textContent = 'Lỗi lưu tên: ' + (err.message || err); nameErr.style.display = 'block'; }
+            } finally {
+                if (saveNameBtn) {
+                    saveNameBtn.textContent = 'Lưu';
+                    saveNameBtn.disabled = false;
+                }
+            }
+        };
+
+        if (saveNameBtn) saveNameBtn.onclick = doSaveName;
+        nameInput.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                doSaveName();
+            } else if (e.key === 'Escape') {
+                editBox.style.display = 'none';
+                if (nameErr) nameErr.style.display = 'none';
+            }
+        };
     }
 }
 

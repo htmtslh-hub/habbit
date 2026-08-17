@@ -1625,6 +1625,9 @@ window.getAvatarHTML = function(level, imgUrl, size = 36, mode = null) {
 };
 
 window.getFullRankCardHTML = function(level, imgUrl, scale = 0.6, displayName = '', subText = '', mode = null) {
+    if (typeof window.getNameplateCardHTML === 'function') {
+        return window.getNameplateCardHTML(level, imgUrl, scale, displayName, subText, mode);
+    }
     const activeMode = mode || getCurrentAvatarThemeMode();
     const cards = (activeMode === 'dark') ? FULL_RANK_CARDS_DARK : FULL_RANK_CARDS_LIGHT;
     const lvl = Math.max(1, Math.min(10, parseInt(level, 10) || 1));
