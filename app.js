@@ -1452,7 +1452,8 @@ function initMobileTabs() {
         item.addEventListener('click', () => {
             const tabId = item.getAttribute('data-tab');
             
-            if (tabId === 'leaderboard') { if(typeof openLeaderboardModal==='function') openLeaderboardModal(); return; }
+            if (tabId === 'community') { if(typeof window._openCommunity==='function') window._openCommunity(); return; }
+            if (tabId === 'leaderboard') { if(typeof openLeaderboardModal==='function') openLeaderboardModal('leaderboard'); return; }
             if (tabId === 'quests') { if(typeof openQuestModal==='function') openQuestModal(); return; }
 
             navItems.forEach(btn => btn.classList.remove('active'));
@@ -1526,6 +1527,7 @@ async function startApp(user){
         initDragAndDrop();
         initMobileTabs();
         initLeaderboard();
+        initCommunity();
         initQuestSystem();
         renderAll();
         if(typeof updateUserDPState==='function') updateUserDPState(true);
@@ -1951,7 +1953,6 @@ async function openLeaderboardModal(defaultTab = 'leaderboard') {
 
     await loadLeaderboard();
     if (defaultTab === 'leaderboard') renderLeaderboard();
-    if (defaultTab === 'community') renderCommunity();
     if (defaultTab === 'ranks') renderRankTiersShowcase();
 }
 
@@ -1970,11 +1971,8 @@ function initLeaderboard() {
     const lbBtn = document.getElementById('leaderboardBtn');
     if (lbBtn) lbBtn.onclick = () => openLeaderboardModal('leaderboard');
 
-    const cmBtn = document.getElementById('communityBtn');
-    if (cmBtn) cmBtn.onclick = () => openLeaderboardModal('community');
-
-    const mobileCmBtn = document.getElementById('mobileCommunityBtn');
-    if (mobileCmBtn) mobileCmBtn.onclick = () => openLeaderboardModal('community');
+    const mobileLbBtn = document.getElementById('mobileLbBtn');
+    if (mobileLbBtn) mobileLbBtn.onclick = () => openLeaderboardModal('leaderboard');
 
     // Tab switching
     document.querySelectorAll('.lb-tab-btn').forEach(btn => {
@@ -1986,68 +1984,336 @@ function initLeaderboard() {
             const panel = document.getElementById(`lbPanel${tab.charAt(0).toUpperCase()+tab.slice(1)}`);
             if (panel) panel.style.display = 'block';
             if (tab === 'leaderboard') renderLeaderboard();
-            if (tab === 'community') renderCommunity();
             if (tab === 'ranks') renderRankTiersShowcase();
         };
     });
 }
 
-// ==================== COMMUNITY ====================
-async function renderCommunity() {
+// ==================== STANDALONE COMMUNITY ====================
+let currentMediaAttached = null; // { type: 'image' | 'video', dataUrl: string }
+let communityPostsCache = [];
+
+function formatRelativeTime(ts) {
+    if (!ts) return 'Vừa xong';
+    const date = ts.toDate ? ts.toDate() : new Date(ts);
+    const now = new Date();
+    const diffSec = Math.floor((now - date) / 1000);
+    if (diffSec < 60) return 'Vừa xong';
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin} phút trước`;
+    const diffHour = Math.floor(diffMin / 60);
+    if (diffHour < 24) return `${diffHour} giờ trước`;
+    const diffDay = Math.floor(diffHour / 24);
+    if (diffDay === 1) return 'Hôm qua';
+    if (diffDay < 7) return `${diffDay} ngày trước`;
+    return date.toLocaleDateString('vi-VN');
+}
+
+window._openLightbox = function(url) {
+    const modal = document.getElementById('cmLightboxModal');
+    const img = document.getElementById('cmLightboxImg');
+    if (modal && img) {
+        img.src = url;
+        modal.style.display = 'flex';
+    }
+};
+
+window._openCommunity = async function() {
+    const modal = document.getElementById('communityModalBg');
+    if (!modal) return;
+    modal.classList.add('show');
+    
+    // Update current user info in creator card
+    if (currentUser) {
+        const nameEl = document.getElementById('cmUserName');
+        const badgeEl = document.getElementById('cmUserBadge');
+        const avatarMini = document.getElementById('cmUserAvatarMini');
+        const computed = calculateUserDPAndStreak();
+        const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (currentUser && currentUser.email === 'admin@gmail.com');
+        const dp = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+        const rank = getRankLevel(dp);
+        const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'Chiến Binh';
+        
+        if (nameEl) nameEl.textContent = displayName;
+        if (badgeEl) badgeEl.textContent = getRankTierName(rank);
+        if (avatarMini && window.getAvatarHTML) {
+            const imgUrl = currentUser.photoURL || `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>`;
+            avatarMini.innerHTML = window.getAvatarHTML(rank.level, imgUrl, 36);
+        }
+    }
+    await renderCommunity();
+};
+
+function closeCommunityModal() {
+    const modal = document.getElementById('communityModalBg');
+    if (modal) modal.classList.remove('show');
+}
+
+async function renderCommunity(forceReload = false) {
     const container = document.getElementById('communityFeedContainer');
     if (!container) return;
     try {
-        const snap = await db.collection('community_posts').orderBy('createdAt', 'desc').limit(20).get();
+        if (forceReload || !container.children.length) {
+            container.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:13px;">⏳ Đang tải bài viết cộng đồng...</div>';
+        }
+        const snap = await db.collection('community_posts').orderBy('createdAt', 'desc').limit(40).get();
+        communityPostsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         if (snap.empty) {
-            container.innerHTML = '<div class="lb-empty">Chưa có bài viết nào</div>';
+            container.innerHTML = '<div class="lb-empty">💬 Chưa có bài viết nào. Hãy là người đầu tiên chia sẻ hành trình rèn luyện!</div>';
             return;
         }
+        
+        const currentUid = currentUser ? currentUser.uid : null;
+        const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (currentUser && currentUser.email === 'admin@gmail.com');
+        
         let html = '';
         snap.forEach(doc => {
             const p = doc.data();
-            const date = p.createdAt ? new Date(p.createdAt.toDate()).toLocaleDateString('vi-VN') : '';
-            html += `<div class="cm-post">
-                <div class="cm-post-header">
-                    <img class="cm-avatar" src="${p.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.displayName || 'U')}&background=0d1117&color=10b981`}" alt="">
-                    <div><strong>${escHtml(p.displayName || 'User')}</strong><span class="cm-date">${date}</span></div>
+            const timeStr = formatRelativeTime(p.createdAt);
+            const rankLvl = p.rankLevel || (p.userDP ? getRankLevel(p.userDP).level : 1);
+            const rankTier = RANK_TIERS[rankLvl - 1] || RANK_TIERS[0];
+            const rankName = getRankTierName(rankTier);
+            const avatarSrc = p.photoURL || `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>`;
+            const avatarHtml = window.getAvatarHTML ? window.getAvatarHTML(rankLvl, avatarSrc, 38) : `<img class="cm-avatar" src="${avatarSrc}" alt="">`;
+            
+            const isLiked = currentUid && Array.isArray(p.likedBy) && p.likedBy.includes(currentUid);
+            const canDelete = currentUid && (p.uid === currentUid || isAdmin);
+            
+            let mediaHtml = '';
+            if (p.mediaUrl) {
+                if (p.mediaType === 'video') {
+                    mediaHtml = `<div class="cm-post-media"><video class="cm-post-video" src="${p.mediaUrl}" controls playsinline preload="metadata"></video></div>`;
+                } else {
+                    mediaHtml = `<div class="cm-post-media"><img class="cm-post-img" src="${p.mediaUrl}" alt="Ảnh đính kèm" onclick="window._openLightbox('${p.mediaUrl}')" loading="lazy"></div>`;
+                }
+            }
+            
+            html += `<div class="cm-post-card" id="post-${doc.id}">
+                <div class="cm-post-author">
+                    <div class="cm-post-author-left">
+                        <div class="cm-post-avatar-wrap">${avatarHtml}</div>
+                        <div class="cm-post-author-info">
+                            <div class="cm-post-author-name">
+                                <span>${escHtml(p.displayName || 'User')}</span>
+                                <span class="cm-post-author-rank">${rankName}</span>
+                            </div>
+                            <span class="cm-post-time">${timeStr}</span>
+                        </div>
+                    </div>
+                    ${canDelete ? `<button class="cm-delete-btn" onclick="window._deleteCmPost('${doc.id}')" title="Xóa bài viết">🗑️</button>` : ''}
                 </div>
-                <div class="cm-post-body">${escHtml(p.content || '')}</div>
+                ${p.content ? `<div class="cm-post-text">${escHtml(p.content)}</div>` : ''}
+                ${mediaHtml}
                 <div class="cm-post-actions">
-                    <button class="cm-like-btn" onclick="window._likeCmPost('${doc.id}')">Thích ${p.likes || 0}</button>
+                    <button class="cm-like-btn ${isLiked ? 'liked' : ''}" onclick="window._likeCmPost('${doc.id}')">
+                        ${isLiked ? '❤️' : '🤍'} <span>${p.likes || (Array.isArray(p.likedBy) ? p.likedBy.length : 0) || 0} Thích</span>
+                    </button>
                 </div>
             </div>`;
         });
         container.innerHTML = html;
     } catch (e) {
-        container.innerHTML = '<div class="lb-empty">Lỗi tải cộng đồng</div>';
+        console.error('Community load error:', e);
+        container.innerHTML = '<div class="lb-empty">Lỗi tải cộng đồng: ' + (e.message || e) + '</div>';
     }
 }
 
 window._likeCmPost = async (postId) => {
+    if (!currentUser) return;
     try {
-        await db.collection('community_posts').doc(postId).update({
-            likes: firebase.firestore.FieldValue.increment(1)
+        const postRef = db.collection('community_posts').doc(postId);
+        const doc = await postRef.get();
+        if (!doc.exists) return;
+        const p = doc.data();
+        let likedBy = Array.isArray(p.likedBy) ? [...p.likedBy] : [];
+        const idx = likedBy.indexOf(currentUser.uid);
+        let newLikes = p.likes || 0;
+        
+        if (idx === -1) {
+            likedBy.push(currentUser.uid);
+            newLikes += 1;
+        } else {
+            likedBy.splice(idx, 1);
+            newLikes = Math.max(0, newLikes - 1);
+        }
+        
+        await postRef.update({
+            likes: newLikes,
+            likedBy: likedBy
         });
         renderCommunity();
     } catch (e) { console.warn('Like error:', e); }
 };
 
+window._deleteCmPost = async (postId) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa bài viết này?')) return;
+    try {
+        await db.collection('community_posts').doc(postId).delete();
+        renderCommunity(true);
+    } catch (e) {
+        alert('Lỗi xóa bài: ' + e.message);
+    }
+};
+
 window._submitCmPost = async () => {
     const input = document.getElementById('cmPostInput');
-    if (!input || !input.value.trim()) return;
+    const submitBtn = document.getElementById('cmSubmitBtn');
+    const content = input ? input.value.trim() : '';
+    
+    if (!content && !currentMediaAttached) {
+        alert('Vui lòng nhập nội dung hoặc đính kèm ảnh/video trước khi đăng bài!');
+        return;
+    }
+    
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '⏳ <span>Đang đăng...</span>';
+    }
+    
     try {
+        const computed = calculateUserDPAndStreak();
+        const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (currentUser && currentUser.email === 'admin@gmail.com');
+        const dp = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+        const rank = getRankLevel(dp);
+        
         await db.collection('community_posts').add({
             uid: currentUser.uid,
             displayName: currentUser.displayName || currentUser.email?.split('@')[0] || 'User',
             photoURL: currentUser.photoURL || '',
-            content: input.value.trim(),
+            userDP: dp,
+            rankLevel: rank.level,
+            content: content,
+            mediaUrl: currentMediaAttached ? currentMediaAttached.dataUrl : null,
+            mediaType: currentMediaAttached ? currentMediaAttached.type : null,
             likes: 0,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            likedBy: [],
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-        input.value = '';
-        renderCommunity();
-    } catch (e) { alert('Lỗi đăng bài: ' + e.message); }
+        
+        if (input) input.value = '';
+        currentMediaAttached = null;
+        const preview = document.getElementById('cmMediaPreview');
+        const container = document.getElementById('cmMediaContainer');
+        if (preview) preview.style.display = 'none';
+        if (container) container.innerHTML = '';
+        
+        // Reset file inputs
+        const imgInput = document.getElementById('cmImageFileInput');
+        const vidInput = document.getElementById('cmVideoFileInput');
+        if (imgInput) imgInput.value = '';
+        if (vidInput) vidInput.value = '';
+        
+        await renderCommunity(true);
+        
+        // Update quest progress for community post if needed
+        if (typeof updateUserDPState === 'function') {
+            updateUserDPState(true);
+        }
+    } catch (e) {
+        alert('Lỗi đăng bài: ' + e.message);
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '🚀 <span>Đăng bài</span>';
+        }
+    }
 };
+
+function initCommunity() {
+    const closeBtn = document.getElementById('communityCloseBtn');
+    if (closeBtn) closeBtn.onclick = closeCommunityModal;
+    
+    const bg = document.getElementById('communityModalBg');
+    if (bg) bg.onclick = (e) => { if (e.target === bg) closeCommunityModal(); };
+    
+    const cmBtn = document.getElementById('communityBtn');
+    if (cmBtn) cmBtn.onclick = () => window._openCommunity();
+    
+    const mobileCmBtn = document.getElementById('mobileCommunityBtn');
+    if (mobileCmBtn) mobileCmBtn.onclick = () => window._openCommunity();
+    
+    // Image attachment
+    const attachImgBtn = document.getElementById('cmAttachImageBtn');
+    const imgFileInput = document.getElementById('cmImageFileInput');
+    if (attachImgBtn && imgFileInput) {
+        attachImgBtn.onclick = () => imgFileInput.click();
+        imgFileInput.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            try {
+                const img = new Image();
+                img.src = URL.createObjectURL(file);
+                await new Promise(res => img.onload = res);
+                
+                const canvas = document.createElement('canvas');
+                const MAX_DIM = 1200;
+                let w = img.width, h = img.height;
+                if (w > h) { if (w > MAX_DIM) { h *= MAX_DIM / w; w = MAX_DIM; } }
+                else { if (h > MAX_DIM) { w *= MAX_DIM / h; h = MAX_DIM; } }
+                
+                canvas.width = w; canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, w, h);
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+                
+                currentMediaAttached = { type: 'image', dataUrl: compressedDataUrl };
+                
+                const preview = document.getElementById('cmMediaPreview');
+                const container = document.getElementById('cmMediaContainer');
+                if (preview && container) {
+                    container.innerHTML = `<img src="${compressedDataUrl}" alt="Preview" style="max-width:100%; max-height:270px; object-fit:contain;">`;
+                    preview.style.display = 'flex';
+                }
+            } catch (err) {
+                console.error('Image process error:', err);
+                alert('Lỗi xử lý ảnh: ' + err.message);
+            }
+        };
+    }
+    
+    // Video attachment
+    const attachVidBtn = document.getElementById('cmAttachVideoBtn');
+    const vidFileInput = document.getElementById('cmVideoFileInput');
+    if (attachVidBtn && vidFileInput) {
+        attachVidBtn.onclick = () => vidFileInput.click();
+        vidFileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 15 * 1024 * 1024) {
+                alert('Vui lòng chọn video có dung lượng dưới 15MB để đảm bảo tải nhanh!');
+                e.target.value = '';
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = () => {
+                const dataUrl = reader.result;
+                currentMediaAttached = { type: 'video', dataUrl: dataUrl };
+                
+                const preview = document.getElementById('cmMediaPreview');
+                const container = document.getElementById('cmMediaContainer');
+                if (preview && container) {
+                    container.innerHTML = `<video src="${dataUrl}" controls playsinline style="max-height:270px; width:100%;"></video>`;
+                    preview.style.display = 'flex';
+                }
+            };
+            reader.readAsDataURL(file);
+        };
+    }
+    
+    // Remove media attachment
+    const removeMediaBtn = document.getElementById('cmRemoveMediaBtn');
+    if (removeMediaBtn) {
+        removeMediaBtn.onclick = () => {
+            currentMediaAttached = null;
+            const preview = document.getElementById('cmMediaPreview');
+            const container = document.getElementById('cmMediaContainer');
+            if (preview) preview.style.display = 'none';
+            if (container) container.innerHTML = '';
+            if (imgFileInput) imgFileInput.value = '';
+            if (vidFileInput) vidFileInput.value = '';
+        };
+    }
+}
 
 // ==================== RANK TIERS SHOWCASE ====================
 function renderRankTiersShowcase() {

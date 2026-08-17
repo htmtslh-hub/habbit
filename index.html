@@ -343,28 +343,84 @@
     <div class="modal-bg" id="lbModalBg">
         <div class="lb-modal">
             <div class="lb-modal-header">
-                <h2 data-i18n="lbTitle">BẢNG XẾP HẠNG CỘNG ĐỒNG</h2>
+                <h2 data-i18n="lbTitle">🏆 BẢNG XẾP HẠNG</h2>
                 <button class="lb-close-btn" id="lbCloseBtn">✕</button>
             </div>
             <div class="lb-summary" id="lbSummary"></div>
             <div class="lb-tabs">
-                <button class="lb-tab-btn active" data-tab="leaderboard"><span data-i18n="topPlayers">Top 50</span></button>
-                <button class="lb-tab-btn" data-tab="community"><span data-i18n="tabCommunity">Cộng đồng</span></button>
-                <button class="lb-tab-btn" data-tab="ranks"><span data-i18n="rankTiers">Cấp bậc</span></button>
+                <button class="lb-tab-btn active" data-tab="leaderboard"><span data-i18n="topPlayers">🏆 Top 50</span></button>
+                <button class="lb-tab-btn" data-tab="ranks"><span data-i18n="rankTiers">🎖️ Cấp bậc</span></button>
             </div>
             <div class="lb-tab-panel" id="lbPanelLeaderboard">
                 <div class="lb-feed-container" id="lbFeedContainer"></div>
             </div>
-            <div class="lb-tab-panel" id="lbPanelCommunity" style="display:none">
-                <div class="cm-post-form">
-                    <textarea id="cmPostInput" placeholder="Chia sẻ hành trình rèn luyện của bạn..." rows="3"></textarea>
-                    <button class="cm-post-submit" onclick="window._submitCmPost()">Đăng bài</button>
-                </div>
-                <div class="lb-feed-container" id="communityFeedContainer"></div>
-            </div>
             <div class="lb-tab-panel" id="lbPanelRanks" style="display:none">
                 <div id="rankTiersContainer"></div>
             </div>
+        </div>
+    </div>
+
+    <!-- STANDALONE COMMUNITY MODAL -->
+    <div class="modal-bg community-modal-bg" id="communityModalBg">
+        <div class="lb-modal community-modal">
+            <div class="lb-modal-header">
+                <h2 data-i18n="communityTitle">💬 CỘNG ĐỒNG RÈN LUYỆN</h2>
+                <button class="lb-close-btn" id="communityCloseBtn">✕</button>
+            </div>
+            
+            <div class="community-body">
+                <!-- POST CREATION CARD -->
+                <div class="cm-create-card">
+                    <div class="cm-create-header">
+                        <div id="cmUserAvatarMini" class="cm-user-avatar-mini"></div>
+                        <div class="cm-user-meta">
+                            <span class="cm-user-name" id="cmUserName">Chiến Binh</span>
+                            <span class="cm-user-badge" id="cmUserBadge">Tân Binh</span>
+                        </div>
+                    </div>
+                    
+                    <textarea id="cmPostInput" class="cm-textarea" placeholder="Chia sẻ câu chuyện, thành tích hoặc động lực rèn luyện của bạn..." rows="3" maxlength="2000"></textarea>
+                    
+                    <!-- MEDIA PREVIEW AREA -->
+                    <div id="cmMediaPreview" class="cm-media-preview" style="display:none;">
+                        <div class="cm-media-container" id="cmMediaContainer"></div>
+                        <button type="button" class="cm-remove-media-btn" id="cmRemoveMediaBtn" title="Xóa đính kèm">✕</button>
+                    </div>
+
+                    <!-- ACTIONS BAR -->
+                    <div class="cm-create-footer">
+                        <div class="cm-attach-buttons">
+                            <button type="button" class="cm-attach-btn" id="cmAttachImageBtn" title="Tải ảnh lên">
+                                📷 <span>Ảnh</span>
+                            </button>
+                            <button type="button" class="cm-attach-btn" id="cmAttachVideoBtn" title="Tải video lên">
+                                🎥 <span>Video</span>
+                            </button>
+                            <input type="file" id="cmImageFileInput" accept="image/*" style="display:none;">
+                            <input type="file" id="cmVideoFileInput" accept="video/mp4,video/webm,video/quicktime,video/*" style="display:none;">
+                        </div>
+                        <button type="button" class="cm-post-submit-btn" id="cmSubmitBtn" onclick="window._submitCmPost()">
+                            🚀 <span>Đăng bài</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FEED HEADER -->
+                <div class="community-feed-header">
+                    <span>🌟 BÀI VIẾT TỪ CỘNG ĐỒNG</span>
+                    <button class="cm-refresh-btn" onclick="if(typeof renderCommunity==='function')renderCommunity(true)" title="Làm mới bài viết">🔄 Tải lại</button>
+                </div>
+
+                <!-- FEED LIST CONTAINER -->
+                <div class="cm-feed-list" id="communityFeedContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIGHTBOX MODAL FOR IMAGES -->
+    <div class="modal-bg" id="cmLightboxModal" style="display:none; z-index:999999;" onclick="this.style.display='none'">
+        <div style="position:relative; max-width:92vw; max-height:90vh; margin:auto; display:flex; align-items:center; justify-content:center;">
+            <img id="cmLightboxImg" src="" alt="Full view" style="max-width:100%; max-height:88vh; border-radius:12px; box-shadow:0 12px 48px rgba(0,0,0,0.85); object-fit:contain;">
         </div>
     </div>
 
