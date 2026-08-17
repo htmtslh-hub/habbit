@@ -170,24 +170,20 @@ async function loadFromFirestore(){
     return false;
 }
 function showUserProfile(user){
-    const avatar = document.querySelector('#userAvatar');
-    const name = document.querySelector('#userName');
-    const navFrame = document.querySelector('#navAvatarFrame');
+    const userProfileEl = document.querySelector('#userProfile');
     const computed = (typeof calculateUserDPAndStreak === 'function') ? calculateUserDPAndStreak(S) : { totalDP: 0 };
     const dp = (typeof S !== 'undefined' && S && typeof S.dp === 'number') ? S.dp : (computed.totalDP + (typeof userBonusDP !== 'undefined' ? userBonusDP : 0));
     const rank = getRankLevel(dp);
     const imgUrl = user.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(user.displayName||user.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
     const displayName = user.displayName || user.email?.split('@')[0] || 'User';
+    const subText = getRankTierName(rank);
 
-    if(name) name.textContent = displayName;
-    
-    if(navFrame && window.getAvatarHTML) {
-        navFrame.innerHTML = window.getAvatarHTML(rank.level, imgUrl, 40);
-        navFrame.style.background = 'transparent';
-        navFrame.style.border = 'none';
-    } else if(avatar) {
-        avatar.src = imgUrl;
-        avatar.style.display = 'block';
+    if(userProfileEl) {
+        if(typeof window.getNameplateCardHTML === 'function') {
+            userProfileEl.innerHTML = window.getNameplateCardHTML(rank.level, imgUrl, 0.32, displayName, subText);
+        } else if(typeof window.getAvatarHTML === 'function') {
+            userProfileEl.innerHTML = `<div style="display:flex;align-items:center;gap:6px;">${window.getAvatarHTML(rank.level, imgUrl, 40)}<span style="font-weight:700;font-size:0.85rem;">${escHtml(displayName)}</span></div>`;
+        }
     }
 }
 
@@ -748,14 +744,7 @@ function ck(id,d){return`${cY}-${cM}-${id}-${d}`}
 let curTheme=localStorage.getItem('hg_theme')||'light';
 function updateThemeAvatars() {
     if (typeof currentUser !== 'undefined' && currentUser) {
-        const navFrame = document.querySelector('#navAvatarFrame');
-        const computed = (typeof calculateUserDPAndStreak === 'function') ? calculateUserDPAndStreak(S) : { totalDP: 0 };
-        const dp = (typeof S !== 'undefined' && S && typeof S.dp === 'number') ? S.dp : (computed.totalDP + (typeof userBonusDP !== 'undefined' ? userBonusDP : 0));
-        const rank = typeof getRankLevel === 'function' ? getRankLevel(dp) : { level: 1 };
-        const imgUrl = currentUser.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser.displayName||currentUser.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
-        if (navFrame && window.getAvatarHTML) {
-            navFrame.innerHTML = window.getAvatarHTML(rank.level, imgUrl, 40);
-        }
+        showUserProfile(currentUser);
         const profileModal = document.getElementById('profileModalBg');
         if (profileModal && profileModal.classList.contains('show') && typeof window.updateProfileModalUI === 'function') {
             window.updateProfileModalUI();
