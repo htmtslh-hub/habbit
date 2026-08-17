@@ -129,8 +129,8 @@ function applyI18n(){
     if(ms){ms.innerHTML='';t('months').forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m;ms.appendChild(o)});ms.value=cM}
     const lBtn = document.querySelector('#langToggleBtn');
     if(lBtn) {
-        const labels = { vi: '🌐 VI', zh: '🌐 中', en: '🌐 EN' };
-        lBtn.textContent = labels[curLang] || '🌐 VI';
+        const labels = { vi: 'VI', zh: '中', en: 'EN' };
+        lBtn.textContent = labels[curLang] || 'VI';
     }
 }
 
