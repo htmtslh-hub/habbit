@@ -659,7 +659,7 @@ const FULL_RANK_CARDS_DARK = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:23px;font-weight:700;letter-spacing:.05em;color:#c9fff5;text-shadow:0 0 11px rgba(79,227,208,.85);white-space:nowrap;">\${displayName || 'Học Việc'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:23px;font-weight:700;letter-spacing:.05em;color:#c9fff5;text-shadow:0 0 11px rgba(79,227,208,.85);white-space:nowrap;">\${displayName || 'Chiến Binh'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:rgba(79,227,208,.85);">\${subText || 'Lv 02'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fff;box-shadow:0 0 8px rgba(79,227,208,.9);"></div></div>
@@ -688,7 +688,7 @@ const FULL_RANK_CARDS_DARK = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:23px;font-weight:700;letter-spacing:.05em;color:#d6f2ff;text-shadow:0 0 13px rgba(56,189,248,.85);white-space:nowrap;">\${displayName || 'Thành Thạo'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:23px;font-weight:700;letter-spacing:.05em;color:#d6f2ff;text-shadow:0 0 13px rgba(56,189,248,.85);white-space:nowrap;">\${displayName || 'Dũng Sĩ'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:rgba(56,189,248,.85);">\${subText || 'Lv 03'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fff;box-shadow:0 0 8px rgba(56,189,248,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#9fe4ff;box-shadow:0 0 8px rgba(56,189,248,.9);"></div></div>
@@ -721,7 +721,7 @@ const FULL_RANK_CARDS_DARK = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:23px;font-weight:700;letter-spacing:.05em;color:#e2e9ff;text-shadow:0 0 15px rgba(79,124,255,.85);white-space:nowrap;">\${displayName || 'Tinh Nhuệ'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:23px;font-weight:700;letter-spacing:.05em;color:#e2e9ff;text-shadow:0 0 15px rgba(79,124,255,.85);white-space:nowrap;">\${displayName || 'Kiếm Sĩ'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:rgba(79,124,255,.85);">\${subText || 'Lv 04'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fff;box-shadow:0 0 8px rgba(79,124,255,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#b9caff;box-shadow:0 0 8px rgba(79,124,255,.9);"></div></div>
@@ -794,7 +794,7 @@ const FULL_RANK_CARDS_DARK = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:25px;font-weight:700;letter-spacing:.05em;color:#ffe0f8;text-shadow:0 0 19px rgba(255,47,208,.85);white-space:nowrap;">\${displayName || 'Tông Sư'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:25px;font-weight:700;letter-spacing:.05em;color:#ffe0f8;text-shadow:0 0 19px rgba(255,47,208,.85);white-space:nowrap;">\${displayName || 'Đại Sư'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,47,208,.85);">\${subText || 'Lv 06'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fff;box-shadow:0 0 8px rgba(255,47,208,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#ffb3f0;box-shadow:0 0 8px rgba(255,47,208,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#ffb3f0;box-shadow:0 0 8px rgba(255,47,208,.9);"></div></div>
@@ -841,7 +841,7 @@ const FULL_RANK_CARDS_DARK = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:25px;font-weight:700;letter-spacing:.05em;color:#ffe4ff;text-shadow:0 0 21px rgba(232,121,255,.85);white-space:nowrap;">\${displayName || 'Bán Thánh'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:25px;font-weight:700;letter-spacing:.05em;color:#ffe4ff;text-shadow:0 0 21px rgba(232,121,255,.85);white-space:nowrap;">\${displayName || 'Chiến Thần'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:rgba(232,121,255,.85);">\${subText || 'Lv 07'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fff;box-shadow:0 0 8px rgba(232,121,255,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fbd0ff;box-shadow:0 0 8px rgba(232,121,255,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fbd0ff;box-shadow:0 0 8px rgba(232,121,255,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fbd0ff;box-shadow:0 0 8px rgba(232,121,255,.9);"></div></div>
@@ -900,7 +900,7 @@ const FULL_RANK_CARDS_DARK = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:25px;font-weight:700;letter-spacing:.05em;color:#f3e8ff;text-shadow:0 0 23px rgba(168,85,247,.85);white-space:nowrap;">\${displayName || 'Thánh Giả'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:25px;font-weight:700;letter-spacing:.05em;color:#f3e8ff;text-shadow:0 0 23px rgba(168,85,247,.85);white-space:nowrap;">\${displayName || 'Bất Tử'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:rgba(168,85,247,.85);">\${subText || 'Lv 08'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fff;box-shadow:0 0 8px rgba(168,85,247,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#efe0ff;box-shadow:0 0 8px rgba(168,85,247,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#efe0ff;box-shadow:0 0 8px rgba(168,85,247,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#efe0ff;box-shadow:0 0 8px rgba(168,85,247,.9);"></div></div>
@@ -970,7 +970,7 @@ const FULL_RANK_CARDS_DARK = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:27px;font-weight:700;letter-spacing:.05em;color:#fff2d4;text-shadow:0 0 25px rgba(255,209,102,.85);white-space:nowrap;">\${displayName || 'Thần Vực'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:27px;font-weight:700;letter-spacing:.05em;color:#fff2d4;text-shadow:0 0 25px rgba(255,209,102,.85);white-space:nowrap;">\${displayName || 'Huyền Thoại'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,209,102,.85);">\${subText || 'Lv 09'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fff;box-shadow:0 0 8px rgba(255,209,102,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#ffe6ad;box-shadow:0 0 8px rgba(255,209,102,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#ffe6ad;box-shadow:0 0 8px rgba(255,209,102,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#ffe6ad;box-shadow:0 0 8px rgba(255,209,102,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#ffe6ad;box-shadow:0 0 8px rgba(255,209,102,.9);"></div></div>
@@ -1036,7 +1036,7 @@ const FULL_RANK_CARDS_DARK = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:27px;font-weight:700;letter-spacing:.05em;color:#ffe6d4;text-shadow:0 0 27px rgba(255,207,92,.85);white-space:nowrap;">\${displayName || 'Huyền Thoại'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:27px;font-weight:700;letter-spacing:.05em;color:#ffe6d4;text-shadow:0 0 27px rgba(255,207,92,.85);white-space:nowrap;">\${displayName || 'Thần Thoại'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:rgba(255,207,92,.85);">\${subText || 'Lv 10'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fff;box-shadow:0 0 8px rgba(255,207,92,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#ffe9b0;box-shadow:0 0 8px rgba(255,207,92,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#ffe9b0;box-shadow:0 0 8px rgba(255,207,92,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#ffe9b0;box-shadow:0 0 8px rgba(255,207,92,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#ffe9b0;box-shadow:0 0 8px rgba(255,207,92,.9);"></div></div>
@@ -1138,7 +1138,7 @@ const FULL_RANK_CARDS_LIGHT = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:23px;font-weight:700;letter-spacing:.05em;color:#0e6f66;white-space:nowrap;">\${displayName || 'Học Việc'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:23px;font-weight:700;letter-spacing:.05em;color:#0e6f66;white-space:nowrap;">\${displayName || 'Chiến Binh'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#0b6f64;">\${subText || 'Lv 02'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#0d9488;box-shadow:0 0 4px rgba(13,148,136,.9);"></div></div>
@@ -1167,7 +1167,7 @@ const FULL_RANK_CARDS_LIGHT = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:23px;font-weight:700;letter-spacing:.05em;color:#0a5d86;white-space:nowrap;">\${displayName || 'Thành Thạo'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:23px;font-weight:700;letter-spacing:.05em;color:#0a5d86;white-space:nowrap;">\${displayName || 'Dũng Sĩ'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#075f8c;">\${subText || 'Lv 03'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#0284c7;box-shadow:0 0 4px rgba(2,132,199,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#3ba0d8;box-shadow:0 0 4px rgba(2,132,199,.9);"></div></div>
@@ -1200,7 +1200,7 @@ const FULL_RANK_CARDS_LIGHT = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:23px;font-weight:700;letter-spacing:.05em;color:#26327a;white-space:nowrap;">\${displayName || 'Tinh Nhuệ'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:23px;font-weight:700;letter-spacing:.05em;color:#26327a;white-space:nowrap;">\${displayName || 'Kiếm Sĩ'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#28357f;">\${subText || 'Lv 04'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#3a52c8;box-shadow:0 0 4px rgba(49,78,196,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#6b83e8;box-shadow:0 0 4px rgba(49,78,196,.9);"></div></div>
@@ -1273,7 +1273,7 @@ const FULL_RANK_CARDS_LIGHT = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:25px;font-weight:700;letter-spacing:.05em;color:#9c157c;white-space:nowrap;">\${displayName || 'Tông Sư'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:25px;font-weight:700;letter-spacing:.05em;color:#9c157c;white-space:nowrap;">\${displayName || 'Đại Sư'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#9c157c;">\${subText || 'Lv 06'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#c8149b;box-shadow:0 0 4px rgba(200,20,155,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#e14fc0;box-shadow:0 0 4px rgba(200,20,155,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#e14fc0;box-shadow:0 0 4px rgba(200,20,155,.9);"></div></div>
@@ -1320,7 +1320,7 @@ const FULL_RANK_CARDS_LIGHT = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:25px;font-weight:700;letter-spacing:.05em;color:#821594;white-space:nowrap;">\${displayName || 'Bán Thánh'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:25px;font-weight:700;letter-spacing:.05em;color:#821594;white-space:nowrap;">\${displayName || 'Chiến Thần'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#7c1494;">\${subText || 'Lv 07'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#a81ac8;box-shadow:0 0 4px rgba(168,26,200,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#c94ede;box-shadow:0 0 4px rgba(168,26,200,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#c94ede;box-shadow:0 0 4px rgba(168,26,200,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#c94ede;box-shadow:0 0 4px rgba(168,26,200,.9);"></div></div>
@@ -1379,7 +1379,7 @@ const FULL_RANK_CARDS_LIGHT = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:25px;font-weight:700;letter-spacing:.05em;color:#63189e;white-space:nowrap;">\${displayName || 'Thánh Giả'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:25px;font-weight:700;letter-spacing:.05em;color:#63189e;white-space:nowrap;">\${displayName || 'Bất Tử'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#66189e;">\${subText || 'Lv 08'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#9333ea;box-shadow:0 0 4px rgba(126,34,206,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#9d5be0;box-shadow:0 0 4px rgba(126,34,206,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#9d5be0;box-shadow:0 0 4px rgba(126,34,206,.9);"></div><div style="width:7px;height:7px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#9d5be0;box-shadow:0 0 4px rgba(126,34,206,.9);"></div></div>
@@ -1449,7 +1449,7 @@ const FULL_RANK_CARDS_LIGHT = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:27px;font-weight:700;letter-spacing:.05em;color:#8a6410;white-space:nowrap;">\${displayName || 'Thần Vực'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:27px;font-weight:700;letter-spacing:.05em;color:#8a6410;white-space:nowrap;">\${displayName || 'Huyền Thoại'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#7a5a08;">\${subText || 'Lv 09'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#ca8a04;box-shadow:0 0 4px rgba(202,138,4,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#d9a11c;box-shadow:0 0 4px rgba(202,138,4,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#d9a11c;box-shadow:0 0 4px rgba(202,138,4,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#d9a11c;box-shadow:0 0 4px rgba(202,138,4,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#d9a11c;box-shadow:0 0 4px rgba(202,138,4,.9);"></div></div>
@@ -1515,7 +1515,7 @@ const FULL_RANK_CARDS_LIGHT = [
       </div>
       <div style="position:absolute;left:178px;top:26px;height:104px;width:298px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
         <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
-          <div style="font-family:'Cinzel',serif;font-size:27px;font-weight:700;letter-spacing:.05em;color:#9c1730;white-space:nowrap;">\${displayName || 'Huyền Thoại'}</div>
+          <div style="font-family:'Cinzel',serif;font-size:27px;font-weight:700;letter-spacing:.05em;color:#9c1730;white-space:nowrap;">\${displayName || 'Thần Thoại'}</div>
           <div style="font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#8a5a00;">\${subText || 'Lv 10'}</div>
         </div>
         <div style="display:flex;gap:5px;align-items:center;flex:0 0 auto;"><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#c78400;box-shadow:0 0 4px rgba(199,132,0,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#d19c17;box-shadow:0 0 4px rgba(199,132,0,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#d19c17;box-shadow:0 0 4px rgba(199,132,0,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#d19c17;box-shadow:0 0 4px rgba(199,132,0,.9);"></div><div style="width:9px;height:9px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);background:#d19c17;box-shadow:0 0 4px rgba(199,132,0,.9);"></div></div>

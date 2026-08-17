@@ -1849,7 +1849,7 @@ function renderLeaderboard() {
     const renderPodiumSlot = (entry, rank) => {
         if (!entry) return `<div class="lb-podium-col rank-${rank} empty"></div>`;
         const tier = getRankLevel(entry.totalDP);
-        const frameLevel = entry.avatarFrame || tier.level || 1;
+        const frameLevel = tier.level || 1;
         const isMe = entry.uid === currentUser?.uid;
         const hasKudos = kudosSet.has(entry.uid);
         const adminBadge = entry.isAdmin ? ' [Admin]' : '';
@@ -1910,7 +1910,7 @@ function renderLeaderboard() {
                     ${rest.map((entry, idx) => {
                         const rank = idx + 4;
                         const tier = getRankLevel(entry.totalDP);
-                        const frameLevel = entry.avatarFrame || tier.level || 1;
+                        const frameLevel = tier.level || 1;
                         const isMe = entry.uid === currentUser?.uid;
                         const medal = `#${rank}`;
                         const hasKudos = kudosSet.has(entry.uid);
