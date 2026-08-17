@@ -1,0 +1,231 @@
+[debug] [2026-08-17T13:52:03.240Z] ----------------------------------------------------------------------
+[debug] [2026-08-17T13:52:03.246Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Lenovo\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only hosting
+[debug] [2026-08-17T13:52:03.247Z] CLI Version:   15.15.0
+[debug] [2026-08-17T13:52:03.247Z] Platform:      win32
+[debug] [2026-08-17T13:52:03.247Z] Node Version:  v24.15.0
+[debug] [2026-08-17T13:52:03.247Z] Time:          Mon Aug 17 2026 20:52:03 GMT+0700 (Indochina Time)
+[debug] [2026-08-17T13:52:03.247Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-08-17T13:52:04.451Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-08-17T13:52:04.451Z] > authorizing via signed-in user (htmt.slh@gmail.com)
+[debug] [2026-08-17T13:52:04.451Z] [iam] checking project sonnhai-2600f for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-08-17T13:52:04.452Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:04.452Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:04.453Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/sonnhai-2600f:testIamPermissions [none]
+[debug] [2026-08-17T13:52:04.453Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/sonnhai-2600f:testIamPermissions  x-goog-user-project=sonnhai-2600f
+[debug] [2026-08-17T13:52:04.453Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/sonnhai-2600f:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-08-17T13:52:04.980Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/sonnhai-2600f:testIamPermissions 200
+[debug] [2026-08-17T13:52:04.980Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/sonnhai-2600f:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-08-17T13:52:04.981Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:04.982Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:04.984Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/sonnhai-2600f [none]
+[debug] [2026-08-17T13:52:05.506Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/sonnhai-2600f 200
+[debug] [2026-08-17T13:52:05.506Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/sonnhai-2600f {"projectId":"sonnhai-2600f","projectNumber":"907935883175","displayName":"sonnhai","name":"projects/sonnhai-2600f","resources":{"hostingSite":"sonnhai-2600f"},"state":"ACTIVE","labels":{"firebase":"enabled"},"etag":"1_ec2cff62-6266-409b-9819-47cdd7da1f36"}
+[info] 
+[info] === Deploying to 'sonnhai-2600f'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2026-08-17T13:52:05.514Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:05.514Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:05.514Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/habitmastery/versions [none]
+[debug] [2026-08-17T13:52:05.514Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/habitmastery/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2026-08-17T13:52:06.862Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/habitmastery/versions 200
+[debug] [2026-08-17T13:52:06.863Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/habitmastery/versions {"name":"projects/907935883175/sites/habitmastery/versions/b3b3766fe5542f67","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[habitmastery]: beginning deploy... 
+[info] i  hosting[habitmastery]: found 96 files in ./ 
+[debug] [2026-08-17T13:52:06.935Z] [hosting] uploading with 200 concurrency
+[debug] [2026-08-17T13:52:06.972Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:06.972Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:06.974Z] [hosting] hash cache [] stored for 96 files
+[debug] [2026-08-17T13:52:06.975Z] [hosting][hash queue][FINAL] {"max":28,"min":0,"avg":3.9383180005588088,"active":0,"complete":96,"success":96,"errored":0,"retried":0,"total":96,"elapsed":36}
+[debug] [2026-08-17T13:52:06.975Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/907935883175/sites/habitmastery/versions/b3b3766fe5542f67:populateFiles [none]
+[debug] [2026-08-17T13:52:06.976Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/907935883175/sites/habitmastery/versions/b3b3766fe5542f67:populateFiles {"files":{"/support.js":"0035b8ffdecd6d2ce6eac9e828dcd47aa6da73a722a991723d9fdd21b1c9691e","/nameplate_templates.js":"d734c80b10579b9e49613ff2794adc2d47851dc851d2b04442441d5f9612f038","/manifest.json":"97e646597ec592fdf49ea836669dd3508d7207c13e8fa61b908ec2d8ba141795","/lvl9.html":"700fe3b84ff449ddf4fb6a278c387faa6c009a1e2542f8d421fe31fdf538207f","/lvl8.html":"2ac9fb6b7b2fab79c17629d08ed0a233853dc9a24e51c64a5d6a828bf495d797","/lvl7.html":"6d33b078e8a84d00d6a9ca3037015a901f9f5e7cecf42cb07bcb7f0b3120d9fa","/lvl6.html":"29de9f18323eba584546615ccc6d4a9e735f2d35a2a36f236a4c17d45a1958be","/lvl5.html":"04b0b70c0777b64230e9ad3f218bbe9a80b507fc04a6d53254764f3a10c10859","/lvl4.html":"4652f1e53328f4dbf3f47fa984afeb69149600ea5293ea11b6dcc1aeea84ef51","/lvl3.html":"8b712271a183def7da3f98361f08e45719b17ae3741cfd0be3807bd15e7ee8ec","/lvl2.html":"63f1871cee92b46e2836c59dbed4b507e75c485c7cfbedf40c1d5a042b9cfa2a","/lvl10.html":"9e6970b227675b5cf6e8bb9cd15611146a3e3bad622a35fce3c5fa845ede71fe","/lvl1.html":"d0b1b9b97ab90cbf2949b6868705c5c895bb45cdfd35f6d47e93a8c79d5e5bcc","/image-slot.js":"757f43f332fa67df80e5cdb2ae18fed6b8f824ea4da0b8a8eb381e7bdc9fda32","/icon-512.png":"79ec9a0e77e275076a46e8092f43734d50c93e3bb6ac172fe1b6bc810f5e318d","/icon-192.png":"7a527fbce09cc9300a9492d0ac096a403b213d6d9e4e87e096b53f1fb8a03d30","/gotiengviet.js":"41ff016d77646eb716a00abbcfc6a8df528ea77f45162dff26e014725c4e3bcc","/gen.js":"26a335e8cba390026aa9ef29ddf2d4ce38c3e572d9b15f002e99bf57c3b589c0","/avatar_frames.js":"b78f9adc910cf75ee3b7e881f3c33df03aa31e6eb7affea8c1bc92e8a2bec0fb","/Avatar Level Frames.dc.html":"1445cb22795464fd20f4060db32f2d04f675548140649e4c58b1d2c852da4583","/auth.js":"69bff1fc2eac579cc158342adc1933dd79607a6f7fa60b044a85f27a718f9e02","/auth.html":"2cd2f209d05710350bca00a6c36751816cb320c59024504edf2b4b28faed78ee","/auth.css":"2dc657c357d915fcdffa43874a5a4246242512ceeccaf8fdcaa26bb93d26f8f4","/admin.js":"4decb89e391010eda1f7750621c5859ac5c4679e1403223d45bf180926d503a3","/admin.html":"464f8133778b95381f7583c371227838a77e6dd0dd0390b96b66aceafbd90b4c","/admin.css":"dc12c552bb4ed21e95514e62a69df5b2035a893617131be27b13c0e739ab8f4f","/404.html":"762bf484ba67404bd1a3b181546ea28d60dfddf18e9dd4795d8d25bcf3c1a890","/uploads/pasted-1786455559565-0.png":"734962a011494b886c35bbd3eed95557aa08efd8165dbcc2c696334bdf73c3fd","/uploads/pasted-1786454198272-0.png":"6275c91cc003d7c09eaf6078120ac10c8646df93f11867a84381223dbd7700b0","/uploads/pasted-1786453751594-0.png":"205a5097487fb553e5f5c4d9e59b9765cf99c18f4a7464e6560255c3c4058e04","/uploads/pasted-1786437930079-0.png":"0d4d85e0d05904f9f0b0a96a210c3d7b71f7306f66b36362eb93b7fcd14ba088","/uploads/pasted-1786437924570-0.png":"97035a689eaecd6fe3d77a2e67039910eda5e89781269c8a4d19fe543f3484fc","/uploads/pasted-1786437916038-0.png":"e62c7b89a257da281da4e017a027ea2520878d55cdc25f8a064af1a0ffd5a4ca","/avatar_frames_v2/support.js":"0035b8ffdecd6d2ce6eac9e828dcd47aa6da73a722a991723d9fdd21b1c9691e","/avatar_frames_v2/image-slot.js":"757f43f332fa67df80e5cdb2ae18fed6b8f824ea4da0b8a8eb381e7bdc9fda32","/avatar_frames_v2/Avatar Level Frames.dc.html":"fc22fdce97f5f247c5fb21a5d61a508fe77ad99020586d7e92c618e23643fd19","/avatar_frames_v2/uploads/pasted-1786455559565-0.png":"734962a011494b886c35bbd3eed95557aa08efd8165dbcc2c696334bdf73c3fd","/avatar_frames_v2/uploads/pasted-1786454198272-0.png":"6275c91cc003d7c09eaf6078120ac10c8646df93f11867a84381223dbd7700b0","/avatar_frames_v2/uploads/pasted-1786453751594-0.png":"205a5097487fb553e5f5c4d9e59b9765cf99c18f4a7464e6560255c3c4058e04","/avatar_frames_v2/uploads/pasted-1786437930079-0.png":"0d4d85e0d05904f9f0b0a96a210c3d7b71f7306f66b36362eb93b7fcd14ba088","/avatar_frames_v2/uploads/pasted-1786437924570-0.png":"97035a689eaecd6fe3d77a2e67039910eda5e89781269c8a4d19fe543f3484fc","/avatar_frames_v2/uploads/pasted-1786437916038-0.png":"e62c7b89a257da281da4e017a027ea2520878d55cdc25f8a064af1a0ffd5a4ca","/.vercel/README.txt":"17190a6405df36feb9538f0081f12d4a513371102404a2f72577759481ea172a","/.vercel/project.json":"a967a91257c0a0eea037bf6a605a0ff1f028dad68ded832d0c35547892657dc8","/.git/kilo":"230754911120ad447988ce6bb4e8df863f5e1350545333f12375ba814870fde6","/.git/HEAD":"23960fa2316fb1cd093c7920df1e9c864ee8c2d784908f7372cd5da920fc3d48","/.git/description":"82406efccfbaa0195ef86e8c8aa8fc71d38fb93a6aa0fbd00d90629d3bbe2342","/.git/config":"6d49cfc70cbc5012d0886bd983249006d82fa4af8cb1f3c98f12e5440c07f553","/.git/objects/pack/pack-d29b207e0bb4bfb257b908efa444ba2d9f44c42b.rev":"8bdc798008d3f6c0f5f4632e9d15fdac30d1f418d4afaa2d8a42a08d358acddd","/.git/objects/pack/pack-d29b207e0bb4bfb257b908efa444ba2d9f44c42b.pack":"947b1c7709b09354620045b6c161edf785ec88de5e31ba3a26f821e6c22e7319","/.git/objects/pack/pack-d29b207e0bb4bfb257b908efa444ba2d9f44c42b.idx":"55423486139328cab49aa0c1cae384d97d903e02bb8eb1a2e8caea8aa90fd437","/.git/objects/pack/multi-pack-index":"9fae5e1afde4c77ed3c8a3c8cf9a1ff2ad6f6025e06cb7ac8e68e5d007e07033","/.git/objects/info/packs":"bb2308509ed037a9092faf9beacad7158d7fc21d0c67044707471f064cc7c802","/.git/objects/c3/fa6499569e0af850acff7e0304e0f2f15663f4":"90004380b527c7dbb9588a78b38187ae85f28d8eac373ba211ea752b0771e6fd","/.git/objects/c1/d103f5edf99d8f62aac5921590d7b628dfcf5c":"a73518714fcc8f80b25a62bc7b247be34c6c963a5251514a910722c16172eee3","/.git/objects/bb/e5d9376ae96a8eb6cc0a3d4603fdd2ec16044c":"cebc70834ed6ee9f823ca8a4f4d8f4062d58474f57d4f90d78573917c78d6dd3","/.git/objects/af/9dc88805fdbada6ecb0aa5d9700f7c9d68264c":"dee288221b8c4b417468844aa02c11c1b25287ff1e48e597e2b55a2595795773","/.git/objects/ab/1b7b6d0d1222c517531003fd5902d32565fda4":"871d6233570923ea4616a21bd68663dd350ee3fc1303f4a15efe857d8e9eec1d","/.git/objects/73/7ad2aa6f339a14703dec84530e7f2f6abefe62":"2c78c69cc9a3f9e040f5feb198b70487ab836698710054f0475fd0fa150c2ed1","/.git/objects/71/aa6ac7d17fa7e2cb99a7ce0a6c117f182479c4":"d112337f4f4f0fb48f5e7cc49c8dbca1a43d0ad2e683bc19b8ef3c5ff54d6bea","/.git/objects/4a/fb6883ab794b2078324a65ca17f00b2a350cdb":"3e3b9dcf06ecee138c7bf2d5a8c833cecbc56c88e6eac050c36288b004b3747b","/.git/objects/3d/f5f4e70156b07b457da63bcd5733a0c5fda34b":"5c03ca6d101ad5d4bb322b11ab12ade0f681f1de49e427477f21ed5d4f292bec","/.git/objects/25/737507a549b3ace38af4a9f7db3e926013d247":"78a4f6a18cae2146d63a515f31cc8b17f7530236755c6026d2d71dd2f8c59bdc","/.git/info/refs":"f74df6d8b1c1f79eef36ef2b61f82195c108ffa18947d1ab2ca372a7b712fb9f","/.git/info/exclude":"32297f77f8b8f8e9212081f047cd2439baee63b748eb199a6039e640edc15ef8","/.git/hooks/update.sample":"a022fa3ca5c3a9dffa3c09dc035866a2c4e6e935a372724aabba8dd6a5639fee","/.git/hooks/sendemail-validate.sample":"5179ae7bdd72e97e2d9cdbfcec1e72434f42f7f5748665239355f08badcbbee7","/.git/hooks/push-to-checkout.sample":"b686f0c3faae36d5e3110bd8933f861039094c0a996e5c55c3a776a209ca119b","/.git/hooks/prepare-commit-msg.sample":"da47e5ee9571edfcb45598d9e1ed424dc30a87011c99c5d205015bbc8cfe16cc","/.git/hooks/pre-receive.sample":"518430951f2c7182a5fc07191f43236719c64a5244e0ac82131ea92dbe4a2f67","/.git/hooks/pre-rebase.sample":"4c12afd92c797d205ded918d4da7fff21f264e3347ccfe1f718df372100dea0e","/.git/hooks/pre-push.sample":"661c005b1ebf95bb520578d7421bf511e0d91ecac507fc1818ee60c2e3127f64","/.git/hooks/pre-merge-commit.sample":"08d54483ffa10c472d4b5bf54e637a763a905f6909af1491ad4ca8a19241496c","/.git/hooks/pre-commit.sample":"0dc110f82f15687bb7daae0e09828a248ba74bacc4373b6c5e395fa1140853ef","/.git/hooks/pre-applypatch.sample":"efd041617b404639750884bd01917d80c6ec9917e3021e448a1386a237184a36","/.git/hooks/post-update.sample":"4545774e0eba6264d25197fec3cc1520bfd61d16bf6b417b7b1566460ebc28ec","/.git/hooks/fsmonitor-watchman.sample":"7be41ceb43aa45424c8db847f44a7340e790ef8d50a9799d36761a5bae7afae7","/.git/hooks/commit-msg.sample":"2e1e33302155d275a43f4b18dadd9d38ae5f64f416ba028e1e6632a3e0f9e620","/.git/hooks/applypatch-msg.sample":"e989aeea500fde675ea8ee009c4cf25aae7abbf4dd02c15b04cb8c85404dbca3","/.git/refs/remotes/origin/main":"c5c3333fbdec27aaadab999e60d98d7e9ec0770294b201710d0ed701099ab891","/sw.js":"faef20edda3b35aa844a51027ad8a5b4fff7d0951348f1b1aa9d41cdf84c8ba2","/.git/refs/heads/main":"c5c3333fbdec27aaadab999e60d98d7e9ec0770294b201710d0ed701099ab891","/.git/index":"8ce45a266f126451b240aad980f6b936bcfd7feb9cc64a03bec729137fbdc236","/.git/COMMIT_EDITMSG":"39958490008ebf6b159ee05716947d81e26b4edfeeeafbe5da884343246ee4e3","/index.html":"123d136ac999384c3c35dfb3bc7ac474c04c0b20271f2160ac681d9ab36e33b6","/.git/objects/cc/72ad32356cc0fbd596fd6be7e4cf43ad7dbf39":"2e51f1c3b270ef365415eef247ddab16e4b8b313941d9134b4f61819b8af1316","/.git/objects/b0/9643c83e815aa8d4807e32839531e4b55135b8":"852048e492d06de5859ec303c5d59ea21bd57ad0a9a508bf8fa0eb03103ea9df","/.git/objects/96/88bd4ad56469187e05dacfc1bf3e3bd8c756a2":"5a7abd0b3ccac927d7923d0658bd2caf283bdd8426e185379ccc2bf2332f4a6c","/.git/objects/32/9ad17a068409a8d0d89e16b880273308e349bd":"1c05027a5cd5ffaa1a141913b5076832a4ade3a9fdbaed372fdd9d1293e59960","/.git/logs/HEAD":"6b8e9edaef9722b6bb8f7d28d50dfcbd27fc43d2f5b92a4d65ace86a5c0d3f57","/.git/logs/refs/remotes/origin/main":"15eb7e2a719f5dfc97c6c7f14b012dea053cd904278ca9dc3494e029c9cb95fc","/.git/objects/69/df423f933cb6129f98a47bf6ea850ac12237e4":"2f8102cde355d6a9f3802a8e9a74c7bdb27c0d91ae02705285f232a95d7231c9","/.git/logs/refs/heads/main":"ac4e3229c2fe8c9b66cb2840cbd7cefa33928dcdc45b1dd80cfb815e4f696fb9","/.git/objects/53/ed377391d32dad1c6257b94bacb4b375954877":"822f0279ac1205154388fb327262fb4aadb007ff047ea59dfa2bd5c4a5b29b1c","/style.css":"ec0ec7d236a8a5dfbce7e87754825bdd77aa49cc01bdb9696549f864f1eaa087","/app.js":"15efed6bc2e42d95bae2a52ef7565540ace5449783b00a0006734ebeb3f69262"}}
+[debug] [2026-08-17T13:52:07.780Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/907935883175/sites/habitmastery/versions/b3b3766fe5542f67:populateFiles 200
+[debug] [2026-08-17T13:52:07.780Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/907935883175/sites/habitmastery/versions/b3b3766fe5542f67:populateFiles {"uploadRequiredHashes":["39958490008ebf6b159ee05716947d81e26b4edfeeeafbe5da884343246ee4e3","8ce45a266f126451b240aad980f6b936bcfd7feb9cc64a03bec729137fbdc236","ec0ec7d236a8a5dfbce7e87754825bdd77aa49cc01bdb9696549f864f1eaa087","15efed6bc2e42d95bae2a52ef7565540ace5449783b00a0006734ebeb3f69262","ac4e3229c2fe8c9b66cb2840cbd7cefa33928dcdc45b1dd80cfb815e4f696fb9","6b8e9edaef9722b6bb8f7d28d50dfcbd27fc43d2f5b92a4d65ace86a5c0d3f57","15eb7e2a719f5dfc97c6c7f14b012dea053cd904278ca9dc3494e029c9cb95fc","822f0279ac1205154388fb327262fb4aadb007ff047ea59dfa2bd5c4a5b29b1c","123d136ac999384c3c35dfb3bc7ac474c04c0b20271f2160ac681d9ab36e33b6","1c05027a5cd5ffaa1a141913b5076832a4ade3a9fdbaed372fdd9d1293e59960","faef20edda3b35aa844a51027ad8a5b4fff7d0951348f1b1aa9d41cdf84c8ba2","2f8102cde355d6a9f3802a8e9a74c7bdb27c0d91ae02705285f232a95d7231c9","852048e492d06de5859ec303c5d59ea21bd57ad0a9a508bf8fa0eb03103ea9df","5a7abd0b3ccac927d7923d0658bd2caf283bdd8426e185379ccc2bf2332f4a6c","2e51f1c3b270ef365415eef247ddab16e4b8b313941d9134b4f61819b8af1316","c5c3333fbdec27aaadab999e60d98d7e9ec0770294b201710d0ed701099ab891"],"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files"}
+[debug] [2026-08-17T13:52:07.781Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.781Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.781Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.781Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.781Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.781Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.781Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.781Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.781Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.782Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.782Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.782Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.782Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.782Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.782Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.782Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.782Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.782Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.782Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.782Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.783Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.783Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.783Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.783Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.783Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.783Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.783Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.783Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.783Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.784Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.784Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.784Z] Checked if tokens are valid: true, expires at: 1786975627881
+[debug] [2026-08-17T13:52:07.784Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/39958490008ebf6b159ee05716947d81e26b4edfeeeafbe5da884343246ee4e3 [none]
+[debug] [2026-08-17T13:52:07.784Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/39958490008ebf6b159ee05716947d81e26b4edfeeeafbe5da884343246ee4e3 [stream]
+[debug] [2026-08-17T13:52:07.788Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/8ce45a266f126451b240aad980f6b936bcfd7feb9cc64a03bec729137fbdc236 [none]
+[debug] [2026-08-17T13:52:07.788Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/8ce45a266f126451b240aad980f6b936bcfd7feb9cc64a03bec729137fbdc236 [stream]
+[debug] [2026-08-17T13:52:07.790Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/ec0ec7d236a8a5dfbce7e87754825bdd77aa49cc01bdb9696549f864f1eaa087 [none]
+[debug] [2026-08-17T13:52:07.790Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/ec0ec7d236a8a5dfbce7e87754825bdd77aa49cc01bdb9696549f864f1eaa087 [stream]
+[debug] [2026-08-17T13:52:07.792Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/15efed6bc2e42d95bae2a52ef7565540ace5449783b00a0006734ebeb3f69262 [none]
+[debug] [2026-08-17T13:52:07.793Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/15efed6bc2e42d95bae2a52ef7565540ace5449783b00a0006734ebeb3f69262 [stream]
+[debug] [2026-08-17T13:52:07.794Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/ac4e3229c2fe8c9b66cb2840cbd7cefa33928dcdc45b1dd80cfb815e4f696fb9 [none]
+[debug] [2026-08-17T13:52:07.794Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/ac4e3229c2fe8c9b66cb2840cbd7cefa33928dcdc45b1dd80cfb815e4f696fb9 [stream]
+[debug] [2026-08-17T13:52:07.796Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/6b8e9edaef9722b6bb8f7d28d50dfcbd27fc43d2f5b92a4d65ace86a5c0d3f57 [none]
+[debug] [2026-08-17T13:52:07.796Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/6b8e9edaef9722b6bb8f7d28d50dfcbd27fc43d2f5b92a4d65ace86a5c0d3f57 [stream]
+[debug] [2026-08-17T13:52:07.797Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/15eb7e2a719f5dfc97c6c7f14b012dea053cd904278ca9dc3494e029c9cb95fc [none]
+[debug] [2026-08-17T13:52:07.798Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/15eb7e2a719f5dfc97c6c7f14b012dea053cd904278ca9dc3494e029c9cb95fc [stream]
+[debug] [2026-08-17T13:52:07.799Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/822f0279ac1205154388fb327262fb4aadb007ff047ea59dfa2bd5c4a5b29b1c [none]
+[debug] [2026-08-17T13:52:07.799Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/822f0279ac1205154388fb327262fb4aadb007ff047ea59dfa2bd5c4a5b29b1c [stream]
+[debug] [2026-08-17T13:52:07.802Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/123d136ac999384c3c35dfb3bc7ac474c04c0b20271f2160ac681d9ab36e33b6 [none]
+[debug] [2026-08-17T13:52:07.802Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/123d136ac999384c3c35dfb3bc7ac474c04c0b20271f2160ac681d9ab36e33b6 [stream]
+[debug] [2026-08-17T13:52:07.805Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/1c05027a5cd5ffaa1a141913b5076832a4ade3a9fdbaed372fdd9d1293e59960 [none]
+[debug] [2026-08-17T13:52:07.805Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/1c05027a5cd5ffaa1a141913b5076832a4ade3a9fdbaed372fdd9d1293e59960 [stream]
+[debug] [2026-08-17T13:52:07.807Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/faef20edda3b35aa844a51027ad8a5b4fff7d0951348f1b1aa9d41cdf84c8ba2 [none]
+[debug] [2026-08-17T13:52:07.807Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/faef20edda3b35aa844a51027ad8a5b4fff7d0951348f1b1aa9d41cdf84c8ba2 [stream]
+[debug] [2026-08-17T13:52:07.809Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/2f8102cde355d6a9f3802a8e9a74c7bdb27c0d91ae02705285f232a95d7231c9 [none]
+[debug] [2026-08-17T13:52:07.809Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/2f8102cde355d6a9f3802a8e9a74c7bdb27c0d91ae02705285f232a95d7231c9 [stream]
+[debug] [2026-08-17T13:52:07.811Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/852048e492d06de5859ec303c5d59ea21bd57ad0a9a508bf8fa0eb03103ea9df [none]
+[debug] [2026-08-17T13:52:07.811Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/852048e492d06de5859ec303c5d59ea21bd57ad0a9a508bf8fa0eb03103ea9df [stream]
+[debug] [2026-08-17T13:52:07.812Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/5a7abd0b3ccac927d7923d0658bd2caf283bdd8426e185379ccc2bf2332f4a6c [none]
+[debug] [2026-08-17T13:52:07.812Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/5a7abd0b3ccac927d7923d0658bd2caf283bdd8426e185379ccc2bf2332f4a6c [stream]
+[debug] [2026-08-17T13:52:07.814Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/2e51f1c3b270ef365415eef247ddab16e4b8b313941d9134b4f61819b8af1316 [none]
+[debug] [2026-08-17T13:52:07.814Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/2e51f1c3b270ef365415eef247ddab16e4b8b313941d9134b4f61819b8af1316 [stream]
+[debug] [2026-08-17T13:52:07.815Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/c5c3333fbdec27aaadab999e60d98d7e9ec0770294b201710d0ed701099ab891 [none]
+[debug] [2026-08-17T13:52:07.815Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/c5c3333fbdec27aaadab999e60d98d7e9ec0770294b201710d0ed701099ab891 [stream]
+[debug] [2026-08-17T13:52:07.818Z] [hosting][populate queue][FINAL] {"max":812,"min":812,"avg":812,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":846}
+[debug] [2026-08-17T13:52:07.818Z] [hosting] uploads queued: 16
+[info] i  hosting: uploading new files [0/16] (0%) 
+[debug] [2026-08-17T13:52:09.367Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/6b8e9edaef9722b6bb8f7d28d50dfcbd27fc43d2f5b92a4d65ace86a5c0d3f57 200
+[debug] [2026-08-17T13:52:09.368Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/6b8e9edaef9722b6bb8f7d28d50dfcbd27fc43d2f5b92a4d65ace86a5c0d3f57 [stream]
+[debug] [2026-08-17T13:52:09.451Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/8ce45a266f126451b240aad980f6b936bcfd7feb9cc64a03bec729137fbdc236 200
+[debug] [2026-08-17T13:52:09.451Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/8ce45a266f126451b240aad980f6b936bcfd7feb9cc64a03bec729137fbdc236 [stream]
+[debug] [2026-08-17T13:52:09.460Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/852048e492d06de5859ec303c5d59ea21bd57ad0a9a508bf8fa0eb03103ea9df 200
+[debug] [2026-08-17T13:52:09.460Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/852048e492d06de5859ec303c5d59ea21bd57ad0a9a508bf8fa0eb03103ea9df [stream]
+[debug] [2026-08-17T13:52:09.486Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/ac4e3229c2fe8c9b66cb2840cbd7cefa33928dcdc45b1dd80cfb815e4f696fb9 200
+[debug] [2026-08-17T13:52:09.486Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/ac4e3229c2fe8c9b66cb2840cbd7cefa33928dcdc45b1dd80cfb815e4f696fb9 [stream]
+[debug] [2026-08-17T13:52:09.496Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/15eb7e2a719f5dfc97c6c7f14b012dea053cd904278ca9dc3494e029c9cb95fc 200
+[debug] [2026-08-17T13:52:09.496Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/15eb7e2a719f5dfc97c6c7f14b012dea053cd904278ca9dc3494e029c9cb95fc [stream]
+[debug] [2026-08-17T13:52:09.607Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/faef20edda3b35aa844a51027ad8a5b4fff7d0951348f1b1aa9d41cdf84c8ba2 200
+[debug] [2026-08-17T13:52:09.607Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/faef20edda3b35aa844a51027ad8a5b4fff7d0951348f1b1aa9d41cdf84c8ba2 [stream]
+[debug] [2026-08-17T13:52:09.691Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/123d136ac999384c3c35dfb3bc7ac474c04c0b20271f2160ac681d9ab36e33b6 200
+[debug] [2026-08-17T13:52:09.691Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/123d136ac999384c3c35dfb3bc7ac474c04c0b20271f2160ac681d9ab36e33b6 [stream]
+[debug] [2026-08-17T13:52:09.698Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/5a7abd0b3ccac927d7923d0658bd2caf283bdd8426e185379ccc2bf2332f4a6c 200
+[debug] [2026-08-17T13:52:09.698Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/5a7abd0b3ccac927d7923d0658bd2caf283bdd8426e185379ccc2bf2332f4a6c [stream]
+[debug] [2026-08-17T13:52:09.710Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/2e51f1c3b270ef365415eef247ddab16e4b8b313941d9134b4f61819b8af1316 200
+[debug] [2026-08-17T13:52:09.711Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/2e51f1c3b270ef365415eef247ddab16e4b8b313941d9134b4f61819b8af1316 [stream]
+[debug] [2026-08-17T13:52:09.729Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/c5c3333fbdec27aaadab999e60d98d7e9ec0770294b201710d0ed701099ab891 200
+[debug] [2026-08-17T13:52:09.729Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/c5c3333fbdec27aaadab999e60d98d7e9ec0770294b201710d0ed701099ab891 [stream]
+[debug] [2026-08-17T13:52:09.793Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/39958490008ebf6b159ee05716947d81e26b4edfeeeafbe5da884343246ee4e3 200
+[debug] [2026-08-17T13:52:09.793Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/39958490008ebf6b159ee05716947d81e26b4edfeeeafbe5da884343246ee4e3 [stream]
+[debug] [2026-08-17T13:52:09.837Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/2f8102cde355d6a9f3802a8e9a74c7bdb27c0d91ae02705285f232a95d7231c9 200
+[debug] [2026-08-17T13:52:09.838Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/2f8102cde355d6a9f3802a8e9a74c7bdb27c0d91ae02705285f232a95d7231c9 [stream]
+[debug] [2026-08-17T13:52:09.843Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/822f0279ac1205154388fb327262fb4aadb007ff047ea59dfa2bd5c4a5b29b1c 200
+[debug] [2026-08-17T13:52:09.843Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/822f0279ac1205154388fb327262fb4aadb007ff047ea59dfa2bd5c4a5b29b1c [stream]
+[debug] [2026-08-17T13:52:09.865Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/1c05027a5cd5ffaa1a141913b5076832a4ade3a9fdbaed372fdd9d1293e59960 200
+[debug] [2026-08-17T13:52:09.865Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/1c05027a5cd5ffaa1a141913b5076832a4ade3a9fdbaed372fdd9d1293e59960 [stream]
+[debug] [2026-08-17T13:52:09.883Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/ec0ec7d236a8a5dfbce7e87754825bdd77aa49cc01bdb9696549f864f1eaa087 200
+[debug] [2026-08-17T13:52:09.883Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/ec0ec7d236a8a5dfbce7e87754825bdd77aa49cc01bdb9696549f864f1eaa087 [stream]
+[debug] [2026-08-17T13:52:10.283Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/15efed6bc2e42d95bae2a52ef7565540ace5449783b00a0006734ebeb3f69262 200
+[debug] [2026-08-17T13:52:10.283Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/habitmastery/versions/b3b3766fe5542f67/files/15efed6bc2e42d95bae2a52ef7565540ace5449783b00a0006734ebeb3f69262 [stream]
+[debug] [2026-08-17T13:52:10.284Z] [hosting][upload queue][FINAL] {"max":2502,"min":1586,"avg":1918.1875,"active":0,"complete":16,"success":16,"errored":0,"retried":0,"total":16,"elapsed":2504}
+[info] i  hosting: upload complete 
+[info] +  hosting[habitmastery]: file upload complete 
+[debug] [2026-08-17T13:52:10.284Z] [hosting] deploy completed after 3419ms
+[debug] [2026-08-17T13:52:10.284Z] [
+  {
+    "config": {
+      "site": "habitmastery",
+      "public": "./",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**",
+        "electron/**",
+        "dist/**",
+        "functions/**",
+        "api/**",
+        "skills/**",
+        "traffice/**",
+        "create_test_user.js",
+        "*.exe",
+        "*.zip",
+        "*.tar.gz",
+        "vercel.json",
+        "package.json",
+        "package-lock.json",
+        "firestore.rules",
+        "firestore.indexes.json",
+        "*.md"
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(js|css)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=3600"
+            }
+          ]
+        },
+        {
+          "source": "**/*.@(png|jpg|ico|svg)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=86400"
+            }
+          ]
+        }
+      ]
+    },
+    "version": "projects/907935883175/sites/habitmastery/versions/b3b3766fe5542f67"
+  }
+]
+[info] i  hosting[habitmastery]: finalizing version... 
+[debug] [2026-08-17T13:52:10.285Z] Checked if tokens are valid: false, expires at: 1786975627881
+[debug] [2026-08-17T13:52:10.285Z] Checked if tokens are valid: false, expires at: 1786975627881
+[debug] [2026-08-17T13:52:10.286Z] > refreshing access token with scopes: []
+[debug] [2026-08-17T13:52:10.287Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-08-17T13:52:10.287Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-08-17T13:52:10.561Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-08-17T13:52:10.561Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-08-17T13:52:10.594Z] >>> [apiv2][query] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/habitmastery/versions/b3b3766fe5542f67 updateMask=status%2Cconfig
+[debug] [2026-08-17T13:52:10.595Z] >>> [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/habitmastery/versions/b3b3766fe5542f67 {"status":"FINALIZED","config":{"headers":[{"glob":"**/*.@(js|css)","headers":{"Cache-Control":"max-age=3600"}},{"glob":"**/*.@(png|jpg|ico|svg)","headers":{"Cache-Control":"max-age=86400"}}]}}
+[debug] [2026-08-17T13:52:11.671Z] <<< [apiv2][status] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/habitmastery/versions/b3b3766fe5542f67 200
+[debug] [2026-08-17T13:52:11.671Z] <<< [apiv2][body] PATCH https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/habitmastery/versions/b3b3766fe5542f67 {"name":"projects/907935883175/sites/habitmastery/versions/b3b3766fe5542f67","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"max-age=3600"},"glob":"**/*.@(js|css)"},{"headers":{"Cache-Control":"max-age=86400"},"glob":"**/*.@(png|jpg|ico|svg)"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-08-17T13:51:17.076215Z","createUser":{"email":"htmt.slh@gmail.com"},"finalizeTime":"2026-08-17T13:51:22.424110Z","finalizeUser":{"email":"htmt.slh@gmail.com"}}
+[debug] [2026-08-17T13:52:11.671Z] [hosting] finalized version for habitmastery:[object Object]
+[info] +  hosting[habitmastery]: version finalized 
+[info] i  hosting[habitmastery]: releasing new version... 
+[debug] [2026-08-17T13:52:11.672Z] Checked if tokens are valid: true, expires at: 1786978329561
+[debug] [2026-08-17T13:52:11.672Z] Checked if tokens are valid: true, expires at: 1786978329561
+[debug] [2026-08-17T13:52:11.672Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/habitmastery/channels/live/releases versionName=projects%2F907935883175%2Fsites%2Fhabitmastery%2Fversions%2Fb3b3766fe5542f67
+[debug] [2026-08-17T13:52:11.672Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/habitmastery/channels/live/releases {}
+[debug] [2026-08-17T13:52:12.604Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/habitmastery/channels/live/releases 200
+[debug] [2026-08-17T13:52:12.604Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/habitmastery/channels/live/releases {"name":"projects/907935883175/sites/habitmastery/channels/live/releases/1786974682654000","version":{"name":"projects/907935883175/sites/habitmastery/versions/b3b3766fe5542f67","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"max-age=3600"},"glob":"**/*.@(js|css)"},{"headers":{"Cache-Control":"max-age=86400"},"glob":"**/*.@(png|jpg|ico|svg)"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-08-17T13:51:17.076215Z","createUser":{"email":"htmt.slh@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocIMTXBTzrZlC5W2dwdrXUlfABCJWgYHMkgxBA7xZnd_Kdj2v02h"},"finalizeTime":"2026-08-17T13:51:22.424110Z","finalizeUser":{"email":"htmt.slh@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocIMTXBTzrZlC5W2dwdrXUlfABCJWgYHMkgxBA7xZnd_Kdj2v02h"}},"type":"DEPLOY","releaseTime":"2026-08-17T13:51:22.654Z","releaseUser":{"email":"htmt.slh@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocIMTXBTzrZlC5W2dwdrXUlfABCJWgYHMkgxBA7xZnd_Kdj2v02h"}}
+[debug] [2026-08-17T13:52:12.604Z] [hosting] release: {"name":"projects/907935883175/sites/habitmastery/channels/live/releases/1786974682654000","version":{"name":"projects/907935883175/sites/habitmastery/versions/b3b3766fe5542f67","status":"FINALIZED","config":{"headers":[{"headers":{"Cache-Control":"max-age=3600"},"glob":"**/*.@(js|css)"},{"headers":{"Cache-Control":"max-age=86400"},"glob":"**/*.@(png|jpg|ico|svg)"}]},"labels":{"deployment-tool":"cli-firebase"},"createTime":"2026-08-17T13:51:17.076215Z","createUser":{"email":"htmt.slh@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocIMTXBTzrZlC5W2dwdrXUlfABCJWgYHMkgxBA7xZnd_Kdj2v02h"},"finalizeTime":"2026-08-17T13:51:22.424110Z","finalizeUser":{"email":"htmt.slh@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocIMTXBTzrZlC5W2dwdrXUlfABCJWgYHMkgxBA7xZnd_Kdj2v02h"}},"type":"DEPLOY","releaseTime":"2026-08-17T13:51:22.654Z","releaseUser":{"email":"htmt.slh@gmail.com","imageUrl":"https://lh3.googleusercontent.com/a/ACg8ocIMTXBTzrZlC5W2dwdrXUlfABCJWgYHMkgxBA7xZnd_Kdj2v02h"}}
+[info] +  hosting[habitmastery]: release complete 
+[info] 
+[info] +  Deploy complete! 
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/sonnhai-2600f/overview
+[info] Hosting URL: https://habitmastery.web.app
+[debug] [2026-08-17T13:52:17.845Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\Lenovo\AppData\Roaming\npm\node_modules\firebase-tools\lib\utils.js:309:49)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[error] 
+[error] Error: An unexpected error has occurred.

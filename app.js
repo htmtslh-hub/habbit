@@ -1992,21 +1992,46 @@ function initLeaderboard() {
 // ==================== STANDALONE COMMUNITY ====================
 let currentMediaAttached = null; // { type: 'image' | 'video', dataUrl: string }
 let communityPostsCache = [];
+let openedCommentsSet = new Set();
 
-function formatRelativeTime(ts) {
+function formatDetailedPostTime(ts) {
     if (!ts) return 'Vừa xong';
     const date = ts.toDate ? ts.toDate() : new Date(ts);
+    if (isNaN(date.getTime())) return 'Vừa xong';
+    
     const now = new Date();
-    const diffSec = Math.floor((now - date) / 1000);
-    if (diffSec < 60) return 'Vừa xong';
+    const diffMs = now - date;
+    const diffSec = Math.floor(diffMs / 1000);
+    
+    const hours = String(date.getHours()).padStart(2, '0');
+    const mins = String(date.getMinutes()).padStart(2, '0');
+    const timeOfDay = `${hours}:${mins}`;
+    
+    const d = String(date.getDate()).padStart(2, '0');
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const y = date.getFullYear();
+    const fullDate = `${d}/${m}/${y}`;
+
+    if (diffSec < 60) return `Vừa xong • ${timeOfDay}`;
     const diffMin = Math.floor(diffSec / 60);
-    if (diffMin < 60) return `${diffMin} phút trước`;
+    if (diffMin < 60) return `${diffMin} phút trước • ${timeOfDay}`;
     const diffHour = Math.floor(diffMin / 60);
-    if (diffHour < 24) return `${diffHour} giờ trước`;
+    if (diffHour < 24 && date.getDate() === now.getDate()) {
+        return `${diffHour} giờ trước • ${timeOfDay}`;
+    }
+    
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    if (date.getDate() === yesterday.getDate() && date.getMonth() === yesterday.getMonth() && date.getFullYear() === yesterday.getFullYear()) {
+        return `Hôm qua lúc ${timeOfDay}`;
+    }
+
     const diffDay = Math.floor(diffHour / 24);
-    if (diffDay === 1) return 'Hôm qua';
-    if (diffDay < 7) return `${diffDay} ngày trước`;
-    return date.toLocaleDateString('vi-VN');
+    if (diffDay < 7) {
+        return `${diffDay} ngày trước • ${fullDate} (${timeOfDay})`;
+    }
+    
+    return `${fullDate} lúc ${timeOfDay}`;
 }
 
 window._openLightbox = function(url) {
@@ -2049,6 +2074,81 @@ function closeCommunityModal() {
     if (modal) modal.classList.remove('show');
 }
 
+window._toggleComments = function(postId) {
+    if (openedCommentsSet.has(postId)) {
+        openedCommentsSet.delete(postId);
+    } else {
+        openedCommentsSet.add(postId);
+    }
+    const section = document.getElementById(`comments-${postId}`);
+    const toggleBtn = document.getElementById(`cmCommentBtn-${postId}`);
+    if (section) {
+        const isShown = openedCommentsSet.has(postId);
+        section.style.display = isShown ? 'flex' : 'none';
+        if (toggleBtn) toggleBtn.classList.toggle('active', isShown);
+        if (isShown) {
+            const input = document.getElementById(`cmCommentInput-${postId}`);
+            if (input) input.focus();
+        }
+    }
+};
+
+window._submitComment = async function(postId) {
+    if (!currentUser) {
+        alert('Vui lòng đăng nhập để bình luận!');
+        return;
+    }
+    const input = document.getElementById(`cmCommentInput-${postId}`);
+    if (!input) return;
+    const content = input.value.trim();
+    if (!content) return;
+    
+    input.value = '';
+    const computed = calculateUserDPAndStreak();
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (currentUser && currentUser.email === 'admin@gmail.com');
+    const dp = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+    const rank = getRankLevel(dp);
+    
+    const newComment = {
+        id: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        uid: currentUser.uid,
+        displayName: currentUser.displayName || currentUser.email?.split('@')[0] || 'User',
+        photoURL: currentUser.photoURL || '',
+        rankLevel: rank.level,
+        content: content,
+        createdAt: new Date().toISOString()
+    };
+    
+    try {
+        openedCommentsSet.add(postId);
+        await db.collection('community_posts').doc(postId).update({
+            comments: firebase.firestore.FieldValue.arrayUnion(newComment)
+        });
+        await renderCommunity(false);
+    } catch (e) {
+        alert('Lỗi gửi bình luận: ' + e.message);
+    }
+};
+
+window._deleteComment = async function(postId, commentId) {
+    if (!confirm('Bạn có chắc chắn muốn xóa bình luận này?')) return;
+    try {
+        const postRef = db.collection('community_posts').doc(postId);
+        const doc = await postRef.get();
+        if (!doc.exists) return;
+        const p = doc.data();
+        const currentComments = Array.isArray(p.comments) ? p.comments : [];
+        const filtered = currentComments.filter(c => c.id !== commentId);
+        
+        await postRef.update({
+            comments: filtered
+        });
+        await renderCommunity(false);
+    } catch (e) {
+        alert('Lỗi xóa bình luận: ' + e.message);
+    }
+};
+
 async function renderCommunity(forceReload = false) {
     const container = document.getElementById('communityFeedContainer');
     if (!container) return;
@@ -2069,7 +2169,7 @@ async function renderCommunity(forceReload = false) {
         let html = '';
         snap.forEach(doc => {
             const p = doc.data();
-            const timeStr = formatRelativeTime(p.createdAt);
+            const timeStr = formatDetailedPostTime(p.createdAt);
             const rankLvl = p.rankLevel || (p.userDP ? getRankLevel(p.userDP).level : 1);
             const rankTier = RANK_TIERS[rankLvl - 1] || RANK_TIERS[0];
             const rankName = getRankTierName(rankTier);
@@ -2079,6 +2179,9 @@ async function renderCommunity(forceReload = false) {
             const isLiked = currentUid && Array.isArray(p.likedBy) && p.likedBy.includes(currentUid);
             const canDelete = currentUid && (p.uid === currentUid || isAdmin);
             
+            const comments = Array.isArray(p.comments) ? p.comments : [];
+            const isCommentsOpen = openedCommentsSet.has(doc.id);
+            
             let mediaHtml = '';
             if (p.mediaUrl) {
                 if (p.mediaType === 'video') {
@@ -2086,6 +2189,36 @@ async function renderCommunity(forceReload = false) {
                 } else {
                     mediaHtml = `<div class="cm-post-media"><img class="cm-post-img" src="${p.mediaUrl}" alt="Ảnh đính kèm" onclick="window._openLightbox('${p.mediaUrl}')" loading="lazy"></div>`;
                 }
+            }
+            
+            // Comments list HTML
+            let commentsHtml = '';
+            if (comments.length > 0) {
+                comments.forEach(c => {
+                    const cRankLvl = c.rankLevel || 1;
+                    const cRankTier = RANK_TIERS[cRankLvl - 1] || RANK_TIERS[0];
+                    const cRankName = getRankTierName(cRankTier);
+                    const cTimeStr = formatDetailedPostTime(c.createdAt);
+                    const cAvatarSrc = c.photoURL || `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>`;
+                    const canDeleteComment = currentUid && (c.uid === currentUid || p.uid === currentUid || isAdmin);
+                    
+                    commentsHtml += `<div class="cm-comment-item">
+                        <img class="cm-comment-avatar" src="${cAvatarSrc}" alt="">
+                        <div class="cm-comment-bubble">
+                            <div class="cm-comment-header">
+                                <div class="cm-comment-author-name">
+                                    <span>${escHtml(c.displayName || 'User')}</span>
+                                    <span class="cm-comment-rank-badge">${cRankName}</span>
+                                </div>
+                                <span class="cm-comment-time">${cTimeStr}</span>
+                            </div>
+                            <div class="cm-comment-content">${escHtml(c.content || '')}</div>
+                            ${canDeleteComment ? `<button class="cm-comment-delete-btn" onclick="window._deleteComment('${doc.id}', '${c.id}')" title="Xóa bình luận">✕</button>` : ''}
+                        </div>
+                    </div>`;
+                });
+            } else {
+                commentsHtml = '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:6px 0;">Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</div>';
             }
             
             html += `<div class="cm-post-card" id="post-${doc.id}">
@@ -2097,7 +2230,7 @@ async function renderCommunity(forceReload = false) {
                                 <span>${escHtml(p.displayName || 'User')}</span>
                                 <span class="cm-post-author-rank">${rankName}</span>
                             </div>
-                            <span class="cm-post-time">${timeStr}</span>
+                            <span class="cm-post-time">📅 ${timeStr}</span>
                         </div>
                     </div>
                     ${canDelete ? `<button class="cm-delete-btn" onclick="window._deleteCmPost('${doc.id}')" title="Xóa bài viết">🗑️</button>` : ''}
@@ -2105,9 +2238,21 @@ async function renderCommunity(forceReload = false) {
                 ${p.content ? `<div class="cm-post-text">${escHtml(p.content)}</div>` : ''}
                 ${mediaHtml}
                 <div class="cm-post-actions">
-                    <button class="cm-like-btn ${isLiked ? 'liked' : ''}" onclick="window._likeCmPost('${doc.id}')">
-                        ${isLiked ? '❤️' : '🤍'} <span>${p.likes || (Array.isArray(p.likedBy) ? p.likedBy.length : 0) || 0} Thích</span>
-                    </button>
+                    <div class="cm-post-actions-left">
+                        <button class="cm-like-btn ${isLiked ? 'liked' : ''}" onclick="window._likeCmPost('${doc.id}')">
+                            ${isLiked ? '❤️' : '🤍'} <span>${p.likes || (Array.isArray(p.likedBy) ? p.likedBy.length : 0) || 0} Thích</span>
+                        </button>
+                        <button class="cm-comment-toggle-btn ${isCommentsOpen ? 'active' : ''}" id="cmCommentBtn-${doc.id}" onclick="window._toggleComments('${doc.id}')">
+                            💬 <span>${comments.length} Bình luận</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="cm-comments-section" id="comments-${doc.id}" style="display:${isCommentsOpen ? 'flex' : 'none'};">
+                    <div class="cm-comment-input-box">
+                        <input type="text" id="cmCommentInput-${doc.id}" class="cm-comment-input" placeholder="Viết bình luận của bạn..." maxlength="500" onkeydown="if(event.key==='Enter') window._submitComment('${doc.id}')">
+                        <button type="button" class="cm-comment-send-btn" onclick="window._submitComment('${doc.id}')">Gửi 💬</button>
+                    </div>
+                    <div class="cm-comment-list">${commentsHtml}</div>
                 </div>
             </div>`;
         });
@@ -2187,6 +2332,7 @@ window._submitCmPost = async () => {
             mediaType: currentMediaAttached ? currentMediaAttached.type : null,
             likes: 0,
             likedBy: [],
+            comments: [],
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         
