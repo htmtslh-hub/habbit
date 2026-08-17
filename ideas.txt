@@ -1,0 +1,111 @@
+================================================================================
+          HABIT MASTERY - ĐỀ XUẤT 5 TRỤ CỘT CHIẾN LƯỢC GIỮ CHÂN NGƯỜI DÙNG
+                       (USER RETENTION & ENGAGEMENT ROADMAP)
+================================================================================
+
+Tài liệu này tổng hợp 5 trụ cột nâng cấp tính năng chiến lược nhằm biến Habit Mastery
+từ một công cụ theo dõi thông thường thành một hệ sinh thái rèn luyện kỷ luật gây 
+nghiện lành mạnh (High-Retention Ecosystem).
+
+--------------------------------------------------------------------------------
+TRỤ CỘT 1: CƠ CHẾ BẢO VỆ VÀ CỨU CHUỖI (STREAK PROTECTION & RECOVERY)
+--------------------------------------------------------------------------------
+* Tâm lý học: Hiệu ứng "Loss Aversion" (Nỗi sợ mất mát). Người dùng tích lũy chuỗi 
+  30-50 ngày rất tự hào, nhưng nếu vì một sự cố đột xuất (ốm, bận việc) làm đứt chuỗi, 
+  họ thường có xu hướng thất vọng, bỏ cuộc và rời ứng dụng.
+  
+1. Bình Đóng Băng Chuỗi (Streak Freeze):
+   - Người dùng có thể sở hữu 1 - 2 bình đóng băng (mua bằng điểm DP hoặc tặng định kỳ).
+   - Tự động kích hoạt khi người dùng bỏ lỡ 1 ngày check-in để bảo vệ số ngày Streak 
+     không bị reset về 0.
+   - Hiển thị hiệu ứng đóng băng băng tuyết đẹp mắt trên ô ngày đó.
+
+2. Vá Chuỗi Trong 24h (Streak Repair):
+   - Nếu lỡ quên và chuỗi bị đứt, trong vòng 24h tiếp theo cho phép người dùng dùng DP 
+     hoặc hoàn thành một thử thách đền bù để "hồi sinh" lại chuỗi.
+
+--------------------------------------------------------------------------------
+TRỤ CỘT 2: CỬA HÀNG KỶ LUẬT & NỀN KINH TẾ DP (DISCIPLINE POINT SHOP)
+--------------------------------------------------------------------------------
+* Mục đích: Tạo ra nơi "tiêu điểm DP", biến điểm thưởng rèn luyện thành tài sản số 
+  có giá trị sử dụng trực tiếp, kích thích người dùng chăm chỉ check-in mỗi ngày.
+
+1. Danh Hiệu Độc Quyền (Character Titles):
+   - Mở khóa các danh hiệu gắn liền với phong cách sống hiển thị cạnh tên nhân vật:
+     + "Kẻ Thức Khuya" / "Chim Sớm"
+     + "Chiến Binh Kỷ Luật" / "Sói Đầu Đàn"
+     + "Bất Khả Xâm Phạm" / "Kẻ Chinh Phục Thói Quen"
+
+2. Gói Hiệu Ứng Check-in (Sound & Visual FX):
+   - Âm thanh khi tích ô: Tiếng chém kiếm Katana, tiếng Level-up RPG, tiếng bấm bàn phím cơ.
+   - Hiệu ứng thị giác: Tia laser, pháo hoa mini, ánh sáng vàng lan tỏa khi tích thói quen.
+
+3. Bộ Giao Diện Chủ Đề Đặc Biệt (Theme Skins):
+   - Cyberpunk Neon, Gold Luxury, Minimalist Sakura, Midnight Matrix, Forest Zen.
+
+4. Mua Thẻ Bổ Sung:
+   - Bình Streak Freeze, Vé nhân đôi DP tạm thời (2x DP Boost trong 24h).
+
+--------------------------------------------------------------------------------
+TRỤ CỘT 3: TỔ ĐỘI RÈN LUYỆN & TRÁCH NHIỆM XÃ HỘI (SOCIAL ACCOUNTABILITY)
+--------------------------------------------------------------------------------
+* Tâm lý học: Tự kỷ luật một mình rất dễ nản, nhưng khi có bạn bè hoặc tổ đội cùng 
+  rèn luyện thì tỷ lệ cam kết duy trì thói quen tăng lên đến 85%.
+
+1. Tổ Đội Rèn Luyện (Squads / Guilds 3 - 5 người):
+   - Tạo nhóm bạn bè hoặc nhóm mục tiêu chung (Ví dụ: "Nhóm Dậy Sớm 5h", "Nhóm Gym").
+   - Cả nhóm cùng check-in để tích lũy điểm thưởng chung cho tổ đội.
+   - Nút "Nhắc nhở / Thúc giục" gửi thông báo nhẹ nhàng cho thành viên chưa hoàn thành.
+
+2. Thách Đấu 1v1 (7-Day Streak Duel):
+   - Hai người bạn đặt cược điểm DP vào kèo thách đấu 7 ngày không đứt chuỗi.
+   - Người chiến thắng nhận toàn bộ phần thưởng và huy hiệu vinh danh trên Bảng xếp hạng.
+
+--------------------------------------------------------------------------------
+TRỤ CỘT 4: BÁO CÁO TỔNG KẾT & KHOE THÀNH TÍCH (SHAREABLE RECAP & CARDS)
+--------------------------------------------------------------------------------
+* Mục đích: Thỏa mãn nhu cầu được công nhận thành quả (Recognition) và tạo vòng lặp 
+  lan tỏa tự nhiên (Viral Marketing) giúp kéo thêm người dùng mới mà không tốn chi phí.
+
+1. Bản Tin Tổng Kết Tuần (Weekly Recap - Kiểu Spotify Wrapped):
+   - Sáng Thứ Hai mở app, hiển thị một Popup Infographic tóm tắt ngắn gọn:
+     + Tỷ lệ hoàn thành thói quen trong tuần (ví dụ: 95%).
+     + Tổng DP kiếm được, số ngày giữ vững chuỗi.
+     + Thói quen hoàn thành tốt nhất / Thói quen cần cải thiện.
+
+2. Xuất Ảnh Khoe Thành Tích Chuẩn Kích Thước Story (9:16):
+   - Tự động tạo một bức ảnh thẻ nhân vật tuyệt đẹp chứa: Avatar + Khung cấp bậc + 
+     Số ngày Streak + Biểu đồ thói quen + Logo Habit Mastery.
+   - Người dùng dễ dàng tải về khoe lên Facebook Story, Instagram, Zalo, TikTok.
+
+--------------------------------------------------------------------------------
+TRỤ CỘT 5: CÔNG CỤ HỖ TRỢ TRỰC TIẾP (ACTION ENABLERS)
+--------------------------------------------------------------------------------
+* Mục đích: Biến ứng dụng thành không gian người dùng ở lại thực hiện hành động, 
+  thay vì chỉ mở ra tích ô rồi đóng lại.
+
+1. Đồng Hồ Tập Trung Tích Hợp (Pomodoro / Deep Work Timer):
+   - Gắn liền với các thói quen như "Đọc sách", "Làm việc sâu", "Học kỹ năng", "Thiền".
+   - Bấm vào thói quen để mở bộ đếm 25 phút kèm nhạc sóng não (Lo-fi, White Noise, Rain).
+   - Khi hết giờ bấm tự động đánh dấu hoàn thành thói quen.
+
+2. Trích Dẫn Khắc Kỷ & Động Lực Mỗi Ngày (Daily Stoic & Mindset Quotes):
+   - Mỗi ngày mở app sẽ có một câu nói truyền cảm hứng sâu sắc về ý chí, kỷ luật 
+     (Marcus Aurelius, David Goggins, James Clear, Seneca...).
+
+================================================================================
+LỘ TRÌNH TRIỂN KHAI KHUYẾN NGHỊ (THEO GIAI ĐOẠN)
+================================================================================
+- Giai đoạn 1 (Ưu tiên cao nhất): 
+  + Bình đóng băng chuỗi (Streak Freeze)
+  + Cửa hàng Kỷ luật (DP Shop đổi Danh hiệu & Vật phẩm)
+
+- Giai đoạn 2 (Lan tỏa & Tự hào):
+  + Bản tin tổng kết tuần (Weekly Recap)
+  + Nút xuất ảnh thẻ Story khoe mạng xã hội
+
+- Giai đoạn 3 (Gắn kết nâng cao):
+  + Tổ đội rèn luyện (Squads)
+  + Đồng hồ Pomodoro Timer tích hợp nhạc tập trung
+
+================================================================================
