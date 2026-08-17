@@ -2644,10 +2644,19 @@ function getQuestContext() {
     };
 }
 
-function claimQuestReward(questId) {
+window.claimQuestReward = async function(questId) {
     if (!S.questData) initQuestData();
+    if (!S.questData.claimed) S.questData.claimed = {};
     const quest = QUEST_DEFINITIONS.find(q => q.id === questId);
-    if (!quest || S.questData.claimed[questId]) return;
+    if (!quest) return;
+    if (S.questData.claimed[questId]) return;
+
+    // Check if criteria still met
+    const ctx = getQuestContext();
+    if (!quest.check(ctx)) {
+        alert('Nhiệm vụ chưa đủ điều kiện nhận thưởng!');
+        return;
+    }
 
     S.questData.claimed[questId] = Date.now();
     S.questData.totalDP = (S.questData.totalDP || 0) + quest.dp;
@@ -2656,18 +2665,29 @@ function claimQuestReward(questId) {
     // Toast celebration
     const toast = document.createElement('div');
     toast.className = 'quest-toast';
-    toast.innerHTML = `<span>${quest.icon}</span> +${quest.dp} DP — ${t('questClaimedToast')}`;
+    toast.innerHTML = `<span>${quest.icon}</span> +${quest.dp} DP — ${t('questClaimedToast') || '✨ Đã nhận thưởng DP!'}`;
     document.body.appendChild(toast);
     setTimeout(() => toast.classList.add('show'), 10);
-    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2500);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
 
-    if (typeof updateUserDPState === 'function') {
-        updateUserDPState(true);
-    } else {
-        syncUserLeaderboard();
+    // Fire celebratory confetti!
+    if (typeof fireConfetti === 'function') fireConfetti();
+
+    // Sync leaderboard & rank calculations
+    if (typeof syncUserLeaderboard === 'function') {
+        await syncUserLeaderboard();
     }
+
+    // Update Profile Nameplate & Modal
+    if (currentUser) {
+        showUserProfile(currentUser);
+        if (window._updateProfileModalUI) window._updateProfileModalUI();
+    }
+
+    // Re-render quest panel
     renderQuestPanel();
-}
+};
+window._claimQuestReward = window.claimQuestReward;
 
 // ==================== SURPRISE QUESTS (from Admin) ====================
 let surpriseQuests = [];
@@ -2752,7 +2772,7 @@ function renderQuestPanel() {
                 </div>
                 <div class="quest-card-footer">
                     ${claimed ? `<span class="quest-status-done">✅ ${t('questClaimed')}</span>` :
-                      completed ? `<button class="quest-claim-btn" onclick="claimQuestReward('${q.id}')">${t('questClaim')}</button>` :
+                      completed ? `<button class="quest-claim-btn" onclick="window.claimQuestReward('${q.id}')">${t('questClaim')}</button>` :
                       `<span class="quest-status-locked">🔒 ${t('questLocked')}</span>`}
                 </div>
             </div>`;
