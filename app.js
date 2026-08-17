@@ -173,7 +173,8 @@ function showUserProfile(user){
     const avatar = document.querySelector('#userAvatar');
     const name = document.querySelector('#userName');
     const navFrame = document.querySelector('#navAvatarFrame');
-    const dp = S.dp || 0;
+    const computed = (typeof calculateUserDPAndStreak === 'function') ? calculateUserDPAndStreak(S) : { totalDP: 0 };
+    const dp = (typeof S !== 'undefined' && S && typeof S.dp === 'number') ? S.dp : (computed.totalDP + (typeof userBonusDP !== 'undefined' ? userBonusDP : 0));
     const rank = getRankLevel(dp);
     const imgUrl = user.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(user.displayName||user.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
     const displayName = user.displayName || user.email?.split('@')[0] || 'User';
@@ -748,7 +749,8 @@ let curTheme=localStorage.getItem('hg_theme')||'light';
 function updateThemeAvatars() {
     if (typeof currentUser !== 'undefined' && currentUser) {
         const navFrame = document.querySelector('#navAvatarFrame');
-        const dp = (typeof S !== 'undefined' && S.dp) ? S.dp : 0;
+        const computed = (typeof calculateUserDPAndStreak === 'function') ? calculateUserDPAndStreak(S) : { totalDP: 0 };
+        const dp = (typeof S !== 'undefined' && S && typeof S.dp === 'number') ? S.dp : (computed.totalDP + (typeof userBonusDP !== 'undefined' ? userBonusDP : 0));
         const rank = typeof getRankLevel === 'function' ? getRankLevel(dp) : { level: 1 };
         const imgUrl = currentUser.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser.displayName||currentUser.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
         if (navFrame && window.getAvatarHTML) {
@@ -992,7 +994,7 @@ function renderGrid(){
             if(cb){cb.classList.toggle('on',!!S.c[k]);cb.classList.remove('pop');void cb.offsetWidth;cb.classList.add('pop')}
             renderStats();renderBar();renderLine();renderT10();renderHeatmap();updateAutoMood();
             checkConfetti();
-            if(typeof syncUserLeaderboard==='function') syncUserLeaderboard();
+            if(typeof updateUserDPState==='function') updateUserDPState(true);
             if(typeof renderQuestPanel==='function') renderQuestPanel();
             // Update row stats in-place
             const tr=td.closest('tr');
@@ -1537,7 +1539,8 @@ async function startApp(user){
         initLeaderboard();
         initQuestSystem();
         renderAll();
-        syncUserLeaderboard();
+        if(typeof updateUserDPState==='function') updateUserDPState(true);
+        else syncUserLeaderboard();
         // Apply premium UI
         renderPremiumBanner();
         applyPremiumGate();
@@ -1589,6 +1592,8 @@ function getRankProgressInfo(dp) {
 }
 
 // ==================== SCORING ENGINE ====================
+let userBonusDP = 0;
+
 function calculateUserDPAndStreak(sData = S) {
     let totalChecks = 0;
     let weeklyChecks = 0;
@@ -1599,16 +1604,16 @@ function calculateUserDPAndStreak(sData = S) {
     if (!sData) return { totalDP: 0, weeklyDP: 0, totalChecks: 0, weeklyChecks: 0, currentStreak: 0, maxStreak: 0, perfectDays: 0, questDP: 0 };
 
     const now = new Date();
-    const thisYear = now.getFullYear();
-    const thisMonth = now.getMonth();
-    const thisDay = now.getDate();
-    const weekStart = new Date(now);
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1);
-    if (weekStart > now) weekStart.setDate(weekStart.getDate() - 7);
-    weekStart.setHours(0, 0, 0, 0);
+    const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const dayMs = 24 * 60 * 60 * 1000;
+
+    // Week start (Monday 00:00 local time)
+    const dayOfWeek = now.getDay();
+    const daysSinceMon = (dayOfWeek + 6) % 7;
+    const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - daysSinceMon, 0, 0, 0, 0);
 
     // Parse all checks
-    const dailyStats = {}; // 'YYYY-MM-DD' -> { checked, total }
+    const dailyStats = {}; // 'YYYY-MM-DD' -> { yr, mo, dy, checked, total, timestamp }
     const habitsList = Array.isArray(sData.h) ? sData.h : [];
     const checkMap = sData.c || {};
     const checkKeys = Object.keys(checkMap).filter(k => checkMap[k]);
@@ -1620,8 +1625,15 @@ function calculateUserDPAndStreak(sData = S) {
         if (isNaN(yr) || isNaN(mo) || isNaN(dy)) return;
 
         totalChecks++;
-        const dateKey = `${yr}-${String(mo).padStart(2,'0')}-${String(dy).padStart(2,'0')}`;
-        if (!dailyStats[dateKey]) dailyStats[dateKey] = { checked: 0, total: habitsList.length || 1 };
+        const dateKey = `${yr}-${String(mo + 1).padStart(2, '0')}-${String(dy).padStart(2, '0')}`;
+        if (!dailyStats[dateKey]) {
+            dailyStats[dateKey] = {
+                yr, mo, dy,
+                checked: 0,
+                total: habitsList.length || 1,
+                timestamp: new Date(yr, mo, dy).getTime()
+            };
+        }
         dailyStats[dateKey].checked++;
 
         // Weekly check
@@ -1629,36 +1641,41 @@ function calculateUserDPAndStreak(sData = S) {
         if (checkDate >= weekStart && checkDate <= now) weeklyChecks++;
     });
 
-    // Perfect days & streak
-    const sortedDays = Object.keys(dailyStats).sort();
-    let prevDate = null;
-    sortedDays.forEach(dk => {
-        const stats = dailyStats[dk];
-        if (stats.total > 0 && stats.checked >= stats.total) perfectDays++;
-        if (stats.checked > 0) {
-            if (prevDate) {
-                const prev = new Date(prevDate);
-                const curr = new Date(dk);
-                const diff = (curr - prev) / (1000 * 60 * 60 * 24);
-                currentStreak = diff === 1 ? currentStreak + 1 : 1;
+    // Perfect days & streak calculation
+    const sortedDays = Object.values(dailyStats).sort((a, b) => a.timestamp - b.timestamp);
+    let prevTimestamp = null;
+
+    sortedDays.forEach(item => {
+        if (item.total > 0 && item.checked >= item.total) perfectDays++;
+        if (item.checked > 0) {
+            if (prevTimestamp !== null) {
+                const diffDays = Math.round((item.timestamp - prevTimestamp) / dayMs);
+                if (diffDays === 1) {
+                    currentStreak += 1;
+                } else if (diffDays > 1) {
+                    currentStreak = 1;
+                }
             } else {
                 currentStreak = 1;
             }
             maxStreak = Math.max(maxStreak, currentStreak);
-            prevDate = dk;
+            prevTimestamp = item.timestamp;
         }
     });
 
-    // Check if streak is still active (last check within 1 day)
-    if (prevDate) {
-        const lastDay = new Date(prevDate);
-        const diff = Math.floor((now - lastDay) / (1000 * 60 * 60 * 24));
-        if (diff > 1) currentStreak = 0;
+    // Check if streak is still active (last check within today or yesterday)
+    if (prevTimestamp !== null) {
+        const daysDiffFromToday = Math.round((todayMidnight - prevTimestamp) / dayMs);
+        if (daysDiffFromToday > 1) {
+            currentStreak = 0; // Missed yesterday and today
+        }
+    } else {
+        currentStreak = 0;
     }
 
-    // Calculate DP
+    // Calculate Base DP & Bonuses
     let totalDP = totalChecks * 10; // Base: 10 DP per check
-    totalDP += perfectDays * 30; // Perfect day bonus
+    totalDP += perfectDays * 30;    // Perfect day bonus
     // Streak bonuses
     if (maxStreak >= 7) totalDP += 50;
     if (maxStreak >= 30) totalDP += 500;
@@ -1667,10 +1684,40 @@ function calculateUserDPAndStreak(sData = S) {
     const questDP = (sData.questData && sData.questData.totalDP) || 0;
     totalDP += questDP;
 
-    // Weekly DP for leaderboard
+    // Weekly DP
     let weeklyDP = weeklyChecks * 10;
 
     return { totalDP, weeklyDP, totalChecks, weeklyChecks, currentStreak, maxStreak, perfectDays, questDP };
+}
+
+function updateUserDPState(forceSync = false) {
+    const computed = calculateUserDPAndStreak(S);
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
+    const totalDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+    const streak = computed.currentStreak;
+    const maxStreak = computed.maxStreak;
+    const rank = getRankLevel(totalDP);
+
+    S.dp = totalDP;
+    S.streak = streak;
+    S.maxStreak = maxStreak;
+    S.rankLevel = rank.level;
+    sv();
+
+    if (currentUser) {
+        showUserProfile(currentUser);
+    }
+
+    const pModal = document.getElementById('profileModalBg');
+    if (pModal && pModal.classList.contains('show') && window._updateProfileModalUI) {
+        window._updateProfileModalUI();
+    }
+
+    if (forceSync && typeof syncUserLeaderboard === 'function') {
+        syncUserLeaderboard();
+    }
+
+    return { totalDP, streak, maxStreak, rank, stats: computed };
 }
 
 // ==================== LEADERBOARD ====================
@@ -1685,9 +1732,19 @@ async function syncUserLeaderboard() {
         const userData = userDoc.exists ? userDoc.data() : {};
         const isAdmin = userData.role === 'admin';
 
-        // Admin override: max rank
-        const finalDP = isAdmin ? 999999 : stats.totalDP;
+        // Check for existing bonus DP in users collection and leaderboard
+        const lbDoc = await db.collection('leaderboard').doc(currentUser.uid).get();
+        const lbData = lbDoc.exists ? lbDoc.data() : {};
+        
+        userBonusDP = userData.bonusDP || lbData.bonusDP || 0;
+
+        const baseTotalDP = stats.totalDP + userBonusDP;
+        const finalDP = isAdmin ? 999999 : baseTotalDP;
         const finalWeekly = isAdmin ? 99999 : stats.weeklyDP;
+
+        S.dp = finalDP;
+        S.streak = stats.currentStreak;
+        S.maxStreak = stats.maxStreak;
 
         const displayName = userData.displayName || currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
         const photoURL = userData.photoURL || currentUser.photoURL || '';
@@ -1697,6 +1754,7 @@ async function syncUserLeaderboard() {
             displayName: displayName,
             photoURL: photoURL,
             totalDP: finalDP,
+            bonusDP: userBonusDP,
             weeklyDP: finalWeekly,
             streak: stats.currentStreak,
             maxStreak: stats.maxStreak,
@@ -1705,6 +1763,9 @@ async function syncUserLeaderboard() {
             isAdmin: isAdmin || false,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         }, { merge: true });
+
+        // Update UI
+        showUserProfile(currentUser);
     } catch (e) {
         console.warn('Leaderboard sync error:', e);
     }
@@ -1716,73 +1777,6 @@ async function loadLeaderboard() {
         // Sync current logged in user first
         if (currentUser) {
             await syncUserLeaderboard();
-        }
-
-        // Fetch users from users collection and sync any missing or out-of-date users
-        const usersSnap = await db.collection('users').get();
-        const lbSnap = await db.collection('leaderboard').get();
-        const lbMap = {};
-        lbSnap.forEach(doc => { lbMap[doc.id] = doc.data(); });
-
-        const syncPromises = [];
-
-        usersSnap.forEach(userDoc => {
-            const uid = userDoc.id;
-            const uData = userDoc.data() || {};
-
-            if (currentUser && uid === currentUser.uid) return;
-
-            let userDP = 0;
-            let userWeekly = 0;
-            let userStreak = 0;
-            let maxStreak = 0;
-            let totalChecks = 0;
-            let perfectDays = 0;
-
-            if (uData.habitData) {
-                try {
-                    const parsed = typeof uData.habitData === 'string' ? JSON.parse(uData.habitData) : uData.habitData;
-                    const computed = calculateUserDPAndStreak(parsed);
-                    userDP = computed.totalDP;
-                    userWeekly = computed.weeklyDP;
-                    userStreak = computed.currentStreak;
-                    maxStreak = computed.maxStreak;
-                    totalChecks = computed.totalChecks;
-                    perfectDays = computed.perfectDays;
-                } catch (err) {}
-            }
-
-            const existingLb = lbMap[uid];
-            const isAdmin = uData.role === 'admin';
-            
-            const displayName = uData.displayName || (existingLb && existingLb.displayName) || uData.email?.split('@')[0] || 'User';
-            const photoURL = uData.photoURL || (existingLb && existingLb.photoURL) || '';
-            const finalDP = isAdmin ? 999999 : Math.max(existingLb?.totalDP || 0, userDP);
-            const finalWeekly = isAdmin ? 99999 : Math.max(existingLb?.weeklyDP || 0, userWeekly);
-            const finalStreak = Math.max(existingLb?.streak || 0, userStreak);
-            const finalMaxStreak = Math.max(existingLb?.maxStreak || 0, maxStreak);
-
-            if (!existingLb || existingLb.displayName !== displayName || existingLb.photoURL !== photoURL || existingLb.totalDP !== finalDP || existingLb.streak !== finalStreak) {
-                syncPromises.push(
-                    db.collection('leaderboard').doc(uid).set({
-                        uid: uid,
-                        displayName: displayName,
-                        photoURL: photoURL,
-                        totalDP: finalDP,
-                        weeklyDP: finalWeekly,
-                        streak: finalStreak,
-                        maxStreak: finalMaxStreak,
-                        totalChecks: totalChecks || existingLb?.totalChecks || 0,
-                        perfectDays: perfectDays || existingLb?.perfectDays || 0,
-                        isAdmin: isAdmin || false,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    }, { merge: true })
-                );
-            }
-        });
-
-        if (syncPromises.length > 0) {
-            await Promise.all(syncPromises);
         }
 
         const snap = await db.collection('leaderboard').orderBy('totalDP', 'desc').limit(50).get();
@@ -1799,14 +1793,16 @@ function renderLeaderboard() {
     const container = document.getElementById('lbFeedContainer');
     if (!container) return;
     
-    const myStats = calculateUserDPAndStreak();
+    const computed = calculateUserDPAndStreak();
+    const isAdmin = userPlan && userPlan.role === 'admin';
+    const totalDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+    const myStats = { ...computed, totalDP };
     const progInfo = getRankProgressInfo(myStats.totalDP);
 
     // Make sure local current user stats reflect in leaderboardCache
     if (currentUser && leaderboardCache.length > 0) {
         const meIndex = leaderboardCache.findIndex(e => e.uid === currentUser.uid);
         if (meIndex !== -1) {
-            const isAdmin = userPlan && userPlan.role === 'admin';
             if (!isAdmin) {
                 leaderboardCache[meIndex].totalDP = myStats.totalDP;
                 leaderboardCache[meIndex].weeklyDP = myStats.weeklyDP;
@@ -2068,7 +2064,9 @@ window._submitCmPost = async () => {
 function renderRankTiersShowcase() {
     const container = document.getElementById('rankTiersContainer');
     if (!container) return;
-    const myDP = calculateUserDPAndStreak().totalDP;
+    const computed = calculateUserDPAndStreak();
+    const isAdmin = userPlan && userPlan.role === 'admin';
+    const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
     const imgUrl = currentUser?.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser?.displayName||currentUser?.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
 
     let html = '<div class="rank-showcase-grid" style="display:flex; flex-direction:column; gap:16px; align-items:center;">';
@@ -2076,7 +2074,7 @@ function renderRankTiersShowcase() {
     RANK_TIERS.forEach((tier, idx) => {
         const level = idx + 1;
         const achieved = myDP >= tier.minDp;
-        const cardHtml = window.getFullRankCardHTML ? window.getFullRankCardHTML(level, imgUrl, 0.65) : '';
+        const cardHtml = window.getFullRankCardHTML ? window.getFullRankCardHTML(level, imgUrl, 0.65, currentUser?.displayName || 'User', getRankTierName(tier)) : '';
         const dpText = `${tier.minDp.toLocaleString()} DP${tier.maxDp !== Infinity ? ` – ${tier.maxDp.toLocaleString()} DP` : '+'}`;
         
         html += `<div class="rank-card-wrapper ${achieved ? 'achieved' : 'locked'}">
@@ -2139,20 +2137,31 @@ const QUEST_DEFINITIONS = [
       check: (ctx) => kudosSet.size >= 50 },
 ];
 
+function getLocalDateKey(d = new Date()) {
+    const yr = d.getFullYear();
+    const mo = String(d.getMonth() + 1).padStart(2, '0');
+    const dy = String(d.getDate()).padStart(2, '0');
+    return `${yr}-${mo}-${dy}`;
+}
+
+function getLocalMondayKey(d = new Date()) {
+    const day = d.getDay();
+    const diff = (day + 6) % 7;
+    const monday = new Date(d.getFullYear(), d.getMonth(), d.getDate() - diff);
+    return getLocalDateKey(monday);
+}
+
 function initQuestData() {
     if (!S.questData) S.questData = { claimed: {}, totalDP: 0, lastDailyReset: '', lastWeeklyReset: '' };
-    const today = new Date().toISOString().slice(0, 10);
-    const now = new Date();
-    const monday = new Date(now);
-    monday.setDate(monday.getDate() - monday.getDay() + 1);
-    const weekKey = monday.toISOString().slice(0, 10);
+    const todayKey = getLocalDateKey();
+    const weekKey = getLocalMondayKey();
 
-    // Auto-reset daily
-    if (S.questData.lastDailyReset !== today) {
+    // Auto-reset daily at 00:00 local time
+    if (S.questData.lastDailyReset !== todayKey) {
         QUEST_DEFINITIONS.filter(q => q.type === 'daily').forEach(q => { delete S.questData.claimed[q.id]; });
-        S.questData.lastDailyReset = today;
+        S.questData.lastDailyReset = todayKey;
     }
-    // Auto-reset weekly
+    // Auto-reset weekly at Monday 00:00 local time
     if (S.questData.lastWeeklyReset !== weekKey) {
         QUEST_DEFINITIONS.filter(q => q.type === 'weekly').forEach(q => { delete S.questData.claimed[q.id]; });
         S.questData.lastWeeklyReset = weekKey;
@@ -2163,7 +2172,6 @@ function initQuestData() {
 function getQuestContext() {
     const stats = calculateUserDPAndStreak();
     const now = new Date();
-    const todayKey = `${cY}-${cM}-`;
 
     // Today pct
     let todayChecked = 0;
@@ -2174,14 +2182,18 @@ function getQuestContext() {
     const noteKey = `${cY}-${cM}-${todayD}`;
     const todayNoteLen = (S.notes && S.notes[noteKey]) ? S.notes[noteKey].length : 0;
 
-    // Time-based checks (approximation — we don't store time of each check, so we check current time)
+    // Time-based checks
     const currentHour = now.getHours();
-    const firstCheckHour = todayChecked > 0 ? currentHour : null; // simplified
+    const firstCheckHour = todayChecked > 0 ? currentHour : null;
     const checksBeforeHour9 = currentHour < 9 ? todayChecked : 0;
 
-    // Weekend pct
-    const thisWeekSat = new Date(now); thisWeekSat.setDate(now.getDate() - now.getDay() + 6);
-    const thisWeekSun = new Date(now); thisWeekSun.setDate(now.getDate() - now.getDay());
+    // Weekend pct (Saturday & Sunday of this current week)
+    const dayOfWeek = now.getDay();
+    const daysSinceMon = (dayOfWeek + 6) % 7;
+    const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - daysSinceMon);
+    const thisWeekSat = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 5);
+    const thisWeekSun = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 6);
+
     const satDay = thisWeekSat.getDate(), sunDay = thisWeekSun.getDate();
     const satMonth = thisWeekSat.getMonth(), sunMonth = thisWeekSun.getMonth();
     let satChecked = 0, sunChecked = 0;
@@ -2193,12 +2205,9 @@ function getQuestContext() {
     const sunPct = S.h.length > 0 ? Math.round(sunChecked / S.h.length * 100) : 0;
 
     // Days with checks this week
-    const weekStart = new Date(now);
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1);
     let daysWithChecks = 0;
     for (let i = 0; i < 7; i++) {
-        const d = new Date(weekStart);
-        d.setDate(d.getDate() + i);
+        const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
         if (d > now) break;
         const dayNum = d.getDate();
         const dayMonth = d.getMonth();
@@ -2229,7 +2238,8 @@ function getQuestContext() {
         monthPct,
         totalHabits: S.h.length,
         newHabitDays: 0, noHabitStreak: 0,
-        weeklyPosts: 0, weeklyComments: 0, maxPostLikes: 0, totalPosts: 0,
+        weeklyPosts: (typeof communityPostsCache !== 'undefined' && currentUser) ? communityPostsCache.filter(p => p.uid === currentUser.uid).length : 0,
+        weeklyComments: 0, maxPostLikes: 0, totalPosts: 0,
     };
 }
 
@@ -2250,7 +2260,11 @@ function claimQuestReward(questId) {
     setTimeout(() => toast.classList.add('show'), 10);
     setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2500);
 
-    syncUserLeaderboard();
+    if (typeof updateUserDPState === 'function') {
+        updateUserDPState(true);
+    } else {
+        syncUserLeaderboard();
+    }
     renderQuestPanel();
 }
 
@@ -2447,20 +2461,27 @@ function initAuthGuard(){
 }
 
 // ==================== PROFILE MODAL & AVATAR ====================
-window._openProfile = () => {
-    const modal = document.getElementById('profileModalBg');
-    if (!modal) return;
-    modal.classList.add('show');
-    
-    const dp = S.dp || 0;
-    const streak = S.streak || 0;
+window._updateProfileModalUI = () => {
+    if (!currentUser) return;
+    const computed = calculateUserDPAndStreak();
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
+    const dp = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+    const streak = computed.currentStreak;
     const rank = getRankLevel(dp);
-    
-    document.getElementById('profileName').textContent = currentUser.displayName || currentUser.email || 'User';
-    document.getElementById('profileLevel').textContent = getRankTierName(rank);
-    document.getElementById('profileDP').textContent = dp;
-    document.getElementById('profileStreak').textContent = streak;
-    
+
+    S.dp = dp;
+    S.streak = streak;
+
+    const pName = document.getElementById('profileName');
+    const pLevel = document.getElementById('profileLevel');
+    const pDP = document.getElementById('profileDP');
+    const pStreak = document.getElementById('profileStreak');
+
+    if (pName) pName.textContent = currentUser.displayName || currentUser.email || 'User';
+    if (pLevel) pLevel.textContent = getRankTierName(rank);
+    if (pDP) pDP.textContent = dp.toLocaleString();
+    if (pStreak) pStreak.textContent = streak;
+
     const pAvatar = document.getElementById('profileAvatar');
     const pFrame = document.getElementById('profileAvatarFrame');
     
@@ -2468,16 +2489,23 @@ window._openProfile = () => {
     const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
     const rankTitle = getRankTierName(rank);
 
-    if (window.getFullRankCardHTML) {
+    if (pFrame && window.getFullRankCardHTML) {
         pFrame.innerHTML = window.getFullRankCardHTML(rank.level, imgUrl, 0.7, displayName, rankTitle);
         pFrame.style.background = 'transparent';
         pFrame.style.border = 'none';
-    } else {
+    } else if (pAvatar) {
         pAvatar.src = imgUrl;
-        pFrame.dataset.level = rank.level;
+        if (pFrame) pFrame.dataset.level = rank.level;
     }
     
     renderFramesGrid(rank.level, imgUrl);
+};
+
+window._openProfile = () => {
+    const modal = document.getElementById('profileModalBg');
+    if (!modal) return;
+    modal.classList.add('show');
+    window._updateProfileModalUI();
 };
 
 function initProfileModal() {
@@ -2509,7 +2537,7 @@ function renderFramesGrid(currentLevel, imgUrl = '') {
         
         let frameHTML = '';
         if (window.getFullRankCardHTML) {
-            frameHTML = window.getFullRankCardHTML(i, imgUrl, 0.5);
+            frameHTML = window.getFullRankCardHTML(i, imgUrl, 0.5, currentUser?.displayName || 'User', getRankTierName(RANK_TIERS[i-1]));
         } else if (window.getAvatarHTML) {
             frameHTML = window.getAvatarHTML(i, imgUrl, 56);
         }
@@ -2523,16 +2551,23 @@ function renderFramesGrid(currentLevel, imgUrl = '') {
 }
 
 window._setProfileFrame = (level) => {
-    const dp = S.dp || 0;
+    const computed = calculateUserDPAndStreak();
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
+    const dp = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
     const rank = getRankLevel(dp);
     // Ignore setting if level is locked
     if (level > rank.level) return;
 
     const imgUrl = currentUser.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser.displayName||currentUser.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
+    const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
+    const selectedRank = RANK_TIERS[level - 1] || rank;
+    const rankTitle = getRankTierName(selectedRank);
     
+    if (window.getFullRankCardHTML) {
+        document.getElementById('profileAvatarFrame').innerHTML = window.getFullRankCardHTML(level, imgUrl, 0.7, displayName, rankTitle);
+    }
     if (window.getAvatarHTML) {
-        document.getElementById('profileAvatarFrame').innerHTML = window.getAvatarHTML(level, imgUrl, 120);
-        document.getElementById('navAvatarFrame').innerHTML = window.getAvatarHTML(level, imgUrl, 44);
+        document.getElementById('navAvatarFrame').innerHTML = window.getAvatarHTML(level, imgUrl, 40);
     } else {
         document.getElementById('profileAvatarFrame').dataset.level = level;
         document.getElementById('navAvatarFrame').dataset.level = level;

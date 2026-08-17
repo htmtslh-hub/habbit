@@ -407,10 +407,23 @@ function initModal(){
         if(!reason) { alert('Vui lòng nhập lý do'); return; }
 
         try {
-            // Update leaderboard DP
-            await db.collection('leaderboard').doc(currentModalUid).set({
+            // Update both leaderboard and users document with bonusDP & totalDP
+            const batch = db.batch();
+            const lbRef = db.collection('leaderboard').doc(currentModalUid);
+            const userRef = db.collection('users').doc(currentModalUid);
+
+            batch.set(lbRef, {
+                totalDP: firebase.firestore.FieldValue.increment(amount),
+                bonusDP: firebase.firestore.FieldValue.increment(amount),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            }, { merge: true });
+
+            batch.set(userRef, {
+                bonusDP: firebase.firestore.FieldValue.increment(amount),
                 totalDP: firebase.firestore.FieldValue.increment(amount),
             }, { merge: true });
+
+            await batch.commit();
 
             // Log the grant
             await db.collection('dp_grants').add({
@@ -748,12 +761,24 @@ window._deactivateQuest = async (questId) => {
 
 window._approveSubmission = async (questId, subId, uid, dp) => {
     try {
-        // Mark submission approved
-        await db.collection('surprise_quests').doc(questId).collection('submissions').doc(subId).update({ status: 'approved' });
-        // Grant DP
-        await db.collection('leaderboard').doc(uid).set({
+        const batch = db.batch();
+        const subRef = db.collection('surprise_quests').doc(questId).collection('submissions').doc(subId);
+        const lbRef = db.collection('leaderboard').doc(uid);
+        const userRef = db.collection('users').doc(uid);
+
+        batch.update(subRef, { status: 'approved' });
+        batch.set(lbRef, {
+            totalDP: firebase.firestore.FieldValue.increment(dp),
+            bonusDP: firebase.firestore.FieldValue.increment(dp),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+        batch.set(userRef, {
+            bonusDP: firebase.firestore.FieldValue.increment(dp),
             totalDP: firebase.firestore.FieldValue.increment(dp),
         }, { merge: true });
+
+        await batch.commit();
+
         // Log
         await db.collection('dp_grants').add({
             uid,

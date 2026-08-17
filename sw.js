@@ -1,16 +1,22 @@
 // ===== HABIT MASTERY - SERVICE WORKER =====
 // Change CACHE_VERSION when deploying updates
-const CACHE_VERSION = '3.0.0';
+const CACHE_VERSION = '3.1.0';
 const CACHE_NAME = `habit-game-v${CACHE_VERSION}`;
 
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
   '/auth.html',
+  '/admin.html',
   '/style.css',
   '/app.js',
   '/auth.css',
   '/auth.js',
+  '/admin.css',
+  '/admin.js',
+  '/gotiengviet.js',
+  '/nameplate_templates.js',
+  '/avatar_frames.js',
   '/icon-192.png',
   '/icon-512.png',
   '/manifest.json'

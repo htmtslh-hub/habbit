@@ -1631,7 +1631,7 @@ window.getFullRankCardHTML = function(level, imgUrl, scale = 0.6, displayName = 
     let html = cards[lvl - 1] || cards[0];
     const safeUrl = imgUrl || `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>`;
     html = html.replace(/\$\{imgUrl\}/g, safeUrl);
-    const defaultNames = ['Tân Binh', 'Học Việc', 'Thành Thạo', 'Tinh Nhuệ', 'Cao Thủ', 'Tông Sư', 'Bán Thánh', 'Thánh Giả', 'Thần Vực', 'Huyền Thoại'];
+    const defaultNames = ['Tân Binh', 'Chiến Binh', 'Dũng Sĩ', 'Kiếm Sĩ', 'Cao Thủ', 'Đại Sư', 'Chiến Thần', 'Bất Tử', 'Huyền Thoại', 'Thần Thoại'];
     const nameToUse = displayName ? displayName : (defaultNames[lvl - 1] || 'Tân Binh');
     const subToUse = subText ? subText : ('Lv ' + String(lvl).padStart(2, '0'));
 
