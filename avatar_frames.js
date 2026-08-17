@@ -1595,25 +1595,45 @@ function getCurrentAvatarThemeMode() {
     return 'light';
 }
 
+// Ensure keyframe animations exist
+if (typeof document !== 'undefined' && !document.getElementById('avatar-frames-anim-style')) {
+    const animStyle = document.createElement('style');
+    animStyle.id = 'avatar-frames-anim-style';
+    animStyle.textContent = `
+        @keyframes om-spin { to { transform: rotate(360deg); } }
+        @keyframes om-pulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+        @keyframes om-sweep { from { transform: translateX(-110%) skewX(-18deg); } to { transform: translateX(345%) skewX(-18deg); } }
+        @keyframes om-gloss { 0%,100% { opacity: .28; } 50% { opacity: .6; } }
+        @keyframes om-breathe { 0%,100% { transform: scale(1); opacity: .5; } 50% { transform: scale(1.06); opacity: .9; } }
+    `;
+    document.head.appendChild(animStyle);
+}
+
 window.getAvatarHTML = function(level, imgUrl, size = 36, mode = null) {
     const activeMode = mode || getCurrentAvatarThemeMode();
     const frames = (activeMode === 'dark') ? AVATAR_FRAMES_DARK : AVATAR_FRAMES_LIGHT;
-    let html = frames[level - 1] || frames[0];
-    html = html.replace(/\$\{imgUrl\}/g, imgUrl);
+    const lvl = Math.max(1, Math.min(10, parseInt(level, 10) || 1));
+    let html = frames[lvl - 1] || frames[0];
+    const safeUrl = imgUrl || `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>`;
+    html = html.replace(/\$\{imgUrl\}/g, safeUrl);
     const scale = size / 156;
-    return '<div style="width:' + size + 'px; height:' + size + 'px; transform: scale(' + scale + '); transform-origin: top left; pointer-events: none;">' +
-        html +
+    return '<div class="avatar-frame-badge" style="width:' + size + 'px; height:' + size + 'px; position:relative; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; pointer-events:none;">' +
+        '<div style="width:156px; height:156px; transform: scale(' + scale + '); transform-origin: center center; position:absolute; top:50%; left:50%; margin-top:-78px; margin-left:-78px; pointer-events:none;">' +
+            html +
+        '</div>' +
     '</div>';
 };
 
 window.getFullRankCardHTML = function(level, imgUrl, scale = 0.6, displayName = '', subText = '', mode = null) {
     const activeMode = mode || getCurrentAvatarThemeMode();
     const cards = (activeMode === 'dark') ? FULL_RANK_CARDS_DARK : FULL_RANK_CARDS_LIGHT;
-    let html = cards[level - 1] || cards[0];
-    html = html.replace(/\$\{imgUrl\}/g, imgUrl);
+    const lvl = Math.max(1, Math.min(10, parseInt(level, 10) || 1));
+    let html = cards[lvl - 1] || cards[0];
+    const safeUrl = imgUrl || `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>`;
+    html = html.replace(/\$\{imgUrl\}/g, safeUrl);
     const defaultNames = ['Tân Binh', 'Học Việc', 'Thành Thạo', 'Tinh Nhuệ', 'Cao Thủ', 'Tông Sư', 'Bán Thánh', 'Thánh Giả', 'Thần Vực', 'Huyền Thoại'];
-    const nameToUse = displayName ? displayName : (defaultNames[level - 1] || 'Tân Binh');
-    const subToUse = subText ? subText : ('Lv ' + String(level).padStart(2, '0'));
+    const nameToUse = displayName ? displayName : (defaultNames[lvl - 1] || 'Tân Binh');
+    const subToUse = subText ? subText : ('Lv ' + String(lvl).padStart(2, '0'));
 
     html = html.replace(/\$\{displayName \|\| '.*?'\}/g, nameToUse);
     html = html.replace(/\$\{subText \|\| '.*?'\}/g, subToUse);
@@ -1626,3 +1646,4 @@ window.getFullRankCardHTML = function(level, imgUrl, scale = 0.6, displayName = 
         '</div>' +
     '</div>';
 };
+

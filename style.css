@@ -3203,6 +3203,13 @@ body {
 .lb-feed-container, .quest-feed-container { overflow-y:auto; max-height:50vh; padding:12px 18px; display:flex; flex-direction:column; gap:8px; }
 .lb-empty { text-align:center; padding:40px 20px; color:#64748b; font-size:14px; }
 
+/* ==================== AVATAR FRAMES KEYFRAME ANIMATIONS ==================== */
+@keyframes om-spin { to { transform: rotate(360deg); } }
+@keyframes om-pulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+@keyframes om-sweep { from { transform: translateX(-110%) skewX(-18deg); } to { transform: translateX(345%) skewX(-18deg); } }
+@keyframes om-gloss { 0%,100% { opacity: .28; } 50% { opacity: .6; } }
+@keyframes om-breathe { 0%,100% { transform: scale(1); opacity: .5; } 50% { transform: scale(1.06); opacity: .9; } }
+
 /* ==================== PODIUM TOP 3 (TRIANGLE LAYOUT) ==================== */
 .lb-podium-wrap {
     display: flex;
@@ -3251,6 +3258,19 @@ body {
     justify-content: center;
     align-items: center;
     margin-bottom: 6px;
+    z-index: 2;
+}
+
+.lb-avatar-wrap.rank-1 {
+    filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.45));
+}
+
+.lb-avatar-wrap.rank-2 {
+    filter: drop-shadow(0 0 8px rgba(203, 213, 225, 0.35));
+}
+
+.lb-avatar-wrap.rank-3 {
+    filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.35));
 }
 
 .lb-podium-avatar {
@@ -3270,13 +3290,13 @@ body {
 
 .lb-crown {
     position: absolute;
-    top: -18px;
+    top: -16px;
     left: 50%;
     transform: translateX(-50%);
     font-size: 22px;
     filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.8));
     animation: floatCrown 2.5s ease-in-out infinite;
-    z-index: 5;
+    z-index: 10;
     pointer-events: none;
 }
 
@@ -3304,8 +3324,8 @@ body {
 /* Rank Badge Overlays */
 .lb-podium-badge {
     position: absolute;
-    bottom: -4px;
-    right: -4px;
+    bottom: -2px;
+    right: -2px;
     width: 22px;
     height: 22px;
     border-radius: 50%;
@@ -3318,6 +3338,7 @@ body {
     color: #fff;
     border: 2px solid #0d1117;
     box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    z-index: 10;
 }
 
 .lb-podium-badge.rank-1 {
@@ -3469,10 +3490,19 @@ body {
     gap: 8px;
 }
 
-.lb-card { display:flex; align-items:center; gap:12px; padding:12px 14px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06); border-radius:14px; transition:all .2s; }
+.lb-card { display:flex; align-items:center; gap:12px; padding:10px 14px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06); border-radius:14px; transition:all .2s; }
 .lb-card:hover { background:rgba(255,255,255,.06); border-color:var(--rank-color,rgba(255,255,255,.1)); }
 .lb-card.lb-me { background:rgba(16,185,129,.08); border-color:rgba(16,185,129,.2); }
 .lb-rank-num { font-size:14px; font-weight:800; min-width:36px; text-align:center; color:#f1f5f9; font-family:Outfit,sans-serif; }
+.lb-card-avatar-wrap {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
 .lb-avatar { width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid var(--rank-color,#334155); flex-shrink:0; }
 .lb-info { flex:1; min-width:0; }
 .lb-name { font-size:13px; font-weight:600; color:#f1f5f9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }

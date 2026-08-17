@@ -1853,6 +1853,7 @@ function renderLeaderboard() {
     const renderPodiumSlot = (entry, rank) => {
         if (!entry) return `<div class="lb-podium-col rank-${rank} empty"></div>`;
         const tier = getRankLevel(entry.totalDP);
+        const frameLevel = entry.avatarFrame || tier.level || 1;
         const isMe = entry.uid === currentUser?.uid;
         const hasKudos = kudosSet.has(entry.uid);
         const adminBadge = entry.isAdmin ? ' [Admin]' : '';
@@ -1866,12 +1867,15 @@ function renderLeaderboard() {
             crownOrBadge = `<div class="lb-podium-badge rank-3">3</div>`;
         }
 
+        const avatarSize = rank === 1 ? 72 : (rank === 2 ? 62 : 56);
+        const avatarHtml = window.getAvatarHTML ? window.getAvatarHTML(frameLevel, avatarSrc, avatarSize) : `<img class="lb-podium-avatar" src="${avatarSrc}" alt="" onerror="this.src='https://ui-avatars.com/api/?name=U&background=0d1117&color=10b981'">`;
+
         return `
             <div class="lb-podium-col rank-${rank} ${isMe ? 'lb-me-podium' : ''}" style="--rank-color:${tier.color}">
                 <div class="lb-podium-user">
                     <div class="lb-avatar-wrap rank-${rank}">
                         ${crownOrBadge}
-                        <img class="lb-podium-avatar" src="${avatarSrc}" alt="" onerror="this.src='https://ui-avatars.com/api/?name=U&background=0d1117&color=10b981'">
+                        ${avatarHtml}
                     </div>
                     <div class="lb-podium-name" title="${escHtml(entry.displayName || 'User')}">${escHtml(entry.displayName || 'User')}${adminBadge}${meBadge}</div>
                     <div class="lb-podium-tier" style="color:${tier.color}">${getRankTierName(tier)}</div>
@@ -1910,21 +1914,26 @@ function renderLeaderboard() {
                     ${rest.map((entry, idx) => {
                         const rank = idx + 4;
                         const tier = getRankLevel(entry.totalDP);
+                        const frameLevel = entry.avatarFrame || tier.level || 1;
                         const isMe = entry.uid === currentUser?.uid;
                         const medal = `#${rank}`;
                         const hasKudos = kudosSet.has(entry.uid);
                         const adminBadge = entry.isAdmin ? ' [Admin]' : '';
                         const meBadge = isMe ? ' (Bạn)' : '';
+                        const avatarSrc = entry.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(entry.displayName || 'U')}&background=0d1117&color=10b981&bold=true`;
+                        const avatarHtml = window.getAvatarHTML ? window.getAvatarHTML(frameLevel, avatarSrc, 48) : `<img class="lb-avatar" src="${avatarSrc}" alt="" onerror="this.src='https://ui-avatars.com/api/?name=U&background=0d1117&color=10b981'">`;
 
                         return `<div class="lb-card ${isMe ? 'lb-me' : ''}" style="--rank-color:${tier.color}">
                             <div class="lb-rank-num">${medal}</div>
-                            <img class="lb-avatar" src="${entry.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(entry.displayName || 'U')}&background=0d1117&color=10b981&bold=true`}" alt="" onerror="this.src='https://ui-avatars.com/api/?name=U&background=0d1117&color=10b981'">
+                            <div class="lb-card-avatar-wrap">
+                                ${avatarHtml}
+                            </div>
                             <div class="lb-info">
                                 <div class="lb-name">${escHtml(entry.displayName || 'User')}${adminBadge}${meBadge}</div>
                                 <div class="lb-tier">${getRankTierName(tier)} · ${(entry.totalDP || 0).toLocaleString()} DP</div>
                             </div>
                             <div class="lb-stats">
-                                <span class="lb-streak">Streak: ${entry.streak || 0}</span>
+                                <span class="lb-streak">🔥 ${entry.streak || 0}</span>
                                 ${!isMe ? `<button class="lb-kudos-btn ${hasKudos ? 'given' : ''}" onclick="window._giveKudos('${entry.uid}')" ${hasKudos ? 'disabled' : ''}>Kudos</button>` : ''}
                             </div>
                         </div>`;
