@@ -48,6 +48,40 @@ const I18N = {
         questProgress:'Tiến độ',questReward:'Thưởng',questResetDaily:'Reset hàng ngày',questResetWeekly:'Reset hàng tuần',questPermanent:'Vĩnh viễn',
         questCompletedToast:'🎉 Nhiệm vụ hoàn thành!',questClaimedToast:'✨ Đã nhận thưởng DP!',
         questReportDone:'📸 Báo hoàn thành',questPending:'Chờ duyệt',questApproved:'Đã duyệt',
+        tabStreakShield:'Bảo vệ chuỗi',streakModalTitle:'BẢO VỆ & CỨU CHUỖI',
+        streakFreeze:'Bình Đóng Băng',streakRepair:'Vá Chuỗi 24h',
+        streakStatus:'Tình trạng chuỗi',streakActive:'Đang duy trì',streakBroken:'Bị đứt hôm qua',
+        streakProtected:'Được bảo vệ bởi Bình Đóng Băng',buyFreeze:'Mua Bình Đóng Băng',repairStreak:'Hồi Sinh Chuỗi',
+        freezeAutoToast:'🧊 Bình Đóng Băng đã tự động bảo vệ chuỗi của bạn hôm qua!',
+        streakRepairToast:'🔥 Chuỗi của bạn đã được HỒI SINH thành công!',
+        freezeBoughtToast:'🧊 Đã mua 1 Bình Đóng Băng thành công!',
+        streakSafeDesc:'Bạn đang có bình đóng băng bảo vệ nếu lỡ quên check-in.',
+        streakDangerDesc:'Bạn chưa có bình đóng băng dự trữ! Hãy mua để tránh đứt chuỗi.',
+        streakBrokenDesc:'Chuỗi của bạn đã bị đứt hôm qua. Bạn có 24h để cứu lại chuỗi!',
+        freezeFlask1:'Bình 1 (Chính)',freezeFlask2:'Bình 2 (Dự phòng)',
+        freezeReady:'Sẵn sàng kích hoạt',freezeEmpty:'Chưa có (Mua thêm)',
+        buyFreezeDesc:'Tự động bảo vệ chuỗi nếu lỡ quên 1 ngày check-in (Tối đa 2 bình).',
+        repairStreakDesc:'Vá lại chuỗi bị đứt trong 24h qua, hồi sinh số ngày chuỗi nguyên vẹn.',
+        historyTitle:'LỊCH SỬ BẢO VỆ CHUỖI',noHistory:'Chưa có lượt bảo vệ nào gần đây.',
+        daysUnit:'ngày',maxStreakLabel:'Kỷ lục',currentStreakLabel:'Chuỗi hiện tại',
+        tabShop:'Cửa hàng',shopModalTitle:'🛒 CỬA HÀNG KỶ LUẬT',
+        shopTabTitles:'Danh hiệu',shopTabThemes:'Giao diện',shopTabFX:'Hiệu ứng',shopTabItems:'Vật phẩm',
+        btnBuy:'Mua',btnEquip:'Trang bị',btnEquipped:'Đang dùng',
+        itemBoughtToast:'Đã mua thành công!',itemEquippedToast:'Đã trang bị thành công!',
+        boostActivatedToast:'⚡ Đã kích hoạt Vé Nhân Đôi 2X DP trong 24h!',
+        tabSquad:'Tổ đội',squadHubTitle:'🛡️ TỔ ĐỘI & THÁCH ĐẤU 1V1',
+        squadTabGuild:'Tổ Đội Rèn Luyện',squadTabDuel:'Đấu Trường 1v1',
+        btnNudge:'⚡ Thúc giục',nudgeSentToast:'⚡ Đã gửi lời thúc giục sấm sét đến đồng đội!',
+        squadCreatedToast:'🛡️ Đã tạo tổ đội thành công!',squadJoinedToast:'🛡️ Đã gia nhập tổ đội!',
+        squadLeftToast:'Đã rời tổ đội.',duelCreatedToast:'⚔️ Đã tạo phòng thách đấu 7 ngày!',
+        duelAcceptedToast:'⚔️ Trận chiến 1v1 chính thức bắt đầu!',duelWonToast:'🏆 Chúc mừng! Bạn đã chiến thắng trận đấu 1v1!',
+        tabRecap:'Tổng kết',tabShareCard:'Khoe thẻ',shareModalTitle:'📸 XUẤT ẢNH THẺ KHOE KỶ LUẬT',
+        recapTitle:'Bản Tin Tổng Kết Tuần',cardDownloadedToast:'📥 Đã tải ảnh thẻ về máy!',
+        cardCopiedToast:'📋 Đã sao chép ảnh thẻ vào Clipboard!',
+        tabPomodoro:'Focus',pomoModalTitle:'⏱️ ĐỒNG HỒ TẬP TRUNG (DEEP WORK)',
+        pomoCompletedToast:'🎉 Hoàn thành phiên tập trung! +15 DP Deep Work Bonus',
+        pomoHabitCompletedToast:'🎉 Đã hoàn thành 25p! Thói quen đã tự động check-in (+15 DP)',
+        quoteCopiedToast:'📋 Đã sao chép câu trích dẫn!',
     },
     zh: {
         title:'习惯追踪器',calSettings:'日历设置',year:'年',month:'月',
@@ -82,6 +116,40 @@ const I18N = {
         questProgress:'进度',questReward:'奖励',questResetDaily:'每日重置',questResetWeekly:'每周重置',questPermanent:'永久',
         questCompletedToast:'🎉 任务完成！',questClaimedToast:'✨ 已领取DP！',
         questReportDone:'📸 报告完成',questPending:'待审核',questApproved:'已审核',
+        tabStreakShield:'连胜保护',streakModalTitle:'连胜保护与恢复',
+        streakFreeze:'连胜冻结瓶',streakRepair:'24小时补签',
+        streakStatus:'连胜状态',streakActive:'进行中',streakBroken:'昨日中断',
+        streakProtected:'受冻结保护',buyFreeze:'购买冻结瓶',repairStreak:'恢复连胜',
+        freezeAutoToast:'🧊 冻结瓶已自动保护你昨天的连胜！',
+        streakRepairToast:'🔥 你的连胜已成功复活！',
+        freezeBoughtToast:'🧊 已成功购买1个冻结瓶！',
+        streakSafeDesc:'你拥有冻结瓶，若遗漏签到将自动受到保护。',
+        streakDangerDesc:'你暂无备用冻结瓶，建议购买以防连胜中断。',
+        streakBrokenDesc:'你的连胜昨天已中断，24小时内可补救！',
+        freezeFlask1:'瓶1（主）',freezeFlask2:'瓶2（备用）',
+        freezeReady:'就绪',freezeEmpty:'空（可购买）',
+        buyFreezeDesc:'遗漏签到时自动保护连胜（最多储存2瓶）。',
+        repairStreakDesc:'修复过去24小时内中断的连胜，完美复活天数。',
+        historyTitle:'连胜保护历史',noHistory:'近期暂无保护记录。',
+        daysUnit:'天',maxStreakLabel:'最高记录',currentStreakLabel:'当前连胜',
+        tabShop:'商店',shopModalTitle:'🛒 自律商店',
+        shopTabTitles:'头衔',shopTabThemes:'主题',shopTabFX:'特效',shopTabItems:'道具',
+        btnBuy:'购买',btnEquip:'装备',btnEquipped:'已装备',
+        itemBoughtToast:'购买成功！',itemEquippedToast:'装备成功！',
+        boostActivatedToast:'⚡ 2X DP加速卡已激活（24小时）！',
+        tabSquad:'战队',squadHubTitle:'🛡️ 战队与1V1对决',
+        squadTabGuild:'自律战队',squadTabDuel:'1V1对决场',
+        btnNudge:'⚡ 催促',nudgeSentToast:'⚡ 已向队友发送闪电提醒！',
+        squadCreatedToast:'🛡️ 战队创建成功！',squadJoinedToast:'🛡️ 成功加入战队！',
+        squadLeftToast:'已退出战队。',duelCreatedToast:'⚔️ 已创建7天对决房间！',
+        duelAcceptedToast:'⚔️ 1V1对决正式开启！',duelWonToast:'🏆 恭喜！你赢得了1V1对决！',
+        tabRecap:'周报',tabShareCard:'分享卡片',shareModalTitle:'📸 导出自律成就卡',
+        recapTitle:'每周自律总结',cardDownloadedToast:'📥 成就卡已保存！',
+        cardCopiedToast:'📋 成就卡已复制到剪贴板！',
+        tabPomodoro:'专注',pomoModalTitle:'⏱️ 专注时钟 (DEEP WORK)',
+        pomoCompletedToast:'🎉 专注完成！获得 +15 DP 奖励',
+        pomoHabitCompletedToast:'🎉 25分钟专注完成！习惯已自动打卡 (+15 DP)',
+        quoteCopiedToast:'📋 格言已复制到剪贴板！',
     },
     en: {
         title:'HABIT MASTERY',calSettings:'CALENDAR SETTINGS',year:'Year',month:'Month',
@@ -116,6 +184,40 @@ const I18N = {
         questProgress:'Progress',questReward:'Reward',questResetDaily:'Resets daily',questResetWeekly:'Resets weekly',questPermanent:'Permanent',
         questCompletedToast:'🎉 Quest completed!',questClaimedToast:'✨ DP claimed!',
         questReportDone:'📸 Report done',questPending:'Pending',questApproved:'Approved',
+        tabStreakShield:'Streak Shield',streakModalTitle:'STREAK SHIELD & RECOVERY',
+        streakFreeze:'Streak Freeze',streakRepair:'24h Streak Repair',
+        streakStatus:'Streak Status',streakActive:'Active',streakBroken:'Broken Yesterday',
+        streakProtected:'Protected by Streak Freeze',buyFreeze:'Buy Streak Freeze',repairStreak:'Resurrect Streak',
+        freezeAutoToast:'🧊 Streak Freeze automatically protected your streak yesterday!',
+        streakRepairToast:'🔥 Your streak has been successfully resurrected!',
+        freezeBoughtToast:'🧊 Successfully purchased 1 Streak Freeze!',
+        streakSafeDesc:'You have an active freeze bottle protecting your streak if you miss a day.',
+        streakDangerDesc:'No reserve freeze bottle! Buy one to prevent streak loss.',
+        streakBrokenDesc:'Your streak broke yesterday. You have 24h to recover it!',
+        freezeFlask1:'Flask 1 (Primary)',freezeFlask2:'Flask 2 (Reserve)',
+        freezeReady:'Ready to activate',freezeEmpty:'Empty (Buy in shop)',
+        buyFreezeDesc:'Auto-protects streak if you miss 1 day of check-in (Max 2 flasks).',
+        repairStreakDesc:'Repairs a broken streak from the past 24h, fully restoring your streak count.',
+        historyTitle:'PROTECTION HISTORY',noHistory:'No recent protection records.',
+        daysUnit:'days',maxStreakLabel:'Record',currentStreakLabel:'Current Streak',
+        tabShop:'Shop',shopModalTitle:'🛒 DISCIPLINE SHOP',
+        shopTabTitles:'Titles',shopTabThemes:'Themes',shopTabFX:'FX & Sound',shopTabItems:'Items',
+        btnBuy:'Buy',btnEquip:'Equip',btnEquipped:'Equipped',
+        itemBoughtToast:'Purchased successfully!',itemEquippedToast:'Equipped successfully!',
+        boostActivatedToast:'⚡ 2X DP Boost activated for 24h!',
+        tabSquad:'Squads',squadHubTitle:'🛡️ SQUADS & 1V1 DUELS',
+        squadTabGuild:'Discipline Squads',squadTabDuel:'1v1 Arena',
+        btnNudge:'⚡ Nudge',nudgeSentToast:'⚡ Thunder poke sent to your teammate!',
+        squadCreatedToast:'🛡️ Squad created successfully!',squadJoinedToast:'🛡️ Joined squad successfully!',
+        squadLeftToast:'Left squad.',duelCreatedToast:'⚔️ 7-Day Duel created!',
+        duelAcceptedToast:'⚔️ 1v1 Duel has begun!',duelWonToast:'🏆 Congratulations! You won the 1v1 duel!',
+        tabRecap:'Recap',tabShareCard:'Share Card',shareModalTitle:'📸 SHAREABLE HABIT CARD',
+        recapTitle:'Weekly Habit Recap',cardDownloadedToast:'📥 Card image downloaded!',
+        cardCopiedToast:'📋 Card image copied to clipboard!',
+        tabPomodoro:'Focus',pomoModalTitle:'⏱️ FOCUS TIMER (DEEP WORK)',
+        pomoCompletedToast:'🎉 Deep work session completed! +15 DP Bonus',
+        pomoHabitCompletedToast:'🎉 25m Focus done! Habit automatically checked-in (+15 DP)',
+        quoteCopiedToast:'📋 Quote copied to clipboard!',
     }
 };
 
@@ -143,11 +245,363 @@ const DEF=[
     {id:11,name:'Learn a skill',emoji:'📈'},{id:12,name:'Meditate',emoji:'🧘'},
     {id:13,name:'Stretching',emoji:'🤸'},
 ];
-let S={h:[...DEF],c:{},mo:{},sl:{},ni:14,notes:{}};
+// ==================== WEB AUDIO API SYNTHESIZER ====================
+let _audioCtx = null;
+function getAudioCtx() {
+    try {
+        if (!_audioCtx) {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (AC) _audioCtx = new AC();
+        }
+        if (_audioCtx && _audioCtx.state === 'suspended') {
+            _audioCtx.resume();
+        }
+        return _audioCtx;
+    } catch(e) { return null; }
+}
+
+function playCheckSound() {
+    try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const soundType = (typeof S !== 'undefined' && S && S.inventory && S.inventory.soundFx) ? S.inventory.soundFx : 'default';
+
+        if (soundType === 'katana') {
+            // Katana slash: Metallic burst + resonant filter sweep
+            const bufferSize = ctx.sampleRate * 0.08;
+            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+            const noise = ctx.createBufferSource();
+            noise.buffer = buffer;
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(3200, now);
+            filter.frequency.exponentialRampToValueAtTime(700, now + 0.08);
+            filter.Q.setValueAtTime(8, now);
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.28, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            noise.start(now);
+
+            // Metallic tone
+            const osc = ctx.createOscillator();
+            const oscGain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(1400, now);
+            osc.frequency.exponentialRampToValueAtTime(2200, now + 0.12);
+            oscGain.gain.setValueAtTime(0.12, now);
+            oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+            osc.connect(oscGain);
+            oscGain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.12);
+        } else if (soundType === 'rpg') {
+            // RPG Level-Up fanfare
+            [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(f, now + i * 0.04);
+                gain.gain.setValueAtTime(0.07, now + i * 0.04);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.04 + 0.14);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + i * 0.04);
+                osc.stop(now + i * 0.04 + 0.14);
+            });
+        } else if (soundType === 'mechanical') {
+            // Mechanical switch thock
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(240, now);
+            osc.frequency.exponentialRampToValueAtTime(80, now + 0.045);
+            gain.gain.setValueAtTime(0.28, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.045);
+        } else if (soundType === 'bubble') {
+            // Water drop / bubble
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(320, now);
+            osc.frequency.exponentialRampToValueAtTime(1100, now + 0.09);
+            gain.gain.setValueAtTime(0.18, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.09);
+        } else if (soundType === 'laser') {
+            // Laser zap
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(1800, now);
+            osc.frequency.exponentialRampToValueAtTime(120, now + 0.12);
+            gain.gain.setValueAtTime(0.14, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.12);
+        } else {
+            // Default Chime
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(587.33, now); // D5
+            osc.frequency.exponentialRampToValueAtTime(880, now + 0.08); // A5
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.12);
+        }
+    } catch(e) {}
+}
+
+function triggerVisualFx(el) {
+    if (!el) return;
+    const vType = (typeof S !== 'undefined' && S && S.inventory && S.inventory.visualFx) ? S.inventory.visualFx : 'default';
+    if (vType === 'default') return;
+
+    if (vType === 'laser') {
+        const sweep = document.createElement('div');
+        sweep.className = 'vfx-laser-sweep';
+        el.style.position = 'relative';
+        el.style.overflow = 'hidden';
+        el.appendChild(sweep);
+        setTimeout(() => sweep.remove(), 450);
+    } else if (vType === 'gold_aura') {
+        const aura = document.createElement('div');
+        aura.className = 'vfx-gold-expand';
+        el.style.position = 'relative';
+        el.appendChild(aura);
+        setTimeout(() => aura.remove(), 550);
+    } else if (vType === 'fireworks') {
+        const rect = el.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const colors = ['#ff007f', '#00f0ff', '#f59e0b', '#10b981', '#a855f7', '#ec4899'];
+        for (let i = 0; i < 10; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'vfx-burst';
+            dot.style.position = 'fixed';
+            dot.style.left = `${centerX}px`;
+            dot.style.top = `${centerY}px`;
+            dot.style.width = '6px';
+            dot.style.height = '6px';
+            dot.style.borderRadius = '50%';
+            dot.style.background = colors[i % colors.length];
+            dot.style.boxShadow = `0 0 6px ${colors[i % colors.length]}`;
+            dot.style.transition = 'all 0.5s cubic-bezier(0.1, 0.9, 0.2, 1)';
+            document.body.appendChild(dot);
+            
+            const angle = (i / 10) * Math.PI * 2;
+            const dist = 22 + Math.random() * 18;
+            const targetX = centerX + Math.cos(angle) * dist;
+            const targetY = centerY + Math.sin(angle) * dist;
+
+            requestAnimationFrame(() => {
+                dot.style.transform = `translate(${targetX - centerX}px, ${targetY - centerY}px) scale(0)`;
+                dot.style.opacity = '0';
+            });
+            setTimeout(() => dot.remove(), 520);
+        }
+    } else if (vType === 'sakura') {
+        const rect = el.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        for (let i = 0; i < 6; i++) {
+            const petal = document.createElement('div');
+            petal.className = 'vfx-burst';
+            petal.innerHTML = '🌸';
+            petal.style.position = 'fixed';
+            petal.style.left = `${centerX + (Math.random() * 20 - 10)}px`;
+            petal.style.top = `${centerY}px`;
+            petal.style.fontSize = '12px';
+            petal.style.transition = 'all 0.6s ease-out';
+            document.body.appendChild(petal);
+
+            const dx = (Math.random() - 0.5) * 30;
+            const dy = 18 + Math.random() * 26;
+
+            requestAnimationFrame(() => {
+                petal.style.transform = `translate(${dx}px, ${dy}px) rotate(${Math.random() * 180}deg) scale(0.4)`;
+                petal.style.opacity = '0';
+            });
+            setTimeout(() => petal.remove(), 620);
+        }
+    }
+}
+
+function playFreezeSound() {
+    try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        [1200, 1600, 2400].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.06);
+            gain.gain.setValueAtTime(0.09, now + i * 0.06);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.25);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + i * 0.06);
+            osc.stop(now + i * 0.06 + 0.25);
+        });
+    } catch(e) {}
+}
+
+function playResurrectSound() {
+    try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const notes = [440, 554.37, 659.25, 880, 1108.73];
+        notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + i * 0.07);
+            gain.gain.setValueAtTime(0.14, now + i * 0.07);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.32);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + i * 0.07);
+            osc.stop(now + i * 0.07 + 0.32);
+        });
+    } catch(e) {}
+}
+
+function playNudgeSound() {
+    try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(1600, now + 0.05);
+        osc.frequency.exponentialRampToValueAtTime(300, now + 0.12);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.12);
+    } catch(e) {}
+}
+
+function playDuelGongSound() {
+    try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(110, now + 0.6);
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.8);
+    } catch(e) {}
+}
+
+let S={
+    h:[...DEF],
+    c:{},
+    mo:{},
+    sl:{},
+    ni:14,
+    notes:{},
+    freezes:1,
+    frozenDays:[],
+    repairedDays:[],
+    lastStreakBreak:null,
+    squadId:'',
+    activeDuelId:'',
+    inventory:{
+        titles:[],
+        equippedTitle:'',
+        soundFx:'default',
+        soundFxOwned:['default'],
+        visualFx:'default',
+        visualFxOwned:['default'],
+        themes:['dark','light'],
+        equippedTheme:localStorage.getItem('hg_theme')||'dark',
+        boost2xExpiresAt:0
+    }
+};
 let cM=new Date().getMonth(),cY=new Date().getFullYear(),sE='💪',selectedDay=new Date().getDate();
 let isColumnFrozen = localStorage.getItem('hg_col_frozen') !== 'false';
 let isColumnCollapsed = localStorage.getItem('hg_col_collapsed') === 'true';
-function ld(){try{const r=localStorage.getItem(SK);if(r){const res=JSON.parse(r);res.notes=res.notes||{};return res}}catch(e){}return{h:[...DEF],c:{},mo:{},sl:{},ni:14,notes:{}}}
+
+function sanitizeInventory(inv) {
+    const defaultInv = {
+        titles:[],
+        equippedTitle:'',
+        soundFx:'default',
+        soundFxOwned:['default'],
+        visualFx:'default',
+        visualFxOwned:['default'],
+        themes:['dark','light'],
+        equippedTheme:localStorage.getItem('hg_theme')||'dark',
+        boost2xExpiresAt:0
+    };
+    if (!inv || typeof inv !== 'object') return defaultInv;
+    return {
+        titles: Array.isArray(inv.titles) ? inv.titles : [],
+        equippedTitle: typeof inv.equippedTitle === 'string' ? inv.equippedTitle : '',
+        soundFx: typeof inv.soundFx === 'string' ? inv.soundFx : 'default',
+        soundFxOwned: Array.isArray(inv.soundFxOwned) ? inv.soundFxOwned : ['default'],
+        visualFx: typeof inv.visualFx === 'string' ? inv.visualFx : 'default',
+        visualFxOwned: Array.isArray(inv.visualFxOwned) ? inv.visualFxOwned : ['default'],
+        themes: Array.isArray(inv.themes) ? inv.themes : ['dark','light'],
+        equippedTheme: typeof inv.equippedTheme === 'string' ? inv.equippedTheme : (localStorage.getItem('hg_theme')||'dark'),
+        boost2xExpiresAt: typeof inv.boost2xExpiresAt === 'number' ? inv.boost2xExpiresAt : 0
+    };
+}
+
+function ld(){
+    try{
+        const r=localStorage.getItem(SK);
+        if(r){
+            const res=JSON.parse(r);
+            res.notes=res.notes||{};
+            if(res.freezes === undefined) res.freezes = 1;
+            if(!Array.isArray(res.frozenDays)) res.frozenDays = [];
+            if(!Array.isArray(res.repairedDays)) res.repairedDays = [];
+            res.squadId = typeof res.squadId === 'string' ? res.squadId : '';
+            res.activeDuelId = typeof res.activeDuelId === 'string' ? res.activeDuelId : '';
+            res.inventory = sanitizeInventory(res.inventory);
+            return res;
+        }
+    }catch(e){}
+    return{
+        h:[...DEF],c:{},mo:{},sl:{},ni:14,notes:{},freezes:1,frozenDays:[],repairedDays:[],lastStreakBreak:null,
+        squadId:'',activeDuelId:'',
+        inventory: sanitizeInventory(null)
+    };
+}
+
 function sv(){
     localStorage.setItem(SK,JSON.stringify(S));
     // Debounced Firestore save
@@ -158,17 +612,90 @@ function sv(){
         }, 1500);
     }
 }
+
 async function loadFromFirestore(){
     if(!userDocRef) return false;
     try{
         const doc = await userDocRef.get();
         if(doc.exists && doc.data().habitData){
             const d = JSON.parse(doc.data().habitData);
-            if(d && d.h && d.c){ d.notes = d.notes||{}; S = d; localStorage.setItem(SK,JSON.stringify(S)); return true; }
+            if(d && d.h && d.c){ 
+                d.notes = d.notes||{}; 
+                if(d.freezes === undefined) d.freezes = 1;
+                if(!Array.isArray(d.frozenDays)) d.frozenDays = [];
+                if(!Array.isArray(d.repairedDays)) d.repairedDays = [];
+                d.squadId = typeof d.squadId === 'string' ? d.squadId : '';
+                d.activeDuelId = typeof d.activeDuelId === 'string' ? d.activeDuelId : '';
+                d.inventory = sanitizeInventory(d.inventory);
+                S = d; 
+                localStorage.setItem(SK,JSON.stringify(S)); 
+                if (S.inventory.equippedTheme && S.inventory.equippedTheme !== curTheme) {
+                    curTheme = S.inventory.equippedTheme;
+                    localStorage.setItem('hg_theme', curTheme);
+                    applyTheme();
+                }
+                return true; 
+            }
         }
     }catch(e){console.warn('Firestore load error:',e);}
     return false;
 }
+
+// ==================== TRỤ CỘT 2: CỬA HÀNG KỶ LUẬT & NỀN KINH TẾ DP (DISCIPLINE POINT SHOP) ====================
+
+const SHOP_CATALOG = {
+    titles: [
+        { id: 'early_bird', name: '🌅 Chim Sớm', nameEn: '🌅 Early Bird', nameZh: '🌅 早起鸟', icon: '🌅', desc: 'Dành cho những người dậy sớm làm chủ bình minh.', descEn: 'For those who wake up early to conquer dawn.', descZh: '献给早起掌控清晨的人。', price: 300 },
+        { id: 'night_owl', name: '🦉 Kẻ Thức Khuya', nameEn: '🦉 Night Owl', nameZh: '🦉 夜猫子', icon: '🦉', desc: 'Dành cho những cú đêm miệt mài rèn luyện.', descEn: 'For dedicated night owls forging habits.', descZh: '献给深夜不辍前行的人。', price: 300 },
+        { id: 'warrior', name: '⚔️ Chiến Binh Kỷ Luật', nameEn: '⚔️ Discipline Warrior', nameZh: '⚔️ 自律战士', icon: '⚔️', desc: 'Ý chí kiên cường không ngại gian khó.', descEn: 'Unbreakable willpower against all odds.', descZh: '坚韧不拔，无惧困难。', price: 500 },
+        { id: 'alpha_wolf', name: '🐺 Sói Đầu Đàn', nameEn: '🐺 Alpha Wolf', nameZh: '🐺 头狼领袖', icon: '🐺', desc: 'Dẫn đầu bầy đàn, kỷ luật thép đỉnh cao.', descEn: 'Leading the pack with apex discipline.', descZh: '领航团队，钢铁意志。', price: 800 },
+        { id: 'invincible', name: '🛡️ Bất Khả Xâm Phạm', nameEn: '🛡️ Invincible', nameZh: '🛡️ 坚不可摧', icon: '🛡️', desc: 'Thành trì bất hoại trước mọi cám dỗ.', descEn: 'An impenetrable fortress against temptations.', descZh: '百毒不侵，坚如磐石。', price: 1200 },
+        { id: 'conqueror', name: '👑 Kẻ Chinh Phục Thói Quen', nameEn: '👑 Habit Conqueror', nameZh: '👑 习惯征服者', icon: '👑', desc: 'Bá chủ kỷ luật, chinh phục mọi giới hạn.', descEn: 'Absolute master conquering all limits.', descZh: '自律霸主，征服极限。', price: 2000 },
+        { id: 'flash_will', name: '⚡ Thần Tốc Kỷ Luật', nameEn: '⚡ Flash of Will', nameZh: '⚡ 极速意志', icon: '⚡', desc: 'Check-in nhanh như chớp, hành động dứt khoát.', descEn: 'Lightning-fast execution & instant check-ins.', descZh: '闪电自律，雷厉风行。', price: 600 },
+        { id: 'zen_master', name: '🧘 Tâm Bất Biến', nameEn: '🧘 Zen Master', nameZh: '🧘 禅心大师', icon: '🧘', desc: 'Tĩnh lặng trong tâm hồn, bền bỉ mỗi ngày.', descEn: 'Inner calm with relentless daily focus.', descZh: '宁静致远，持之以恒。', price: 500 }
+    ],
+    themes: [
+        { id: 'dark', name: '🌙 Dark Mode', desc: 'Giao diện tối cổ điển huyền bí.', price: 0, free: true, bg: '#0f172a', accent: '#10b981' },
+        { id: 'light', name: '☀️ Light Mode', desc: 'Giao diện sáng sủa tươi mới.', price: 0, free: true, bg: '#f8fafc', accent: '#059669' },
+        { id: 'cyberpunk', name: '🔮 Cyberpunk Neon', desc: 'Thế giới tương lai rực rỡ tím & hồng cyan.', price: 600, bg: '#0d0221', accent: '#ff007f' },
+        { id: 'luxury', name: '👑 Gold Luxury', desc: 'Vàng kim hoàng gia quý phái obsidian.', price: 800, bg: '#0b0b0e', accent: '#d4af37' },
+        { id: 'sakura', name: '🌸 Minimalist Sakura', desc: 'Hồng hoa anh đào thanh tao Nhật Bản.', price: 500, bg: '#fcf5f8', accent: '#ec4899' },
+        { id: 'matrix', name: '💻 Midnight Matrix', desc: 'Xanh terminal hacker thế giới ma trận.', price: 600, bg: '#000c04', accent: '#00ff66' },
+        { id: 'forest', name: '🍃 Forest Zen', desc: 'Rừng ngọc bích thiên nhiên dịu mát an lành.', price: 500, bg: '#081711', accent: '#10b981' }
+    ],
+    soundFx: [
+        { id: 'default', name: '🔔 Chime Mặc Định', desc: 'Âm thanh trong trẻo êm tai.', price: 0, free: true },
+        { id: 'katana', name: '🗡️ Katana Slash', desc: 'Tiếng chém kiếm sắc bén dứt khoát.', price: 350 },
+        { id: 'rpg', name: '🎮 RPG Level-Up', desc: 'Hợp âm chiến thắng thăng cấp nhập vai.', price: 400 },
+        { id: 'mechanical', name: '⌨️ Phím Cơ Thocky', desc: 'Âm switch phím cơ êm ái gây nghiện.', price: 350 },
+        { id: 'bubble', name: '💧 Bong Bóng Nước', desc: 'Tiếng giọt nước bùng nổ tươi mát.', price: 250 },
+        { id: 'laser', name: '⚡ Laser Beam Zap', desc: 'Tia năng lượng viễn tưởng siêu tốc.', price: 300 }
+    ],
+    visualFx: [
+        { id: 'default', name: '🟢 Pop Nhẹ Mặc Định', desc: 'Hiệu ứng phóng to nhẹ nhàng.', price: 0, free: true },
+        { id: 'fireworks', name: '🎆 Pháo Hoa Mini', desc: 'Hạt pháo hoa lung linh bùng nổ từ ô check.', price: 400 },
+        { id: 'laser', name: '⚡ Tia Laser Neon', desc: 'Vệt sáng laser quét ngang rực rỡ.', price: 400 },
+        { id: 'gold_aura', name: '🌟 Hào Quang Vàng Kim', desc: 'Vòng sáng hoàng kim tỏa rộng đẳng cấp.', price: 450 },
+        { id: 'sakura', name: '🌸 Cánh Hoa Bay', desc: 'Cánh hoa anh đào rơi lãng mạn.', price: 350 }
+    ],
+    items: [
+        { id: 'freeze', name: '🧊 Bình Đóng Băng Chuỗi', icon: '🧊', desc: 'Tự động bảo vệ chuỗi khi quên check-in (Tối đa 2 bình).', price: 200 },
+        { id: 'boost2x', name: '⚡ Vé Nhân Đôi Điểm (2X DP 24h)', icon: '⚡', desc: 'Nhân đôi tất cả điểm thưởng DP khi check-in trong suốt 24 giờ!', price: 300 }
+    ]
+};
+window.SHOP_CATALOG = SHOP_CATALOG;
+
+function getUserTitleBadgeHTML(titleId = null) {
+    const id = titleId || (typeof S !== 'undefined' && S && S.inventory && S.inventory.equippedTitle);
+    if (!id) return '';
+    if (typeof SHOP_CATALOG === 'undefined' || !Array.isArray(SHOP_CATALOG.titles)) return '';
+    const titleObj = SHOP_CATALOG.titles.find(t => t.id === id);
+    if (!titleObj) return '';
+    const tName = curLang === 'en' ? titleObj.nameEn : (curLang === 'zh' ? titleObj.nameZh : titleObj.name);
+    return `<span class="user-title-badge">${escHtml(tName)}</span>`;
+}
+window.getUserTitleBadgeHTML = getUserTitleBadgeHTML;
+
 function showUserProfile(user){
     const userProfileEl = document.querySelector('#userProfile');
     const computed = (typeof calculateUserDPAndStreak === 'function') ? calculateUserDPAndStreak(S) : { totalDP: 0 };
@@ -769,8 +1296,14 @@ function getStreak(hId){
     // Count backwards from today (or last day of month)
     const end=cM===todayM&&cY===todayY?todayD:days;
     for(let d=end;d>=1;d--){
-        if(S.c[ck(hId,d)])streak++;
-        else break;
+        const dateKey = `${cY}-${String(cM + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const isFrozen = Array.isArray(S.frozenDays) && S.frozenDays.includes(dateKey);
+        const isRepaired = Array.isArray(S.repairedDays) && S.repairedDays.includes(dateKey);
+        if(S.c[ck(hId,d)] || isFrozen || isRepaired){
+            streak++;
+        } else {
+            break;
+        }
     }
     return streak;
 }
@@ -913,7 +1446,12 @@ function renderGrid(){
         const dow=new Date(cY,cM,d).getDay();
         const tc=isToday(d)?' today':'';
         const sc=d===selectedDay?' selected-day':'';
-        hh+=`<th class="h-day${tc}${sc}" data-d="${d}"><span class="dn">${DA[dow]}</span><span class="dd">${d}</span></th>`;
+        const dateKey = `${cY}-${String(cM + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const isFrozen = Array.isArray(S.frozenDays) && S.frozenDays.includes(dateKey);
+        const isRepaired = Array.isArray(S.repairedDays) && S.repairedDays.includes(dateKey);
+        const frozenClass = isFrozen ? ' frozen-day' : (isRepaired ? ' repaired-day' : '');
+        const freezeBadge = isFrozen ? '<span class="day-freeze-icon" title="Ngày đã đóng băng chuỗi">🧊</span>' : (isRepaired ? '<span class="day-freeze-icon" title="Ngày đã hồi sinh chuỗi">⚡</span>' : '');
+        hh+=`<th class="h-day${tc}${sc}${frozenClass}" data-d="${d}"><span class="dn">${DA[dow]}</span><span class="dd">${d}${freezeBadge}</span></th>`;
     }
     hh+=`<th class="h-an">${t('target')}</th><th class="h-an">${t('actual')}</th><th class="h-an">${t('leftCol')}</th><th class="h-pg">${t('progress')}</th></tr>`;
     $('#thead').innerHTML=hh;
@@ -934,7 +1472,19 @@ function renderGrid(){
             const on=S.c[ck(h.id,d)];if(on)dn++;
             const tc=isToday(d)?' today':'';
             const dateStr = `${d}/${cM+1}/${cY}`;
-            bb+=`<td class="td-chk${tc}" data-h="${h.id}" data-d="${d}" title="${esc(h.emoji)} ${esc(h.name)} (${dateStr})"><div class="cb${on?' on':''}"></div></td>`;
+            const dateKey = `${cY}-${String(cM + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const isFrozen = Array.isArray(S.frozenDays) && S.frozenDays.includes(dateKey);
+            const isRepaired = Array.isArray(S.repairedDays) && S.repairedDays.includes(dateKey);
+            const frozenClass = isFrozen ? ' frozen-day' : (isRepaired ? ' repaired-day' : '');
+
+            let cellInner = `<div class="cb${on?' on':''}"></div>`;
+            if(!on && isFrozen){
+                cellInner = `<div class="cb-frozen" title="🧊 Đã đóng băng chuỗi">🧊</div>`;
+            } else if(!on && isRepaired){
+                cellInner = `<div class="cb-repaired" title="⚡ Đã hồi sinh chuỗi">⚡</div>`;
+            }
+
+            bb+=`<td class="td-chk${tc}${frozenClass}" data-h="${h.id}" data-d="${d}" title="${esc(h.emoji)} ${esc(h.name)} (${dateStr})">${cellInner}</td>`;
         }
         const targetVal = h.target !== undefined ? h.target : days;
         const lt = Math.max(0, targetVal - dn);
@@ -979,12 +1529,17 @@ function renderGrid(){
     $$('.td-chk').forEach(td=>{
         td.onclick=()=>{
             const k=ck(td.dataset.h,td.dataset.d);S.c[k]=!S.c[k];sv();
+            if(S.c[k]) {
+                if(typeof playCheckSound === 'function') playCheckSound();
+                if(typeof triggerVisualFx === 'function') triggerVisualFx(td);
+            }
             const cb=td.querySelector('.cb');
             if(cb){cb.classList.toggle('on',!!S.c[k]);cb.classList.remove('pop');void cb.offsetWidth;cb.classList.add('pop')}
             renderStats();renderBar();renderLine();renderT10();renderHeatmap();updateAutoMood();
             checkConfetti();
             if(typeof updateUserDPState==='function') updateUserDPState(true);
             if(typeof renderQuestPanel==='function') renderQuestPanel();
+            if(typeof onHabitCheckedSyncSquadAndDuel==='function') onHabitCheckedSyncSquadAndDuel();
             // Update row stats in-place
             const tr=td.closest('tr');
             if(tr){
@@ -1354,14 +1909,27 @@ function renderHeatmap() {
                     const key = `${cY}-${d.getMonth()}-${h.id}-${d.getDate()}`;
                     if (S.c[key]) completed++;
                 });
+                const dKey = `${cY}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                const isFrozen = Array.isArray(S.frozenDays) && S.frozenDays.includes(dKey);
+                const isRepaired = Array.isArray(S.repairedDays) && S.repairedDays.includes(dKey);
+
                 const pct = hc ? Math.round(completed / hc * 100) : 0;
                 const level = hc ? getLevel(completed / hc) : 0;
                 cell.dataset.level = level;
                 
+                if (isFrozen) cell.classList.add('hm-frozen');
+                if (isRepaired) cell.classList.add('hm-repaired');
+
                 const dateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${cY}`;
                 const tooltip = document.createElement('span');
                 tooltip.className = 'hm-tooltip';
-                tooltip.textContent = `${dateStr}: ${completed}/${hc} (${pct}%)`;
+                if (isFrozen) {
+                    tooltip.textContent = `${dateStr}: 🧊 Đã Đóng Băng Chuỗi (${completed}/${hc})`;
+                } else if (isRepaired) {
+                    tooltip.textContent = `${dateStr}: ⚡ Đã Hồi Sinh Chuỗi (${completed}/${hc})`;
+                } else {
+                    tooltip.textContent = `${dateStr}: ${completed}/${hc} (${pct}%)`;
+                }
                 cell.appendChild(tooltip);
             } else {
                 cell.style.opacity = '0';
@@ -1584,6 +2152,7 @@ function getRankProgressInfo(dp) {
 
 // ==================== SCORING ENGINE ====================
 let userBonusDP = 0;
+let _hasShownAutoFreezeToast = false;
 
 function calculateUserDPAndStreak(sData = S) {
     let totalChecks = 0;
@@ -1594,8 +2163,15 @@ function calculateUserDPAndStreak(sData = S) {
 
     if (!sData) return { totalDP: 0, weeklyDP: 0, totalChecks: 0, weeklyChecks: 0, currentStreak: 0, maxStreak: 0, perfectDays: 0, questDP: 0 };
 
+    if (sData.freezes === undefined) sData.freezes = 1;
+    if (!Array.isArray(sData.frozenDays)) sData.frozenDays = [];
+    if (!Array.isArray(sData.repairedDays)) sData.repairedDays = [];
+
     const now = new Date();
     const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const yesterdayMidnight = todayMidnight - 24 * 60 * 60 * 1000;
+    const yObj = new Date(yesterdayMidnight);
+    const yesterdayKey = `${yObj.getFullYear()}-${String(yObj.getMonth() + 1).padStart(2, '0')}-${String(yObj.getDate()).padStart(2, '0')}`;
     const dayMs = 24 * 60 * 60 * 1000;
 
     // Week start (Monday 00:00 local time)
@@ -1604,7 +2180,7 @@ function calculateUserDPAndStreak(sData = S) {
     const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - daysSinceMon, 0, 0, 0, 0);
 
     // Parse all checks
-    const dailyStats = {}; // 'YYYY-MM-DD' -> { yr, mo, dy, checked, total, timestamp }
+    const dailyStats = {}; // 'YYYY-MM-DD' -> { yr, mo, dy, checked, total, timestamp, isFrozen, isRepaired }
     const habitsList = Array.isArray(sData.h) ? sData.h : [];
     const checkMap = sData.c || {};
     const checkKeys = Object.keys(checkMap).filter(k => checkMap[k]);
@@ -1622,7 +2198,9 @@ function calculateUserDPAndStreak(sData = S) {
                 yr, mo, dy,
                 checked: 0,
                 total: habitsList.length || 1,
-                timestamp: new Date(yr, mo, dy).getTime()
+                timestamp: new Date(yr, mo, dy).getTime(),
+                isFrozen: false,
+                isRepaired: false
             };
         }
         dailyStats[dateKey].checked++;
@@ -1632,54 +2210,128 @@ function calculateUserDPAndStreak(sData = S) {
         if (checkDate >= weekStart && checkDate <= now) weeklyChecks++;
     });
 
+    // Merge frozen days
+    (sData.frozenDays || []).forEach(fKey => {
+        if (!dailyStats[fKey]) {
+            const parts = fKey.split('-').map(Number);
+            if (parts.length === 3) {
+                dailyStats[fKey] = {
+                    yr: parts[0], mo: parts[1] - 1, dy: parts[2],
+                    checked: 0, total: habitsList.length || 1,
+                    timestamp: new Date(parts[0], parts[1] - 1, parts[2]).getTime(),
+                    isFrozen: true, isRepaired: false
+                };
+            }
+        } else {
+            dailyStats[fKey].isFrozen = true;
+        }
+    });
+
+    // Merge repaired days
+    (sData.repairedDays || []).forEach(rKey => {
+        if (!dailyStats[rKey]) {
+            const parts = rKey.split('-').map(Number);
+            if (parts.length === 3) {
+                dailyStats[rKey] = {
+                    yr: parts[0], mo: parts[1] - 1, dy: parts[2],
+                    checked: 0, total: habitsList.length || 1,
+                    timestamp: new Date(parts[0], parts[1] - 1, parts[2]).getTime(),
+                    isFrozen: false, isRepaired: true
+                };
+            }
+        } else {
+            dailyStats[rKey].isRepaired = true;
+        }
+    });
+
     // Perfect days & streak calculation
     const sortedDays = Object.values(dailyStats).sort((a, b) => a.timestamp - b.timestamp);
     let prevTimestamp = null;
+    let runningStreak = 0;
 
     sortedDays.forEach(item => {
         if (item.total > 0 && item.checked >= item.total) perfectDays++;
-        if (item.checked > 0) {
+        if (item.checked > 0 || item.isFrozen || item.isRepaired) {
             if (prevTimestamp !== null) {
                 const diffDays = Math.round((item.timestamp - prevTimestamp) / dayMs);
                 if (diffDays === 1) {
-                    currentStreak += 1;
+                    runningStreak += 1;
                 } else if (diffDays > 1) {
-                    currentStreak = 1;
+                    runningStreak = 1;
                 }
             } else {
-                currentStreak = 1;
+                runningStreak = 1;
             }
-            maxStreak = Math.max(maxStreak, currentStreak);
+            maxStreak = Math.max(maxStreak, runningStreak);
             prevTimestamp = item.timestamp;
         }
     });
 
-    // Check if streak is still active (last check within today or yesterday)
+    currentStreak = runningStreak;
+
+    // Check if streak is still active
+    let triggeredAutoFreeze = false;
     if (prevTimestamp !== null) {
         const daysDiffFromToday = Math.round((todayMidnight - prevTimestamp) / dayMs);
-        if (daysDiffFromToday > 1) {
-            currentStreak = 0; // Missed yesterday and today
+        if (daysDiffFromToday === 1) {
+            // Checked yesterday, active today
+        } else if (daysDiffFromToday > 1) {
+            // Missed yesterday!
+            if (daysDiffFromToday === 2 && !sData.frozenDays.includes(yesterdayKey) && !sData.repairedDays.includes(yesterdayKey)) {
+                if (sData.freezes > 0 && runningStreak >= 1) {
+                    // Auto-freeze!
+                    sData.freezes--;
+                    sData.frozenDays.push(yesterdayKey);
+                    triggeredAutoFreeze = true;
+                    if (!_hasShownAutoFreezeToast) {
+                        _hasShownAutoFreezeToast = true;
+                        setTimeout(() => {
+                            if (typeof playFreezeSound === 'function') playFreezeSound();
+                            alert(t('freezeAutoToast') || '🧊 Bình Đóng Băng đã tự động bảo vệ chuỗi của bạn hôm qua!');
+                        }, 500);
+                    }
+                    return calculateUserDPAndStreak(sData);
+                } else if (runningStreak >= 1) {
+                    // Streak broke without freeze -> Record for 24h repair
+                    if (!sData.lastStreakBreak || sData.lastStreakBreak.date !== yesterdayKey) {
+                        sData.lastStreakBreak = {
+                            date: yesterdayKey,
+                            streakBeforeBreak: runningStreak,
+                            timestamp: Date.now(),
+                            repaired: false
+                        };
+                    }
+                }
+            }
+            currentStreak = 0;
         }
     } else {
         currentStreak = 0;
     }
 
-    // Calculate Base DP & Bonuses
-    let totalDP = totalChecks * 10; // Base: 10 DP per check
-    totalDP += perfectDays * 30;    // Perfect day bonus
-    // Streak bonuses
+    // Calculate Base DP & Bonuses (with 2X Booster support)
+    const isBoostActive = sData.inventory && sData.inventory.boost2xExpiresAt && Date.now() < sData.inventory.boost2xExpiresAt;
+    const checkMultiplier = isBoostActive ? 2 : 1;
+    let totalDP = totalChecks * 10 * checkMultiplier;
+    totalDP += perfectDays * 30;
     if (maxStreak >= 7) totalDP += 50;
     if (maxStreak >= 30) totalDP += 500;
     if (maxStreak >= 100) totalDP += 2000;
-    // Quest DP
     const questDP = (sData.questData && sData.questData.totalDP) || 0;
     totalDP += questDP;
 
-    // Weekly DP
-    let weeklyDP = weeklyChecks * 10;
+    let weeklyDP = weeklyChecks * 10 * checkMultiplier;
 
-    return { totalDP, weeklyDP, totalChecks, weeklyChecks, currentStreak, maxStreak, perfectDays, questDP };
+    return { 
+        totalDP, weeklyDP, totalChecks, weeklyChecks, currentStreak, maxStreak, perfectDays, questDP,
+        freezes: sData.freezes || 0,
+        frozenDays: sData.frozenDays || [],
+        repairedDays: sData.repairedDays || [],
+        lastStreakBreak: sData.lastStreakBreak || null
+    };
 }
+window.calculateUserDPAndStreak = calculateUserDPAndStreak;
+window._calculateUserDPAndStreak = calculateUserDPAndStreak;
 
 function updateUserDPState(forceSync = false) {
     const computed = calculateUserDPAndStreak(S);
@@ -1699,9 +2351,24 @@ function updateUserDPState(forceSync = false) {
         showUserProfile(currentUser);
     }
 
+    renderStreakShieldNavbar();
+    renderStreakBanner();
+
+    if (typeof updateBoost2xTimer === 'function') updateBoost2xTimer();
+
     const pModal = document.getElementById('profileModalBg');
     if (pModal && pModal.classList.contains('show') && window._updateProfileModalUI) {
         window._updateProfileModalUI();
+    }
+
+    const sModal = document.getElementById('streakModalBg');
+    if (sModal && sModal.classList.contains('show') && typeof renderStreakProtectionUI === 'function') {
+        renderStreakProtectionUI();
+    }
+
+    const shopModal = document.getElementById('shopModalBg');
+    if (shopModal && shopModal.classList.contains('show') && typeof renderShopUI === 'function') {
+        renderShopUI();
     }
 
     if (forceSync && typeof syncUserLeaderboard === 'function') {
@@ -1744,6 +2411,7 @@ async function syncUserLeaderboard() {
             uid: currentUser.uid,
             displayName: displayName,
             photoURL: photoURL,
+            equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
             totalDP: finalDP,
             bonusDP: userBonusDP,
             weeklyDP: finalWeekly,
@@ -1864,7 +2532,7 @@ function renderLeaderboard() {
                         ${crownOrBadge}
                         ${avatarHtml}
                     </div>
-                    <div class="lb-podium-name" title="${escHtml(entry.displayName || 'User')}">${escHtml(entry.displayName || 'User')}${adminBadge}${meBadge}</div>
+                    <div class="lb-podium-name" title="${escHtml(entry.displayName || 'User')}">${escHtml(entry.displayName || 'User')}${getUserTitleBadgeHTML(entry.equippedTitle)}${adminBadge}${meBadge}</div>
                     <div class="lb-podium-tier" style="color:${tier.color}">${getRankTierName(tier)}</div>
                     <div class="lb-podium-dp">${(entry.totalDP || 0).toLocaleString()} DP</div>
                     <div class="lb-podium-streak">🔥 ${entry.streak || 0}</div>
@@ -1916,7 +2584,7 @@ function renderLeaderboard() {
                                 ${avatarHtml}
                             </div>
                             <div class="lb-info">
-                                <div class="lb-name">${escHtml(entry.displayName || 'User')}${adminBadge}${meBadge}</div>
+                                <div class="lb-name">${escHtml(entry.displayName || 'User')}${getUserTitleBadgeHTML(entry.equippedTitle)}${adminBadge}${meBadge}</div>
                                 <div class="lb-tier">${getRankTierName(tier)} · ${(entry.totalDP || 0).toLocaleString()} DP</div>
                             </div>
                             <div class="lb-stats">
@@ -2114,6 +2782,7 @@ window._submitComment = async function(postId) {
         uid: currentUser.uid,
         displayName: currentUser.displayName || currentUser.email?.split('@')[0] || 'User',
         photoURL: currentUser.photoURL || '',
+        equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
         rankLevel: rank.level,
         content: content,
         createdAt: new Date().toISOString()
@@ -2208,6 +2877,7 @@ async function renderCommunity(forceReload = false) {
                             <div class="cm-comment-header">
                                 <div class="cm-comment-author-name">
                                     <span>${escHtml(c.displayName || 'User')}</span>
+                                    ${getUserTitleBadgeHTML(c.equippedTitle)}
                                     <span class="cm-comment-rank-badge">${cRankName}</span>
                                 </div>
                                 <span class="cm-comment-time">${cTimeStr}</span>
@@ -2228,6 +2898,7 @@ async function renderCommunity(forceReload = false) {
                         <div class="cm-post-author-info">
                             <div class="cm-post-author-name">
                                 <span>${escHtml(p.displayName || 'User')}</span>
+                                ${getUserTitleBadgeHTML(p.equippedTitle)}
                                 <span class="cm-post-author-rank">${rankName}</span>
                             </div>
                             <span class="cm-post-time">📅 ${timeStr}</span>
@@ -2325,6 +2996,7 @@ window._submitCmPost = async () => {
             uid: currentUser.uid,
             displayName: currentUser.displayName || currentUser.email?.split('@')[0] || 'User',
             photoURL: currentUser.photoURL || '',
+            equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
             userDP: dp,
             rankLevel: rank.level,
             content: content,
@@ -2879,6 +3551,14 @@ function initAuthGuard(){
         }
     });
     initProfileModal();
+    initStreakModal();
+    initShopModal();
+    initSquadHubModal();
+    initRecapAndShareModals();
+    initPomodoroModal();
+    renderDailyQuoteWidget();
+    checkWeeklyRecapAutoPrompt();
+    startBoostCountdown();
 }
 
 // ==================== PROFILE MODAL & AVATAR ====================
@@ -2898,7 +3578,8 @@ window._updateProfileModalUI = () => {
     const pDP = document.getElementById('profileDP');
     const pStreak = document.getElementById('profileStreak');
 
-    if (pName) pName.textContent = currentUser.displayName || currentUser.email || 'User';
+    const titleBadge = getUserTitleBadgeHTML();
+    if (pName) pName.innerHTML = `${escHtml(currentUser.displayName || currentUser.email || 'User')}${titleBadge}`;
     if (pLevel) pLevel.textContent = getRankTierName(rank);
     if (pDP) pDP.textContent = dp.toLocaleString();
     if (pStreak) pStreak.textContent = streak;
@@ -3140,6 +3821,2567 @@ async function handleAvatarUpload(e) {
         e.target.value = '';
     }, 2000);
 }
+
+// ==================== TRỤ CỘT 1: STREAK SHIELD & RECOVERY MODAL ====================
+
+function renderStreakShieldNavbar() {
+    const btn = document.getElementById('streakShieldBtn');
+    const badge = document.getElementById('navFreezeCount');
+    if (!badge) return;
+    const freezeCount = (typeof S !== 'undefined' && S && typeof S.freezes === 'number') ? S.freezes : 0;
+    badge.textContent = `${freezeCount}/2`;
+    if (btn) {
+        btn.title = `${t('tabStreakShield')}: ${freezeCount} ${t('streakFreeze')}`;
+        if (freezeCount > 0) {
+            btn.classList.add('has-freeze');
+        } else {
+            btn.classList.remove('has-freeze');
+        }
+    }
+}
+
+function renderStreakBanner() {
+    const banner = document.getElementById('streakEmergencyBanner');
+    if (!banner) return;
+    const sBreak = (typeof S !== 'undefined' && S && S.lastStreakBreak) ? S.lastStreakBreak : null;
+    const now = Date.now();
+    const isWithin48h = sBreak && !sBreak.repaired && (now - (sBreak.timestamp || 0) < 48 * 60 * 60 * 1000);
+    
+    if (isWithin48h) {
+        banner.style.display = 'block';
+        const titleEl = document.getElementById('sebTitle');
+        const descEl = document.getElementById('sebDesc');
+        if (titleEl) {
+            titleEl.textContent = `🚨 Chuỗi ${sBreak.streakBeforeBreak || ''} ${t('daysUnit')} của bạn vừa bị đứt hôm qua!`;
+        }
+        if (descEl) {
+            descEl.textContent = t('streakBrokenDesc') || 'Bạn có 24h để Hồi sinh lại chuỗi trước khi mất vĩnh viễn!';
+        }
+    } else {
+        banner.style.display = 'none';
+    }
+}
+
+function openStreakModal() {
+    const modal = document.getElementById('streakModalBg');
+    if (!modal) return;
+    modal.classList.add('show');
+    renderStreakProtectionUI();
+}
+
+window._openStreakModal = openStreakModal;
+
+function renderStreakProtectionUI() {
+    const body = document.getElementById('streakModalBody');
+    if (!body) return;
+
+    const computed = calculateUserDPAndStreak(S);
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
+    const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+    const streak = computed.currentStreak;
+    const maxStreak = computed.maxStreak;
+    const freezes = S.freezes || 0;
+    const sBreak = S.lastStreakBreak;
+    const hasBrokenStreak = sBreak && !sBreak.repaired && (Date.now() - (sBreak.timestamp || 0) < 48 * 60 * 60 * 1000);
+
+    let statusBadgeHtml = '';
+    let statusDescText = '';
+    if (hasBrokenStreak) {
+        statusBadgeHtml = `<span class="sm-status-badge danger">🚨 ${t('streakBroken')}</span>`;
+        statusDescText = t('streakBrokenDesc');
+    } else if (freezes > 0) {
+        statusBadgeHtml = `<span class="sm-status-badge safe">🛡️ ${t('streakProtected')} (x${freezes})</span>`;
+        statusDescText = t('streakSafeDesc');
+    } else {
+        statusBadgeHtml = `<span class="sm-status-badge warning">⚠️ ${t('streakDangerDesc')}</span>`;
+        statusDescText = t('streakDangerDesc');
+    }
+
+    // Flask 1 & Flask 2
+    const flask1Filled = freezes >= 1;
+    const flask2Filled = freezes >= 2;
+
+    // Shop buttons availability
+    const canBuyFreeze = freezes < 2 && (myDP >= 200 || isAdmin);
+    const canRepairStreak = hasBrokenStreak && (myDP >= 150 || isAdmin);
+
+    // History items
+    const frozenDays = Array.isArray(S.frozenDays) ? S.frozenDays : [];
+    const repairedDays = Array.isArray(S.repairedDays) ? S.repairedDays : [];
+    const allHistory = [
+        ...frozenDays.map(d => ({ date: d, type: 'freeze' })),
+        ...repairedDays.map(d => ({ date: d, type: 'repair' }))
+    ].sort((a, b) => b.date.localeCompare(a.date));
+
+    let historyHtml = '';
+    if (allHistory.length === 0) {
+        historyHtml = `<div class="sm-history-row" style="justify-content:center; opacity:0.6;">${t('noHistory')}</div>`;
+    } else {
+        allHistory.slice(0, 5).forEach(h => {
+            const parts = h.date.split('-');
+            const dateStr = parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : h.date;
+            const badge = h.type === 'freeze' ? 
+                '<span style="color:#0284c7; font-weight:700;">🧊 Đã Đóng Băng</span>' : 
+                '<span style="color:#f59e0b; font-weight:700;">⚡ Đã Hồi Sinh</span>';
+            historyHtml += `<div class="sm-history-row"><span>📅 ${dateStr}</span>${badge}</div>`;
+        });
+    }
+
+    body.innerHTML = `
+        <!-- STATUS CARD -->
+        <div class="sm-status-card">
+            <div class="sm-streak-main">
+                <div class="sm-fire-icon">🔥</div>
+                <div>
+                    <div class="sm-streak-num">${streak} <span style="font-size:15px; font-weight:600; color:var(--text-muted);">${t('daysUnit')}</span></div>
+                    <div class="sm-streak-label">${t('currentStreakLabel')} · ${t('maxStreakLabel')}: ${maxStreak} ${t('daysUnit')}</div>
+                </div>
+            </div>
+            <div>
+                ${statusBadgeHtml}
+            </div>
+        </div>
+        <div style="font-size:12.5px; color:var(--text-muted); margin-top:-6px; text-align:center;">${statusDescText}</div>
+
+        <!-- FLASKS INVENTORY -->
+        <div>
+            <div class="sm-section-title">
+                <span>🎒 ${t('streakFreeze')}</span>
+                <span>${freezes}/2 ${t('availableFrame') || 'Khả dụng'}</span>
+            </div>
+            <div class="sm-flasks-grid">
+                <div class="sm-flask-card ${flask1Filled ? 'filled' : 'empty'}">
+                    <div class="sm-flask-art">${flask1Filled ? '🧊' : '🧪'}</div>
+                    <div class="sm-flask-meta">
+                        <div class="sm-flask-name">${t('freezeFlask1')}</div>
+                        <div class="sm-flask-status">${flask1Filled ? '❄️ ' + t('freezeReady') : '⚪ ' + t('freezeEmpty')}</div>
+                    </div>
+                </div>
+                <div class="sm-flask-card ${flask2Filled ? 'filled' : 'empty'}">
+                    <div class="sm-flask-art">${flask2Filled ? '🧊' : '🧪'}</div>
+                    <div class="sm-flask-meta">
+                        <div class="sm-flask-name">${t('freezeFlask2')}</div>
+                        <div class="sm-flask-status">${flask2Filled ? '❄️ ' + t('freezeReady') : '⚪ ' + t('freezeEmpty')}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SHOP & REPAIR ACTIONS -->
+        <div>
+            <div class="sm-section-title">
+                <span>🛒 CỬA HÀNG CỨU CHUỖI</span>
+                <span style="font-size:12px; color:var(--accent); font-weight:700;">Ví: ${myDP.toLocaleString()} DP</span>
+            </div>
+            <div class="sm-shop-grid">
+                <!-- BUY FREEZE -->
+                <div class="sm-shop-item">
+                    <div class="sm-item-left">
+                        <div class="sm-item-icon">🧊</div>
+                        <div>
+                            <div class="sm-item-title">${t('buyFreeze')}</div>
+                            <div class="sm-item-desc">${t('buyFreezeDesc')}</div>
+                        </div>
+                    </div>
+                    <button class="sm-item-btn btn-buy-freeze" onclick="window._buyStreakFreeze()" ${!canBuyFreeze ? 'disabled' : ''}>
+                        ${freezes >= 2 ? 'Đầy túi (2/2)' : 'Mua (200 DP)'}
+                    </button>
+                </div>
+
+                <!-- REPAIR STREAK -->
+                <div class="sm-shop-item" style="${hasBrokenStreak ? 'border-color:rgba(239,68,68,0.5); background:linear-gradient(135deg, rgba(239,68,68,0.06), var(--bg-card));' : ''}">
+                    <div class="sm-item-left">
+                        <div class="sm-item-icon" style="color:#ef4444;">⚡</div>
+                        <div>
+                            <div class="sm-item-title">${t('repairStreak')} (24h)</div>
+                            <div class="sm-item-desc">${t('repairStreakDesc')}</div>
+                        </div>
+                    </div>
+                    <button class="sm-item-btn btn-repair-streak" onclick="window._repairStreakWithDP()" ${!canRepairStreak ? 'disabled' : ''}>
+                        ${hasBrokenStreak ? 'Hồi sinh (150 DP)' : 'Không cần vá'}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HISTORY -->
+        <div>
+            <div class="sm-section-title">
+                <span>📜 ${t('historyTitle')}</span>
+            </div>
+            <div class="sm-history-list">
+                ${historyHtml}
+            </div>
+        </div>
+    `;
+}
+
+async function buyStreakFreeze(cost = 200) {
+    if (S.freezes >= 2) {
+        alert('Bạn đã sở hữu tối đa 2 bình đóng băng!');
+        return;
+    }
+    const computed = calculateUserDPAndStreak(S);
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
+    const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+
+    if (myDP < cost && !isAdmin) {
+        alert(`Bạn cần ít nhất ${cost} DP để mua bình đóng băng (Hiện có: ${myDP} DP)!`);
+        return;
+    }
+
+    if (!confirm(`Xác nhận dùng ${cost} DP để mua 1 Bình Đóng Băng Chuỗi?`)) return;
+
+    if (!isAdmin) {
+        userBonusDP = (userBonusDP || 0) - cost;
+        if (currentUser && db) {
+            try {
+                await userDocRef.update({ bonusDP: userBonusDP });
+                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
+            } catch(e) { console.warn(e); }
+        }
+    }
+
+    S.freezes = (S.freezes || 0) + 1;
+    sv();
+
+    if (typeof playFreezeSound === 'function') playFreezeSound();
+    if (typeof fireConfetti === 'function') fireConfetti();
+
+    // Show Toast
+    const toast = document.createElement('div');
+    toast.className = 'quest-toast';
+    toast.innerHTML = `<span>🧊</span> ${t('freezeBoughtToast') || 'Đã mua Bình Đóng Băng!'}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
+
+    updateUserDPState(true);
+    renderStreakProtectionUI();
+}
+window._buyStreakFreeze = buyStreakFreeze;
+
+async function repairStreakWithDP(cost = 150) {
+    const sBreak = S.lastStreakBreak;
+    if (!sBreak || sBreak.repaired) {
+        alert('Không có chuỗi nào cần cứu lúc này!');
+        return;
+    }
+
+    const computed = calculateUserDPAndStreak(S);
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
+    const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+
+    if (myDP < cost && !isAdmin) {
+        alert(`Bạn cần ít nhất ${cost} DP để Hồi sinh chuỗi (Hiện có: ${myDP} DP)!`);
+        return;
+    }
+
+    if (!confirm(`Xác nhận dùng ${cost} DP để Hồi sinh chuỗi ngày bị đứt hôm qua?`)) return;
+
+    if (!isAdmin) {
+        userBonusDP = (userBonusDP || 0) - cost;
+        if (currentUser && db) {
+            try {
+                await userDocRef.update({ bonusDP: userBonusDP });
+                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
+            } catch(e) { console.warn(e); }
+        }
+    }
+
+    if (!Array.isArray(S.repairedDays)) S.repairedDays = [];
+    if (sBreak.date && !S.repairedDays.includes(sBreak.date)) {
+        S.repairedDays.push(sBreak.date);
+    }
+    S.lastStreakBreak.repaired = true;
+    sv();
+
+    if (typeof playResurrectSound === 'function') playResurrectSound();
+    if (typeof fireConfetti === 'function') fireConfetti();
+
+    // Show Toast
+    const toast = document.createElement('div');
+    toast.className = 'quest-toast';
+    toast.innerHTML = `<span>🔥</span> ${t('streakRepairToast') || 'Chuỗi đã được Hồi sinh thành công!'}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
+
+    updateUserDPState(true);
+    renderGrid();
+    renderHeatmap();
+    renderStreakProtectionUI();
+    renderStreakBanner();
+}
+window._repairStreakWithDP = repairStreakWithDP;
+
+function initStreakModal() {
+    const shieldBtn = document.getElementById('streakShieldBtn');
+    if (shieldBtn) shieldBtn.onclick = openStreakModal;
+
+    const mobileBtn = document.getElementById('mobileStreakBtn');
+    if (mobileBtn) mobileBtn.onclick = openStreakModal;
+
+    const closeBtn = document.getElementById('streakCloseBtn');
+    if (closeBtn) closeBtn.onclick = () => document.getElementById('streakModalBg').classList.remove('show');
+
+    const bg = document.getElementById('streakModalBg');
+    if (bg) bg.onclick = (e) => { if (e.target === bg) bg.classList.remove('show'); };
+}
+
+let shopActiveTab = 'titles';
+let boostIntervalId = null;
+
+function updateBoost2xTimer() {
+    const badge = document.getElementById('navBoostBadge');
+    const countdownEl = document.getElementById('navBoostCountdown');
+    if (!badge || !countdownEl) return;
+
+    const expiresAt = (typeof S !== 'undefined' && S && S.inventory && S.inventory.boost2xExpiresAt) ? S.inventory.boost2xExpiresAt : 0;
+    const now = Date.now();
+    const remainingMs = expiresAt - now;
+
+    if (remainingMs > 0) {
+        badge.style.display = 'inline-flex';
+        const totalSecs = Math.floor(remainingMs / 1000);
+        const hours = Math.floor(totalSecs / 3600);
+        const mins = Math.floor((totalSecs % 3600) / 60);
+        const secs = totalSecs % 60;
+        countdownEl.textContent = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function startBoostCountdown() {
+    if (boostIntervalId) clearInterval(boostIntervalId);
+    updateBoost2xTimer();
+    boostIntervalId = setInterval(updateBoost2xTimer, 1000);
+}
+
+function openShopModal(tab = 'titles') {
+    const modal = document.getElementById('shopModalBg');
+    if (!modal) return;
+    modal.classList.add('show');
+    renderShopUI(tab);
+}
+window._openShopModal = openShopModal;
+
+function renderShopUI(targetTab = null) {
+    if (targetTab) shopActiveTab = targetTab;
+    const container = document.getElementById('shopFeedContainer');
+    const walletDP = document.getElementById('shopWalletDP');
+    const extraEl = document.getElementById('shopWalletExtra');
+    if (!container) return;
+
+    const computed = calculateUserDPAndStreak(S);
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
+    const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+
+    if (walletDP) walletDP.textContent = `${myDP.toLocaleString()} DP`;
+    
+    // Check 2x boost active
+    const isBoostActive = S.inventory && S.inventory.boost2xExpiresAt && Date.now() < S.inventory.boost2xExpiresAt;
+    if (extraEl) {
+        if (isBoostActive) {
+            extraEl.innerHTML = '<span style="font-size:12px; color:#ef4444; font-weight:800;">⚡ 2X DP ĐANG KÍCH HOẠT</span>';
+        } else {
+            extraEl.innerHTML = '';
+        }
+    }
+
+    // Update active tab buttons
+    document.querySelectorAll('.shop-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === shopActiveTab);
+    });
+
+    let html = '';
+
+    if (shopActiveTab === 'titles') {
+        const owned = S.inventory?.titles || [];
+        const equipped = S.inventory?.equippedTitle || '';
+
+        SHOP_CATALOG.titles.forEach(item => {
+            const isOwned = owned.includes(item.id);
+            const isEquipped = equipped === item.id;
+            const tName = curLang === 'en' ? item.nameEn : (curLang === 'zh' ? item.nameZh : item.name);
+            const tDesc = curLang === 'en' ? (item.descEn || item.desc) : (curLang === 'zh' ? (item.descZh || item.desc) : item.desc);
+            const canAfford = myDP >= item.price || isAdmin;
+
+            html += `
+                <div class="shop-card ${isEquipped ? 'equipped' : ''}">
+                    <div class="shop-card-header">
+                        <div class="shop-card-art">${item.icon}</div>
+                        <div class="shop-card-meta">
+                            <div class="shop-card-title">${tName}</div>
+                            <div class="shop-card-desc">${tDesc}</div>
+                        </div>
+                    </div>
+                    <div class="shop-card-footer">
+                        <div class="shop-card-price">
+                            ${isOwned ? '<span style="color:#10b981;">✅ Đã sở hữu</span>' : `💎 ${item.price} DP`}
+                        </div>
+                        <div>
+                            ${isEquipped ? `<button class="shop-action-btn btn-equipped" onclick="window._unequipShopItem('titles', '${item.id}')">${t('btnEquipped') || 'Đang dùng'}</button>` :
+                              isOwned ? `<button class="shop-action-btn btn-equip" onclick="window._equipShopItem('titles', '${item.id}')">${t('btnEquip') || 'Trang bị'}</button>` :
+                              `<button class="shop-action-btn btn-buy" onclick="window._buyShopItem('titles', '${item.id}', ${item.price})" ${!canAfford ? 'disabled' : ''}>${t('btnBuy') || 'Mua'}</button>`}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    } else if (shopActiveTab === 'themes') {
+        const owned = S.inventory?.themes || ['dark', 'light'];
+        const equipped = S.inventory?.equippedTheme || curTheme || 'dark';
+
+        SHOP_CATALOG.themes.forEach(item => {
+            const isOwned = item.free || owned.includes(item.id);
+            const isEquipped = (equipped === item.id || curTheme === item.id);
+            const canAfford = myDP >= item.price || isAdmin;
+
+            html += `
+                <div class="shop-card ${isEquipped ? 'equipped' : ''}">
+                    <div class="shop-card-header">
+                        <div class="shop-card-art" style="background:${item.bg}; color:${item.accent}; border:1px solid ${item.accent};">🎨</div>
+                        <div class="shop-card-meta">
+                            <div class="shop-card-title">${item.name}</div>
+                            <div class="shop-card-desc">${item.desc}</div>
+                            <div class="shop-card-preview" style="background:linear-gradient(90deg, ${item.bg}, ${item.accent});"></div>
+                        </div>
+                    </div>
+                    <div class="shop-card-footer">
+                        <div class="shop-card-price">
+                            ${item.free ? '<span style="color:#10b981;">🎁 Miễn phí</span>' : isOwned ? '<span style="color:#10b981;">✅ Đã sở hữu</span>' : `💎 ${item.price} DP`}
+                        </div>
+                        <div>
+                            ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
+                              isOwned ? `<button class="shop-action-btn btn-equip" onclick="window._equipShopItem('themes', '${item.id}')">${t('btnEquip') || 'Áp dụng'}</button>` :
+                              `<button class="shop-action-btn btn-buy" onclick="window._buyShopItem('themes', '${item.id}', ${item.price})" ${!canAfford ? 'disabled' : ''}>${t('btnBuy') || 'Mở khóa'}</button>`}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    } else if (shopActiveTab === 'fx') {
+        const soundOwned = S.inventory?.soundFxOwned || ['default'];
+        const visualOwned = S.inventory?.visualFxOwned || ['default'];
+        const soundEquipped = S.inventory?.soundFx || 'default';
+        const visualEquipped = S.inventory?.visualFx || 'default';
+
+        html += `<div style="grid-column:1/-1;font-family:var(--font-heading);font-size:13px;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin-bottom:-6px;">🔊 Gói Âm Thanh Check-in</div>`;
+        SHOP_CATALOG.soundFx.forEach(item => {
+            const isOwned = item.free || soundOwned.includes(item.id);
+            const isEquipped = soundEquipped === item.id;
+            const canAfford = myDP >= item.price || isAdmin;
+
+            html += `
+                <div class="shop-card ${isEquipped ? 'equipped' : ''}">
+                    <div class="shop-card-header">
+                        <div class="shop-card-art">🔊</div>
+                        <div class="shop-card-meta">
+                            <div class="shop-card-title">${item.name}</div>
+                            <div class="shop-card-desc">${item.desc}</div>
+                        </div>
+                    </div>
+                    <div class="shop-card-footer">
+                        <div class="shop-card-price">
+                            ${item.free ? '<span style="color:#10b981;">🎁 Mặc định</span>' : isOwned ? '<span style="color:#10b981;">✅ Đã sở hữu</span>' : `💎 ${item.price} DP`}
+                        </div>
+                        <div>
+                            ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
+                              isOwned ? `<button class="shop-action-btn btn-equip" onclick="window._equipShopItem('soundFx', '${item.id}')">${t('btnEquip') || 'Trang bị'}</button>` :
+                              `<button class="shop-action-btn btn-buy" onclick="window._buyShopItem('soundFx', '${item.id}', ${item.price})" ${!canAfford ? 'disabled' : ''}>${t('btnBuy') || 'Mua'}</button>`}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `<div style="grid-column:1/-1;font-family:var(--font-heading);font-size:13px;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin:12px 0 -6px;">✨ Gói Thị Giác Check-in</div>`;
+        SHOP_CATALOG.visualFx.forEach(item => {
+            const isOwned = item.free || visualOwned.includes(item.id);
+            const isEquipped = visualEquipped === item.id;
+            const canAfford = myDP >= item.price || isAdmin;
+
+            html += `
+                <div class="shop-card ${isEquipped ? 'equipped' : ''}">
+                    <div class="shop-card-header">
+                        <div class="shop-card-art">✨</div>
+                        <div class="shop-card-meta">
+                            <div class="shop-card-title">${item.name}</div>
+                            <div class="shop-card-desc">${item.desc}</div>
+                        </div>
+                    </div>
+                    <div class="shop-card-footer">
+                        <div class="shop-card-price">
+                            ${item.free ? '<span style="color:#10b981;">🎁 Mặc định</span>' : isOwned ? '<span style="color:#10b981;">✅ Đã sở hữu</span>' : `💎 ${item.price} DP`}
+                        </div>
+                        <div>
+                            ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
+                              isOwned ? `<button class="shop-action-btn btn-equip" onclick="window._equipShopItem('visualFx', '${item.id}')">${t('btnEquip') || 'Trang bị'}</button>` :
+                              `<button class="shop-action-btn btn-buy" onclick="window._buyShopItem('visualFx', '${item.id}', ${item.price})" ${!canAfford ? 'disabled' : ''}>${t('btnBuy') || 'Mua'}</button>`}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    } else if (shopActiveTab === 'items') {
+        const freezes = S.freezes || 0;
+        const isBoostActive = S.inventory && S.inventory.boost2xExpiresAt && Date.now() < S.inventory.boost2xExpiresAt;
+
+        SHOP_CATALOG.items.forEach(item => {
+            const canAfford = myDP >= item.price || isAdmin;
+            let statusText = '';
+            let btnDisabled = false;
+            let btnText = `Mua (${item.price} DP)`;
+
+            if (item.id === 'freeze') {
+                statusText = `Hiện có: ${freezes}/2 bình`;
+                if (freezes >= 2) {
+                    btnDisabled = true;
+                    btnText = 'Đầy túi (2/2)';
+                }
+            } else if (item.id === 'boost2x') {
+                if (isBoostActive) {
+                    statusText = '⚡ Đang kích hoạt';
+                    btnText = 'Gia hạn (+24h)';
+                } else {
+                    statusText = 'Chưa kích hoạt';
+                }
+            }
+
+            html += `
+                <div class="shop-card">
+                    <div class="shop-card-header">
+                        <div class="shop-card-art">${item.icon}</div>
+                        <div class="shop-card-meta">
+                            <div class="shop-card-title">${item.name}</div>
+                            <div class="shop-card-desc">${item.desc}</div>
+                        </div>
+                    </div>
+                    <div class="shop-card-footer">
+                        <div class="shop-card-price">
+                            <div>💎 ${item.price} DP</div>
+                            <div style="font-size:11.5px;color:var(--text-muted);font-weight:600;">${statusText}</div>
+                        </div>
+                        <div>
+                            <button class="shop-action-btn btn-buy" onclick="window._buyShopItem('items', '${item.id}', ${item.price})" ${btnDisabled || (!canAfford && !isAdmin) ? 'disabled' : ''}>
+                                ${btnText}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    container.innerHTML = html;
+}
+
+async function buyShopItem(type, itemId, cost) {
+    const computed = calculateUserDPAndStreak(S);
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
+    const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+
+    if (myDP < cost && !isAdmin) {
+        alert(`Bạn cần ít nhất ${cost} DP để mua vật phẩm này! (Hiện có: ${myDP} DP)`);
+        return;
+    }
+
+    if (!confirm(`Xác nhận dùng ${cost} DP để mua vật phẩm này?`)) return;
+
+    if (!isAdmin) {
+        userBonusDP = (userBonusDP || 0) - cost;
+        if (currentUser && db) {
+            try {
+                await userDocRef.update({ bonusDP: userBonusDP });
+                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
+            } catch(e) { console.warn(e); }
+        }
+    }
+
+    if (!S.inventory) S.inventory = sanitizeInventory(null);
+
+    if (type === 'titles') {
+        if (!S.inventory.titles.includes(itemId)) S.inventory.titles.push(itemId);
+        S.inventory.equippedTitle = itemId;
+    } else if (type === 'themes') {
+        if (!S.inventory.themes.includes(itemId)) S.inventory.themes.push(itemId);
+        S.inventory.equippedTheme = itemId;
+        curTheme = itemId;
+        localStorage.setItem('hg_theme', curTheme);
+        applyTheme();
+    } else if (type === 'soundFx') {
+        if (!S.inventory.soundFxOwned.includes(itemId)) S.inventory.soundFxOwned.push(itemId);
+        S.inventory.soundFx = itemId;
+        playCheckSound();
+    } else if (type === 'visualFx') {
+        if (!S.inventory.visualFxOwned.includes(itemId)) S.inventory.visualFxOwned.push(itemId);
+        S.inventory.visualFx = itemId;
+    } else if (type === 'items') {
+        if (itemId === 'freeze') {
+            S.freezes = (S.freezes || 0) + 1;
+            if (typeof playFreezeSound === 'function') playFreezeSound();
+        } else if (itemId === 'boost2x') {
+            const currentExp = Math.max(Date.now(), S.inventory.boost2xExpiresAt || 0);
+            S.inventory.boost2xExpiresAt = currentExp + 24 * 60 * 60 * 1000;
+            if (typeof playResurrectSound === 'function') playResurrectSound();
+        }
+    }
+
+    sv();
+
+    if (typeof fireConfetti === 'function') fireConfetti();
+
+    // Show Toast
+    const toast = document.createElement('div');
+    toast.className = 'quest-toast';
+    toast.innerHTML = `<span>✨</span> ${t('itemBoughtToast') || 'Đã mua thành công!'}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
+
+    updateUserDPState(true);
+    if (typeof syncUserLeaderboard === 'function') syncUserLeaderboard();
+    showUserProfile(currentUser);
+    renderShopUI();
+}
+window._buyShopItem = buyShopItem;
+
+async function equipShopItem(type, itemId) {
+    if (!S.inventory) S.inventory = sanitizeInventory(null);
+
+    if (type === 'titles') {
+        S.inventory.equippedTitle = itemId;
+    } else if (type === 'themes') {
+        S.inventory.equippedTheme = itemId;
+        curTheme = itemId;
+        localStorage.setItem('hg_theme', curTheme);
+        applyTheme();
+    } else if (type === 'soundFx') {
+        S.inventory.soundFx = itemId;
+        playCheckSound();
+    } else if (type === 'visualFx') {
+        S.inventory.visualFx = itemId;
+    }
+
+    sv();
+
+    if (typeof syncUserLeaderboard === 'function') syncUserLeaderboard();
+    showUserProfile(currentUser);
+    renderShopUI();
+}
+window._equipShopItem = equipShopItem;
+
+async function unequipShopItem(type, itemId) {
+    if (!S.inventory) return;
+    if (type === 'titles' && S.inventory.equippedTitle === itemId) {
+        S.inventory.equippedTitle = '';
+    }
+    sv();
+    if (typeof syncUserLeaderboard === 'function') syncUserLeaderboard();
+    showUserProfile(currentUser);
+    renderShopUI();
+}
+window._unequipShopItem = unequipShopItem;
+
+function initShopModal() {
+    const shopBtn = document.getElementById('shopBtn');
+    if (shopBtn) shopBtn.onclick = () => openShopModal();
+
+    const mobileBtn = document.getElementById('mobileShopBtn');
+    if (mobileBtn) mobileBtn.onclick = () => openShopModal();
+
+    const closeBtn = document.getElementById('shopCloseBtn');
+    if (closeBtn) closeBtn.onclick = () => document.getElementById('shopModalBg').classList.remove('show');
+
+    const bg = document.getElementById('shopModalBg');
+    if (bg) bg.onclick = (e) => { if (e.target === bg) bg.classList.remove('show'); };
+
+    // Tab buttons
+    document.querySelectorAll('.shop-tab-btn').forEach(btn => {
+        btn.onclick = () => {
+            renderShopUI(btn.dataset.tab);
+        };
+    });
+}
+
+// ==================== TRỤ CỘT 3: TỔ ĐỘI RÈN LUYỆN & ĐẤU TRƯỜNG THÁCH ĐẤU 1V1 ====================
+
+let squadHubActiveTab = 'squads';
+let localSquadCache = null;
+let localDuelCache = null;
+
+function getSquadLevelInfo(totalDP = 0) {
+    if (totalDP >= 7000) return { level: 5, name: 'Huyền Thoại (Lv.5)', max: 10000, current: totalDP, pct: 100 };
+    if (totalDP >= 3500) return { level: 4, name: 'Bậc Thầy (Lv.4)', max: 7000, current: totalDP, pct: Math.round((totalDP - 3500) / 3500 * 100) };
+    if (totalDP >= 1500) return { level: 3, name: 'Chiến Tinh (Lv.3)', max: 3500, current: totalDP, pct: Math.round((totalDP - 1500) / 2000 * 100) };
+    if (totalDP >= 500) return { level: 2, name: 'Tiên Phong (Lv.2)', max: 1500, current: totalDP, pct: Math.round((totalDP - 500) / 1000 * 100) };
+    return { level: 1, name: 'Tân Binh (Lv.1)', max: 500, current: totalDP, pct: Math.round(totalDP / 500 * 100) };
+}
+window.getSquadLevelInfo = getSquadLevelInfo;
+
+function openSquadModal(tab = 'squads') {
+    const modal = document.getElementById('squadModalBg');
+    if (!modal) return;
+    modal.classList.add('show');
+    renderSquadHubUI(tab);
+}
+window._openSquadModal = openSquadModal;
+
+async function renderSquadHubUI(targetTab = null) {
+    if (targetTab) squadHubActiveTab = targetTab;
+    const container = document.getElementById('squadFeedContainer');
+    if (!container) return;
+
+    // Update tab buttons
+    document.querySelectorAll('.squad-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === squadHubActiveTab);
+    });
+
+    const now = new Date();
+    const todayKey = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
+    const myUid = currentUser ? currentUser.uid : 'local_user';
+    const myName = currentUser ? (currentUser.displayName || currentUser.email?.split('@')[0] || 'User') : 'User';
+    const myAvatar = currentUser ? (currentUser.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%236366f1'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(myName||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`) : '';
+
+    if (squadHubActiveTab === 'squads') {
+        container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">⏳ Đang tải dữ liệu Tổ Đội...</div>';
+        
+        let squadData = null;
+        if (S.squadId && db) {
+            try {
+                const sDoc = await db.collection('squads').doc(S.squadId).get();
+                if (sDoc.exists) squadData = { id: sDoc.id, ...sDoc.data() };
+            } catch(e) { console.warn(e); }
+        }
+
+        if (squadData) {
+            const members = Array.isArray(squadData.members) ? squadData.members : [];
+            const checkedCount = members.filter(m => m.todayChecked || m.lastCheckedDate === todayKey).length;
+            const completionPct = members.length ? Math.round((checkedCount / members.length) * 100) : 0;
+            const lvlInfo = getSquadLevelInfo(squadData.totalDP || 0);
+            const isLeader = squadData.createdBy === myUid;
+
+            let membersHtml = '';
+            members.forEach(m => {
+                const isMe = m.uid === myUid;
+                const isChecked = m.todayChecked || m.lastCheckedDate === todayKey;
+                const titleHtml = getUserTitleBadgeHTML(m.equippedTitle);
+                const mAvatar = m.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%236366f1'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(m.displayName||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
+
+                membersHtml += `
+                    <div class="squad-member-card">
+                        <div class="squad-member-left">
+                            <img class="squad-member-avatar" src="${mAvatar}" alt="">
+                            <div class="squad-member-info">
+                                <div class="squad-member-name">
+                                    <span>${escHtml(m.displayName || 'Member')}</span>
+                                    ${titleHtml}
+                                    ${isMe ? '<span style="font-size:10.5px;padding:1px 6px;border-radius:10px;background:#6366f1;color:#fff;">Bạn</span>' : ''}
+                                </div>
+                                <div class="squad-member-status ${isChecked ? 'checked' : 'pending'}">
+                                    ${isChecked ? '✅ Đã check-in hôm nay' : '⏳ Chưa hoàn thành'}
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            ${!isChecked && !isMe ? `
+                                <button class="squad-nudge-btn" onclick="window._nudgeMember('${m.uid}', '${escHtml(m.displayName)}')">
+                                    ${t('btnNudge') || '⚡ Thúc giục'}
+                                </button>
+                            ` : isChecked ? '<span style="font-size:12px;color:#10b981;font-weight:700;">+10 DP</span>' : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            let logHtml = '';
+            const nudges = Array.isArray(squadData.nudges) ? squadData.nudges.slice(-8).reverse() : [];
+            if (nudges.length > 0) {
+                nudges.forEach(n => {
+                    logHtml += `
+                        <div class="squad-log-item">
+                            <span>⚡</span>
+                            <span><strong>${escHtml(n.fromName)}</strong> đã gửi lời thúc giục tới <strong>${escHtml(n.toName)}</strong>!</span>
+                        </div>
+                    `;
+                });
+            } else {
+                logHtml = '<div style="font-size:12px;color:var(--text-muted);padding:4px 0;">Chưa có hoạt động thúc giục nào hôm nay.</div>';
+            }
+
+            container.innerHTML = `
+                <div class="squad-hero">
+                    <div class="squad-hero-top">
+                        <div class="squad-hero-title-wrap">
+                            <div class="squad-hero-icon">${squadData.icon || '🛡️'}</div>
+                            <div>
+                                <div class="squad-hero-name">
+                                    ${escHtml(squadData.name || 'Tổ Đội Kỷ Luật')}
+                                    <span class="squad-level-badge">${lvlInfo.name}</span>
+                                </div>
+                                <div class="squad-hero-desc">${escHtml(squadData.description || 'Cùng nhau rèn luyện thói quen mỗi ngày!')}</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="squad-code-pill" onclick="window._copySquadCode('${squadData.code}')" title="Bấm để sao chép mã mời">
+                                <span>🔑 MÃ MỜI: ${squadData.code}</span>
+                                <span>📋</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="squad-progress-section">
+                        <div class="squad-progress-header">
+                            <span>Tiến độ hoàn thành hôm nay: ${checkedCount}/${members.length} thành viên (${completionPct}%)</span>
+                            <span>Tổng EXP: ${(squadData.totalDP || 0).toLocaleString()} DP</span>
+                        </div>
+                        <div class="squad-progress-track">
+                            <div class="squad-progress-fill" style="width:${completionPct}%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="squad-members-title">
+                    <span>Thành viên tổ đội (${members.length}/5)</span>
+                    <button style="background:none;border:none;color:#ef4444;font-size:12px;font-weight:700;cursor:pointer;" onclick="window._leaveSquad()">Rời đội 🚪</button>
+                </div>
+                <div class="squad-members-grid">${membersHtml}</div>
+
+                <div class="squad-log-box">
+                    <div class="squad-log-header">⚡ Nhật ký Thúc Giục & Hoạt Động</div>
+                    <div class="squad-log-list">${logHtml}</div>
+                </div>
+            `;
+        } else {
+            // No squad -> Show Welcome / Create & Join
+            container.innerHTML = `
+                <div class="squad-welcome-card">
+                    <div class="squad-welcome-title">🛡️ Gia Nhập Tổ Đội Rèn Luyện</div>
+                    <div class="squad-welcome-desc">
+                        Nghiên cứu chỉ ra rằng khi có đồng đội cùng theo dõi và nhắc nhở, tỷ lệ duy trì kỷ luật thói quen tăng tới <strong>85%</strong>! Hãy tạo hoặc tham gia một tổ đội ngay.
+                    </div>
+                </div>
+
+                <div class="squad-actions-row">
+                    <div class="squad-action-card">
+                        <h3>✨ Tạo Tổ Đội Mới (3-5 Người)</h3>
+                        <input type="text" id="squadNewName" class="squad-input" placeholder="Tên tổ đội (VD: Chiến Binh 5H Sáng)..." maxlength="30">
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <label style="font-size:12px;font-weight:700;color:var(--text-muted);">Biểu tượng:</label>
+                            <select id="squadNewIcon" class="squad-input" style="width:auto;">
+                                <option value="⚔️">⚔️ Kiếm Tiên Phong</option>
+                                <option value="🐺">🐺 Sói Đầu Đàn</option>
+                                <option value="🦁">🦁 Sư Tử Kỷ Luật</option>
+                                <option value="🔥">🔥 Ngọn Lửa Bền Bỉ</option>
+                                <option value="🏆">🏆 Nhà Vô Địch</option>
+                                <option value="⚡">⚡ Tia Chớp Thần Tốc</option>
+                                <option value="🛡️">🛡️ Khiên Bất Hoại</option>
+                            </select>
+                        </div>
+                        <input type="text" id="squadNewDesc" class="squad-input" placeholder="Mục tiêu chung của đội..." maxlength="80">
+                        <button class="squad-btn-primary" onclick="window._createSquad()">🚀 Tạo Tổ Đội Ngay</button>
+                    </div>
+
+                    <div class="squad-action-card">
+                        <h3>🔑 Gia Nhập Bằng Mã Mời</h3>
+                        <p style="font-size:12.5px;color:var(--text-muted);margin:0;">Nhập mã mời 6 ký tự do đội trưởng hoặc bạn bè gửi cho bạn:</p>
+                        <input type="text" id="squadJoinCode" class="squad-input" placeholder="VD: SD8921" maxlength="10" style="text-transform:uppercase;font-family:monospace;font-weight:800;">
+                        <button class="squad-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669);" onclick="window._joinSquadByCode()">📥 Gia Nhập Đội</button>
+                    </div>
+                </div>
+            `;
+        }
+    } else if (squadHubActiveTab === 'duels') {
+        container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">⏳ Đang tải Đấu Trường 1v1...</div>';
+
+        let activeDuel = null;
+        let openDuels = [];
+
+        if (db) {
+            try {
+                if (S.activeDuelId) {
+                    const dDoc = await db.collection('duels').doc(S.activeDuelId).get();
+                    if (dDoc.exists) activeDuel = { id: dDoc.id, ...dDoc.data() };
+                }
+                const snap = await db.collection('duels').where('status', '==', 'open').limit(10).get();
+                openDuels = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            } catch(e) { console.warn(e); }
+        }
+
+        const computed = calculateUserDPAndStreak(S);
+        const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
+        const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+
+        let html = '';
+
+        if (activeDuel && (activeDuel.status === 'active' || activeDuel.status === 'finished')) {
+            const p1 = activeDuel.challenger || {};
+            const p2 = activeDuel.opponent || {};
+            const isP1 = p1.uid === myUid;
+            const pot = (activeDuel.betDP || 50) * 2;
+            const remainingMs = Math.max(0, (activeDuel.endDate || Date.now()) - Date.now());
+            const daysLeft = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
+
+            let p1Dots = '';
+            for (let i = 1; i <= 7; i++) {
+                p1Dots += `<div class="duel-day-dot ${(p1.daysChecked || 0) >= i ? 'done' : ''}">${i}</div>`;
+            }
+            let p2Dots = '';
+            for (let i = 1; i <= 7; i++) {
+                p2Dots += `<div class="duel-day-dot ${(p2.daysChecked || 0) >= i ? 'done' : ''}">${i}</div>`;
+            }
+
+            const isFinished = activeDuel.status === 'finished' || remainingMs <= 0;
+            let resultHtml = '';
+            if (isFinished) {
+                const p1Score = p1.daysChecked || 0;
+                const p2Score = p2.daysChecked || 0;
+                let won = false;
+                let draw = false;
+                if (p1Score === p2Score) draw = true;
+                else if (isP1 && p1Score > p2Score) won = true;
+                else if (!isP1 && p2Score > p1Score) won = true;
+
+                resultHtml = `
+                    <div style="background:rgba(0,0,0,0.3);border:1px solid #f59e0b;padding:12px;border-radius:8px;text-align:center;margin-top:14px;">
+                        <div style="font-size:16px;font-weight:900;color:#f59e0b;">
+                            ${draw ? '🤝 KẾT QUẢ HÒA CÂN NÃO (7/7)!' : won ? '🏆 BẠN ĐÃ CHIẾN THẮNG TRẬN ĐẤU!' : '💀 BẠN ĐÃ THUA TRẬN ĐẤU!'}
+                        </div>
+                        <button class="squad-btn-primary" style="margin-top:10px;" onclick="window._claimDuelReward('${activeDuel.id}')">
+                            ${won ? `Nhận Thưởng ${pot} DP 💎` : 'Đóng trận đấu & Nhận kết quả'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            html += `
+                <div class="duel-vs-banner">
+                    <div class="duel-vs-header">
+                        <span class="duel-badge-live">${isFinished ? '🏁 ĐÃ KẾT THÚC' : '🔥 ĐANG TRANH TÀI 7 NGÀY'}</span>
+                        <span style="font-size:12.5px;color:var(--text-secondary);font-weight:700;">⏳ Còn lại: ${daysLeft} ngày</span>
+                    </div>
+
+                    <div class="duel-vs-stage">
+                        <div class="duel-fighter challenger">
+                            <img class="duel-fighter-avatar" src="${p1.photoURL || myAvatar}" alt="">
+                            <div class="duel-fighter-name">${escHtml(p1.displayName || 'P1')}${getUserTitleBadgeHTML(p1.equippedTitle)}</div>
+                            <div style="font-size:12px;color:var(--text-muted);">Đạt: <strong>${p1.daysChecked || 0}/7 ngày</strong></div>
+                            <div class="duel-7day-track">${p1Dots}</div>
+                        </div>
+
+                        <div class="duel-vs-center">
+                            <div class="duel-vs-text">VS</div>
+                            <div class="duel-pot-pill">🏆 HŨ THƯỞNG: ${pot} DP</div>
+                        </div>
+
+                        <div class="duel-fighter opponent">
+                            <img class="duel-fighter-avatar" src="${p2.photoURL || myAvatar}" alt="">
+                            <div class="duel-fighter-name">${escHtml(p2.displayName || 'P2')}${getUserTitleBadgeHTML(p2.equippedTitle)}</div>
+                            <div style="font-size:12px;color:var(--text-muted);">Đạt: <strong>${p2.daysChecked || 0}/7 ngày</strong></div>
+                            <div class="duel-7day-track">${p2Dots}</div>
+                        </div>
+                    </div>
+
+                    ${resultHtml}
+                </div>
+            `;
+        } else if (activeDuel && activeDuel.status === 'open') {
+            html += `
+                <div class="duel-vs-banner">
+                    <div class="duel-vs-header">
+                        <span class="duel-badge-live" style="background:#f59e0b;">⏳ ĐANG CHỜ ĐỐI THỦ NHẬN KÈO</span>
+                        <button style="background:none;border:none;color:#ef4444;font-size:12px;font-weight:700;cursor:pointer;" onclick="window._cancelDuel('${activeDuel.id}', ${activeDuel.betDP || 50})">Hủy thách đấu (Hoàn lại ${activeDuel.betDP} DP) ✕</button>
+                    </div>
+                    <div style="text-align:center;padding:16px;">
+                        <div style="font-size:24px;margin-bottom:6px;">⚔️</div>
+                        <div style="font-size:16px;font-weight:800;color:var(--text-primary);">Phòng thách đấu cược ${activeDuel.betDP || 50} DP của bạn đã sẵn sàng!</div>
+                        <div style="font-size:13px;color:var(--text-secondary);margin-top:4px;">Hũ thưởng: <strong>${(activeDuel.betDP || 50) * 2} DP</strong> đang chờ một đấu thủ vào nhận kèo.</div>
+                    </div>
+                </div>
+            `;
+        } else {
+            // Create duel & Lobby
+            html += `
+                <div class="squad-welcome-card" style="background:radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.12), rgba(15, 23, 42, 0.85)); border-color:rgba(239, 68, 68, 0.35);">
+                    <div class="squad-welcome-title" style="color:#ef4444;">⚔️ Đấu Trường Thách Đấu 1v1 (7-Day Streak Duel)</div>
+                    <div class="squad-welcome-desc">
+                        Đặt cược điểm rèn luyện DP và so tài kỷ luật trong 7 ngày liên tiếp không đứt chuỗi! Người chiến thắng sẽ ăn trọn toàn bộ hũ thưởng DP.
+                    </div>
+
+                    <div style="background:rgba(0,0,0,0.3);padding:14px;border-radius:10px;display:inline-block;border:1px solid rgba(255,255,255,0.08);">
+                        <div style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px;">CHỌN MỨC CƯỢC DP:</div>
+                        <div class="bet-chips-row" style="justify-content:center;">
+                            <div class="bet-chip active" onclick="window._selectBet(this, 50)">💎 50 DP</div>
+                            <div class="bet-chip" onclick="window._selectBet(this, 100)">💎 100 DP</div>
+                            <div class="bet-chip" onclick="window._selectBet(this, 200)">💎 200 DP</div>
+                            <div class="bet-chip" onclick="window._selectBet(this, 500)">💎 500 DP</div>
+                        </div>
+                        <button class="squad-btn-primary" style="background:linear-gradient(135deg,#ef4444,#dc2626);margin-top:10px;" onclick="window._createDuel()">
+                            ⚔️ Tạo Phòng Thách Đấu Mới
+                        </button>
+                    </div>
+                </div>
+
+                <div class="squad-members-title">
+                    <span>Phòng chờ thách đấu công khai (${openDuels.length})</span>
+                </div>
+            `;
+
+            if (openDuels.length > 0) {
+                openDuels.forEach(od => {
+                    const isMyOwn = od.challenger && od.challenger.uid === myUid;
+                    const canAfford = myDP >= (od.betDP || 50) || isAdmin;
+
+                    html += `
+                        <div class="duel-lobby-card">
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <img style="width:38px;height:38px;border-radius:50%;border:2px solid #ef4444;" src="${od.challenger?.photoURL || myAvatar}" alt="">
+                                <div>
+                                    <div style="font-weight:800;font-size:13.5px;color:var(--text-primary);">
+                                        ${escHtml(od.challenger?.displayName || 'Challenger')}
+                                        ${getUserTitleBadgeHTML(od.challenger?.equippedTitle)}
+                                    </div>
+                                    <div style="font-size:12px;color:#f59e0b;font-weight:700;">Cược: ${od.betDP} DP · Hũ: ${od.betDP * 2} DP</div>
+                                </div>
+                            </div>
+                            <div>
+                                ${isMyOwn ? '<span style="font-size:12px;color:var(--text-muted);font-weight:700;">Phòng của bạn</span>' : `
+                                    <button class="squad-btn-primary" style="background:linear-gradient(135deg,#ef4444,#b91c1c);font-size:12px;padding:6px 14px;" onclick="window._acceptDuel('${od.id}', ${od.betDP})" ${!canAfford ? 'disabled' : ''}>
+                                        Nhận Kèo ⚔️
+                                    </button>
+                                `}
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                html += '<div style="font-size:13px;color:var(--text-muted);text-align:center;padding:12px;">Hiện chưa có phòng thách đấu nào đang mở. Hãy là người đầu tiên tạo kèo!</div>';
+            }
+        }
+
+        container.innerHTML = html;
+    }
+}
+
+let currentSelectedBet = 50;
+window._selectBet = function(el, amount) {
+    document.querySelectorAll('.bet-chip').forEach(c => c.classList.remove('active'));
+    if (el) el.classList.add('active');
+    currentSelectedBet = amount;
+};
+
+async function createSquad() {
+    if (!currentUser) { alert('Vui lòng đăng nhập để tạo tổ đội!'); return; }
+    const nameInput = document.getElementById('squadNewName');
+    const iconSelect = document.getElementById('squadNewIcon');
+    const descInput = document.getElementById('squadNewDesc');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    const icon = iconSelect ? iconSelect.value : '🛡️';
+    const desc = descInput ? descInput.value.trim() : '';
+
+    if (!name || name.length < 3) { alert('Vui lòng nhập tên tổ đội có ít nhất 3 ký tự!'); return; }
+
+    const code = 'SQ' + Math.floor(1000 + Math.random() * 9000);
+    const myName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
+
+    const newSquad = {
+        name: name,
+        icon: icon,
+        code: code,
+        description: desc,
+        createdBy: currentUser.uid,
+        leaderName: myName,
+        members: [{
+            uid: currentUser.uid,
+            displayName: myName,
+            photoURL: currentUser.photoURL || '',
+            equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
+            todayChecked: false,
+            lastCheckedDate: '',
+            contributedDP: 0
+        }],
+        totalDP: 0,
+        level: 1,
+        nudges: [],
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    try {
+        const docRef = await db.collection('squads').add(newSquad);
+        S.squadId = docRef.id;
+        sv();
+        if (typeof playResurrectSound === 'function') playResurrectSound();
+        if (typeof fireConfetti === 'function') fireConfetti();
+
+        const toast = document.createElement('div');
+        toast.className = 'quest-toast';
+        toast.innerHTML = `<span>🛡️</span> ${t('squadCreatedToast') || 'Đã tạo tổ đội thành công!'}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
+
+        renderSquadHubUI('squads');
+    } catch(e) {
+        alert('Lỗi tạo tổ đội: ' + e.message);
+    }
+}
+window._createSquad = createSquad;
+
+async function joinSquadByCode() {
+    if (!currentUser) { alert('Vui lòng đăng nhập để gia nhập tổ đội!'); return; }
+    const codeInput = document.getElementById('squadJoinCode');
+    const code = codeInput ? codeInput.value.trim().toUpperCase() : '';
+
+    if (!code) { alert('Vui lòng nhập mã mời tổ đội!'); return; }
+
+    try {
+        const snap = await db.collection('squads').where('code', '==', code).limit(1).get();
+        if (snap.empty) { alert('Không tìm thấy tổ đội với mã mời này!'); return; }
+
+        const doc = snap.docs[0];
+        const data = doc.data();
+        const members = Array.isArray(data.members) ? data.members : [];
+
+        if (members.length >= 5) { alert('Tổ đội này đã đầy (tối đa 5 thành viên)!'); return; }
+        if (members.some(m => m.uid === currentUser.uid)) { alert('Bạn đã là thành viên của tổ đội này!'); S.squadId = doc.id; sv(); renderSquadHubUI('squads'); return; }
+
+        const myName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
+        const newMember = {
+            uid: currentUser.uid,
+            displayName: myName,
+            photoURL: currentUser.photoURL || '',
+            equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
+            todayChecked: false,
+            lastCheckedDate: '',
+            contributedDP: 0
+        };
+
+        await db.collection('squads').doc(doc.id).update({
+            members: firebase.firestore.FieldValue.arrayUnion(newMember)
+        });
+
+        S.squadId = doc.id;
+        sv();
+        if (typeof playResurrectSound === 'function') playResurrectSound();
+        if (typeof fireConfetti === 'function') fireConfetti();
+
+        const toast = document.createElement('div');
+        toast.className = 'quest-toast';
+        toast.innerHTML = `<span>🛡️</span> ${t('squadJoinedToast') || 'Đã gia nhập tổ đội thành công!'}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
+
+        renderSquadHubUI('squads');
+    } catch(e) {
+        alert('Lỗi gia nhập tổ đội: ' + e.message);
+    }
+}
+window._joinSquadByCode = joinSquadByCode;
+
+async function leaveSquad() {
+    if (!confirm('Bạn có chắc chắn muốn rời tổ đội này?')) return;
+    if (!S.squadId || !currentUser) { S.squadId = ''; sv(); renderSquadHubUI('squads'); return; }
+
+    try {
+        const sDoc = await db.collection('squads').doc(S.squadId).get();
+        if (sDoc.exists) {
+            const data = sDoc.data();
+            const updatedMembers = (data.members || []).filter(m => m.uid !== currentUser.uid);
+            await db.collection('squads').doc(S.squadId).update({ members: updatedMembers });
+        }
+    } catch(e) { console.warn(e); }
+
+    S.squadId = '';
+    sv();
+    renderSquadHubUI('squads');
+}
+window._leaveSquad = leaveSquad;
+
+async function nudgeMember(toUid, toName) {
+    if (!currentUser || !S.squadId) return;
+    playNudgeSound();
+
+    const myName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
+    const nudgeObj = {
+        fromUid: currentUser.uid,
+        fromName: myName,
+        toUid: toUid,
+        toName: toName,
+        emoji: '⚡',
+        timestamp: Date.now()
+    };
+
+    try {
+        await db.collection('squads').doc(S.squadId).update({
+            nudges: firebase.firestore.FieldValue.arrayUnion(nudgeObj)
+        });
+    } catch(e) { console.warn(e); }
+
+    const toast = document.createElement('div');
+    toast.className = 'quest-toast';
+    toast.innerHTML = `<span>⚡</span> Đã gửi lời thúc giục sấm sét tới <strong>${escHtml(toName)}</strong>!`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
+
+    renderSquadHubUI('squads');
+}
+window._nudgeMember = nudgeMember;
+
+function copySquadCode(code) {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(code).then(() => {
+            alert(`Đã sao chép mã mời: ${code}! Hãy gửi cho bạn bè của bạn.`);
+        });
+    } else {
+        prompt('Sao chép mã mời này:', code);
+    }
+}
+window._copySquadCode = copySquadCode;
+
+async function createDuel() {
+    if (!currentUser) { alert('Vui lòng đăng nhập để tạo phòng thách đấu!'); return; }
+    const cost = currentSelectedBet || 50;
+
+    const computed = calculateUserDPAndStreak(S);
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
+    const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+
+    if (myDP < cost && !isAdmin) {
+        alert(`Bạn cần ít nhất ${cost} DP để đặt cược cho trận đấu này! (Hiện có: ${myDP} DP)`);
+        return;
+    }
+
+    if (!confirm(`Xác nhận đặt cược ${cost} DP vào Hũ thưởng để tạo phòng thách đấu 7 ngày?`)) return;
+
+    if (!isAdmin) {
+        userBonusDP = (userBonusDP || 0) - cost;
+        if (currentUser && db) {
+            try {
+                await userDocRef.update({ bonusDP: userBonusDP });
+                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
+            } catch(e) {}
+        }
+    }
+
+    const myName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
+    const newDuel = {
+        challenger: {
+            uid: currentUser.uid,
+            displayName: myName,
+            photoURL: currentUser.photoURL || '',
+            rankLevel: S.rankLevel || 1,
+            equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
+            daysChecked: 0,
+            lastCheckedDate: ''
+        },
+        opponent: null,
+        betDP: cost,
+        status: 'open',
+        startDate: Date.now(),
+        endDate: Date.now() + 7 * 86400000,
+        winnerUid: null,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    try {
+        const docRef = await db.collection('duels').add(newDuel);
+        S.activeDuelId = docRef.id;
+        sv();
+        playDuelGongSound();
+        updateUserDPState(true);
+        renderSquadHubUI('duels');
+    } catch(e) {
+        alert('Lỗi tạo thách đấu: ' + e.message);
+    }
+}
+window._createDuel = createDuel;
+
+async function acceptDuel(duelId, cost) {
+    if (!currentUser) { alert('Vui lòng đăng nhập để nhận kèo thách đấu!'); return; }
+    const computed = calculateUserDPAndStreak(S);
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
+    const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+
+    if (myDP < cost && !isAdmin) {
+        alert(`Bạn cần ít nhất ${cost} DP để nhận kèo thách đấu này! (Hiện có: ${myDP} DP)`);
+        return;
+    }
+
+    if (!confirm(`Xác nhận đặt cược ${cost} DP để tham gia trận đấu 1v1 7 ngày?`)) return;
+
+    if (!isAdmin) {
+        userBonusDP = (userBonusDP || 0) - cost;
+        if (currentUser && db) {
+            try {
+                await userDocRef.update({ bonusDP: userBonusDP });
+                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
+            } catch(e) {}
+        }
+    }
+
+    const myName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
+    const opponentData = {
+        uid: currentUser.uid,
+        displayName: myName,
+        photoURL: currentUser.photoURL || '',
+        rankLevel: S.rankLevel || 1,
+        equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
+        daysChecked: 0,
+        lastCheckedDate: ''
+    };
+
+    try {
+        await db.collection('duels').doc(duelId).update({
+            opponent: opponentData,
+            status: 'active',
+            startDate: Date.now(),
+            endDate: Date.now() + 7 * 86400000
+        });
+
+        S.activeDuelId = duelId;
+        sv();
+        playDuelGongSound();
+        if (typeof fireConfetti === 'function') fireConfetti();
+        updateUserDPState(true);
+        renderSquadHubUI('duels');
+    } catch(e) {
+        alert('Lỗi nhận thách đấu: ' + e.message);
+    }
+}
+window._acceptDuel = acceptDuel;
+
+async function cancelDuel(duelId, cost) {
+    if (!confirm(`Xác nhận hủy thách đấu và nhận lại ${cost} DP?`)) return;
+    try {
+        await db.collection('duels').doc(duelId).delete();
+    } catch(e) {}
+
+    userBonusDP = (userBonusDP || 0) + cost;
+    if (currentUser && db) {
+        try {
+            await userDocRef.update({ bonusDP: userBonusDP });
+            await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
+        } catch(e) {}
+    }
+
+    S.activeDuelId = '';
+    sv();
+    updateUserDPState(true);
+    renderSquadHubUI('duels');
+}
+window._cancelDuel = cancelDuel;
+
+async function claimDuelReward(duelId) {
+    if (!db || !S.activeDuelId) return;
+    try {
+        const dDoc = await db.collection('duels').doc(duelId).get();
+        if (dDoc.exists) {
+            const data = dDoc.data();
+            const p1 = data.challenger || {};
+            const p2 = data.opponent || {};
+            const myUid = currentUser ? currentUser.uid : '';
+            const isP1 = p1.uid === myUid;
+            const p1Score = p1.daysChecked || 0;
+            const p2Score = p2.daysChecked || 0;
+
+            if (p1Score === p2Score) {
+                // Draw -> Refund bet
+                userBonusDP = (userBonusDP || 0) + (data.betDP || 50);
+            } else if ((isP1 && p1Score > p2Score) || (!isP1 && p2Score > p1Score)) {
+                // Winner -> Full pot
+                const winAmount = (data.betDP || 50) * 2;
+                userBonusDP = (userBonusDP || 0) + winAmount;
+                if (typeof playResurrectSound === 'function') playResurrectSound();
+                if (typeof fireConfetti === 'function') fireConfetti();
+            }
+
+            if (currentUser && db) {
+                await userDocRef.update({ bonusDP: userBonusDP });
+                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
+            }
+        }
+    } catch(e) { console.warn(e); }
+
+    S.activeDuelId = '';
+    sv();
+    updateUserDPState(true);
+    renderSquadHubUI('duels');
+}
+window._claimDuelReward = claimDuelReward;
+
+async function onHabitCheckedSyncSquadAndDuel() {
+    const now = new Date();
+    const todayKey = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
+    const myUid = currentUser ? currentUser.uid : null;
+    if (!myUid || !db) return;
+
+    // 1. Sync Squad
+    if (S.squadId) {
+        try {
+            const sDoc = await db.collection('squads').doc(S.squadId).get();
+            if (sDoc.exists) {
+                const sData = sDoc.data();
+                const members = Array.isArray(sData.members) ? sData.members : [];
+                let memberUpdated = false;
+                const updatedMembers = members.map(m => {
+                    if (m.uid === myUid && m.lastCheckedDate !== todayKey) {
+                        memberUpdated = true;
+                        return {
+                            ...m,
+                            todayChecked: true,
+                            lastCheckedDate: todayKey,
+                            contributedDP: (m.contributedDP || 0) + 10
+                        };
+                    }
+                    return m;
+                });
+
+                if (memberUpdated) {
+                    await db.collection('squads').doc(S.squadId).update({
+                        members: updatedMembers,
+                        totalDP: firebase.firestore.FieldValue.increment(10)
+                    });
+                }
+            }
+        } catch(e) { console.warn('Squad sync error:', e); }
+    }
+
+    // 2. Sync Duel
+    if (S.activeDuelId) {
+        try {
+            const dDoc = await db.collection('duels').doc(S.activeDuelId).get();
+            if (dDoc.exists && dDoc.data().status === 'active') {
+                const dData = dDoc.data();
+                const isP1 = dData.challenger && dData.challenger.uid === myUid;
+                const fighter = isP1 ? dData.challenger : dData.opponent;
+
+                if (fighter && fighter.lastCheckedDate !== todayKey) {
+                    const newDaysChecked = (fighter.daysChecked || 0) + 1;
+                    const updatePayload = {};
+                    if (isP1) {
+                        updatePayload['challenger.daysChecked'] = newDaysChecked;
+                        updatePayload['challenger.lastCheckedDate'] = todayKey;
+                    } else {
+                        updatePayload['opponent.daysChecked'] = newDaysChecked;
+                        updatePayload['opponent.lastCheckedDate'] = todayKey;
+                    }
+
+                    // Check if 7 days completed
+                    if (newDaysChecked >= 7 || Date.now() >= dData.endDate) {
+                        updatePayload['status'] = 'finished';
+                    }
+
+                    await db.collection('duels').doc(S.activeDuelId).update(updatePayload);
+                }
+            }
+        } catch(e) { console.warn('Duel sync error:', e); }
+    }
+}
+
+function initSquadHubModal() {
+    const hubBtn = document.getElementById('squadHubBtn');
+    if (hubBtn) hubBtn.onclick = () => openSquadModal();
+
+    const mobileBtn = document.getElementById('mobileSquadBtn');
+    if (mobileBtn) mobileBtn.onclick = () => openSquadModal();
+
+    const closeBtn = document.getElementById('squadCloseBtn');
+    if (closeBtn) closeBtn.onclick = () => document.getElementById('squadModalBg').classList.remove('show');
+
+    const bg = document.getElementById('squadModalBg');
+    if (bg) bg.onclick = (e) => { if (e.target === bg) bg.classList.remove('show'); };
+
+    document.querySelectorAll('.squad-tab-btn').forEach(btn => {
+        btn.onclick = () => {
+            renderSquadHubUI(btn.dataset.tab);
+        };
+    });
+}
+
+// ==================== TRỤ CỘT 4: BÁO CÁO TỔNG KẾT & XUẤT ẢNH STORY (WEEKLY RECAP & SHARE CARDS) ====================
+
+function calculateWeeklyRecapData() {
+    const habits = Array.isArray(S.h) ? S.h : [];
+    const numHabits = habits.length || 1;
+    const now = new Date();
+    
+    // Check the last 7 days (today down to 6 days ago)
+    let totalChecks = 0;
+    let habitCheckMap = {};
+    habits.forEach(h => { habitCheckMap[h.id] = 0; });
+    let perfectDays = 0;
+
+    for (let offset = 0; offset < 7; offset++) {
+        const d = new Date(now);
+        d.setDate(now.getDate() - offset);
+        const y = d.getFullYear();
+        const m = d.getMonth();
+        const day = d.getDate();
+        let dayChecks = 0;
+
+        habits.forEach(h => {
+            const k = ck(h.id, day);
+            // Also handle if month matched
+            if (m === cM && y === cY && S.c && S.c[k]) {
+                totalChecks++;
+                dayChecks++;
+                habitCheckMap[h.id] = (habitCheckMap[h.id] || 0) + 1;
+            }
+        });
+
+        if (dayChecks === numHabits && numHabits > 0) {
+            perfectDays++;
+        }
+    }
+
+    const targetChecks = numHabits * 7;
+    const completionPct = targetChecks > 0 ? Math.min(100, Math.round((totalChecks / targetChecks) * 100)) : 0;
+
+    // Find top and least habit
+    let bestHabit = null;
+    let leastHabit = null;
+    let maxChecks = -1;
+    let minChecks = 999;
+
+    habits.forEach(h => {
+        const count = habitCheckMap[h.id] || 0;
+        if (count > maxChecks) {
+            maxChecks = count;
+            bestHabit = { ...h, checksInWeek: count };
+        }
+        if (count < minChecks) {
+            minChecks = count;
+            leastHabit = { ...h, checksInWeek: count };
+        }
+    });
+
+    const isBoostActive = S.inventory && S.inventory.boost2xExpiresAt && Date.now() < S.inventory.boost2xExpiresAt;
+    const checkMultiplier = isBoostActive ? 2 : 1;
+    const weeklyDP = totalChecks * 10 * checkMultiplier + perfectDays * 30;
+
+    let gradeTitle = '🌟 Chiến Binh Tiên Phong';
+    if (completionPct >= 90) gradeTitle = '👑 Huyền Thoại Kỷ Luật';
+    else if (completionPct >= 75) gradeTitle = '⚔️ Chiến Binh Bất Bại';
+    else if (completionPct >= 50) gradeTitle = '🔥 Kỷ Luật Vàng';
+    else if (completionPct >= 30) gradeTitle = '🍃 Kiên Trì Bền Bỉ';
+
+    const computed = calculateUserDPAndStreak(S);
+
+    return {
+        totalChecks,
+        targetChecks,
+        completionPct,
+        perfectDays,
+        weeklyDP,
+        bestHabit,
+        leastHabit,
+        gradeTitle,
+        streak: computed.currentStreak,
+        totalDP: computed.totalDP + (userBonusDP || 0),
+        rank: getRankLevel(computed.totalDP + (userBonusDP || 0))
+    };
+}
+window.calculateWeeklyRecapData = calculateWeeklyRecapData;
+
+let recapCurrentSlide = 0;
+const RECAP_TOTAL_SLIDES = 5;
+let recapTimerId = null;
+
+function openWeeklyRecapModal() {
+    const modal = document.getElementById('recapModalBg');
+    if (!modal) return;
+    modal.classList.add('show');
+    recapCurrentSlide = 0;
+    renderRecapSlide();
+    if (typeof playResurrectSound === 'function') playResurrectSound();
+    if (typeof fireConfetti === 'function') fireConfetti();
+}
+window._openWeeklyRecapModal = openWeeklyRecapModal;
+
+function renderRecapSlide() {
+    const body = document.getElementById('recapSlideBody');
+    const barsContainer = document.getElementById('recapProgressBars');
+    if (!body || !barsContainer) return;
+
+    // Render bars
+    let barsHtml = '';
+    for (let i = 0; i < RECAP_TOTAL_SLIDES; i++) {
+        const cls = i < recapCurrentSlide ? 'done' : (i === recapCurrentSlide ? 'active' : '');
+        barsHtml += `<div class="recap-bar-segment ${cls}"><div class="recap-bar-fill" style="${i === recapCurrentSlide ? 'width:100%;' : ''}"></div></div>`;
+    }
+    barsContainer.innerHTML = barsHtml;
+
+    const data = calculateWeeklyRecapData();
+    let html = '';
+
+    if (recapCurrentSlide === 0) {
+        html = `
+            <div class="recap-slide-icon">🏆</div>
+            <div class="recap-slide-title">KỶ LUẬT TUẦN QUA</div>
+            <div class="recap-slide-value">${data.completionPct}%</div>
+            <div class="recap-slide-subtitle">Bạn đã hoàn thành <strong>${data.totalChecks}/${data.targetChecks}</strong> mục tiêu thói quen trong 7 ngày gần nhất.</div>
+            <div class="recap-slide-pill">${data.gradeTitle}</div>
+        `;
+    } else if (recapCurrentSlide === 1) {
+        html = `
+            <div class="recap-slide-icon">⚡</div>
+            <div class="recap-slide-title">NĂNG LƯỢNG DP THU VỀ</div>
+            <div class="recap-slide-value">+${data.weeklyDP} DP</div>
+            <div class="recap-slide-subtitle">Bao gồm điểm tick thói quen và thưởng <strong>${data.perfectDays} ngày rèn luyện hoàn hảo</strong> (100%).</div>
+            <div class="recap-slide-pill">💎 Ví hiện có: ${data.totalDP.toLocaleString()} DP</div>
+        `;
+    } else if (recapCurrentSlide === 2) {
+        html = `
+            <div class="recap-slide-icon">🔥</div>
+            <div class="recap-slide-title">CHUỖI NGÀY BÙNG CHÁY</div>
+            <div class="recap-slide-value">${data.streak} NGÀY</div>
+            <div class="recap-slide-subtitle">Kỷ luật không phải là cảm xúc nhất thời, đó là sự bền bỉ được chứng minh qua chuỗi ngày liên tiếp!</div>
+            <div class="recap-slide-pill">🧊 Bình Freeze dự phòng: ${S.freezes || 0}/2</div>
+        `;
+    } else if (recapCurrentSlide === 3) {
+        const bestName = data.bestHabit ? `${data.bestHabit.emoji || '✨'} ${data.bestHabit.name}` : 'Chưa có';
+        const bestCount = data.bestHabit ? `${data.bestHabit.checksInWeek}/7 ngày` : '0';
+        html = `
+            <div class="recap-slide-icon">🌟</div>
+            <div class="recap-slide-title">THÓI QUEN QUÁN QUÂN</div>
+            <div class="recap-slide-value" style="font-size:32px;">${escHtml(bestName)}</div>
+            <div class="recap-slide-subtitle">Thói quen được rèn luyện xuất sắc nhất với <strong>${bestCount}</strong> hoàn thành trong tuần!</div>
+            <div class="recap-slide-pill">💪 Tiếp tục phát huy tuần tới!</div>
+        `;
+    } else if (recapCurrentSlide === 4) {
+        html = `
+            <div class="recap-slide-icon">📸</div>
+            <div class="recap-slide-title">KHOE THÀNH QUẢ KỶ LUẬT</div>
+            <div class="recap-slide-subtitle" style="margin:16px 0;">Hãy tự hào về hành trình kiên trì của bạn! Xuất bức ảnh thẻ Story 9:16 tuyệt đẹp để chia sẻ lên mạng xã hội.</div>
+            <button class="recap-share-btn" style="pointer-events:auto;margin-top:12px;" onclick="window._openShareCardModal()">
+                📸 Mở Bộ Tạo Ảnh Thẻ Story
+            </button>
+        `;
+    }
+
+    body.innerHTML = html;
+}
+
+function nextRecapSlide() {
+    if (recapCurrentSlide < RECAP_TOTAL_SLIDES - 1) {
+        recapCurrentSlide++;
+        renderRecapSlide();
+    } else {
+        const modal = document.getElementById('recapModalBg');
+        if (modal) modal.classList.remove('show');
+    }
+}
+window._nextRecapSlide = nextRecapSlide;
+
+function prevRecapSlide() {
+    if (recapCurrentSlide > 0) {
+        recapCurrentSlide--;
+        renderRecapSlide();
+    }
+}
+window._prevRecapSlide = prevRecapSlide;
+
+// --- SHARE CARD CANVAS GENERATOR ---
+
+let shareSelectedRatio = 'story'; // 'story' (9:16) | 'square' (1:1)
+let shareSelectedTheme = 'cyberpunk'; // 'cyberpunk' | 'luxury' | 'sakura'
+
+const STOIC_QUOTES = [
+    { text: "Kỷ luật là cây cầu nối giữa mục tiêu và thành tựu.", author: "Jim Rohn" },
+    { text: "Chúng ta là những gì chúng ta lặp đi lặp lại mỗi ngày.", author: "Aristotle" },
+    { text: "Chiến thắng vĩ đại nhất là chiến thắng chính bản thân mình.", author: "Plato" },
+    { text: "Kỷ luật hôm nay là tự do của ngày mai.", author: "Seneca" },
+    { text: "Không có sự vĩ đại nào đạt được mà thiếu đi sự rèn luyện kiên định.", author: "Marcus Aurelius" }
+];
+
+function openShareCardModal() {
+    const recapModal = document.getElementById('recapModalBg');
+    if (recapModal) recapModal.classList.remove('show');
+
+    const modal = document.getElementById('shareCardModalBg');
+    if (!modal) return;
+    modal.classList.add('show');
+    renderShareCardToCanvas();
+}
+window._openShareCardModal = openShareCardModal;
+
+function renderShareCardToCanvas(ratio = null, theme = null) {
+    if (ratio) shareSelectedRatio = ratio;
+    if (theme) shareSelectedTheme = theme;
+
+    const canvas = document.getElementById('shareCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Set dimensions
+    const isStory = shareSelectedRatio === 'story';
+    const width = 1080;
+    const height = isStory ? 1920 : 1080;
+    canvas.width = width;
+    canvas.height = height;
+
+    const data = calculateWeeklyRecapData();
+    const myName = currentUser ? (currentUser.displayName || currentUser.email?.split('@')[0] || 'User') : 'Chiến Binh Kỷ Luật';
+    const titleObj = (SHOP_CATALOG && S.inventory && S.inventory.equippedTitle) ? SHOP_CATALOG.titles.find(t => t.id === S.inventory.equippedTitle) : null;
+    const titleName = titleObj ? titleObj.name : '';
+    const rankName = getRankTierName(data.rank);
+
+    // 1. BACKGROUND GRADIENT
+    if (shareSelectedTheme === 'luxury') {
+        const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+        bgGrad.addColorStop(0, '#0c0a06');
+        bgGrad.addColorStop(0.5, '#191408');
+        bgGrad.addColorStop(1, '#060503');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, width, height);
+
+        // Gold border
+        ctx.strokeStyle = '#d4af37';
+        ctx.lineWidth = 14;
+        ctx.strokeRect(30, 30, width - 60, height - 60);
+
+        ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(45, 45, width - 90, height - 90);
+    } else if (shareSelectedTheme === 'sakura') {
+        const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+        bgGrad.addColorStop(0, '#2d0f1f');
+        bgGrad.addColorStop(0.5, '#1c0813');
+        bgGrad.addColorStop(1, '#0f0209');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.strokeStyle = '#ec4899';
+        ctx.lineWidth = 10;
+        ctx.strokeRect(30, 30, width - 60, height - 60);
+    } else {
+        // Cyberpunk Neon
+        const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+        bgGrad.addColorStop(0, '#0d0221');
+        bgGrad.addColorStop(0.45, '#150630');
+        bgGrad.addColorStop(1, '#020b1e');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, width, height);
+
+        // Neon cyber grid lines
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.08)';
+        ctx.lineWidth = 2;
+        for (let x = 60; x < width; x += 100) {
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+        }
+        for (let y = 60; y < height; y += 100) {
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+        }
+
+        ctx.strokeStyle = '#00f0ff';
+        ctx.lineWidth = 8;
+        ctx.strokeRect(30, 30, width - 60, height - 60);
+    }
+
+    // 2. HEADER LOGO & BRAND
+    ctx.textAlign = 'center';
+    let currentY = isStory ? 150 : 110;
+
+    ctx.font = '900 48px sans-serif';
+    ctx.fillStyle = shareSelectedTheme === 'luxury' ? '#d4af37' : (shareSelectedTheme === 'sakura' ? '#f472b6' : '#00f0ff');
+    ctx.fillText('✦ HABIT MASTERY ✦', width / 2, currentY);
+
+    currentY += 45;
+    ctx.font = '700 22px sans-serif';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.fillText('MASTER YOUR HABITS · MASTER YOUR LIFE', width / 2, currentY);
+
+    // 3. PROFILE CARD
+    currentY += isStory ? 100 : 70;
+    const cardH = isStory ? 240 : 180;
+    const cardW = width - 160;
+    const cardX = 80;
+
+    // Card background
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.beginPath();
+    ctx.roundRect(cardX, currentY, cardW, cardH, 24);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // User Avatar Circle
+    const avatarCenterX = cardX + 90;
+    const avatarCenterY = currentY + (cardH / 2);
+    ctx.beginPath();
+    ctx.arc(avatarCenterX, avatarCenterY, 50, 0, Math.PI * 2);
+    ctx.fillStyle = shareSelectedTheme === 'luxury' ? '#d4af37' : '#6366f1';
+    ctx.fill();
+    ctx.font = '900 40px sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.fillText(myName.charAt(0).toUpperCase(), avatarCenterX, avatarCenterY + 14);
+
+    // User Name & Rank
+    ctx.textAlign = 'left';
+    const textX = avatarCenterX + 75;
+    ctx.font = '900 38px sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(myName, textX, avatarCenterY - 14);
+
+    ctx.font = '700 24px sans-serif';
+    ctx.fillStyle = shareSelectedTheme === 'luxury' ? '#fbbf24' : '#a78bfa';
+    let subInfo = `${rankName}`;
+    if (titleName) subInfo += ` · ${titleName}`;
+    ctx.fillText(subInfo, textX, avatarCenterY + 28);
+
+    // 4. BIG METRIC BADGES
+    currentY += cardH + (isStory ? 80 : 50);
+    const badgeW = (cardW - 40) / 3;
+    const badgeH = isStory ? 200 : 150;
+
+    // Badge 1: Streak
+    drawMetricBox(ctx, cardX, currentY, badgeW, badgeH, '🔥 CHUỖI STREAK', `${data.streak} NGÀY`, '#ef4444');
+    // Badge 2: DP
+    drawMetricBox(ctx, cardX + badgeW + 20, currentY, badgeW, badgeH, '💎 TỔNG ĐIỂM DP', `${data.totalDP.toLocaleString()}`, '#10b981');
+    // Badge 3: Rate
+    drawMetricBox(ctx, cardX + (badgeW + 20) * 2, currentY, badgeW, badgeH, '🎯 KỶ LUẬT TUẦN', `${data.completionPct}%`, '#06b6d4');
+
+    // 5. HABIT WEEKLY SUMMARY LIST
+    currentY += badgeH + (isStory ? 80 : 50);
+    if (isStory) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+        ctx.beginPath();
+        ctx.roundRect(cardX, currentY, cardW, 360, 24);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.stroke();
+
+        ctx.textAlign = 'left';
+        ctx.font = '800 24px sans-serif';
+        ctx.fillStyle = '#f472b6';
+        ctx.fillText('⚡ THÀNH TÍCH RÈN LUYỆN 7 NGÀY QUA', cardX + 36, currentY + 54);
+
+        const habits = (S.h || []).slice(0, 4);
+        let itemY = currentY + 115;
+        habits.forEach((h, idx) => {
+            const hEmoji = h.emoji || '✨';
+            const hName = h.name || 'Habit';
+            ctx.font = '700 26px sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(`${hEmoji}  ${hName}`, cardX + 36, itemY);
+
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#10b981';
+            ctx.fillText('✅ Đã hoàn thành', cardX + cardW - 36, itemY);
+            ctx.textAlign = 'left';
+
+            itemY += 56;
+        });
+
+        currentY += 360 + 60;
+    }
+
+    // 6. STOIC QUOTE
+    const quote = STOIC_QUOTES[Math.floor(Math.random() * STOIC_QUOTES.length)];
+    ctx.textAlign = 'center';
+    ctx.font = 'italic 700 24px sans-serif';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.fillText(`"${quote.text}"`, width / 2, currentY + 30);
+    ctx.font = '600 20px sans-serif';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.fillText(`— ${quote.author}`, width / 2, currentY + 66);
+
+    // 7. FOOTER
+    const footerY = height - 80;
+    ctx.font = '700 20px monospace';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.fillText('habit-mastery.web.app', width / 2, footerY);
+}
+
+function drawMetricBox(ctx, x, y, w, h, label, val, color) {
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, 20);
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.textAlign = 'center';
+    ctx.font = '800 18px sans-serif';
+    ctx.fillStyle = color;
+    ctx.fillText(label, x + w / 2, y + 42);
+
+    ctx.font = '900 36px sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(val, x + w / 2, y + (h / 2) + 24);
+}
+
+function downloadShareCard() {
+    const canvas = document.getElementById('shareCanvas');
+    if (!canvas) return;
+    const link = document.createElement('a');
+    link.download = `habit-mastery-${shareSelectedRatio}-${Date.now()}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    const toast = document.createElement('div');
+    toast.className = 'quest-toast';
+    toast.innerHTML = `<span>📥</span> ${t('cardDownloadedToast') || 'Đã tải ảnh thẻ về máy!'}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
+}
+window._downloadShareCard = downloadShareCard;
+
+async function shareViaWebShareApi() {
+    const canvas = document.getElementById('shareCanvas');
+    if (!canvas) return;
+
+    if (navigator.share && navigator.canShare) {
+        canvas.toBlob(async (blob) => {
+            if (!blob) return;
+            const file = new File([blob], 'habit-mastery-story.png', { type: 'image/png' });
+            if (navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: 'Thành Tích Kỷ Luật Habit Mastery',
+                        text: 'Cùng tôi rèn luyện thói quen và duy trì kỷ luật tại Habit Mastery!'
+                    });
+                } catch(e) {}
+            } else {
+                downloadShareCard();
+            }
+        });
+    } else {
+        downloadShareCard();
+    }
+}
+window._shareViaWebShareApi = shareViaWebShareApi;
+
+async function copyShareCardImage() {
+    const canvas = document.getElementById('shareCanvas');
+    if (!canvas) return;
+    canvas.toBlob(async (blob) => {
+        if (!blob) return;
+        try {
+            if (navigator.clipboard && navigator.clipboard.write) {
+                await navigator.clipboard.write([
+                    new ClipboardItem({ 'image/png': blob })
+                ]);
+                const toast = document.createElement('div');
+                toast.className = 'quest-toast';
+                toast.innerHTML = `<span>📋</span> ${t('cardCopiedToast') || 'Đã sao chép ảnh thẻ vào Clipboard!'}`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.classList.add('show'), 10);
+                setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
+            } else {
+                downloadShareCard();
+            }
+        } catch(e) {
+            downloadShareCard();
+        }
+    });
+}
+window._copyShareCardImage = copyShareCardImage;
+
+function checkWeeklyRecapAutoPrompt() {
+    const now = new Date();
+    // Monday is day 1
+    if (now.getDay() === 1) {
+        const weekKey = `recap_${now.getFullYear()}_${now.getMonth()}_${Math.floor(now.getDate() / 7)}`;
+        const lastSeen = localStorage.getItem('hg_last_recap_prompt');
+        if (lastSeen !== weekKey) {
+            localStorage.setItem('hg_last_recap_prompt', weekKey);
+            setTimeout(() => {
+                openWeeklyRecapModal();
+            }, 1200);
+        }
+    }
+}
+
+function initRecapAndShareModals() {
+    // Recap triggers
+    const recapBtn = document.getElementById('recapBtn');
+    if (recapBtn) recapBtn.onclick = () => openWeeklyRecapModal();
+
+    const mobileRecapBtn = document.getElementById('mobileRecapBtn');
+    if (mobileRecapBtn) mobileRecapBtn.onclick = () => openWeeklyRecapModal();
+
+    const recapCloseBtn = document.getElementById('recapCloseBtn');
+    if (recapCloseBtn) recapCloseBtn.onclick = () => document.getElementById('recapModalBg').classList.remove('show');
+
+    const recapBg = document.getElementById('recapModalBg');
+    if (recapBg) recapBg.onclick = (e) => { if (e.target === recapBg) recapBg.classList.remove('show'); };
+
+    const tapLeft = document.getElementById('recapTapLeft');
+    if (tapLeft) tapLeft.onclick = prevRecapSlide;
+
+    const tapRight = document.getElementById('recapTapRight');
+    if (tapRight) tapRight.onclick = nextRecapSlide;
+
+    const prevBtn = document.getElementById('recapPrevBtn');
+    if (prevBtn) prevBtn.onclick = prevRecapSlide;
+
+    const nextBtn = document.getElementById('recapNextBtn');
+    if (nextBtn) nextBtn.onclick = nextRecapSlide;
+
+    const toShareBtn = document.getElementById('recapToShareBtn');
+    if (toShareBtn) toShareBtn.onclick = openShareCardModal;
+
+    // Share triggers
+    const shareCardBtn = document.getElementById('shareCardBtn');
+    if (shareCardBtn) shareCardBtn.onclick = () => openShareCardModal();
+
+    const shareCloseBtn = document.getElementById('shareCardCloseBtn');
+    if (shareCloseBtn) shareCloseBtn.onclick = () => document.getElementById('shareCardModalBg').classList.remove('show');
+
+    const shareBg = document.getElementById('shareCardModalBg');
+    if (shareBg) shareBg.onclick = (e) => { if (e.target === shareBg) shareBg.classList.remove('show'); };
+
+    // Ratio buttons
+    const optStory = document.getElementById('optRatioStory');
+    const optSquare = document.getElementById('optRatioSquare');
+    if (optStory && optSquare) {
+        optStory.onclick = () => {
+            optStory.classList.add('active');
+            optSquare.classList.remove('active');
+            renderShareCardToCanvas('story', null);
+        };
+        optSquare.onclick = () => {
+            optSquare.classList.add('active');
+            optStory.classList.remove('active');
+            renderShareCardToCanvas('square', null);
+        };
+    }
+
+    // Theme buttons
+    const optCyber = document.getElementById('optThemeCyber');
+    const optLuxury = document.getElementById('optThemeLuxury');
+    const optSakura = document.getElementById('optThemeSakura');
+    if (optCyber && optLuxury && optSakura) {
+        optCyber.onclick = () => {
+            optCyber.classList.add('active');
+            optLuxury.classList.remove('active');
+            optSakura.classList.remove('active');
+            renderShareCardToCanvas(null, 'cyberpunk');
+        };
+        optLuxury.onclick = () => {
+            optLuxury.classList.add('active');
+            optCyber.classList.remove('active');
+            optSakura.classList.remove('active');
+            renderShareCardToCanvas(null, 'luxury');
+        };
+        optSakura.onclick = () => {
+            optSakura.classList.add('active');
+            optCyber.classList.remove('active');
+            optLuxury.classList.remove('active');
+            renderShareCardToCanvas(null, 'sakura');
+        };
+    }
+
+    // Download & Share
+    const dlBtn = document.getElementById('shareDownloadBtn');
+    if (dlBtn) dlBtn.onclick = downloadShareCard;
+
+    const nativeBtn = document.getElementById('shareNativeBtn');
+    if (nativeBtn) nativeBtn.onclick = shareViaWebShareApi;
+
+    const copyBtn = document.getElementById('shareCopyBtn');
+    if (copyBtn) copyBtn.onclick = copyShareCardImage;
+}
+
+// ==================== TRỤ CỘT 5: CÔNG CỤ HỖ TRỢ TRỰC TIẾP (POMODORO & DAILY STOIC QUOTES) ====================
+
+// --- 1. WEB AUDIO API AMBIENT SOUNDSCAPE SYNTHESIZER ---
+
+let currentAmbientType = 'none';
+let ambientNodes = null;
+let ambientGainNode = null;
+let ambientMasterVolume = 0.5;
+
+function stopAmbientSound() {
+    if (ambientGainNode && audioCtx) {
+        try {
+            ambientGainNode.gain.setValueAtTime(ambientGainNode.gain.value, audioCtx.currentTime);
+            ambientGainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
+        } catch(e){}
+    }
+    setTimeout(() => {
+        if (ambientNodes) {
+            try {
+                if (ambientNodes.source) ambientNodes.source.stop();
+                if (ambientNodes.lfo) ambientNodes.lfo.stop();
+                if (ambientNodes.interval) clearInterval(ambientNodes.interval);
+            } catch(e){}
+            ambientNodes = null;
+        }
+        currentAmbientType = 'none';
+    }, 320);
+}
+
+function playAmbientSound(type, volume = 0.5) {
+    ambientMasterVolume = volume;
+    if (type === 'none') {
+        stopAmbientSound();
+        return;
+    }
+    stopAmbientSound();
+
+    try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        currentAmbientType = type;
+
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
+        masterGain.gain.exponentialRampToValueAtTime(Math.max(0.01, volume * 0.35), ctx.currentTime + 0.5);
+        masterGain.connect(ctx.destination);
+        ambientGainNode = masterGain;
+
+        if (type === 'rain') {
+            // Rain generator: Pink noise buffer with lowpass
+            const bufferSize = ctx.sampleRate * 3;
+            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                b0 = 0.99886 * b0 + white * 0.0555179;
+                b1 = 0.99332 * b1 + white * 0.0750759;
+                b2 = 0.96900 * b2 + white * 0.1538520;
+                b3 = 0.86650 * b3 + white * 0.3104856;
+                b4 = 0.55000 * b4 + white * 0.5329522;
+                b5 = -0.7616 * b5 - white * 0.0168980;
+                data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
+                b6 = white * 0.115926;
+            }
+            const noise = ctx.createBufferSource();
+            noise.buffer = buffer;
+            noise.loop = true;
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(950, ctx.currentTime);
+
+            noise.connect(filter);
+            filter.connect(masterGain);
+            noise.start();
+            ambientNodes = { source: noise };
+        } else if (type === 'ocean') {
+            // Ocean generator: filtered noise with slow wave LFO
+            const bufferSize = ctx.sampleRate * 4;
+            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.28;
+
+            const noise = ctx.createBufferSource();
+            noise.buffer = buffer;
+            noise.loop = true;
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(360, ctx.currentTime);
+            filter.Q.setValueAtTime(1.2, ctx.currentTime);
+
+            const lfo = ctx.createOscillator();
+            lfo.frequency.setValueAtTime(0.12, ctx.currentTime);
+            const lfoGain = ctx.createGain();
+            lfoGain.gain.setValueAtTime(220, ctx.currentTime);
+            lfo.connect(filter.frequency);
+
+            noise.connect(filter);
+            filter.connect(masterGain);
+            noise.start();
+            lfo.start();
+            ambientNodes = { source: noise, lfo: lfo };
+        } else if (type === 'noise') {
+            // White Noise Focus
+            const bufferSize = ctx.sampleRate * 2;
+            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.15;
+
+            const noise = ctx.createBufferSource();
+            noise.buffer = buffer;
+            noise.loop = true;
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(1800, ctx.currentTime);
+
+            noise.connect(filter);
+            filter.connect(masterGain);
+            noise.start();
+            ambientNodes = { source: noise };
+        } else if (type === 'lofi') {
+            // Lo-fi Rhodes Chords
+            const chords = [
+                [261.63, 329.63, 392.00, 493.88], // Cmaj7
+                [220.00, 261.63, 329.63, 392.00], // Am7
+                [174.61, 220.00, 261.63, 329.63], // Fmaj7
+                [196.00, 246.94, 293.66, 349.23]  // G7
+            ];
+            let chordIdx = 0;
+            const playNextChord = () => {
+                if (currentAmbientType !== 'lofi' || !audioCtx) return;
+                const chord = chords[chordIdx % chords.length];
+                chordIdx++;
+                chord.forEach((freq) => {
+                    const osc = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+                    g.gain.linearRampToValueAtTime(0.025 * volume, ctx.currentTime + 0.3);
+                    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.0);
+                    osc.connect(g);
+                    g.connect(masterGain);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 3.2);
+                });
+            };
+            playNextChord();
+            const interval = setInterval(playNextChord, 3400);
+            ambientNodes = { interval: interval };
+        }
+    } catch(e) { console.warn('Ambient sound error:', e); }
+}
+
+function playPomodoroEndChime() {
+    try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const freqs = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        freqs.forEach((f, idx) => {
+            const osc = ctx.createOscillator();
+            const g = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(f, ctx.currentTime + idx * 0.15);
+            g.gain.setValueAtTime(0.0001, ctx.currentTime + idx * 0.15);
+            g.gain.linearRampToValueAtTime(0.12, ctx.currentTime + idx * 0.15 + 0.05);
+            g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.15 + 2.5);
+            osc.connect(g);
+            g.connect(ctx.destination);
+            osc.start(ctx.currentTime + idx * 0.15);
+            osc.stop(ctx.currentTime + idx * 0.15 + 2.6);
+        });
+    } catch(e){}
+}
+
+// --- 2. POMODORO TIMER ENGINE ---
+
+let pomoState = {
+    mode: 'pomodoro', // 'pomodoro' | 'short' | 'long'
+    totalSeconds: 25 * 60,
+    secondsLeft: 25 * 60,
+    isRunning: false,
+    intervalId: null,
+    selectedHabitId: null,
+    ambientType: 'none',
+    volume: 0.5
+};
+
+function openPomodoroModal(habitId = null) {
+    const modal = document.getElementById('pomodoroModalBg');
+    if (!modal) return;
+    modal.classList.add('show');
+
+    // Populate habit selector
+    const sel = document.getElementById('pomoHabitSelect');
+    if (sel) {
+        let optHtml = '<option value="">-- Tập trung tự do (Deep Work) --</option>';
+        (S.h || []).forEach(h => {
+            optHtml += `<option value="${h.id}">${h.emoji || '✨'} ${h.name}</option>`;
+        });
+        sel.innerHTML = optHtml;
+        if (habitId) {
+            sel.value = habitId;
+            pomoState.selectedHabitId = habitId;
+        } else if (pomoState.selectedHabitId) {
+            sel.value = pomoState.selectedHabitId;
+        }
+    }
+
+    updatePomoDisplay();
+}
+window._openPomodoroModal = openPomodoroModal;
+
+function switchPomoMode(mode) {
+    pomoState.mode = mode;
+    if (mode === 'pomodoro') pomoState.totalSeconds = 25 * 60;
+    else if (mode === 'short') pomoState.totalSeconds = 5 * 60;
+    else if (mode === 'long') pomoState.totalSeconds = 15 * 60;
+
+    pausePomodoroTimer();
+    pomoState.secondsLeft = pomoState.totalSeconds;
+
+    document.querySelectorAll('.pomo-mode-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+
+    const statusEl = document.getElementById('pomoStatusLabel');
+    if (statusEl) {
+        statusEl.textContent = mode === 'pomodoro' ? 'Đang sẵn sàng' : (mode === 'short' ? 'Nghỉ ngơi 5 phút' : 'Nghỉ ngơi 15 phút');
+    }
+
+    updatePomoDisplay();
+}
+
+function startPomodoroTimer() {
+    if (pomoState.isRunning) {
+        pausePomodoroTimer();
+        return;
+    }
+
+    pomoState.isRunning = true;
+    const startBtn = document.getElementById('pomoStartBtn');
+    if (startBtn) {
+        startBtn.textContent = '⏸ Tạm Dừng';
+        startBtn.classList.add('running');
+    }
+
+    const statusEl = document.getElementById('pomoStatusLabel');
+    if (statusEl) statusEl.textContent = pomoState.mode === 'pomodoro' ? '🔥 Đang tập trung...' : '☕ Đang nghỉ ngơi...';
+
+    // Start ambient sound if selected
+    if (pomoState.ambientType !== 'none') {
+        playAmbientSound(pomoState.ambientType, pomoState.volume);
+    }
+
+    pomoState.intervalId = setInterval(() => {
+        if (pomoState.secondsLeft > 0) {
+            pomoState.secondsLeft--;
+            updatePomoDisplay();
+        } else {
+            onPomodoroFinished();
+        }
+    }, 1000);
+}
+
+function pausePomodoroTimer() {
+    pomoState.isRunning = false;
+    if (pomoState.intervalId) {
+        clearInterval(pomoState.intervalId);
+        pomoState.intervalId = null;
+    }
+
+    const startBtn = document.getElementById('pomoStartBtn');
+    if (startBtn) {
+        startBtn.textContent = '▶ Tiếp Tục';
+        startBtn.classList.remove('running');
+    }
+
+    const statusEl = document.getElementById('pomoStatusLabel');
+    if (statusEl) statusEl.textContent = 'Đang tạm dừng';
+
+    stopAmbientSound();
+}
+
+function resetPomodoroTimer() {
+    pausePomodoroTimer();
+    pomoState.secondsLeft = pomoState.totalSeconds;
+    const startBtn = document.getElementById('pomoStartBtn');
+    if (startBtn) startBtn.textContent = '▶ Bắt Đầu';
+    const statusEl = document.getElementById('pomoStatusLabel');
+    if (statusEl) statusEl.textContent = 'Đang sẵn sàng';
+    updatePomoDisplay();
+}
+
+function updatePomoDisplay() {
+    const mins = Math.floor(pomoState.secondsLeft / 60);
+    const secs = pomoState.secondsLeft % 60;
+    const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+    const display = document.getElementById('pomoTimeDisplay');
+    if (display) display.textContent = formatted;
+
+    // Update circular progress SVG
+    const circle = document.getElementById('pomoCircleProgress');
+    if (circle) {
+        const circumference = 628; // 2 * PI * 100
+        const progress = pomoState.secondsLeft / pomoState.totalSeconds;
+        const offset = circumference * (1 - progress);
+        circle.style.strokeDashoffset = offset;
+    }
+}
+
+async function onPomodoroFinished() {
+    pausePomodoroTimer();
+    playPomodoroEndChime();
+    if (typeof fireConfetti === 'function') fireConfetti();
+
+    let toastMsg = t('pomoCompletedToast') || '🎉 Hoàn thành phiên tập trung! +15 DP';
+
+    // If pomodoro mode and habit was selected -> auto check-in!
+    const sel = document.getElementById('pomoHabitSelect');
+    const habitId = sel ? sel.value : null;
+
+    if (pomoState.mode === 'pomodoro' && habitId) {
+        const now = new Date();
+        const k = ck(habitId, now.getDate());
+        if (!S.c[k]) {
+            S.c[k] = true;
+            save();
+            render();
+            if (typeof onHabitCheckedSyncSquadAndDuel === 'function') {
+                onHabitCheckedSyncSquadAndDuel();
+            }
+            toastMsg = t('pomoHabitCompletedToast') || '🎉 Đã hoàn thành 25p! Thói quen đã tự động check-in (+15 DP)';
+        }
+    }
+
+    // Award bonus 15 DP
+    userBonusDP = (userBonusDP || 0) + 15;
+    localStorage.setItem('hg_bonus_dp', userBonusDP);
+    updateUserDPState(true);
+    if (typeof syncUserLeaderboard === 'function') syncUserLeaderboard();
+
+    // Show Toast
+    const toast = document.createElement('div');
+    toast.className = 'quest-toast';
+    toast.innerHTML = `<span>⏱️</span> ${toastMsg}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3200);
+
+    resetPomodoroTimer();
+}
+
+function initPomodoroModal() {
+    const pomoBtn = document.getElementById('pomodoroBtn');
+    if (pomoBtn) pomoBtn.onclick = () => openPomodoroModal();
+
+    const mobileBtn = document.getElementById('mobilePomodoroBtn');
+    if (mobileBtn) mobileBtn.onclick = () => openPomodoroModal();
+
+    const closeBtn = document.getElementById('pomoCloseBtn');
+    if (closeBtn) {
+        closeBtn.onclick = () => {
+            document.getElementById('pomodoroModalBg').classList.remove('show');
+            if (pomoState.ambientType !== 'none' && !pomoState.isRunning) stopAmbientSound();
+        };
+    }
+
+    const bg = document.getElementById('pomodoroModalBg');
+    if (bg) {
+        bg.onclick = (e) => {
+            if (e.target === bg) {
+                bg.classList.remove('show');
+                if (pomoState.ambientType !== 'none' && !pomoState.isRunning) stopAmbientSound();
+            }
+        };
+    }
+
+    const startBtn = document.getElementById('pomoStartBtn');
+    if (startBtn) startBtn.onclick = startPomodoroTimer;
+
+    const resetBtn = document.getElementById('pomoResetBtn');
+    if (resetBtn) resetBtn.onclick = resetPomodoroTimer;
+
+    // Mode buttons
+    const m25 = document.getElementById('pomoMode25');
+    const m5 = document.getElementById('pomoMode5');
+    const m15 = document.getElementById('pomoMode15');
+    if (m25) m25.onclick = () => switchPomoMode('pomodoro');
+    if (m5) m5.onclick = () => switchPomoMode('short');
+    if (m15) m15.onclick = () => switchPomoMode('long');
+
+    // Ambient sound buttons
+    document.querySelectorAll('.pomo-sound-btn').forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll('.pomo-sound-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            pomoState.ambientType = btn.dataset.sound;
+            playAmbientSound(pomoState.ambientType, pomoState.volume);
+        };
+    });
+
+    const volSlider = document.getElementById('pomoVolumeSlider');
+    if (volSlider) {
+        volSlider.oninput = (e) => {
+            pomoState.volume = parseFloat(e.target.value);
+            if (ambientGainNode && audioCtx) {
+                ambientGainNode.gain.setValueAtTime(pomoState.volume * 0.35, audioCtx.currentTime);
+            }
+        };
+    }
+}
+
+// --- 3. DAILY STOIC & MINDSET QUOTES ENGINE ---
+
+const DAILY_STOIC_QUOTES = [
+    { vi: "Kỷ luật là cây cầu nối giữa mục tiêu và thành tựu.", zh: "自律是连接目标与成就的桥梁。", en: "Discipline is the bridge between goals and accomplishment.", author: "Jim Rohn" },
+    { vi: "Chúng ta là những gì chúng ta lặp đi lặp lại mỗi ngày. Sự xuất sắc không phải là hành động mà là thói quen.", zh: "我们日复一日做的事情决定了我们。优秀不是一种行为，而是一种习惯。", en: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Aristotle" },
+    { vi: "Chiến thắng vĩ đại nhất là chiến thắng chính bản thân mình.", zh: "最伟大的胜利就是战胜自我。", en: "The first and greatest victory is to conquer yourself.", author: "Plato" },
+    { vi: "Kỷ luật hôm nay là tự do của ngày mai.", zh: "今日的自律，铸就明日的自由。", en: "Discipline today equals freedom tomorrow.", author: "Jocko Willink" },
+    { vi: "Bạn có quyền kiểm soát tâm trí của mình, chứ không phải các sự kiện bên ngoài. Hãy nhận ra điều này, và bạn sẽ tìm thấy sức mạnh.", zh: "你能掌控自己的心灵，而非外在事件。明白这一点，你将所向披靡。", en: "You have power over your mind - not outside events. Realize this, and you will find strength.", author: "Marcus Aurelius" },
+    { vi: "Chúng ta đau khổ trong trí tưởng tượng nhiều hơn là trong thực tế.", zh: "我们在想象中所受的苦，远多于在现实中所受的。", en: "We suffer more often in imagination than in reality.", author: "Seneca" },
+    { vi: "Đừng đòi hỏi sự việc phải diễn ra theo ý bạn, hãy mong muốn chúng diễn ra đúng như thực tế, và cuộc đời bạn sẽ an yên.", zh: "不要要求事情按你的期望发生，而是顺应事情原本的样子，你就会生活得平静。", en: "Don't demand that things happen as you wish, but wish them to happen as they do, and you will go on well.", author: "Epictetus" },
+    { vi: "Người chịu được những điều người khác không chịu được sẽ làm được những việc người khác không làm được.", zh: "能忍常人所不能忍者，必能成常人所不能成之事。", en: "He who can endure what others cannot will achieve what others never can.", author: "David Goggins" },
+    { vi: "Mỗi hành động bạn thực hiện là một lá phiếu cho kiểu người bạn muốn trở thành.", zh: "你的每一次行动，都是对你想成为的那种人投下的一票。", en: "Every action you take is a vote for the type of person you wish to become.", author: "James Clear" },
+    { vi: "Kẻ thắng người là có sức, kẻ thắng mình là người mạnh.", zh: "胜人者有力，自胜者强。", en: "He who overcomes others has strength; he who overcomes himself is mighty.", author: "Lão Tử (Lao Tzu)" }
+];
+
+let curQuoteIndex = 0;
+
+function getRandomStoicQuote() {
+    const d = new Date();
+    const daySeed = d.getFullYear() * 365 + d.getMonth() * 31 + d.getDate();
+    return DAILY_STOIC_QUOTES[daySeed % DAILY_STOIC_QUOTES.length];
+}
+
+function renderDailyQuoteWidget() {
+    const quote = DAILY_STOIC_QUOTES[curQuoteIndex % DAILY_STOIC_QUOTES.length] || getRandomStoicQuote();
+    const textEl = document.getElementById('dqwText');
+    const authorEl = document.getElementById('dqwAuthor');
+
+    if (textEl && authorEl) {
+        const lang = curLang || 'vi';
+        const txt = quote[lang] || quote.vi || quote.en;
+        textEl.textContent = `"${txt}"`;
+        authorEl.textContent = `— ${quote.author}`;
+    }
+
+    const refreshBtn = document.getElementById('dqwRefreshBtn');
+    if (refreshBtn && !refreshBtn.dataset.bound) {
+        refreshBtn.dataset.bound = 'true';
+        refreshBtn.onclick = () => {
+            curQuoteIndex = (curQuoteIndex + 1 + Math.floor(Math.random() * (DAILY_STOIC_QUOTES.length - 1))) % DAILY_STOIC_QUOTES.length;
+            renderDailyQuoteWidget();
+        };
+    }
+
+    const copyBtn = document.getElementById('dqwCopyBtn');
+    if (copyBtn && !copyBtn.dataset.bound) {
+        copyBtn.dataset.bound = 'true';
+        copyBtn.onclick = () => {
+            const txt = textEl ? `${textEl.textContent} ${authorEl.textContent}` : '';
+            navigator.clipboard.writeText(txt).then(() => {
+                const toast = document.createElement('div');
+                toast.className = 'quest-toast';
+                toast.innerHTML = `<span>📜</span> ${t('quoteCopiedToast') || 'Đã sao chép câu trích dẫn!'}`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.classList.add('show'), 10);
+                setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2500);
+            });
+        };
+    }
+
+    const shareBtn = document.getElementById('dqwShareBtn');
+    if (shareBtn && !shareBtn.dataset.bound) {
+        shareBtn.dataset.bound = 'true';
+        shareBtn.onclick = () => {
+            if (typeof openShareCardModal === 'function') openShareCardModal();
+        };
+    }
+}
+window.renderDailyQuoteWidget = renderDailyQuoteWidget;
+
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',initAuthGuard):initAuthGuard();
 })();
 

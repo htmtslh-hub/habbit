@@ -53,13 +53,51 @@
             <div class="nav-controls">
                 <!-- User Profile (Rendered via Dynamic Rank Nameplate) -->
                 <div class="user-profile" id="userProfile" onclick="window._openProfile()" title="Hồ sơ nhân vật"></div>
+                <div class="nav-boost-badge" id="navBoostBadge" style="display:none;" onclick="if(window._openShopModal)window._openShopModal('items')" title="2X DP Boost đang kích hoạt!">⚡ 2X DP: <span id="navBoostCountdown">24:00</span></div>
                 <button class="nav-theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
                 <button class="nav-lang-btn" id="langToggleBtn" title="Chuyển ngôn ngữ">VI</button>
+                <button class="nav-action-btn shop-btn" id="shopBtn" title="Cửa hàng Kỷ luật">🛒 <span data-i18n="tabShop">Shop</span></button>
+                <button class="nav-action-btn squad-btn" id="squadHubBtn" title="Tổ đội & Thách đấu">🛡️ <span data-i18n="tabSquad">Tổ đội</span></button>
+                <button class="nav-action-btn pomo-btn" id="pomodoroBtn" title="Đồng hồ tập trung Deep Work">⏱️ <span data-i18n="tabPomodoro">Focus</span></button>
+                <button class="nav-action-btn recap-btn" id="recapBtn" title="Tổng kết tuần Wrapped">📊 <span data-i18n="tabRecap">Tổng kết</span></button>
+                <button class="nav-action-btn share-btn" id="shareCardBtn" title="Khoe thẻ kỷ luật">📸 <span data-i18n="tabShareCard">Khoe thẻ</span></button>
+                <button class="nav-action-btn streak-shield-btn" id="streakShieldBtn" title="Bảo vệ & Cứu chuỗi">🧊 <span id="navFreezeCount">1</span></button>
                 <button class="nav-action-btn" id="communityBtn" title="Cộng đồng"><span data-i18n="tabCommunity">Cộng đồng</span></button>
                 <button class="nav-action-btn" id="leaderboardBtn" title="Bảng Xếp Hạng"><span data-i18n="tabLeaderboard">BXH</span></button>
                 <button class="nav-action-btn quest-btn" id="questBtn" title="Nhiệm vụ rèn luyện">⚔️ <span data-i18n="tabQuests">Nhiệm vụ</span></button>
             </div>
         </header>
+
+        <!-- STREAK EMERGENCY BANNER (Shown when streak broke within 24h) -->
+        <div class="streak-emergency-banner" id="streakEmergencyBanner" style="display:none;">
+            <div class="seb-content">
+                <div class="seb-icon">🚨</div>
+                <div class="seb-info">
+                    <div class="seb-title" id="sebTitle">Chuỗi ngày của bạn vừa bị đứt hôm qua!</div>
+                    <div class="seb-desc" id="sebDesc">Bạn có 24h để Hồi sinh lại chuỗi trước khi mất vĩnh viễn!</div>
+                </div>
+                <div class="seb-actions">
+                    <button class="seb-btn-repair" id="sebBtnRepair" onclick="if(window._openStreakModal)window._openStreakModal()">⚡ Cứu chuỗi ngay</button>
+                    <button class="seb-btn-dismiss" id="sebBtnDismiss" onclick="document.getElementById('streakEmergencyBanner').style.display='none'">✕</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAILY STOIC QUOTE WIDGET -->
+        <div class="daily-quote-widget" id="dailyQuoteWidget">
+            <div class="dqw-content">
+                <div class="dqw-icon">📜</div>
+                <div class="dqw-body">
+                    <div class="dqw-text" id="dqwText">"Kỷ luật là cây cầu nối giữa mục tiêu và thành tựu."</div>
+                    <div class="dqw-author" id="dqwAuthor">— Jim Rohn</div>
+                </div>
+            </div>
+            <div class="dqw-actions">
+                <button class="dqw-btn" id="dqwRefreshBtn" title="Đổi câu trích dẫn khác">🎲</button>
+                <button class="dqw-btn" id="dqwCopyBtn" title="Sao chép câu nói">📋</button>
+                <button class="dqw-btn" id="dqwShareBtn" title="Khoe câu nói lên Story">📸</button>
+            </div>
+        </div>
 
         <!-- TOP SECTION: Calendar + Chart + Stats -->
         <div class="top-section">
@@ -221,6 +259,26 @@
             <button class="mobile-nav-item" data-tab="quests" id="mobileQuestBtn">
                 <span class="mobile-nav-icon">⚔️</span>
                 <span class="mobile-nav-text" data-i18n="tabQuests">Nhiệm vụ</span>
+            </button>
+            <button class="mobile-nav-item" data-tab="streak" id="mobileStreakBtn">
+                <span class="mobile-nav-icon">🧊</span>
+                <span class="mobile-nav-text" data-i18n="tabStreakShield">Cứu chuỗi</span>
+            </button>
+            <button class="mobile-nav-item" data-tab="pomo" id="mobilePomodoroBtn">
+                <span class="mobile-nav-icon">⏱️</span>
+                <span class="mobile-nav-text" data-i18n="tabPomodoro">Focus</span>
+            </button>
+            <button class="mobile-nav-item" data-tab="squad" id="mobileSquadBtn">
+                <span class="mobile-nav-icon">🛡️</span>
+                <span class="mobile-nav-text" data-i18n="tabSquad">Tổ đội</span>
+            </button>
+            <button class="mobile-nav-item" data-tab="recap" id="mobileRecapBtn">
+                <span class="mobile-nav-icon">📊</span>
+                <span class="mobile-nav-text" data-i18n="tabRecap">Tổng kết</span>
+            </button>
+            <button class="mobile-nav-item" data-tab="shop" id="mobileShopBtn">
+                <span class="mobile-nav-icon">🛒</span>
+                <span class="mobile-nav-text" data-i18n="tabShop">Shop</span>
             </button>
         </div>
     </div>
@@ -481,6 +539,190 @@
                     <button class="profile-logout-btn" id="profileLogoutBtn" title="Đăng xuất tài khoản">
                         <span>🚪 Đăng xuất tài khoản</span>
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STREAK SHIELD & RECOVERY MODAL -->
+    <div class="modal-bg streak-modal-bg" id="streakModalBg">
+        <div class="lb-modal streak-modal">
+            <div class="lb-modal-header">
+                <h2 data-i18n="streakModalTitle">🧊 BẢO VỆ & CỨU CHUỖI</h2>
+                <button class="lb-close-btn" id="streakCloseBtn">✕</button>
+            </div>
+            <div class="streak-modal-body" id="streakModalBody"></div>
+        </div>
+    </div>
+
+    <!-- DISCIPLINE POINT SHOP MODAL -->
+    <div class="modal-bg shop-modal-bg" id="shopModalBg">
+        <div class="lb-modal shop-modal">
+            <div class="lb-modal-header">
+                <h2 data-i18n="shopModalTitle">🛒 CỬA HÀNG KỶ LUẬT</h2>
+                <button class="lb-close-btn" id="shopCloseBtn">✕</button>
+            </div>
+            <div class="shop-wallet-banner" id="shopWalletBanner">
+                <div class="swb-balance">
+                    <span class="swb-label">Ví điểm rèn luyện:</span>
+                    <span class="swb-val" id="shopWalletDP">0 DP</span>
+                </div>
+                <div class="swb-extra" id="shopWalletExtra"></div>
+            </div>
+            <div class="lb-tabs shop-tabs">
+                <button class="lb-tab-btn shop-tab-btn active" data-tab="titles">🏷️ <span data-i18n="shopTabTitles">Danh hiệu</span></button>
+                <button class="lb-tab-btn shop-tab-btn" data-tab="themes">🎨 <span data-i18n="shopTabThemes">Giao diện</span></button>
+                <button class="lb-tab-btn shop-tab-btn" data-tab="fx">🔊 <span data-i18n="shopTabFX">Hiệu ứng</span></button>
+                <button class="lb-tab-btn shop-tab-btn" data-tab="items">⚡ <span data-i18n="shopTabItems">Vật phẩm</span></button>
+            </div>
+            <div class="shop-feed-container" id="shopFeedContainer"></div>
+        </div>
+    </div>
+
+    <!-- SOCIAL ACCOUNTABILITY HUB (SQUADS & 1V1 DUELS) MODAL -->
+    <div class="modal-bg squad-modal-bg" id="squadModalBg">
+        <div class="lb-modal squad-modal">
+            <div class="lb-modal-header">
+                <h2 data-i18n="squadHubTitle">🛡️ TỔ ĐỘI & THÁCH ĐẤU 1V1</h2>
+                <button class="lb-close-btn" id="squadCloseBtn">✕</button>
+            </div>
+            <div class="lb-tabs squad-tabs">
+                <button class="lb-tab-btn squad-tab-btn active" data-tab="squads">🛡️ <span data-i18n="squadTabGuild">Tổ Đội Rèn Luyện</span></button>
+                <button class="lb-tab-btn squad-tab-btn" data-tab="duels">⚔️ <span data-i18n="squadTabDuel">Đấu Trường 1v1</span></button>
+            </div>
+            <div class="squad-feed-container" id="squadFeedContainer"></div>
+        </div>
+    </div>
+
+    <!-- WEEKLY RECAP (SPOTIFY WRAPPED) MODAL -->
+    <div class="modal-bg recap-modal-bg" id="recapModalBg">
+        <div class="recap-modal">
+            <!-- Progress bars on top -->
+            <div class="recap-progress-bars" id="recapProgressBars"></div>
+            
+            <div class="recap-top-bar">
+                <div class="recap-badge">✨ HABIT RECAP</div>
+                <button class="recap-close-btn" id="recapCloseBtn">✕</button>
+            </div>
+
+            <!-- Slide Content Area -->
+            <div class="recap-slide-container" id="recapSlideContainer">
+                <div class="recap-tap-area recap-tap-left" id="recapTapLeft"></div>
+                <div class="recap-tap-area recap-tap-right" id="recapTapRight"></div>
+                <div class="recap-slide-body" id="recapSlideBody"></div>
+            </div>
+
+            <div class="recap-bottom-bar">
+                <button class="recap-nav-btn" id="recapPrevBtn">←</button>
+                <button class="recap-share-btn" id="recapToShareBtn">📸 Khoe Thẻ Story</button>
+                <button class="recap-nav-btn" id="recapNextBtn">→</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SHAREABLE STORY CARD MODAL -->
+    <div class="modal-bg share-modal-bg" id="shareCardModalBg">
+        <div class="lb-modal share-modal">
+            <div class="lb-modal-header">
+                <h2 data-i18n="shareModalTitle">📸 XUẤT ẢNH THẺ KHOE KỶ LUẬT</h2>
+                <button class="lb-close-btn" id="shareCardCloseBtn">✕</button>
+            </div>
+            <div class="share-modal-body">
+                <div class="share-preview-pane">
+                    <div class="share-canvas-wrap" id="shareCanvasWrap">
+                        <canvas id="shareCanvas" width="1080" height="1920"></canvas>
+                    </div>
+                </div>
+                <div class="share-controls-pane">
+                    <div class="share-control-group">
+                        <label class="share-label">📐 KÍCH THƯỚC THẺ:</label>
+                        <div class="share-options-row">
+                            <button class="share-opt-btn active" data-ratio="story" id="optRatioStory">📱 Story 9:16</button>
+                            <button class="share-opt-btn" data-ratio="square" id="optRatioSquare">⏹️ Vuông 1:1</button>
+                        </div>
+                    </div>
+                    <div class="share-control-group">
+                        <label class="share-label">🎨 PHONG CÁCH HÌNH NỀN:</label>
+                        <div class="share-options-row">
+                            <button class="share-opt-btn active" data-theme="cyberpunk" id="optThemeCyber">🔮 Cyberpunk</button>
+                            <button class="share-opt-btn" data-theme="luxury" id="optThemeLuxury">👑 Gold Luxury</button>
+                            <button class="share-opt-btn" data-theme="sakura" id="optThemeSakura">🌸 Sakura</button>
+                        </div>
+                    </div>
+                    <div class="share-actions-group">
+                        <button class="share-action-btn btn-download" id="shareDownloadBtn">
+                            📥 Tải Ảnh HD (PNG)
+                        </button>
+                        <button class="share-action-btn btn-native-share" id="shareNativeBtn">
+                            📲 Chia Sẻ Story
+                        </button>
+                        <button class="share-action-btn btn-copy-img" id="shareCopyBtn">
+                            📋 Sao Chép Ảnh
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- POMODORO & DEEP WORK STATION MODAL -->
+    <div class="modal-bg pomo-modal-bg" id="pomodoroModalBg">
+        <div class="lb-modal pomo-modal">
+            <div class="lb-modal-header">
+                <h2 data-i18n="pomoModalTitle">⏱️ ĐỒNG HỒ TẬP TRUNG (DEEP WORK)</h2>
+                <button class="lb-close-btn" id="pomoCloseBtn">✕</button>
+            </div>
+            <div class="pomo-modal-body">
+                <!-- Habit Selector -->
+                <div class="pomo-habit-picker-row">
+                    <label class="pomo-label">🎯 GẮN VỚI THÓI QUEN:</label>
+                    <select class="pomo-habit-select" id="pomoHabitSelect">
+                        <option value="">-- Tập trung tự do (Deep Work) --</option>
+                    </select>
+                </div>
+
+                <!-- Mode switcher tabs -->
+                <div class="pomo-modes-row">
+                    <button class="pomo-mode-btn active" data-mode="pomodoro" id="pomoMode25">⏱️ Pomodoro (25m)</button>
+                    <button class="pomo-mode-btn" data-mode="short" id="pomoMode5">☕ Nghỉ ngắn (5m)</button>
+                    <button class="pomo-mode-btn" data-mode="long" id="pomoMode15">🌴 Nghỉ dài (15m)</button>
+                </div>
+
+                <!-- Circular Timer Display -->
+                <div class="pomo-timer-wrap">
+                    <svg class="pomo-svg" viewBox="0 0 240 240">
+                        <circle class="pomo-circle-bg" cx="120" cy="120" r="100"/>
+                        <circle class="pomo-circle-progress" id="pomoCircleProgress" cx="120" cy="120" r="100"/>
+                    </svg>
+                    <div class="pomo-timer-center">
+                        <div class="pomo-time-display" id="pomoTimeDisplay">25:00</div>
+                        <div class="pomo-status-label" id="pomoStatusLabel">Đang sẵn sàng</div>
+                        <div class="pomo-reward-pill" id="pomoRewardPill">✨ Thưởng +15 DP khi hoàn thành</div>
+                    </div>
+                </div>
+
+                <!-- Timer Controls -->
+                <div class="pomo-controls-row">
+                    <button class="pomo-action-btn btn-pomo-start" id="pomoStartBtn">▶ Bắt Đầu</button>
+                    <button class="pomo-action-btn btn-pomo-reset" id="pomoResetBtn">🔄 Đặt Lại</button>
+                </div>
+
+                <!-- Ambient Soundscape Generator -->
+                <div class="pomo-soundscape-panel">
+                    <div class="pomo-sound-header">
+                        <label class="pomo-label">🎧 NHẠC NỀN TẬP TRUNG (AMBIENT SOUND):</label>
+                        <div class="pomo-volume-control">
+                            <span class="pomo-vol-icon">🔊</span>
+                            <input type="range" id="pomoVolumeSlider" min="0" max="1" step="0.05" value="0.5" class="pomo-slider">
+                        </div>
+                    </div>
+                    <div class="pomo-sounds-grid">
+                        <button class="pomo-sound-btn active" data-sound="none" id="pomoSoundNone">🔇 Tắt</button>
+                        <button class="pomo-sound-btn" data-sound="rain" id="pomoSoundRain">🌧️ Mưa Rơi</button>
+                        <button class="pomo-sound-btn" data-sound="ocean" id="pomoSoundOcean">🌊 Sóng Biển</button>
+                        <button class="pomo-sound-btn" data-sound="noise" id="pomoSoundNoise">📻 Tiếng Ồn Trắng</button>
+                        <button class="pomo-sound-btn" data-sound="lofi" id="pomoSoundLofi">☕ Lo-fi Chords</button>
+                    </div>
                 </div>
             </div>
         </div>
