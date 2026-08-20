@@ -204,7 +204,7 @@ function renderUsers(filter, search){
             <td>
                 <div class="user-cell">
                     ${avatarHtml(u.photoURL, name)}
-                    <span class="user-cell-name">${escHtml(name)}${u.role==='admin'?' 🛡️':''}</span>
+                    <span class="user-cell-name">${escHtml(name)}${u.role==='admin'?' <svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg>':''}</span>
                 </div>
             </td>
             <td>${escHtml(u.email||'—')}</td>
@@ -697,7 +697,7 @@ async function loadAdminQuests() {
                 const statusColor = q.status === 'active' ? '#10b981' : '#64748b';
                 html += `<div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;margin-bottom:8px;">
                     <div style="flex:1;">
-                        <div style="font-weight:600;color:#f1f5f9;">⚡ ${escapeHtml(q.title || '')}</div>
+                        <div style="font-weight:600;color:#f1f5f9;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> ${escapeHtml(q.title || '')}</div>
                         <div style="font-size:12px;color:#94a3b8;margin-top:2px;">${escapeHtml(q.description || '')} | +${q.rewardDP || 0} DP | Hạn: ${deadline}</div>
                     </div>
                     <span style="color:${statusColor};font-size:12px;font-weight:600;">${q.status === 'active' ? 'Đang mở' : 'Đã đóng'}</span>
@@ -722,7 +722,7 @@ async function loadAdminQuests() {
                     subHtml += `<div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.15);border-radius:12px;margin-bottom:8px;">
                         <div style="flex:1;">
                             <div style="font-weight:600;color:#f1f5f9;">${escapeHtml(s.displayName || 'User')}</div>
-                            <div style="font-size:12px;color:#94a3b8;">⚡ ${escapeHtml(q.title || '')} | +${q.rewardDP || 0} DP</div>
+                            <div style="font-size:12px;color:#94a3b8;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> ${escapeHtml(q.title || '')} | +${q.rewardDP || 0} DP</div>
                         </div>
                         <button onclick="window._approveSubmission('${doc.id}','${sub.id}','${sub.data().uid}',${q.rewardDP || 0})" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;">✅ Duyệt</button>
                         <button onclick="window._rejectSubmission('${doc.id}','${sub.id}')" style="background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.2);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;">❌ Từ chối</button>

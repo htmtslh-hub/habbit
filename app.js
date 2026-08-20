@@ -1,6 +1,17 @@
 (function(){
 'use strict';
 
+// ==================== GLOBAL MODAL SCROLL LOCK ====================
+// Automatically lock body scroll when any modal is visible
+(function initModalScrollLock() {
+    function checkModals() {
+        const anyModalOpen = document.querySelector('.modal-bg.show, .upgrade-modal-bg.show, .recap-modal-bg.show');
+        document.body.classList.toggle('modal-open', !!anyModalOpen);
+    }
+    const observer = new MutationObserver(checkModals);
+    observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'] });
+})();
+
 const SK='habitgame_v3';
 const auth = firebase.auth();
 const db = firebase.firestore();
@@ -12,6 +23,9 @@ const MAX_FREE_HABITS = 3;
 const PREMIUM_FEATURES = ['heatmap','notes','charts','unlimited_habits'];
 
 const I18N = {
+    // Rune Icon helper — returns inline SVG markup for i18n strings
+    _ri: function(name, cls) { return '<svg class="rune-inline'+(cls?' '+cls:'')+'" viewBox="0 0 48 48"><use href="#i-'+name+'"></use></svg>'; },
+
     vi: {
         title:'THEO DÕI THÓI QUEN',calSettings:'CÀI ĐẶT LỊCH',
         year:'Năm',month:'Tháng',overallStats:'Thống Kê Chung',
@@ -46,15 +60,15 @@ const I18N = {
         questTitle:'NHIỆM VỤ RÈN LUYỆN',questDaily:'Hàng ngày',questWeekly:'Hàng tuần',questAchievement:'Thành tích',questSurprise:'Đột xuất',
         questClaimed:'Đã nhận',questClaim:'Nhận thưởng',questLocked:'Chưa hoàn thành',
         questProgress:'Tiến độ',questReward:'Thưởng',questResetDaily:'Reset hàng ngày',questResetWeekly:'Reset hàng tuần',questPermanent:'Vĩnh viễn',
-        questCompletedToast:'🎉 Nhiệm vụ hoàn thành!',questClaimedToast:'✨ Đã nhận thưởng DP!',
-        questReportDone:'📸 Báo hoàn thành',questPending:'Chờ duyệt',questApproved:'Đã duyệt',
+        questCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Nhiệm vụ hoàn thành!',questClaimedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Đã nhận thưởng DP!',
+        questReportDone:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> Báo hoàn thành',questPending:'Chờ duyệt',questApproved:'Đã duyệt',
         tabStreakShield:'Bảo vệ chuỗi',streakModalTitle:'BẢO VỆ & CỨU CHUỖI',
         streakFreeze:'Bình Đóng Băng',streakRepair:'Vá Chuỗi 24h',
         streakStatus:'Tình trạng chuỗi',streakActive:'Đang duy trì',streakBroken:'Bị đứt hôm qua',
         streakProtected:'Được bảo vệ bởi Bình Đóng Băng',buyFreeze:'Mua Bình Đóng Băng',repairStreak:'Hồi Sinh Chuỗi',
-        freezeAutoToast:'🧊 Bình Đóng Băng đã tự động bảo vệ chuỗi của bạn hôm qua!',
-        streakRepairToast:'🔥 Chuỗi của bạn đã được HỒI SINH thành công!',
-        freezeBoughtToast:'🧊 Đã mua 1 Bình Đóng Băng thành công!',
+        freezeAutoToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> Bình Đóng Băng đã tự động bảo vệ chuỗi của bạn hôm qua!',
+        streakRepairToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg> Chuỗi của bạn đã được HỒI SINH thành công!',
+        freezeBoughtToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> Đã mua 1 Bình Đóng Băng thành công!',
         streakSafeDesc:'Bạn đang có bình đóng băng bảo vệ nếu lỡ quên check-in.',
         streakDangerDesc:'Bạn chưa có bình đóng băng dự trữ! Hãy mua để tránh đứt chuỗi.',
         streakBrokenDesc:'Chuỗi của bạn đã bị đứt hôm qua. Bạn có 24h để cứu lại chuỗi!',
@@ -64,24 +78,48 @@ const I18N = {
         repairStreakDesc:'Vá lại chuỗi bị đứt trong 24h qua, hồi sinh số ngày chuỗi nguyên vẹn.',
         historyTitle:'LỊCH SỬ BẢO VỆ CHUỖI',noHistory:'Chưa có lượt bảo vệ nào gần đây.',
         daysUnit:'ngày',maxStreakLabel:'Kỷ lục',currentStreakLabel:'Chuỗi hiện tại',
-        tabShop:'Cửa hàng',shopModalTitle:'🛒 CỬA HÀNG KỶ LUẬT',
+        tabShop:'Cửa hàng',shopModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-market"></use></svg> CỬA HÀNG KỶ LUẬT',
         shopTabTitles:'Danh hiệu',shopTabThemes:'Giao diện',shopTabFX:'Hiệu ứng',shopTabItems:'Vật phẩm',
         btnBuy:'Mua',btnEquip:'Trang bị',btnEquipped:'Đang dùng',
         itemBoughtToast:'Đã mua thành công!',itemEquippedToast:'Đã trang bị thành công!',
-        boostActivatedToast:'⚡ Đã kích hoạt Vé Nhân Đôi 2X DP trong 24h!',
-        tabSquad:'Tổ đội',squadHubTitle:'🛡️ TỔ ĐỘI & THÁCH ĐẤU 1V1',
+        boostActivatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> Đã kích hoạt Vé Nhân Đôi 2X DP trong 24h!',
+        tabSquad:'Tổ đội',squadHubTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> TỔ ĐỘI & THÁCH ĐẤU 1V1',
         squadTabGuild:'Tổ Đội Rèn Luyện',squadTabDuel:'Đấu Trường 1v1',
-        btnNudge:'⚡ Thúc giục',nudgeSentToast:'⚡ Đã gửi lời thúc giục sấm sét đến đồng đội!',
-        squadCreatedToast:'🛡️ Đã tạo tổ đội thành công!',squadJoinedToast:'🛡️ Đã gia nhập tổ đội!',
-        squadLeftToast:'Đã rời tổ đội.',duelCreatedToast:'⚔️ Đã tạo phòng thách đấu 7 ngày!',
-        duelAcceptedToast:'⚔️ Trận chiến 1v1 chính thức bắt đầu!',duelWonToast:'🏆 Chúc mừng! Bạn đã chiến thắng trận đấu 1v1!',
-        tabRecap:'Tổng kết',tabShareCard:'Khoe thẻ',shareModalTitle:'📸 XUẤT ẢNH THẺ KHOE KỶ LUẬT',
-        recapTitle:'Bản Tin Tổng Kết Tuần',cardDownloadedToast:'📥 Đã tải ảnh thẻ về máy!',
-        cardCopiedToast:'📋 Đã sao chép ảnh thẻ vào Clipboard!',
-        tabPomodoro:'Focus',pomoModalTitle:'⏱️ ĐỒNG HỒ TẬP TRUNG (DEEP WORK)',
-        pomoCompletedToast:'🎉 Hoàn thành phiên tập trung! +15 DP Deep Work Bonus',
-        pomoHabitCompletedToast:'🎉 Đã hoàn thành 25p! Thói quen đã tự động check-in (+15 DP)',
-        quoteCopiedToast:'📋 Đã sao chép câu trích dẫn!',
+        btnNudge:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> Thúc giục',nudgeSentToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> Đã gửi lời thúc giục sấm sét đến đồng đội!',
+        squadCreatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Đã tạo tổ đội thành công!',squadJoinedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Đã gia nhập tổ đội!',
+        squadLeftToast:'Đã rời tổ đội.',duelCreatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg> Đã tạo phòng thách đấu 7 ngày!',
+        duelAcceptedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg> Trận chiến 1v1 chính thức bắt đầu!',duelWonToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg> Chúc mừng! Bạn đã chiến thắng trận đấu 1v1!',
+        tabRecap:'Tổng kết',tabShareCard:'Khoe thẻ',shareModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> XUẤT ẢNH THẺ KHOE KỶ LUẬT',
+        recapTitle:'Bản Tin Tổng Kết Tuần',cardDownloadedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> Đã tải ảnh thẻ về máy!',
+        cardCopiedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> Đã sao chép ảnh thẻ vào Clipboard!',
+        tabPomodoro:'Focus',pomoModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-focus"></use></svg> ĐỒNG HỒ TẬP TRUNG (DEEP WORK)',
+        pomoCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Hoàn thành phiên tập trung! +15 DP Deep Work Bonus',
+        pomoHabitCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Đã hoàn thành 25p! Thói quen đã tự động check-in (+15 DP)',
+        quoteCopiedToast:'Đã sao chép câu trích dẫn!',
+        pomoLinkHabit:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg> GẮN VỚI THÓI QUEN:',pomoFreeDeepWork:'-- Tập trung tự do (Deep Work) --',
+        pomoPomodoro:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cycle"></use></svg> Pomodoro (25m)',pomoShortBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> Nghỉ ngắn (5m)',pomoLongBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg> Nghỉ dài (15m)',
+        pomoStart:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Bắt Đầu',pomoReset:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-reset"></use></svg> Đặt Lại',pomoPause:'⏸ Tạm Dừng',pomoContinue:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Tiếp Tục',
+        pomoReady:'Đang sẵn sàng',pomoFocusing:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg> Đang tập trung...',pomoResting:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> Đang nghỉ ngơi...',
+        pomoPaused:'Đang tạm dừng',pomoShortRest:'Nghỉ ngơi 5 phút',pomoLongRest:'Nghỉ ngơi 15 phút',
+        pomoRewardHint:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Thưởng +15 DP khi hoàn thành',
+        pomoAmbientLabel:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-audio"></use></svg> NHẠC NỀN TẬP TRUNG (AMBIENT SOUND):',
+        pomoSoundOff:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-mute"></use></svg> Tắt',pomoSoundRain:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-rain"></use></svg> Mưa Rơi',pomoSoundOcean:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-tide"></use></svg> Sóng Biển',
+        pomoSoundNoise:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-static"></use></svg> Tiếng Ồn Trắng',pomoSoundLofi:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-disc"></use></svg> Lo-fi Chords',
+        cmPlaceholder:'Chia sẻ câu chuyện, thành tích hoặc động lực rèn luyện của bạn...',
+        cmAttachImage:'Ảnh',cmAttachVideo:'Video',cmSubmitPost:'Đăng bài',
+        cmFeedHeader:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> BÀI VIẾT TỪ CỘNG ĐỒNG',cmRefresh:'Tải lại',
+        streakShopTitle:'CỬA HÀNG CỨU CHUỖI',streakWallet:'Ví',
+        streakBuyBtn:'Mua',streakNoNeed:'Không cần vá',
+        streakAvailable:'CÒN',
+        squadJoinTitle:'Gia Nhập Tổ Đội Rèn Luyện',
+        squadJoinDesc:'Nghiên cứu chỉ ra rằng khi có đồng đội cùng theo dõi và nhắc nhở, tỷ lệ duy trì kỷ luật thói quen tăng tới <b>85%</b>! Hãy tạo hoặc tham gia một tổ đội ngay.',
+        squadCreateTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Tạo Tổ Đội Mới (3-5 Người)',
+        squadNamePh:'Tên tổ đội (VD: Chiến Binh 5H Sáng)...',
+        squadIconLabel:'Biểu tượng:',squadGoalPh:'Mục tiêu chung của đội...',
+        squadCreateBtn:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Tạo Tổ Đội Ngay',
+        squadJoinByCode:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Gia Nhập Bằng Mã Mời',
+        squadCodePh:'Nhập mã mời...',squadJoinBtn:'Gia nhập',
+        shopOwned:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Đã sở hữu',
     },
     zh: {
         title:'习惯追踪器',calSettings:'日历设置',year:'年',month:'月',
@@ -114,15 +152,15 @@ const I18N = {
         questTitle:'训练任务',questDaily:'每日',questWeekly:'每周',questAchievement:'成就',questSurprise:'突发',
         questClaimed:'已领取',questClaim:'领取',questLocked:'未完成',
         questProgress:'进度',questReward:'奖励',questResetDaily:'每日重置',questResetWeekly:'每周重置',questPermanent:'永久',
-        questCompletedToast:'🎉 任务完成！',questClaimedToast:'✨ 已领取DP！',
-        questReportDone:'📸 报告完成',questPending:'待审核',questApproved:'已审核',
+        questCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 任务完成！',questClaimedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 已领取DP！',
+        questReportDone:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> 报告完成',questPending:'待审核',questApproved:'已审核',
         tabStreakShield:'连胜保护',streakModalTitle:'连胜保护与恢复',
         streakFreeze:'连胜冻结瓶',streakRepair:'24小时补签',
         streakStatus:'连胜状态',streakActive:'进行中',streakBroken:'昨日中断',
         streakProtected:'受冻结保护',buyFreeze:'购买冻结瓶',repairStreak:'恢复连胜',
-        freezeAutoToast:'🧊 冻结瓶已自动保护你昨天的连胜！',
-        streakRepairToast:'🔥 你的连胜已成功复活！',
-        freezeBoughtToast:'🧊 已成功购买1个冻结瓶！',
+        freezeAutoToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> 冻结瓶已自动保护你昨天的连胜！',
+        streakRepairToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg> 你的连胜已成功复活！',
+        freezeBoughtToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> 已成功购买1个冻结瓶！',
         streakSafeDesc:'你拥有冻结瓶，若遗漏签到将自动受到保护。',
         streakDangerDesc:'你暂无备用冻结瓶，建议购买以防连胜中断。',
         streakBrokenDesc:'你的连胜昨天已中断，24小时内可补救！',
@@ -132,24 +170,48 @@ const I18N = {
         repairStreakDesc:'修复过去24小时内中断的连胜，完美复活天数。',
         historyTitle:'连胜保护历史',noHistory:'近期暂无保护记录。',
         daysUnit:'天',maxStreakLabel:'最高记录',currentStreakLabel:'当前连胜',
-        tabShop:'商店',shopModalTitle:'🛒 自律商店',
+        tabShop:'商店',shopModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-market"></use></svg> 自律商店',
         shopTabTitles:'头衔',shopTabThemes:'主题',shopTabFX:'特效',shopTabItems:'道具',
         btnBuy:'购买',btnEquip:'装备',btnEquipped:'已装备',
         itemBoughtToast:'购买成功！',itemEquippedToast:'装备成功！',
-        boostActivatedToast:'⚡ 2X DP加速卡已激活（24小时）！',
-        tabSquad:'战队',squadHubTitle:'🛡️ 战队与1V1对决',
+        boostActivatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> 2X DP加速卡已激活（24小时）！',
+        tabSquad:'战队',squadHubTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> 战队与1V1对决',
         squadTabGuild:'自律战队',squadTabDuel:'1V1对决场',
-        btnNudge:'⚡ 催促',nudgeSentToast:'⚡ 已向队友发送闪电提醒！',
-        squadCreatedToast:'🛡️ 战队创建成功！',squadJoinedToast:'🛡️ 成功加入战队！',
-        squadLeftToast:'已退出战队。',duelCreatedToast:'⚔️ 已创建7天对决房间！',
-        duelAcceptedToast:'⚔️ 1V1对决正式开启！',duelWonToast:'🏆 恭喜！你赢得了1V1对决！',
-        tabRecap:'周报',tabShareCard:'分享卡片',shareModalTitle:'📸 导出自律成就卡',
-        recapTitle:'每周自律总结',cardDownloadedToast:'📥 成就卡已保存！',
-        cardCopiedToast:'📋 成就卡已复制到剪贴板！',
-        tabPomodoro:'专注',pomoModalTitle:'⏱️ 专注时钟 (DEEP WORK)',
-        pomoCompletedToast:'🎉 专注完成！获得 +15 DP 奖励',
-        pomoHabitCompletedToast:'🎉 25分钟专注完成！习惯已自动打卡 (+15 DP)',
-        quoteCopiedToast:'📋 格言已复制到剪贴板！',
+        btnNudge:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> 催促',nudgeSentToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> 已向队友发送闪电提醒！',
+        squadCreatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> 战队创建成功！',squadJoinedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> 成功加入战队！',
+        squadLeftToast:'已退出战队。',duelCreatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg> 已创建7天对决房间！',
+        duelAcceptedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg> 1V1对决正式开启！',duelWonToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg> 恭喜！你赢得了1V1对决！',
+        tabRecap:'周报',tabShareCard:'分享卡片',shareModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> 导出自律成就卡',
+        recapTitle:'每周自律总结',cardDownloadedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> 成就卡已保存！',
+        cardCopiedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> 成就卡已复制到剪贴板！',
+        tabPomodoro:'专注',pomoModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-focus"></use></svg> 专注时钟 (DEEP WORK)',
+        pomoCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 专注完成！获得 +15 DP 奖励',
+        pomoHabitCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 25分钟专注完成！习惯已自动打卡 (+15 DP)',
+        quoteCopiedToast:'格言已复制到剪贴板！',
+        pomoLinkHabit:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg> 关联习惯:',pomoFreeDeepWork:'-- 自由专注 (Deep Work) --',
+        pomoPomodoro:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cycle"></use></svg> 番茄钟 (25m)',pomoShortBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> 短休 (5m)',pomoLongBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg> 长休 (15m)',
+        pomoStart:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> 开始',pomoReset:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-reset"></use></svg> 重置',pomoPause:'⏸ 暂停',pomoContinue:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> 继续',
+        pomoReady:'准备就绪',pomoFocusing:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg> 专注中...',pomoResting:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> 休息中...',
+        pomoPaused:'已暂停',pomoShortRest:'休息5分钟',pomoLongRest:'休息15分钟',
+        pomoRewardHint:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 完成可获得 +15 DP',
+        pomoAmbientLabel:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-audio"></use></svg> 专注背景音:',
+        pomoSoundOff:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-mute"></use></svg> 关闭',pomoSoundRain:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-rain"></use></svg> 雨声',pomoSoundOcean:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-tide"></use></svg> 海浪',
+        pomoSoundNoise:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-static"></use></svg> 白噪声',pomoSoundLofi:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-disc"></use></svg> Lo-fi和弦',
+        cmPlaceholder:'分享你的故事、成就或训练心得...',
+        cmAttachImage:'图片',cmAttachVideo:'视频',cmSubmitPost:'发布',
+        cmFeedHeader:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 社区动态',cmRefresh:'刷新',
+        streakShopTitle:'连胜商店',streakWallet:'余额',
+        streakBuyBtn:'购买',streakNoNeed:'无需修复',
+        streakAvailable:'可用',
+        squadJoinTitle:'加入自律战队',
+        squadJoinDesc:'研究表明，有队友共同监督和提醒时，习惯坚持率提高至<b>85%</b>！立即创建或加入战队。',
+        squadCreateTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 创建新战队 (3-5人)',
+        squadNamePh:'战队名称...',
+        squadIconLabel:'图标:',squadGoalPh:'团队共同目标...',
+        squadCreateBtn:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> 立即创建战队',
+        squadJoinByCode:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> 通过邀请码加入',
+        squadCodePh:'输入邀请码...',squadJoinBtn:'加入',
+        shopOwned:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> 已拥有',
     },
     en: {
         title:'HABIT MASTERY',calSettings:'CALENDAR SETTINGS',year:'Year',month:'Month',
@@ -182,15 +244,15 @@ const I18N = {
         questTitle:'TRAINING QUESTS',questDaily:'Daily',questWeekly:'Weekly',questAchievement:'Achievements',questSurprise:'Surprise',
         questClaimed:'Claimed',questClaim:'Claim',questLocked:'Incomplete',
         questProgress:'Progress',questReward:'Reward',questResetDaily:'Resets daily',questResetWeekly:'Resets weekly',questPermanent:'Permanent',
-        questCompletedToast:'🎉 Quest completed!',questClaimedToast:'✨ DP claimed!',
-        questReportDone:'📸 Report done',questPending:'Pending',questApproved:'Approved',
+        questCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Quest completed!',questClaimedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> DP claimed!',
+        questReportDone:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> Report done',questPending:'Pending',questApproved:'Approved',
         tabStreakShield:'Streak Shield',streakModalTitle:'STREAK SHIELD & RECOVERY',
         streakFreeze:'Streak Freeze',streakRepair:'24h Streak Repair',
         streakStatus:'Streak Status',streakActive:'Active',streakBroken:'Broken Yesterday',
         streakProtected:'Protected by Streak Freeze',buyFreeze:'Buy Streak Freeze',repairStreak:'Resurrect Streak',
-        freezeAutoToast:'🧊 Streak Freeze automatically protected your streak yesterday!',
-        streakRepairToast:'🔥 Your streak has been successfully resurrected!',
-        freezeBoughtToast:'🧊 Successfully purchased 1 Streak Freeze!',
+        freezeAutoToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> Streak Freeze automatically protected your streak yesterday!',
+        streakRepairToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg> Your streak has been successfully resurrected!',
+        freezeBoughtToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> Successfully purchased 1 Streak Freeze!',
         streakSafeDesc:'You have an active freeze bottle protecting your streak if you miss a day.',
         streakDangerDesc:'No reserve freeze bottle! Buy one to prevent streak loss.',
         streakBrokenDesc:'Your streak broke yesterday. You have 24h to recover it!',
@@ -200,24 +262,48 @@ const I18N = {
         repairStreakDesc:'Repairs a broken streak from the past 24h, fully restoring your streak count.',
         historyTitle:'PROTECTION HISTORY',noHistory:'No recent protection records.',
         daysUnit:'days',maxStreakLabel:'Record',currentStreakLabel:'Current Streak',
-        tabShop:'Shop',shopModalTitle:'🛒 DISCIPLINE SHOP',
+        tabShop:'Shop',shopModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-market"></use></svg> DISCIPLINE SHOP',
         shopTabTitles:'Titles',shopTabThemes:'Themes',shopTabFX:'FX & Sound',shopTabItems:'Items',
         btnBuy:'Buy',btnEquip:'Equip',btnEquipped:'Equipped',
         itemBoughtToast:'Purchased successfully!',itemEquippedToast:'Equipped successfully!',
-        boostActivatedToast:'⚡ 2X DP Boost activated for 24h!',
-        tabSquad:'Squads',squadHubTitle:'🛡️ SQUADS & 1V1 DUELS',
+        boostActivatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> 2X DP Boost activated for 24h!',
+        tabSquad:'Squads',squadHubTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> SQUADS & 1V1 DUELS',
         squadTabGuild:'Discipline Squads',squadTabDuel:'1v1 Arena',
-        btnNudge:'⚡ Nudge',nudgeSentToast:'⚡ Thunder poke sent to your teammate!',
-        squadCreatedToast:'🛡️ Squad created successfully!',squadJoinedToast:'🛡️ Joined squad successfully!',
-        squadLeftToast:'Left squad.',duelCreatedToast:'⚔️ 7-Day Duel created!',
-        duelAcceptedToast:'⚔️ 1v1 Duel has begun!',duelWonToast:'🏆 Congratulations! You won the 1v1 duel!',
-        tabRecap:'Recap',tabShareCard:'Share Card',shareModalTitle:'📸 SHAREABLE HABIT CARD',
-        recapTitle:'Weekly Habit Recap',cardDownloadedToast:'📥 Card image downloaded!',
-        cardCopiedToast:'📋 Card image copied to clipboard!',
-        tabPomodoro:'Focus',pomoModalTitle:'⏱️ FOCUS TIMER (DEEP WORK)',
-        pomoCompletedToast:'🎉 Deep work session completed! +15 DP Bonus',
-        pomoHabitCompletedToast:'🎉 25m Focus done! Habit automatically checked-in (+15 DP)',
-        quoteCopiedToast:'📋 Quote copied to clipboard!',
+        btnNudge:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> Nudge',nudgeSentToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> Thunder poke sent to your teammate!',
+        squadCreatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Squad created successfully!',squadJoinedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Joined squad successfully!',
+        squadLeftToast:'Left squad.',duelCreatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg> 7-Day Duel created!',
+        duelAcceptedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg> 1v1 Duel has begun!',duelWonToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg> Congratulations! You won the 1v1 duel!',
+        tabRecap:'Recap',tabShareCard:'Share Card',shareModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> SHAREABLE HABIT CARD',
+        recapTitle:'Weekly Habit Recap',cardDownloadedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> Card image downloaded!',
+        cardCopiedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> Card image copied to clipboard!',
+        tabPomodoro:'Focus',pomoModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-focus"></use></svg> FOCUS TIMER (DEEP WORK)',
+        pomoCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Deep work session completed! +15 DP Bonus',
+        pomoHabitCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 25m Focus done! Habit automatically checked-in (+15 DP)',
+        quoteCopiedToast:'Quote copied to clipboard!',
+        pomoLinkHabit:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg> LINK TO HABIT:',pomoFreeDeepWork:'-- Free Focus (Deep Work) --',
+        pomoPomodoro:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cycle"></use></svg> Pomodoro (25m)',pomoShortBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> Short Break (5m)',pomoLongBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg> Long Break (15m)',
+        pomoStart:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Start',pomoReset:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-reset"></use></svg> Reset',pomoPause:'⏸ Pause',pomoContinue:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Resume',
+        pomoReady:'Ready',pomoFocusing:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg> Focusing...',pomoResting:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> Resting...',
+        pomoPaused:'Paused',pomoShortRest:'5 min break',pomoLongRest:'15 min break',
+        pomoRewardHint:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> +15 DP reward on completion',
+        pomoAmbientLabel:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-audio"></use></svg> AMBIENT SOUND:',
+        pomoSoundOff:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-mute"></use></svg> Off',pomoSoundRain:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-rain"></use></svg> Rain',pomoSoundOcean:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-tide"></use></svg> Ocean',
+        pomoSoundNoise:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-static"></use></svg> White Noise',pomoSoundLofi:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-disc"></use></svg> Lo-fi Chords',
+        cmPlaceholder:'Share your story, achievement, or training motivation...',
+        cmAttachImage:'Image',cmAttachVideo:'Video',cmSubmitPost:'Post',
+        cmFeedHeader:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> COMMUNITY POSTS',cmRefresh:'Refresh',
+        streakShopTitle:'STREAK SHOP',streakWallet:'Wallet',
+        streakBuyBtn:'Buy',streakNoNeed:'Not needed',
+        streakAvailable:'AVAILABLE',
+        squadJoinTitle:'Join a Discipline Squad',
+        squadJoinDesc:'Research shows that having teammates to track and remind each other increases habit discipline rate up to <b>85%</b>! Create or join a squad now.',
+        squadCreateTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Create New Squad (3-5 People)',
+        squadNamePh:'Squad name (e.g., Morning Warriors)...',
+        squadIconLabel:'Icon:',squadGoalPh:'Team shared goal...',
+        squadCreateBtn:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Create Squad Now',
+        squadJoinByCode:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Join by Invite Code',
+        squadCodePh:'Enter invite code...',squadJoinBtn:'Join',
+        shopOwned:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Owned',
     }
 };
 
@@ -225,15 +311,10 @@ let curLang=localStorage.getItem('hg_lang')||'vi';
 function t(k){return(I18N[curLang]||I18N.en)[k]||(I18N.en[k])||k}
 
 function applyI18n(){
-    document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n)});
+    document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n)});
     document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=t(el.dataset.i18nPh)});
     const ms=document.querySelector('#monthSel');
     if(ms){ms.innerHTML='';t('months').forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m;ms.appendChild(o)});ms.value=cM}
-    const lBtn = document.querySelector('#langToggleBtn');
-    if(lBtn) {
-        const labels = { vi: 'VI', zh: '中', en: 'EN' };
-        lBtn.textContent = labels[curLang] || 'VI';
-    }
 }
 
 const DEF=[
@@ -645,42 +726,42 @@ async function loadFromFirestore(){
 
 const SHOP_CATALOG = {
     titles: [
-        { id: 'early_bird', name: '🌅 Chim Sớm', nameEn: '🌅 Early Bird', nameZh: '🌅 早起鸟', icon: '🌅', desc: 'Dành cho những người dậy sớm làm chủ bình minh.', descEn: 'For those who wake up early to conquer dawn.', descZh: '献给早起掌控清晨的人。', price: 300 },
-        { id: 'night_owl', name: '🦉 Kẻ Thức Khuya', nameEn: '🦉 Night Owl', nameZh: '🦉 夜猫子', icon: '🦉', desc: 'Dành cho những cú đêm miệt mài rèn luyện.', descEn: 'For dedicated night owls forging habits.', descZh: '献给深夜不辍前行的人。', price: 300 },
-        { id: 'warrior', name: '⚔️ Chiến Binh Kỷ Luật', nameEn: '⚔️ Discipline Warrior', nameZh: '⚔️ 自律战士', icon: '⚔️', desc: 'Ý chí kiên cường không ngại gian khó.', descEn: 'Unbreakable willpower against all odds.', descZh: '坚韧不拔，无惧困难。', price: 500 },
-        { id: 'alpha_wolf', name: '🐺 Sói Đầu Đàn', nameEn: '🐺 Alpha Wolf', nameZh: '🐺 头狼领袖', icon: '🐺', desc: 'Dẫn đầu bầy đàn, kỷ luật thép đỉnh cao.', descEn: 'Leading the pack with apex discipline.', descZh: '领航团队，钢铁意志。', price: 800 },
-        { id: 'invincible', name: '🛡️ Bất Khả Xâm Phạm', nameEn: '🛡️ Invincible', nameZh: '🛡️ 坚不可摧', icon: '🛡️', desc: 'Thành trì bất hoại trước mọi cám dỗ.', descEn: 'An impenetrable fortress against temptations.', descZh: '百毒不侵，坚如磐石。', price: 1200 },
-        { id: 'conqueror', name: '👑 Kẻ Chinh Phục Thói Quen', nameEn: '👑 Habit Conqueror', nameZh: '👑 习惯征服者', icon: '👑', desc: 'Bá chủ kỷ luật, chinh phục mọi giới hạn.', descEn: 'Absolute master conquering all limits.', descZh: '自律霸主，征服极限。', price: 2000 },
-        { id: 'flash_will', name: '⚡ Thần Tốc Kỷ Luật', nameEn: '⚡ Flash of Will', nameZh: '⚡ 极速意志', icon: '⚡', desc: 'Check-in nhanh như chớp, hành động dứt khoát.', descEn: 'Lightning-fast execution & instant check-ins.', descZh: '闪电自律，雷厉风行。', price: 600 },
-        { id: 'zen_master', name: '🧘 Tâm Bất Biến', nameEn: '🧘 Zen Master', nameZh: '🧘 禅心大师', icon: '🧘', desc: 'Tĩnh lặng trong tâm hồn, bền bỉ mỗi ngày.', descEn: 'Inner calm with relentless daily focus.', descZh: '宁静致远，持之以恒。', price: 500 }
+        { id: 'early_bird', name: 'Chim Sớm', nameEn: 'Early Bird', nameZh: '早起鸟', icon: '🌅', desc: 'Dành cho những người dậy sớm làm chủ bình minh.', descEn: 'For those who wake up early to conquer dawn.', descZh: '献给早起掌控清晨的人。', price: 300 },
+        { id: 'night_owl', name: 'Kẻ Thức Khuya', nameEn: 'Night Owl', nameZh: '夜猫子', icon: '🦉', desc: 'Dành cho những cú đêm miệt mài rèn luyện.', descEn: 'For dedicated night owls forging habits.', descZh: '献给深夜不辍前行的人。', price: 300 },
+        { id: 'warrior', name: 'Chiến Binh Kỷ Luật', nameEn: 'Discipline Warrior', nameZh: '自律战士', icon: '⚔️', desc: 'Ý chí kiên cường không ngại gian khó.', descEn: 'Unbreakable willpower against all odds.', descZh: '坚韧不拔，无惧困难。', price: 500 },
+        { id: 'alpha_wolf', name: 'Sói Đầu Đàn', nameEn: 'Alpha Wolf', nameZh: '头狼领袖', icon: '🐺', desc: 'Dẫn đầu bầy đàn, kỷ luật thép đỉnh cao.', descEn: 'Leading the pack with apex discipline.', descZh: '领航团队，钢铁意志。', price: 800 },
+        { id: 'invincible', name: 'Bất Khả Xâm Phạm', nameEn: 'Invincible', nameZh: '坚不可摧', icon: '🛡️', desc: 'Thành trì bất hoại trước mọi cám dỗ.', descEn: 'An impenetrable fortress against temptations.', descZh: '百毒不侵，坚如磐石。', price: 1200 },
+        { id: 'conqueror', name: 'Kẻ Chinh Phục Thói Quen', nameEn: 'Habit Conqueror', nameZh: '习惯征服者', icon: '👑', desc: 'Bá chủ kỷ luật, chinh phục mọi giới hạn.', descEn: 'Absolute master conquering all limits.', descZh: '自律霸主，征服极限。', price: 2000 },
+        { id: 'flash_will', name: 'Thần Tốc Kỷ Luật', nameEn: 'Flash of Will', nameZh: '极速意志', icon: '⚡', desc: 'Check-in nhanh như chớp, hành động dứt khoát.', descEn: 'Lightning-fast execution & instant check-ins.', descZh: '闪电自律，雷厉风行。', price: 600 },
+        { id: 'zen_master', name: 'Tâm Bất Biến', nameEn: 'Zen Master', nameZh: '禅心大师', icon: '🧘', desc: 'Tĩnh lặng trong tâm hồn, bền bỉ mỗi ngày.', descEn: 'Inner calm with relentless daily focus.', descZh: '宁静致远，持之以恒。', price: 500 }
     ],
     themes: [
-        { id: 'dark', name: '🌙 Dark Mode', desc: 'Giao diện tối cổ điển huyền bí.', price: 0, free: true, bg: '#0f172a', accent: '#10b981' },
-        { id: 'light', name: '☀️ Light Mode', desc: 'Giao diện sáng sủa tươi mới.', price: 0, free: true, bg: '#f8fafc', accent: '#059669' },
-        { id: 'cyberpunk', name: '🔮 Cyberpunk Neon', desc: 'Thế giới tương lai rực rỡ tím & hồng cyan.', price: 600, bg: '#0d0221', accent: '#ff007f' },
-        { id: 'luxury', name: '👑 Gold Luxury', desc: 'Vàng kim hoàng gia quý phái obsidian.', price: 800, bg: '#0b0b0e', accent: '#d4af37' },
-        { id: 'sakura', name: '🌸 Minimalist Sakura', desc: 'Hồng hoa anh đào thanh tao Nhật Bản.', price: 500, bg: '#fcf5f8', accent: '#ec4899' },
-        { id: 'matrix', name: '💻 Midnight Matrix', desc: 'Xanh terminal hacker thế giới ma trận.', price: 600, bg: '#000c04', accent: '#00ff66' },
-        { id: 'forest', name: '🍃 Forest Zen', desc: 'Rừng ngọc bích thiên nhiên dịu mát an lành.', price: 500, bg: '#081711', accent: '#10b981' }
+        { id: 'dark', name: 'Dark Mode', desc: 'Giao diện tối cổ điển huyền bí.', price: 0, free: true, bg: '#0f172a', accent: '#10b981' },
+        { id: 'light', name: 'Light Mode', desc: 'Giao diện sáng sủa tươi mới.', price: 0, free: true, bg: '#f8fafc', accent: '#059669' },
+        { id: 'cyberpunk', name: 'Cyberpunk Neon', desc: 'Thế giới tương lai rực rỡ tím & hồng cyan.', price: 600, bg: '#0d0221', accent: '#ff007f' },
+        { id: 'luxury', name: 'Gold Luxury', desc: 'Vàng kim hoàng gia quý phái obsidian.', price: 800, bg: '#0b0b0e', accent: '#d4af37' },
+        { id: 'sakura', name: 'Minimalist Sakura', desc: 'Hồng hoa anh đào thanh tao Nhật Bản.', price: 500, bg: '#fcf5f8', accent: '#ec4899' },
+        { id: 'matrix', name: 'Midnight Matrix', desc: 'Xanh terminal hacker thế giới ma trận.', price: 600, bg: '#000c04', accent: '#00ff66' },
+        { id: 'forest', name: 'Forest Zen', desc: 'Rừng ngọc bích thiên nhiên dịu mát an lành.', price: 500, bg: '#081711', accent: '#10b981' }
     ],
     soundFx: [
-        { id: 'default', name: '🔔 Chime Mặc Định', desc: 'Âm thanh trong trẻo êm tai.', price: 0, free: true },
-        { id: 'katana', name: '🗡️ Katana Slash', desc: 'Tiếng chém kiếm sắc bén dứt khoát.', price: 350 },
-        { id: 'rpg', name: '🎮 RPG Level-Up', desc: 'Hợp âm chiến thắng thăng cấp nhập vai.', price: 400 },
-        { id: 'mechanical', name: '⌨️ Phím Cơ Thocky', desc: 'Âm switch phím cơ êm ái gây nghiện.', price: 350 },
-        { id: 'bubble', name: '💧 Bong Bóng Nước', desc: 'Tiếng giọt nước bùng nổ tươi mát.', price: 250 },
-        { id: 'laser', name: '⚡ Laser Beam Zap', desc: 'Tia năng lượng viễn tưởng siêu tốc.', price: 300 }
+        { id: 'default', name: 'Chime Mặc Định', desc: 'Âm thanh trong trẻo êm tai.', price: 0, free: true },
+        { id: 'katana', name: 'Katana Slash', desc: 'Tiếng chém kiếm sắc bén dứt khoát.', price: 350 },
+        { id: 'rpg', name: 'RPG Level-Up', desc: 'Hợp âm chiến thắng thăng cấp nhập vai.', price: 400 },
+        { id: 'mechanical', name: 'Phím Cơ Thocky', desc: 'Âm switch phím cơ êm ái gây nghiện.', price: 350 },
+        { id: 'bubble', name: 'Bong Bóng Nước', desc: 'Tiếng giọt nước bùng nổ tươi mát.', price: 250 },
+        { id: 'laser', name: 'Laser Beam Zap', desc: 'Tia năng lượng viễn tưởng siêu tốc.', price: 300 }
     ],
     visualFx: [
-        { id: 'default', name: '🟢 Pop Nhẹ Mặc Định', desc: 'Hiệu ứng phóng to nhẹ nhàng.', price: 0, free: true },
-        { id: 'fireworks', name: '🎆 Pháo Hoa Mini', desc: 'Hạt pháo hoa lung linh bùng nổ từ ô check.', price: 400 },
-        { id: 'laser', name: '⚡ Tia Laser Neon', desc: 'Vệt sáng laser quét ngang rực rỡ.', price: 400 },
-        { id: 'gold_aura', name: '🌟 Hào Quang Vàng Kim', desc: 'Vòng sáng hoàng kim tỏa rộng đẳng cấp.', price: 450 },
-        { id: 'sakura', name: '🌸 Cánh Hoa Bay', desc: 'Cánh hoa anh đào rơi lãng mạn.', price: 350 }
+        { id: 'default', name: 'Pop Nhẹ Mặc Định', desc: 'Hiệu ứng phóng to nhẹ nhàng.', price: 0, free: true },
+        { id: 'fireworks', name: 'Pháo Hoa Mini', desc: 'Hạt pháo hoa lung linh bùng nổ từ ô check.', price: 400 },
+        { id: 'laser', name: 'Tia Laser Neon', desc: 'Vệt sáng laser quét ngang rực rỡ.', price: 400 },
+        { id: 'gold_aura', name: 'Hào Quang Vàng Kim', desc: 'Vòng sáng hoàng kim tỏa rộng đẳng cấp.', price: 450 },
+        { id: 'sakura', name: 'Cánh Hoa Bay', desc: 'Cánh hoa anh đào rơi lãng mạn.', price: 350 }
     ],
     items: [
-        { id: 'freeze', name: '🧊 Bình Đóng Băng Chuỗi', icon: '🧊', desc: 'Tự động bảo vệ chuỗi khi quên check-in (Tối đa 2 bình).', price: 200 },
-        { id: 'boost2x', name: '⚡ Vé Nhân Đôi Điểm (2X DP 24h)', icon: '⚡', desc: 'Nhân đôi tất cả điểm thưởng DP khi check-in trong suốt 24 giờ!', price: 300 }
+        { id: 'freeze', name: 'Bình Đóng Băng Chuỗi', icon: '🧊', desc: 'Tự động bảo vệ chuỗi khi quên check-in (Tối đa 2 bình).', price: 200 },
+        { id: 'boost2x', name: 'Vé Nhân Đôi Điểm (2X DP 24h)', icon: '⚡', desc: 'Nhân đôi tất cả điểm thưởng DP khi check-in trong suốt 24 giờ!', price: 300 }
     ]
 };
 window.SHOP_CATALOG = SHOP_CATALOG;
@@ -909,21 +990,10 @@ function applyPremiumGate(){
         }
     }
 
-    // Admin link
-    if(userPlan.role === 'admin'){
-        if(!document.querySelector('#adminLink')){
-            const nav = document.querySelector('.nav-controls');
-            if(nav){
-                const link = document.createElement('a');
-                link.id = 'adminLink';
-                link.href = 'admin.html';
-                link.className = 'nav-action-btn';
-                link.title = 'Admin Dashboard';
-                link.textContent = '🛡️';
-                link.style.textDecoration = 'none';
-                nav.insertBefore(link, nav.firstChild);
-            }
-        }
+    // Admin link — show in profile modal instead of navbar
+    const adminSection = document.getElementById('profileAdminSection');
+    if (adminSection) {
+        adminSection.style.display = userPlan.role === 'admin' ? 'block' : 'none';
     }
 }
 
@@ -957,35 +1027,35 @@ function openUpgradeModal(){
                         <div class="compare-col free-col">
                             <h3>Free</h3>
                             <ul>
-                                <li>✅ ${MAX_FREE_HABITS} thói quen</li>
-                                <li>✅ Theo dõi hàng ngày</li>
-                                <li>✅ Đồng bộ đám mây</li>
-                                <li>❌ Biểu đồ phân tích</li>
-                                <li>❌ Heatmap năm</li>
-                                <li>❌ Ghi chú hàng ngày</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> ${MAX_FREE_HABITS} thói quen</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Theo dõi hàng ngày</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Đồng bộ đám mây</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg> Biểu đồ phân tích</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg> Heatmap năm</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg> Ghi chú hàng ngày</li>
                             </ul>
                             <div class="compare-price">0đ</div>
                         </div>
                         <div class="compare-col premium-col">
-                            <h3>Premium 👑</h3>
+                            <h3>Premium <svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg></h3>
                             <ul>
-                                <li>✅ Không giới hạn thói quen</li>
-                                <li>✅ Biểu đồ phân tích</li>
-                                <li>✅ Heatmap cả năm</li>
-                                <li>✅ Ghi chú hàng ngày</li>
-                                <li>✅ Ưu tiên hỗ trợ</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Không giới hạn thói quen</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Biểu đồ phân tích</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Heatmap cả năm</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Ghi chú hàng ngày</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Ưu tiên hỗ trợ</li>
                             </ul>
                         </div>
                     </div>
                     <div class="plan-selector">
                         <div class="plan-card" data-plan="monthly" onclick="window._selectPlan('monthly')">
-                            <span class="plan-check">✅</span>
+                            <span class="plan-check"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span>
                             <div class="plan-name">Gói Tháng</div>
                             <div class="plan-price">99.000đ<small>/tháng</small></div>
                         </div>
                         <div class="plan-card" data-plan="yearly" onclick="window._selectPlan('yearly')">
                             <span class="plan-badge">Tiết kiệm 30%</span>
-                            <span class="plan-check">✅</span>
+                            <span class="plan-check"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span>
                             <div class="plan-name">Gói Năm</div>
                             <div class="plan-price">399.000đ<small>/năm</small></div>
                             <div class="plan-save">~33.250đ/tháng</div>
@@ -1247,7 +1317,7 @@ window._manualConfirm = async function(){
             upgradeRequestedAt: firebase.firestore.FieldValue.serverTimestamp(),
             upgradeNote: _currentPaymentOrder.orderNumber,
         });
-        alert('✅ Yêu cầu đã gửi! Admin sẽ xác nhận trong 1-24 giờ.\nMã đơn: ' + _currentPaymentOrder.orderNumber);
+        alert('Yêu cầu đã gửi! Admin sẽ xác nhận trong 1-24 giờ.\nMã đơn: ' + _currentPaymentOrder.orderNumber);
     } catch(e){
         alert('Lỗi: ' + e.message);
     }
@@ -1273,13 +1343,25 @@ function updateThemeAvatars() {
     if (typeof currentUser !== 'undefined' && currentUser) {
         showUserProfile(currentUser);
         const profileModal = document.getElementById('profileModalBg');
-        if (profileModal && profileModal.classList.contains('show') && typeof window.updateProfileModalUI === 'function') {
-            window.updateProfileModalUI();
+        if (profileModal && profileModal.classList.contains('show') && typeof window._updateProfileModalUI === 'function') {
+            window._updateProfileModalUI();
         }
     }
 }
-function applyTheme(){document.documentElement.setAttribute('data-theme',curTheme);const b=$('#themeBtn');if(b)b.textContent=curTheme==='dark'?'☀️':'🌙';updateThemeAvatars();}
+function applyTheme(){document.documentElement.setAttribute('data-theme',curTheme);updateThemeAvatars();}
 function toggleTheme(){curTheme=curTheme==='dark'?'light':'dark';localStorage.setItem('hg_theme',curTheme);applyTheme();renderBar();renderLine()}
+
+function switchToTheme(themeId) {
+    curTheme = themeId;
+    localStorage.setItem('hg_theme', curTheme);
+    if (!S.inventory) S.inventory = sanitizeInventory ? sanitizeInventory(null) : {};
+    S.inventory.equippedTheme = themeId;
+    sv();
+    applyTheme();
+    renderBar();
+    renderLine();
+}
+window._switchToTheme = switchToTheme;
 
 /* EXPORT/IMPORT */
 function exportData(){const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=`habit-backup-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(u)}
@@ -1377,17 +1459,16 @@ function initCal(){
     $('#monthSel').onchange=()=>{cM=+$('#monthSel').value;renderAll()};
 }
 function initLang(){
-    const btn = $('#langToggleBtn');
-    if(btn){
-        btn.onclick = () => {
-            const nextLang = { vi: 'zh', zh: 'en', en: 'vi' };
-            curLang = nextLang[curLang] || 'vi';
-            localStorage.setItem('hg_lang', curLang);
-            applyI18n();
-            renderAll();
-        };
-    }
+    // Language switching now handled in Profile Modal via initProfileModal
 }
+function switchLang(lang) {
+    curLang = lang;
+    localStorage.setItem('hg_lang', curLang);
+    applyI18n();
+    renderAll();
+    if (window._updateProfileModalUI) window._updateProfileModalUI();
+}
+window._switchLang = switchLang;
 let vietnameseInput=null;
 let curIme='telex';
 function initIme(){
@@ -1405,7 +1486,7 @@ function applyIme(){
         vietnameseInput.enable();
     }
 }
-function initTheme(){applyTheme();const b=$('#themeBtn');if(b)b.onclick=toggleTheme}
+function initTheme(){applyTheme();}
 function initExportImport(){
     const eb=$('#exportBtn'),ib=$('#importBtn'),f=$('#importFile');
     if(eb)eb.onclick=exportData;
@@ -2112,16 +2193,16 @@ async function startApp(user){
 
 // ==================== RANK TIERS & SCORING ====================
 const RANK_TIERS = [
-    { level:1, name:'Tân Binh', nameEn:'Recruit', nameZh:'新兵', icon:'🌱', minDp:0, maxDp:1500, color:'#94a3b8' },
-    { level:2, name:'Chiến Binh', nameEn:'Warrior', nameZh:'战士', icon:'⚔️', minDp:1501, maxDp:4500, color:'#22c55e' },
-    { level:3, name:'Dũng Sĩ', nameEn:'Champion', nameZh:'勇士', icon:'🛡️', minDp:4501, maxDp:9000, color:'#3b82f6' },
-    { level:4, name:'Kiếm Sĩ', nameEn:'Swordsman', nameZh:'剑士', icon:'⚡', minDp:9001, maxDp:15000, color:'#a855f7' },
-    { level:5, name:'Cao Thủ', nameEn:'Expert', nameZh:'高手', icon:'🔥', minDp:15001, maxDp:24000, color:'#f97316' },
-    { level:6, name:'Đại Sư', nameEn:'Grand Master', nameZh:'大师', icon:'💎', minDp:24001, maxDp:36000, color:'#06b6d4' },
-    { level:7, name:'Chiến Thần', nameEn:'War God', nameZh:'战神', icon:'🌟', minDp:36001, maxDp:54000, color:'#eab308' },
-    { level:8, name:'Bất Tử', nameEn:'Immortal', nameZh:'不朽', icon:'👑', minDp:54001, maxDp:75000, color:'#ec4899' },
-    { level:9, name:'Huyền Thoại', nameEn:'Legend', nameZh:'传说', icon:'🏆', minDp:75001, maxDp:105000, color:'#ef4444' },
-    { level:10, name:'Thần Thoại', nameEn:'Mythic', nameZh:'神话', icon:'✨', minDp:105001, maxDp:Infinity, color:'#fbbf24' },
+    { level:1, name:'Tân Binh', nameEn:'Recruit', nameZh:'新兵', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', minDp:0, maxDp:1500, color:'#94a3b8' },
+    { level:2, name:'Chiến Binh', nameEn:'Warrior', nameZh:'战士', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg>', minDp:1501, maxDp:4500, color:'#22c55e' },
+    { level:3, name:'Dũng Sĩ', nameEn:'Champion', nameZh:'勇士', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg>', minDp:4501, maxDp:9000, color:'#3b82f6' },
+    { level:4, name:'Kiếm Sĩ', nameEn:'Swordsman', nameZh:'剑士', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg>', minDp:9001, maxDp:15000, color:'#a855f7' },
+    { level:5, name:'Cao Thủ', nameEn:'Expert', nameZh:'高手', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg>', minDp:15001, maxDp:24000, color:'#f97316' },
+    { level:6, name:'Đại Sư', nameEn:'Grand Master', nameZh:'大师', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', minDp:24001, maxDp:36000, color:'#06b6d4' },
+    { level:7, name:'Chiến Thần', nameEn:'War God', nameZh:'战神', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', minDp:36001, maxDp:54000, color:'#eab308' },
+    { level:8, name:'Bất Tử', nameEn:'Immortal', nameZh:'不朽', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', minDp:54001, maxDp:75000, color:'#ec4899' },
+    { level:9, name:'Huyền Thoại', nameEn:'Legend', nameZh:'传说', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', minDp:75001, maxDp:105000, color:'#ef4444' },
+    { level:10, name:'Thần Thoại', nameEn:'Mythic', nameZh:'神话', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', minDp:105001, maxDp:Infinity, color:'#fbbf24' },
 ];
 
 function getRankTierName(tier) {
@@ -2612,7 +2693,7 @@ async function openLeaderboardModal(defaultTab = 'leaderboard') {
     modal.classList.add('show');
 
     // Switch tab
-    document.querySelectorAll('.lb-tab-btn').forEach(b => {
+    document.querySelectorAll('#lbModalBg .lb-tab-btn:not(.shop-tab-btn):not(.quest-tab-btn):not(.squad-tab-btn)').forEach(b => {
         b.classList.toggle('active', b.dataset.tab === defaultTab);
     });
     document.querySelectorAll('.lb-tab-panel').forEach(p => p.style.display = 'none');
@@ -2643,9 +2724,9 @@ function initLeaderboard() {
     if (mobileLbBtn) mobileLbBtn.onclick = () => openLeaderboardModal('leaderboard');
 
     // Tab switching
-    document.querySelectorAll('.lb-tab-btn').forEach(btn => {
+    document.querySelectorAll('#lbModalBg .lb-tab-btn:not(.shop-tab-btn):not(.quest-tab-btn):not(.squad-tab-btn)').forEach(btn => {
         btn.onclick = () => {
-            document.querySelectorAll('.lb-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('#lbModalBg .lb-tab-btn:not(.shop-tab-btn):not(.quest-tab-btn):not(.squad-tab-btn)').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             const tab = btn.dataset.tab;
             document.querySelectorAll('.lb-tab-panel').forEach(p => p.style.display = 'none');
@@ -3032,7 +3113,7 @@ window._submitCmPost = async () => {
     } finally {
         if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '🚀 <span>Đăng bài</span>';
+            submitBtn.innerHTML = '<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> <span>Đăng bài</span>';
         }
     }
 };
@@ -3165,48 +3246,48 @@ function renderRankTiersShowcase() {
 // ==================== QUEST SYSTEM ====================
 const QUEST_DEFINITIONS = [
     // Daily
-    { id:'d_earlybird', type:'daily', icon:'🌅', name:'Chim Sớm', nameEn:'Early Bird', nameZh:'早起鸟', desc:'Check thói quen trước 7h sáng', dp:20,
+    { id:'d_earlybird', type:'daily', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Chim Sớm', nameEn:'Early Bird', nameZh:'早起鸟', desc:'Check thói quen trước 7h sáng', dp:20,
       check: (ctx) => ctx.firstCheckHour !== null && ctx.firstCheckHour < 7 },
-    { id:'d_morning_gold', type:'daily', icon:'⚡', name:'Buổi Sáng Vàng', nameEn:'Golden Morning', nameZh:'黄金早晨', desc:'Hoàn thành ≥3 thói quen trước 9h', dp:40,
+    { id:'d_morning_gold', type:'daily', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg>', name:'Buổi Sáng Vàng', nameEn:'Golden Morning', nameZh:'黄金早晨', desc:'Hoàn thành ≥3 thói quen trước 9h', dp:40,
       check: (ctx) => ctx.checksBeforeHour9 >= 3 },
-    { id:'d_perfect', type:'daily', icon:'🏆', name:'Ngày Không Lùi Bước', nameEn:'No Retreat', nameZh:'不退缩', desc:'100% thói quen hôm nay', dp:50,
+    { id:'d_perfect', type:'daily', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', name:'Ngày Không Lùi Bước', nameEn:'No Retreat', nameZh:'不退缩', desc:'100% thói quen hôm nay', dp:50,
       check: (ctx) => ctx.todayPct === 100 && ctx.totalHabits > 0 },
-    { id:'d_reflect', type:'daily', icon:'📝', name:'Suy Ngẫm', nameEn:'Reflect', nameZh:'反思', desc:'Viết ghi chú ≥50 chữ', dp:15,
+    { id:'d_reflect', type:'daily', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', name:'Suy Ngẫm', nameEn:'Reflect', nameZh:'反思', desc:'Viết ghi chú ≥50 chữ', dp:15,
       check: (ctx) => ctx.todayNoteLen >= 50 },
     // Weekly
-    { id:'w_weekend', type:'weekly', icon:'🔥', name:'Chiến Binh Cuối Tuần', nameEn:'Weekend Warrior', nameZh:'周末战士', desc:'100% cả T7 và CN', dp:120,
+    { id:'w_weekend', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg>', name:'Chiến Binh Cuối Tuần', nameEn:'Weekend Warrior', nameZh:'周末战士', desc:'100% cả T7 và CN', dp:120,
       check: (ctx) => ctx.satPct === 100 && ctx.sunPct === 100 },
-    { id:'w_new_habit', type:'weekly', icon:'🧊', name:'Thử Thách Mới', nameEn:'New Challenge', nameZh:'新挑战', desc:'Thêm 1 thói quen mới, hoàn thành ≥3 ngày', dp:100,
+    { id:'w_new_habit', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', name:'Thử Thách Mới', nameEn:'New Challenge', nameZh:'新挑战', desc:'Thêm 1 thói quen mới, hoàn thành ≥3 ngày', dp:100,
       check: (ctx) => ctx.newHabitDays >= 3 },
-    { id:'w_steel', type:'weekly', icon:'🎯', name:'Tuần Thép', nameEn:'Steel Week', nameZh:'钢铁周', desc:'Check-in 7/7 ngày', dp:100,
+    { id:'w_steel', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg>', name:'Tuần Thép', nameEn:'Steel Week', nameZh:'钢铁周', desc:'Check-in 7/7 ngày', dp:100,
       check: (ctx) => ctx.daysWithChecks >= 7 },
-    { id:'w_no_quit', type:'weekly', icon:'🌙', name:'Quy Tắc Không Bỏ Cuộc', nameEn:'No Quit Rule', nameZh:'不放弃', desc:'Duy trì thói quen "Không" 7 ngày', dp:80,
+    { id:'w_no_quit', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg>', name:'Quy Tắc Không Bỏ Cuộc', nameEn:'No Quit Rule', nameZh:'不放弃', desc:'Duy trì thói quen "Không" 7 ngày', dp:80,
       check: (ctx) => ctx.noHabitStreak >= 7 },
     // Community Weekly
-    { id:'w_share', type:'weekly', icon:'📢', name:'Chia Sẻ Hành Trình', nameEn:'Share Journey', nameZh:'分享旅程', desc:'Đăng 1 bài cộng đồng', dp:60,
+    { id:'w_share', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-echo"></use></svg>', name:'Chia Sẻ Hành Trình', nameEn:'Share Journey', nameZh:'分享旅程', desc:'Đăng 1 bài cộng đồng', dp:60,
       check: (ctx) => ctx.weeklyPosts >= 1 },
-    { id:'w_kudos', type:'weekly', icon:'👏', name:'Người Truyền Lửa', nameEn:'Fire Starter', nameZh:'传火者', desc:'Tặng Kudos ≥5 người', dp:40,
+    { id:'w_kudos', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Người Truyền Lửa', nameEn:'Fire Starter', nameZh:'传火者', desc:'Tặng Kudos ≥5 người', dp:40,
       check: (ctx) => kudosSet.size >= 5 },
-    { id:'w_mentor', type:'weekly', icon:'💡', name:'Mentor', nameEn:'Mentor', nameZh:'导师', desc:'Bình luận ≥3 bài viết', dp:50,
+    { id:'w_mentor', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg>', name:'Mentor', nameEn:'Mentor', nameZh:'导师', desc:'Bình luận ≥3 bài viết', dp:50,
       check: (ctx) => ctx.weeklyComments >= 3 },
-    { id:'w_inspire', type:'weekly', icon:'⭐', name:'Người Truyền Cảm Hứng', nameEn:'Inspirator', nameZh:'激励者', desc:'Bài viết nhận ≥5 likes', dp:80,
+    { id:'w_inspire', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Người Truyền Cảm Hứng', nameEn:'Inspirator', nameZh:'激励者', desc:'Bài viết nhận ≥5 likes', dp:80,
       check: (ctx) => ctx.maxPostLikes >= 5 },
     // Achievement (permanent)
-    { id:'a_first_day', type:'achievement', icon:'🎉', name:'Ngày Đầu Tiên', nameEn:'First Day', nameZh:'第一天', desc:'100% lần đầu tiên', dp:50,
+    { id:'a_first_day', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Ngày Đầu Tiên', nameEn:'First Day', nameZh:'第一天', desc:'100% lần đầu tiên', dp:50,
       check: (ctx) => ctx.perfectDays >= 1 },
-    { id:'a_streak30', type:'achievement', icon:'🔥', name:'Lửa Không Tắt', nameEn:'Eternal Flame', nameZh:'永恒之火', desc:'Chuỗi 30 ngày', dp:500,
+    { id:'a_streak30', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg>', name:'Lửa Không Tắt', nameEn:'Eternal Flame', nameZh:'永恒之火', desc:'Chuỗi 30 ngày', dp:500,
       check: (ctx) => ctx.maxStreak >= 30 },
-    { id:'a_streak100', type:'achievement', icon:'💎', name:'Kim Cương', nameEn:'Diamond', nameZh:'钻石', desc:'Chuỗi 100 ngày', dp:2000,
+    { id:'a_streak100', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', name:'Kim Cương', nameEn:'Diamond', nameZh:'钻石', desc:'Chuỗi 100 ngày', dp:2000,
       check: (ctx) => ctx.maxStreak >= 100 },
-    { id:'a_1000checks', type:'achievement', icon:'🏆', name:'Huyền Thoại', nameEn:'Legend', nameZh:'传说', desc:'1000 lần check', dp:1000,
+    { id:'a_1000checks', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', name:'Huyền Thoại', nameEn:'Legend', nameZh:'传说', desc:'1000 lần check', dp:1000,
       check: (ctx) => ctx.totalChecks >= 1000 },
-    { id:'a_multi', type:'achievement', icon:'🌈', name:'Chiến Binh Đa Năng', nameEn:'Versatile', nameZh:'多才多艺', desc:'≥5 thói quen 1 tuần', dp:100,
+    { id:'a_multi', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', name:'Chiến Binh Đa Năng', nameEn:'Versatile', nameZh:'多才多艺', desc:'≥5 thói quen 1 tuần', dp:100,
       check: (ctx) => ctx.totalHabits >= 5 },
-    { id:'a_month', type:'achievement', icon:'📅', name:'Tháng Thép', nameEn:'Steel Month', nameZh:'钢铁月', desc:'≥80% cả tháng', dp:300,
+    { id:'a_month', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-metric"></use></svg>', name:'Tháng Thép', nameEn:'Steel Month', nameZh:'钢铁月', desc:'≥80% cả tháng', dp:300,
       check: (ctx) => ctx.monthPct >= 80 },
-    { id:'a_comm10', type:'achievement', icon:'💬', name:'Linh Hồn Cộng Đồng', nameEn:'Community Soul', nameZh:'社区灵魂', desc:'10 bài viết', dp:200,
+    { id:'a_comm10', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-echo"></use></svg>', name:'Linh Hồn Cộng Đồng', nameEn:'Community Soul', nameZh:'社区灵魂', desc:'10 bài viết', dp:200,
       check: (ctx) => ctx.totalPosts >= 10 },
-    { id:'a_kudos50', type:'achievement', icon:'🤝', name:'Đồng Đội Tuyệt Vời', nameEn:'Great Teammate', nameZh:'好队友', desc:'50 Kudos cho người khác', dp:150,
+    { id:'a_kudos50', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg>', name:'Đồng Đội Tuyệt Vời', nameEn:'Great Teammate', nameZh:'好队友', desc:'50 Kudos cho người khác', dp:150,
       check: (ctx) => kudosSet.size >= 50 },
 ];
 
@@ -3337,7 +3418,7 @@ window.claimQuestReward = async function(questId) {
     // Toast celebration
     const toast = document.createElement('div');
     toast.className = 'quest-toast';
-    toast.innerHTML = `<span>${quest.icon}</span> +${quest.dp} DP — ${t('questClaimedToast') || '✨ Đã nhận thưởng DP!'}`;
+    toast.innerHTML = `<span>${quest.icon}</span> +${quest.dp} DP — ${t('questClaimedToast') || 'Đã nhận thưởng DP!'}`;
     document.body.appendChild(toast);
     setTimeout(() => toast.classList.add('show'), 10);
     setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
@@ -3443,9 +3524,9 @@ function renderQuestPanel() {
                     <div class="quest-dp-badge">+${q.dp} DP</div>
                 </div>
                 <div class="quest-card-footer">
-                    ${claimed ? `<span class="quest-status-done">✅ ${t('questClaimed')}</span>` :
+                    ${claimed ? `<span class="quest-status-done"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> ${t('questClaimed')}</span>` :
                       completed ? `<button class="quest-claim-btn" onclick="window.claimQuestReward('${q.id}')">${t('questClaim')}</button>` :
-                      `<span class="quest-status-locked">🔒 ${t('questLocked')}</span>`}
+                      `<span class="quest-status-locked"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg> ${t('questLocked')}</span>`}
                 </div>
             </div>`;
         });
@@ -3591,8 +3672,8 @@ window._updateProfileModalUI = () => {
     const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
     const rankTitle = getRankTierName(rank);
 
-    if (pFrame && window.getFullRankCardHTML) {
-        pFrame.innerHTML = window.getFullRankCardHTML(rank.level, imgUrl, 0.7, displayName, rankTitle);
+    if (pFrame && window.getAvatarHTML) {
+        pFrame.innerHTML = window.getAvatarHTML(rank.level, imgUrl, 90);
         pFrame.style.background = 'transparent';
         pFrame.style.border = 'none';
     } else if (pAvatar) {
@@ -3601,6 +3682,35 @@ window._updateProfileModalUI = () => {
     }
     
     renderFramesGrid(rank.level, imgUrl);
+
+    // === RENDER OWNED THEMES IN PROFILE ===
+    const themeGrid = document.getElementById('profileThemeGrid');
+    if (themeGrid && typeof SHOP_CATALOG !== 'undefined') {
+        const ownedThemes = S.inventory?.themes || ['dark', 'light'];
+        const equippedTheme = curTheme || 'light';
+        let themeHtml = '';
+        SHOP_CATALOG.themes.forEach(item => {
+            const isOwned = item.free || ownedThemes.includes(item.id);
+            if (!isOwned) return; // Only show owned themes
+            const isActive = (equippedTheme === item.id);
+            themeHtml += `
+                <div class="profile-theme-card ${isActive ? 'active' : ''}" data-theme-id="${item.id}" onclick="window._switchToTheme('${item.id}'); if(window._updateProfileModalUI) window._updateProfileModalUI();">
+                    <div class="ptc-preview" style="background: linear-gradient(135deg, ${item.bg}, ${item.accent});"></div>
+                    <div class="ptc-info">
+                        <div class="ptc-name">${item.name}</div>
+                        <div class="ptc-status">${isActive ? 'Đang dùng' : 'Áp dụng'}</div>
+                    </div>
+                </div>
+            `;
+        });
+        themeGrid.innerHTML = themeHtml;
+    }
+
+    // === RENDER LANGUAGE ACTIVE STATE ===
+    const langBtns = document.querySelectorAll('#profileLangRow .profile-lang-pill');
+    langBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === curLang);
+    });
 };
 
 window._openProfile = () => {
@@ -3610,106 +3720,497 @@ window._openProfile = () => {
     window._updateProfileModalUI();
 };
 
+// === ORBITAL SUB-POPUP SYSTEM ===
+
+/**
+ * Compute the pixel position of an orbital button (data-pos 1–6)
+ * within the 280×280 orbital ring, then decide where to anchor the popup.
+ */
+function getOrbitalBtnCenter(pos) {
+    // data-pos angles: 1→-90°, 2→-30°, 3→30°, 4→90°, 5→150°, 6→210°
+    const angleMap = { 1: -90, 2: -30, 3: 30, 4: 90, 5: 150, 6: 210 };
+    const angleDeg = angleMap[pos] || 0;
+    const rad = angleDeg * Math.PI / 180;
+    const radius = 110;
+    const cx = 140 + radius * Math.cos(rad);
+    const cy = 140 + radius * Math.sin(rad);
+    return { x: cx, y: cy, angleDeg };
+}
+
+let _activeOrbPopup = null;
+let _activeOrbBtn = null;
+let _activeOrbBackdrop = null;
+
+function closeOrbitalPopup(immediate) {
+    if (_activeOrbBackdrop) {
+        _activeOrbBackdrop.remove();
+        _activeOrbBackdrop = null;
+    }
+
+    const existing = _activeOrbPopup;
+    if (!existing) return;
+
+    if (_activeOrbBtn) {
+        _activeOrbBtn.classList.remove('orb-active');
+        _activeOrbBtn = null;
+    }
+
+    if (immediate) {
+        existing.remove();
+        _activeOrbPopup = null;
+        return;
+    }
+
+    existing.classList.add('closing');
+    _activeOrbPopup = null;
+    setTimeout(() => existing.remove(), 200);
+}
+
+/**
+ * Show a floating popup panel next to the clicked orbital button.
+ * Uses position:fixed + getBoundingClientRect for screen-accurate placement.
+ * @param {HTMLElement} btnEl - The orbital button element
+ * @param {string} title - Header label for the popup
+ * @param {Array} items - Array of { icon, label, desc?, action, danger? }
+ */
+function showOrbitalPopup(btnEl, title, items) {
+    // If same button clicked again, toggle off
+    if (_activeOrbBtn === btnEl) {
+        closeOrbitalPopup();
+        return;
+    }
+
+    // Close any existing popup first
+    closeOrbitalPopup(true);
+
+    // Build popup HTML
+    let html = `<div class="orbital-popup-header">${title}</div>`;
+    items.forEach((item, idx) => {
+        if (idx > 0) html += '<div class="orbital-popup-divider"></div>';
+        const dangerClass = item.danger ? ' danger' : '';
+        const descHtml = item.desc ? `<div class="orbital-popup-item-desc">${item.desc}</div>` : '';
+        html += `
+            <div class="orbital-popup-item${dangerClass}" data-idx="${idx}">
+                <div class="orbital-popup-item-icon">${item.icon}</div>
+                <div>
+                    <div class="orbital-popup-item-label">${item.label}</div>
+                    ${descHtml}
+                </div>
+            </div>`;
+    });
+
+    const popup = document.createElement('div');
+    popup.className = 'orbital-popup';
+    popup.innerHTML = html;
+
+    // Get button screen position
+    const rect = btnEl.getBoundingClientRect();
+    const btnCx = rect.left + rect.width / 2;
+    const btnCy = rect.top + rect.height / 2;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    let popupLeft, popupTop, originX, originY;
+    const popupW = 200; // approximate popup width
+
+    // Determine best placement based on button position on screen
+    if (btnCx < vw / 2) {
+        // Button on left half → show popup to the right
+        popupLeft = rect.right + 8;
+        originX = '0';
+    } else {
+        // Button on right half → show popup to the left
+        popupLeft = rect.left - popupW - 8;
+        originX = '100%';
+    }
+
+    if (btnCy < vh / 2) {
+        // Button in top half → align popup top with button
+        popupTop = rect.top - 10;
+        originY = '20px';
+    } else {
+        // Button in bottom half → align popup bottom with button
+        popupTop = rect.bottom - 140; // rough popup height offset
+        originY = 'calc(100% - 20px)';
+    }
+
+    // Clamp to viewport
+    popupLeft = Math.max(8, Math.min(popupLeft, vw - popupW - 8));
+    popupTop = Math.max(8, popupTop);
+
+    popup.style.left = popupLeft + 'px';
+    popup.style.top = popupTop + 'px';
+    popup.style.setProperty('--popup-origin', `${originX} ${originY}`);
+
+    // Create invisible backdrop for click-outside
+    const backdrop = document.createElement('div');
+    backdrop.className = 'orbital-popup-backdrop';
+    backdrop.onclick = () => closeOrbitalPopup();
+    document.body.appendChild(backdrop);
+    _activeOrbBackdrop = backdrop;
+
+    // Append popup to body (fixed position, no clipping)
+    document.body.appendChild(popup);
+
+    popup.querySelectorAll('.orbital-popup-item').forEach(el => {
+        const idx = parseInt(el.dataset.idx);
+        el.onclick = (e) => {
+            e.stopPropagation();
+            closeOrbitalPopup();
+            if (items[idx] && items[idx].action) {
+                items[idx].action();
+            }
+        };
+    });
+
+    // Mark button as active
+    btnEl.classList.add('orb-active');
+    _activeOrbBtn = btnEl;
+    _activeOrbPopup = popup;
+}
+
+// Close popup when profile modal closes
+const _origProfileModalObserver = new MutationObserver(() => {
+    const modal = document.getElementById('profileModalBg');
+    if (modal && !modal.classList.contains('show')) {
+        closeOrbitalPopup(true);
+    }
+});
+setTimeout(() => {
+    const modal = document.getElementById('profileModalBg');
+    if (modal) _origProfileModalObserver.observe(modal, { attributes: true, attributeFilter: ['class'] });
+}, 500);
+
+// === ORBITAL CONTENT POPUP (Second-level for rich content) ===
+let _activeContentOverlay = null;
+
+function closeOrbitalContentPopup() {
+    if (!_activeContentOverlay) return;
+    _activeContentOverlay.classList.add('closing');
+    const ref = _activeContentOverlay;
+    _activeContentOverlay = null;
+    setTimeout(() => ref.remove(), 250);
+}
+
+/**
+ * Show a centered overlay popup with rich content (theme grid, lang, name, frames).
+ * @param {string} title - Header title
+ * @param {Function} renderContent - Returns HTML string for the body
+ * @param {Function} initCallback - Called with (bodyEl) after DOM insert to bind events
+ */
+function showOrbitalContentPopup(title, renderContent, initCallback) {
+    // Close any existing
+    if (_activeContentOverlay) {
+        _activeContentOverlay.remove();
+        _activeContentOverlay = null;
+    }
+
+    // Also close the orbital popup
+    closeOrbitalPopup(true);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'orbital-content-overlay';
+    overlay.innerHTML = `
+        <div class="orbital-content-popup">
+            <div class="ocp-header">
+                <div class="ocp-header-title">${title}</div>
+                <button class="ocp-close-btn">✕</button>
+            </div>
+            <div class="ocp-body"></div>
+        </div>`;
+
+    const body = overlay.querySelector('.ocp-body');
+    body.innerHTML = renderContent();
+
+    // Close button
+    overlay.querySelector('.ocp-close-btn').onclick = () => closeOrbitalContentPopup();
+    // Click overlay background to close
+    overlay.onclick = (e) => { if (e.target === overlay) closeOrbitalContentPopup(); };
+
+    document.body.appendChild(overlay);
+    _activeContentOverlay = overlay;
+
+    // Init event handlers
+    if (initCallback) initCallback(body);
+}
+
+
 function initProfileModal() {
     const closeBtn = document.getElementById('profileCloseBtn');
     if (closeBtn) closeBtn.onclick = () => document.getElementById('profileModalBg').classList.remove('show');
     
     const bg = document.getElementById('profileModalBg');
     if (bg) bg.onclick = (e) => { if (e.target === bg) bg.classList.remove('show'); };
-    
-    const uploadBtn = document.getElementById('avatarUploadBtn');
+
+    // --- Helper ---
+    const closeProfile = () => document.getElementById('profileModalBg').classList.remove('show');
     const fileInput = document.getElementById('avatarFileInput');
-    
-    if (uploadBtn && fileInput) {
-        uploadBtn.onclick = () => fileInput.click();
-        fileInput.onchange = handleAvatarUpload;
-    }
+    if (fileInput) fileInput.onchange = handleAvatarUpload;
 
-    // Change Display Name handlers
-    const changeNameBtn = document.getElementById('changeNameBtn');
-    const editBox = document.getElementById('profileNameEditBox');
-    const nameInput = document.getElementById('profileNewNameInput');
-    const saveNameBtn = document.getElementById('saveNameBtn');
-    const cancelNameBtn = document.getElementById('cancelNameBtn');
-    const nameErr = document.getElementById('profileNameError');
+    // --- Orbital Popup Definitions ---
 
-    if (changeNameBtn && editBox && nameInput) {
-        changeNameBtn.onclick = () => {
-            const isHidden = editBox.style.display === 'none' || !editBox.style.display;
-            editBox.style.display = isHidden ? 'block' : 'none';
-            if (isHidden) {
-                nameInput.value = currentUser?.displayName || currentUser?.email?.split('@')[0] || '';
-                nameInput.focus();
-                nameInput.select();
-                if (nameErr) nameErr.style.display = 'none';
-            }
-        };
+    // 🛒 Cửa hàng (pos 1)
+    const orbShop = document.getElementById('orbShopBtn');
+    if (orbShop) orbShop.onclick = (e) => {
+        e.stopPropagation();
+        showOrbitalPopup(orbShop, 'Cửa hàng', [
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: 'Danh hiệu', desc: 'Mua danh hiệu độc quyền', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('titles'); } },
+            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', label: 'Giao diện', desc: 'Chủ đề màu sắc', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('themes'); } },
+            { icon: '<svg class="rune-icon rune-sound" viewBox="0 0 48 48"><use href="#i-disc"></use></svg>', label: 'Hiệu ứng', desc: 'Âm thanh & hình ảnh', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('fx'); } },
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', label: 'Vật phẩm', desc: 'Freeze, Boost 2X...', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('items'); } },
+        ]);
+    };
 
-        if (cancelNameBtn) {
-            cancelNameBtn.onclick = () => {
-                editBox.style.display = 'none';
-                if (nameErr) nameErr.style.display = 'none';
-            };
-        }
+    // 🧊 Bảo vệ chuỗi (pos 2)
+    const orbStreak = document.getElementById('orbStreakBtn');
+    if (orbStreak) orbStreak.onclick = (e) => {
+        e.stopPropagation();
+        showOrbitalPopup(orbStreak, 'Bảo vệ chuỗi', [
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', label: 'Bình đóng băng', desc: 'Xem & kích hoạt Freeze', action: () => { closeProfile(); if (window._openStreakModal) window._openStreakModal(); } },
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-streak"></use></svg>', label: 'Cứu chuỗi ngay', desc: 'Hồi sinh chuỗi trong 24h', action: () => { closeProfile(); if (window._openStreakModal) window._openStreakModal(); } },
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-metric"></use></svg>', label: 'Lịch sử chuỗi', desc: 'Xem heatmap thói quen', action: () => {
+                closeProfile();
+                const hm = document.getElementById('heatmapGrid') || document.getElementById('streakSection');
+                if (hm) hm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }},
+        ]);
+    };
 
-        const doSaveName = async () => {
-            const val = nameInput.value.trim();
-            if (!val) {
-                if (nameErr) { nameErr.textContent = 'Vui lòng nhập tên hiển thị!'; nameErr.style.display = 'block'; }
-                return;
-            }
-            if (val.length < 2 || val.length > 30) {
-                if (nameErr) { nameErr.textContent = 'Tên phải từ 2 đến 30 ký tự!'; nameErr.style.display = 'block'; }
-                return;
-            }
-            if (val === currentUser?.displayName) {
-                editBox.style.display = 'none';
-                return;
-            }
+    // 📊 Tổng kết (pos 3)
+    const orbRecap = document.getElementById('orbRecapBtn');
+    if (orbRecap) orbRecap.onclick = (e) => {
+        e.stopPropagation();
+        showOrbitalPopup(orbRecap, 'Tổng kết & Thống kê', [
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-metric"></use></svg>', label: 'Tổng kết tuần', desc: 'Weekly Recap Infographic', action: () => { closeProfile(); if (window._openWeeklyRecapModal) window._openWeeklyRecapModal(); } },
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', label: 'Thống kê chi tiết', desc: 'Biểu đồ & dữ liệu', action: () => {
+                closeProfile();
+                const statsEl = document.getElementById('statsSection') || document.querySelector('.top-right');
+                if (statsEl) statsEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }},
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', label: 'Sao chép thống kê', desc: 'Copy vào clipboard', action: () => {
+                const computed = typeof calculateUserDPAndStreak === 'function' ? calculateUserDPAndStreak() : {};
+                const name = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User';
+                const text = `${name} — Habit Mastery\nDP: ${(computed.totalDP || 0).toLocaleString()}\nStreak: ${computed.currentStreak || 0} ngày\nMax Streak: ${computed.maxStreak || 0} ngày\nTổng check-in: ${computed.totalChecks || 0}`;
+                navigator.clipboard.writeText(text).then(() => {
+                    const toast = document.createElement('div');
+                    toast.className = 'quest-toast';
+                    toast.innerHTML = '<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></span> Đã sao chép thống kê!';
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.classList.add('show'), 10);
+                    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2200);
+                });
+            }},
+        ]);
+    };
 
-            if (saveNameBtn) {
-                saveNameBtn.textContent = '⏳...';
-                saveNameBtn.disabled = true;
-            }
-            if (nameErr) nameErr.style.display = 'none';
+    // 📸 Chia sẻ (pos 4)
+    const orbShare = document.getElementById('orbShareBtn');
+    if (orbShare) orbShare.onclick = (e) => {
+        e.stopPropagation();
+        showOrbitalPopup(orbShare, 'Chia sẻ & Khoe', [
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: 'Khoe thẻ Rank', desc: 'Xuất ảnh Story 9:16', action: () => { closeProfile(); if (window._openShareCardModal) window._openShareCardModal(); } },
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-metric"></use></svg>', label: 'Khoe tổng kết tuần', desc: 'Weekly Recap → Share', action: () => { closeProfile(); if (window._openWeeklyRecapModal) window._openWeeklyRecapModal(); } },
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', label: 'Sao chép thành tích', desc: 'Copy text thành tích', action: () => {
+                const computed = typeof calculateUserDPAndStreak === 'function' ? calculateUserDPAndStreak() : {};
+                const name = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User';
+                const text = `${name} đang trên chuỗi ${computed.currentStreak || 0} ngày liên tiếp!\nTổng DP: ${(computed.totalDP || 0).toLocaleString()}\nMax Streak: ${computed.maxStreak || 0} ngày\n— Habit Mastery`;
+                navigator.clipboard.writeText(text).then(() => {
+                    const toast = document.createElement('div');
+                    toast.className = 'quest-toast';
+                    toast.innerHTML = '<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></span> Đã sao chép thành tích!';
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.classList.add('show'), 10);
+                    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2200);
+                });
+            }},
+        ]);
+    };
 
-            try {
-                if (currentUser) {
-                    await currentUser.updateProfile({ displayName: val });
+    // 📷 Avatar (pos 5)
+    const orbAvatar = document.getElementById('orbAvatarBtn');
+    if (orbAvatar) orbAvatar.onclick = (e) => {
+        e.stopPropagation();
+        showOrbitalPopup(orbAvatar, 'Ảnh đại diện', [
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: 'Tải ảnh lên', desc: 'Chọn ảnh từ thiết bị', action: () => { if (fileInput) fileInput.click(); } },
+            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: 'Chọn khung Rank', desc: 'Đổi khung cấp bậc', action: () => {
+                showOrbitalContentPopup('<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Chọn khung Rank', () => {
+                    const computed = calculateUserDPAndStreak();
+                    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (currentUser && currentUser.email === 'admin@gmail.com');
+                    const dp = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+                    const rank = getRankLevel(dp);
+                    const imgUrl = currentUser.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser.displayName||currentUser.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
+                    let html = '<div class="ocp-frames-grid">';
+                    for (let i = 1; i <= 10; i++) {
+                        const isUnlocked = rank.level >= i;
+                        const isCurrent = rank.level === i;
+                        let cls = 'ocp-frame-item';
+                        if (isCurrent) cls += ' current';
+                        if (!isUnlocked) cls += ' locked';
+                        let frameHTML = '';
+                        if (window.getAvatarHTML) frameHTML = window.getAvatarHTML(i, imgUrl, 56);
+                        html += `<div class="${cls}" data-level="${i}">
+                            ${!isUnlocked ? '<div class="ocp-frame-lock"><svg class="rune-icon rune-xs" viewBox="0 0 48 48"><use href="#i-close"></use></svg></div>' : ''}
+                            ${frameHTML}
+                            <div class="ocp-frame-lv">${isCurrent ? 'Đang dùng' : isUnlocked ? 'Lv ' + i : 'Lv ' + i}</div>
+                        </div>`;
+                    }
+                    html += '</div>';
+                    return html;
+                }, (body) => {
+                    body.querySelectorAll('.ocp-frame-item:not(.locked)').forEach(el => {
+                        el.onclick = () => {
+                            const level = parseInt(el.dataset.level);
+                            if (window._setProfileFrame) window._setProfileFrame(level);
+                            closeOrbitalContentPopup();
+                        };
+                    });
+                });
+            }},
+            { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Xóa ảnh đại diện', desc: 'Về avatar mặc định', danger: true, action: async () => {
+                if (!confirm('Bạn có chắc muốn xóa ảnh đại diện?')) return;
+                try {
+                    if (currentUser) await currentUser.updateProfile({ photoURL: '' });
+                    if (userDocRef) await userDocRef.update({ photoURL: '' });
+                    showUserProfile(currentUser);
+                    if (window._updateProfileModalUI) window._updateProfileModalUI();
+                    const toast = document.createElement('div');
+                    toast.className = 'quest-toast';
+                    toast.innerHTML = '<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span> Đã xóa ảnh đại diện!';
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.classList.add('show'), 10);
+                    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2200);
+                } catch (err) {
+                    console.error('Remove avatar error:', err);
+                    alert('Lỗi xóa ảnh: ' + (err.message || err));
                 }
-                if (userDocRef) {
-                    await userDocRef.update({ displayName: val });
-                }
-                if (db && currentUser) {
-                    await db.collection('leaderboard').doc(currentUser.uid).set({ displayName: val }, { merge: true });
-                }
-                showUserProfile(currentUser);
-                if (window._updateProfileModalUI) window._updateProfileModalUI();
-                editBox.style.display = 'none';
-            } catch (err) {
-                console.error('Update name error:', err);
-                if (nameErr) { nameErr.textContent = 'Lỗi lưu tên: ' + (err.message || err); nameErr.style.display = 'block'; }
-            } finally {
-                if (saveNameBtn) {
-                    saveNameBtn.textContent = 'Lưu';
-                    saveNameBtn.disabled = false;
-                }
-            }
-        };
+            }},
+        ]);
+    };
 
-        if (saveNameBtn) saveNameBtn.onclick = doSaveName;
-        nameInput.onkeydown = (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                doSaveName();
-            } else if (e.key === 'Escape') {
-                editBox.style.display = 'none';
-                if (nameErr) nameErr.style.display = 'none';
-            }
-        };
-    }
+    // ⚙️ Cài đặt (pos 6) — all content is shown inside content popups
+    const orbSettings = document.getElementById('orbSettingsBtn');
+    if (orbSettings) orbSettings.onclick = (e) => {
+        e.stopPropagation();
+        showOrbitalPopup(orbSettings, 'Cài đặt', [
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-core"></use></svg>', label: 'Đổi tên hiển thị', desc: 'Thay đổi tên nhân vật', action: () => {
+                showOrbitalContentPopup('<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-core"></use></svg> Đổi tên hiển thị', () => {
+                    const curName = currentUser?.displayName || currentUser?.email?.split('@')[0] || '';
+                    return `<div class="ocp-name-section">
+                        <div class="ocp-name-current">Tên hiện tại: <strong>${escHtml(curName)}</strong></div>
+                        <input type="text" class="ocp-name-input" id="ocpNameInput" placeholder="Nhập tên mới (2 - 30 ký tự)..." maxlength="30" value="${escHtml(curName)}">
+                        <div class="ocp-name-error" id="ocpNameError"></div>
+                        <button class="ocp-name-save-btn" id="ocpNameSaveBtn"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> Lưu tên mới</button>
+                    </div>`;
+                }, (body) => {
+                    const inp = body.querySelector('#ocpNameInput');
+                    const errEl = body.querySelector('#ocpNameError');
+                    const saveBtn = body.querySelector('#ocpNameSaveBtn');
+                    if (inp) setTimeout(() => inp.focus(), 100);
+                    const doSave = async () => {
+                        const val = inp.value.trim();
+                        if (!val) { errEl.textContent = 'Vui lòng nhập tên hiển thị!'; errEl.style.display = 'block'; return; }
+                        if (val.length < 2 || val.length > 30) { errEl.textContent = 'Tên phải từ 2 đến 30 ký tự!'; errEl.style.display = 'block'; return; }
+                        if (val === currentUser?.displayName) { closeOrbitalContentPopup(); return; }
+                        saveBtn.textContent = '⏳...'; saveBtn.disabled = true; errEl.style.display = 'none';
+                        try {
+                            if (currentUser) await currentUser.updateProfile({ displayName: val });
+                            if (userDocRef) await userDocRef.update({ displayName: val });
+                            if (db && currentUser) await db.collection('leaderboard').doc(currentUser.uid).set({ displayName: val }, { merge: true });
+                            showUserProfile(currentUser);
+                            if (window._updateProfileModalUI) window._updateProfileModalUI();
+                            closeOrbitalContentPopup();
+                            const toast = document.createElement('div'); toast.className = 'quest-toast';
+                            toast.innerHTML = '<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span> Đã đổi tên thành công!';
+                            document.body.appendChild(toast);
+                            setTimeout(() => toast.classList.add('show'), 10);
+                            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2200);
+                        } catch (err) {
+                            errEl.textContent = 'Lỗi: ' + (err.message || err); errEl.style.display = 'block';
+                            saveBtn.innerHTML = '<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> Lưu tên mới'; saveBtn.disabled = false;
+                        }
+                    };
+                    if (saveBtn) saveBtn.onclick = doSave;
+                    if (inp) inp.onkeydown = (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); doSave(); } };
+                });
+            }},
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', label: 'Đổi giao diện', desc: 'Chọn theme yêu thích', action: () => {
+                showOrbitalContentPopup('<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Đổi giao diện', () => {
+                    if (typeof SHOP_CATALOG === 'undefined') return '<p>Không tìm thấy danh sách giao diện.</p>';
+                    const ownedThemes = (S.inventory?.themes) || ['dark', 'light'];
+                    const equippedTheme = curTheme || 'light';
+                    let html = '<div class="ocp-theme-grid">';
+                    SHOP_CATALOG.themes.forEach(item => {
+                        const isOwned = item.free || ownedThemes.includes(item.id);
+                        if (!isOwned) return;
+                        const isActive = (equippedTheme === item.id);
+                        html += `<div class="ocp-theme-card ${isActive ? 'active' : ''}" data-theme-id="${item.id}">
+                            <div class="ocp-theme-preview" style="background: linear-gradient(135deg, ${item.bg}, ${item.accent});"></div>
+                            <div class="ocp-theme-info">
+                                <div class="ocp-theme-name">${item.name}</div>
+                                <div class="ocp-theme-status">${isActive ? 'Đang dùng' : 'Áp dụng'}</div>
+                            </div>
+                        </div>`;
+                    });
+                    html += '</div>';
+                    html += '<div style="margin-top:12px;text-align:center;"><button class="ocp-name-save-btn" id="ocpBrowseShopBtn" style="background:rgba(255,255,255,0.08);color:var(--text-main);font-size:12px;padding:10px;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-market"></use></svg> Mua thêm trong Cửa hàng</button></div>';
+                    return html;
+                }, (body) => {
+                    body.querySelectorAll('.ocp-theme-card').forEach(card => {
+                        card.onclick = () => {
+                            const themeId = card.dataset.themeId;
+                            if (window._switchToTheme) window._switchToTheme(themeId);
+                            if (window._updateProfileModalUI) window._updateProfileModalUI();
+                            closeOrbitalContentPopup();
+                        };
+                    });
+                    const shopBtn = body.querySelector('#ocpBrowseShopBtn');
+                    if (shopBtn) shopBtn.onclick = () => {
+                        closeOrbitalContentPopup();
+                        closeProfile();
+                        if (window._openShopModal) window._openShopModal('themes');
+                    };
+                });
+            }},
+            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-echo"></use></svg>', label: 'Ngôn ngữ', desc: 'Việt / 中文 / English', action: () => {
+                showOrbitalContentPopup('<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-echo"></use></svg> Ngôn ngữ', () => {
+                    const langs = [
+                        { code: 'vi', flag: '🇻🇳', name: 'Tiếng Việt' },
+                        { code: 'zh', flag: '🇨🇳', name: '中文 (Chinese)' },
+                        { code: 'en', flag: '🇬🇧', name: 'English' }
+                    ];
+                    let html = '<div class="ocp-lang-grid">';
+                    langs.forEach(l => {
+                        const isActive = (typeof curLang !== 'undefined' && curLang === l.code);
+                        html += `<div class="ocp-lang-item ${isActive ? 'active' : ''}" data-lang="${l.code}">
+                            <span class="ocp-lang-flag">${l.flag}</span>
+                            <span class="ocp-lang-label">${l.name}</span>
+                            <span class="ocp-lang-check">✓</span>
+                        </div>`;
+                    });
+                    html += '</div>';
+                    return html;
+                }, (body) => {
+                    body.querySelectorAll('.ocp-lang-item').forEach(item => {
+                        item.onclick = () => {
+                            const lang = item.dataset.lang;
+                            if (window._switchLang) window._switchLang(lang);
+                            if (window._updateProfileModalUI) window._updateProfileModalUI();
+                            closeOrbitalContentPopup();
+                        };
+                    });
+                });
+            }},
+            { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Đăng xuất', danger: true, action: () => {
+                if (confirm('Bạn có chắc chắn muốn đăng xuất tài khoản không?')) {
+                    auth.signOut().then(() => {
+                        window.location.href = 'auth.html';
+                    });
+                }
+            }},
+        ]);
+    };
 
-    // Profile Logout Handler
+    // Profile Logout Handler (keep existing button in settings panel)
     const profileLogoutBtn = document.getElementById('profileLogoutBtn');
     if (profileLogoutBtn) {
         profileLogoutBtn.onclick = () => {
@@ -3720,6 +4221,12 @@ function initProfileModal() {
             }
         };
     }
+
+    // Hide settings panel and logout from profile body (now accessible via orbital popups)
+    const settingsPanel = document.getElementById('profileSettingsPanel');
+    if (settingsPanel) settingsPanel.style.display = 'none';
+    const logoutWrap = document.querySelector('.profile-logout-wrap');
+    if (logoutWrap) logoutWrap.style.display = 'none';
 }
 
 function renderFramesGrid(currentLevel, imgUrl = '') {
@@ -3761,10 +4268,8 @@ window._setProfileFrame = (level) => {
     const selectedRank = RANK_TIERS[level - 1] || rank;
     const rankTitle = getRankTierName(selectedRank);
     
-    if (window.getFullRankCardHTML) {
-        document.getElementById('profileAvatarFrame').innerHTML = window.getFullRankCardHTML(level, imgUrl, 0.7, displayName, rankTitle);
-    }
     if (window.getAvatarHTML) {
+        document.getElementById('profileAvatarFrame').innerHTML = window.getAvatarHTML(level, imgUrl, 90);
         document.getElementById('navAvatarFrame').innerHTML = window.getAvatarHTML(level, imgUrl, 40);
     } else {
         document.getElementById('profileAvatarFrame').dataset.level = level;
@@ -3808,7 +4313,7 @@ async function handleAvatarUpload(e) {
         
         showUserProfile(currentUser);
         if (window._openProfile) window._openProfile();
-        uploadBtn.textContent = '✅ Xong';
+        uploadBtn.textContent = 'Xong';
     } catch (err) {
         console.error(err);
         alert('Lỗi tải ảnh: ' + err.message);
@@ -3825,19 +4330,11 @@ async function handleAvatarUpload(e) {
 // ==================== TRỤ CỘT 1: STREAK SHIELD & RECOVERY MODAL ====================
 
 function renderStreakShieldNavbar() {
-    const btn = document.getElementById('streakShieldBtn');
     const badge = document.getElementById('navFreezeCount');
-    if (!badge) return;
+    const pqaBadge = document.getElementById('orbFreezeCount');
     const freezeCount = (typeof S !== 'undefined' && S && typeof S.freezes === 'number') ? S.freezes : 0;
-    badge.textContent = `${freezeCount}/2`;
-    if (btn) {
-        btn.title = `${t('tabStreakShield')}: ${freezeCount} ${t('streakFreeze')}`;
-        if (freezeCount > 0) {
-            btn.classList.add('has-freeze');
-        } else {
-            btn.classList.remove('has-freeze');
-        }
-    }
+    if (badge) badge.textContent = `${freezeCount}/2`;
+    if (pqaBadge) pqaBadge.textContent = `${freezeCount}/2`;
 }
 
 function renderStreakBanner() {
@@ -3852,10 +4349,10 @@ function renderStreakBanner() {
         const titleEl = document.getElementById('sebTitle');
         const descEl = document.getElementById('sebDesc');
         if (titleEl) {
-            titleEl.textContent = `🚨 Chuỗi ${sBreak.streakBeforeBreak || ''} ${t('daysUnit')} của bạn vừa bị đứt hôm qua!`;
+            titleEl.textContent = `🚨 ${t('streakBroken')} - ${sBreak.streakBeforeBreak || ''} ${t('daysUnit')}!`;
         }
         if (descEl) {
-            descEl.textContent = t('streakBrokenDesc') || 'Bạn có 24h để Hồi sinh lại chuỗi trước khi mất vĩnh viễn!';
+            descEl.textContent = t('streakBrokenDesc');
         }
     } else {
         banner.style.display = 'none';
@@ -3921,8 +4418,8 @@ function renderStreakProtectionUI() {
             const parts = h.date.split('-');
             const dateStr = parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : h.date;
             const badge = h.type === 'freeze' ? 
-                '<span style="color:#0284c7; font-weight:700;">🧊 Đã Đóng Băng</span>' : 
-                '<span style="color:#f59e0b; font-weight:700;">⚡ Đã Hồi Sinh</span>';
+                `<span style="color:#0284c7; font-weight:700;">🧊 ${t('streakFreeze')}</span>` : 
+                `<span style="color:#f59e0b; font-weight:700;">⚡ ${t('repairStreak')}</span>`;
             historyHtml += `<div class="sm-history-row"><span>📅 ${dateStr}</span>${badge}</div>`;
         });
     }
@@ -3947,21 +4444,21 @@ function renderStreakProtectionUI() {
         <div>
             <div class="sm-section-title">
                 <span>🎒 ${t('streakFreeze')}</span>
-                <span>${freezes}/2 ${t('availableFrame') || 'Khả dụng'}</span>
+                <span>${freezes}/2 ${t('streakAvailable')}</span>
             </div>
             <div class="sm-flasks-grid">
                 <div class="sm-flask-card ${flask1Filled ? 'filled' : 'empty'}">
-                    <div class="sm-flask-art">${flask1Filled ? '🧊' : '🧪'}</div>
+                    <div class="sm-flask-art">${flask1Filled ? '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>' : '<svg class="rune-icon" style="color:var(--text-muted)" viewBox="0 0 48 48"><use href="#i-close"></use></svg>'}</div>
                     <div class="sm-flask-meta">
                         <div class="sm-flask-name">${t('freezeFlask1')}</div>
-                        <div class="sm-flask-status">${flask1Filled ? '❄️ ' + t('freezeReady') : '⚪ ' + t('freezeEmpty')}</div>
+                        <div class="sm-flask-status">${flask1Filled ? '<svg class="rune-inline rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> ' + t('freezeReady') : '⚪ ' + t('freezeEmpty')}</div>
                     </div>
                 </div>
                 <div class="sm-flask-card ${flask2Filled ? 'filled' : 'empty'}">
-                    <div class="sm-flask-art">${flask2Filled ? '🧊' : '🧪'}</div>
+                    <div class="sm-flask-art">${flask2Filled ? '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>' : '<svg class="rune-icon" style="color:var(--text-muted)" viewBox="0 0 48 48"><use href="#i-close"></use></svg>'}</div>
                     <div class="sm-flask-meta">
                         <div class="sm-flask-name">${t('freezeFlask2')}</div>
-                        <div class="sm-flask-status">${flask2Filled ? '❄️ ' + t('freezeReady') : '⚪ ' + t('freezeEmpty')}</div>
+                        <div class="sm-flask-status">${flask2Filled ? '<svg class="rune-inline rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> ' + t('freezeReady') : '⚪ ' + t('freezeEmpty')}</div>
                     </div>
                 </div>
             </div>
@@ -3970,35 +4467,35 @@ function renderStreakProtectionUI() {
         <!-- SHOP & REPAIR ACTIONS -->
         <div>
             <div class="sm-section-title">
-                <span>🛒 CỬA HÀNG CỨU CHUỖI</span>
+                <span><svg class="rune-inline rune-nav" viewBox="0 0 48 48"><use href="#i-market"></use></svg> CỬA HÀNG CỨU CHUỖI</span>
                 <span style="font-size:12px; color:var(--accent); font-weight:700;">Ví: ${myDP.toLocaleString()} DP</span>
             </div>
             <div class="sm-shop-grid">
                 <!-- BUY FREEZE -->
                 <div class="sm-shop-item">
                     <div class="sm-item-left">
-                        <div class="sm-item-icon">🧊</div>
+                        <div class="sm-item-icon"><svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg></div>
                         <div>
                             <div class="sm-item-title">${t('buyFreeze')}</div>
                             <div class="sm-item-desc">${t('buyFreezeDesc')}</div>
                         </div>
                     </div>
                     <button class="sm-item-btn btn-buy-freeze" onclick="window._buyStreakFreeze()" ${!canBuyFreeze ? 'disabled' : ''}>
-                        ${freezes >= 2 ? 'Đầy túi (2/2)' : 'Mua (200 DP)'}
+                        ${freezes >= 2 ? t('freezeReady') + ' (2/2)' : t('streakBuyBtn') + ' (200 DP)'}
                     </button>
                 </div>
 
                 <!-- REPAIR STREAK -->
                 <div class="sm-shop-item" style="${hasBrokenStreak ? 'border-color:rgba(239,68,68,0.5); background:linear-gradient(135deg, rgba(239,68,68,0.06), var(--bg-card));' : ''}">
                     <div class="sm-item-left">
-                        <div class="sm-item-icon" style="color:#ef4444;">⚡</div>
+                        <div class="sm-item-icon" style="color:#ef4444;"><svg class="rune-icon" style="color:#ef4444" viewBox="0 0 48 48"><use href="#i-dp"></use></svg></div>
                         <div>
                             <div class="sm-item-title">${t('repairStreak')} (24h)</div>
                             <div class="sm-item-desc">${t('repairStreakDesc')}</div>
                         </div>
                     </div>
                     <button class="sm-item-btn btn-repair-streak" onclick="window._repairStreakWithDP()" ${!canRepairStreak ? 'disabled' : ''}>
-                        ${hasBrokenStreak ? 'Hồi sinh (150 DP)' : 'Không cần vá'}
+                        ${hasBrokenStreak ? t('repairStreak') + ' (150 DP)' : t('streakNoNeed')}
                     </button>
                 </div>
             </div>
@@ -4007,7 +4504,7 @@ function renderStreakProtectionUI() {
         <!-- HISTORY -->
         <div>
             <div class="sm-section-title">
-                <span>📜 ${t('historyTitle')}</span>
+                <span><svg class="rune-inline rune-sys" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> ${t('historyTitle')}</span>
             </div>
             <div class="sm-history-list">
                 ${historyHtml}
@@ -4219,7 +4716,7 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${isOwned ? '<span style="color:#10b981;">✅ Đã sở hữu</span>' : `💎 ${item.price} DP`}
+                            ${isOwned ? `<span style="color:#10b981;">${t('shopOwned')}</span>` : `${item.price} DP`}
                         </div>
                         <div>
                             ${isEquipped ? `<button class="shop-action-btn btn-equipped" onclick="window._unequipShopItem('titles', '${item.id}')">${t('btnEquipped') || 'Đang dùng'}</button>` :
@@ -4251,7 +4748,7 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${item.free ? '<span style="color:#10b981;">🎁 Miễn phí</span>' : isOwned ? '<span style="color:#10b981;">✅ Đã sở hữu</span>' : `💎 ${item.price} DP`}
+                            ${item.free ? '<span style="color:#10b981;">Miễn phí</span>' : isOwned ? '<span style="color:#10b981;">Đã sở hữu</span>' : `${item.price} DP`}
                         </div>
                         <div>
                             ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
@@ -4268,7 +4765,7 @@ function renderShopUI(targetTab = null) {
         const soundEquipped = S.inventory?.soundFx || 'default';
         const visualEquipped = S.inventory?.visualFx || 'default';
 
-        html += `<div style="grid-column:1/-1;font-family:var(--font-heading);font-size:13px;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin-bottom:-6px;">🔊 Gói Âm Thanh Check-in</div>`;
+        html += `<div style="grid-column:1/-1;font-family:var(--font-heading);font-size:13px;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin-bottom:-6px;">Gói Âm Thanh Check-in</div>`;
         SHOP_CATALOG.soundFx.forEach(item => {
             const isOwned = item.free || soundOwned.includes(item.id);
             const isEquipped = soundEquipped === item.id;
@@ -4285,7 +4782,7 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${item.free ? '<span style="color:#10b981;">🎁 Mặc định</span>' : isOwned ? '<span style="color:#10b981;">✅ Đã sở hữu</span>' : `💎 ${item.price} DP`}
+                            ${item.free ? '<span style="color:#10b981;">Mặc định</span>' : isOwned ? '<span style="color:#10b981;">Đã sở hữu</span>' : `${item.price} DP`}
                         </div>
                         <div>
                             ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
@@ -4297,7 +4794,7 @@ function renderShopUI(targetTab = null) {
             `;
         });
 
-        html += `<div style="grid-column:1/-1;font-family:var(--font-heading);font-size:13px;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin:12px 0 -6px;">✨ Gói Thị Giác Check-in</div>`;
+        html += `<div style="grid-column:1/-1;font-family:var(--font-heading);font-size:13px;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin:12px 0 -6px;">Gói Thị Giác Check-in</div>`;
         SHOP_CATALOG.visualFx.forEach(item => {
             const isOwned = item.free || visualOwned.includes(item.id);
             const isEquipped = visualEquipped === item.id;
@@ -4306,7 +4803,7 @@ function renderShopUI(targetTab = null) {
             html += `
                 <div class="shop-card ${isEquipped ? 'equipped' : ''}">
                     <div class="shop-card-header">
-                        <div class="shop-card-art">✨</div>
+                        <div class="shop-card-art"><svg class="rune-icon rune-xl" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></div>
                         <div class="shop-card-meta">
                             <div class="shop-card-title">${item.name}</div>
                             <div class="shop-card-desc">${item.desc}</div>
@@ -4314,7 +4811,7 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${item.free ? '<span style="color:#10b981;">🎁 Mặc định</span>' : isOwned ? '<span style="color:#10b981;">✅ Đã sở hữu</span>' : `💎 ${item.price} DP`}
+                            ${item.free ? '<span style="color:#10b981;">Mặc định</span>' : isOwned ? '<span style="color:#10b981;">Đã sở hữu</span>' : `${item.price} DP`}
                         </div>
                         <div>
                             ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
@@ -4361,7 +4858,7 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            <div>💎 ${item.price} DP</div>
+                            <div>${item.price} DP</div>
                             <div style="font-size:11.5px;color:var(--text-muted);font-weight:600;">${statusText}</div>
                         </div>
                         <div>
@@ -4436,7 +4933,7 @@ async function buyShopItem(type, itemId, cost) {
     // Show Toast
     const toast = document.createElement('div');
     toast.className = 'quest-toast';
-    toast.innerHTML = `<span>✨</span> ${t('itemBoughtToast') || 'Đã mua thành công!'}`;
+    toast.innerHTML = `<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></span> ${t('itemBoughtToast') || 'Đã mua thành công!'}`;
     document.body.appendChild(toast);
     setTimeout(() => toast.classList.add('show'), 10);
     setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
@@ -4488,6 +4985,9 @@ window._unequipShopItem = unequipShopItem;
 function initShopModal() {
     const shopBtn = document.getElementById('shopBtn');
     if (shopBtn) shopBtn.onclick = () => openShopModal();
+
+    const navShopBtn = document.getElementById('navShopBtn');
+    if (navShopBtn) navShopBtn.onclick = () => openShopModal();
 
     const mobileBtn = document.getElementById('mobileShopBtn');
     if (mobileBtn) mobileBtn.onclick = () => openShopModal();
@@ -4581,7 +5081,7 @@ async function renderSquadHubUI(targetTab = null) {
                                     ${isMe ? '<span style="font-size:10.5px;padding:1px 6px;border-radius:10px;background:#6366f1;color:#fff;">Bạn</span>' : ''}
                                 </div>
                                 <div class="squad-member-status ${isChecked ? 'checked' : 'pending'}">
-                                    ${isChecked ? '✅ Đã check-in hôm nay' : '⏳ Chưa hoàn thành'}
+                                    ${isChecked ? 'Đã check-in hôm nay' : 'Chưa hoàn thành'}
                                 </div>
                             </div>
                         </div>
@@ -4666,7 +5166,7 @@ async function renderSquadHubUI(targetTab = null) {
 
                 <div class="squad-actions-row">
                     <div class="squad-action-card">
-                        <h3>✨ Tạo Tổ Đội Mới (3-5 Người)</h3>
+                        <h3><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Tạo Tổ Đội Mới (3-5 Người)</h3>
                         <input type="text" id="squadNewName" class="squad-input" placeholder="Tên tổ đội (VD: Chiến Binh 5H Sáng)..." maxlength="30">
                         <div style="display:flex;gap:8px;align-items:center;">
                             <label style="font-size:12px;font-weight:700;color:var(--text-muted);">Biểu tượng:</label>
@@ -4681,14 +5181,14 @@ async function renderSquadHubUI(targetTab = null) {
                             </select>
                         </div>
                         <input type="text" id="squadNewDesc" class="squad-input" placeholder="Mục tiêu chung của đội..." maxlength="80">
-                        <button class="squad-btn-primary" onclick="window._createSquad()">🚀 Tạo Tổ Đội Ngay</button>
+                        <button class="squad-btn-primary" onclick="window._createSquad()"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Tạo Tổ Đội Ngay</button>
                     </div>
 
                     <div class="squad-action-card">
                         <h3>🔑 Gia Nhập Bằng Mã Mời</h3>
                         <p style="font-size:12.5px;color:var(--text-muted);margin:0;">Nhập mã mời 6 ký tự do đội trưởng hoặc bạn bè gửi cho bạn:</p>
                         <input type="text" id="squadJoinCode" class="squad-input" placeholder="VD: SD8921" maxlength="10" style="text-transform:uppercase;font-family:monospace;font-weight:800;">
-                        <button class="squad-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669);" onclick="window._joinSquadByCode()">📥 Gia Nhập Đội</button>
+                        <button class="squad-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669);" onclick="window._joinSquadByCode()"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Gia Nhập Đội</button>
                     </div>
                 </div>
             `;
@@ -4747,7 +5247,7 @@ async function renderSquadHubUI(targetTab = null) {
                 resultHtml = `
                     <div style="background:rgba(0,0,0,0.3);border:1px solid #f59e0b;padding:12px;border-radius:8px;text-align:center;margin-top:14px;">
                         <div style="font-size:16px;font-weight:900;color:#f59e0b;">
-                            ${draw ? '🤝 KẾT QUẢ HÒA CÂN NÃO (7/7)!' : won ? '🏆 BẠN ĐÃ CHIẾN THẮNG TRẬN ĐẤU!' : '💀 BẠN ĐÃ THUA TRẬN ĐẤU!'}
+                            ${draw ? 'KẾT QUẢ HÒA CÂN NÃO (7/7)!' : won ? 'BẠN ĐÃ CHIẾN THẮNG TRẬN ĐẤU!' : 'BẠN ĐÃ THUA TRẬN ĐẤU!'}
                         </div>
                         <button class="squad-btn-primary" style="margin-top:10px;" onclick="window._claimDuelReward('${activeDuel.id}')">
                             ${won ? `Nhận Thưởng ${pot} DP 💎` : 'Đóng trận đấu & Nhận kết quả'}
@@ -4773,7 +5273,7 @@ async function renderSquadHubUI(targetTab = null) {
 
                         <div class="duel-vs-center">
                             <div class="duel-vs-text">VS</div>
-                            <div class="duel-pot-pill">🏆 HŨ THƯỞNG: ${pot} DP</div>
+                            <div class="duel-pot-pill"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg> HŨ THƯỞNG: ${pot} DP</div>
                         </div>
 
                         <div class="duel-fighter opponent">
@@ -5364,13 +5864,15 @@ function calculateWeeklyRecapData() {
     const checkMultiplier = isBoostActive ? 2 : 1;
     const weeklyDP = totalChecks * 10 * checkMultiplier + perfectDays * 30;
 
-    let gradeTitle = '🌟 Chiến Binh Tiên Phong';
-    if (completionPct >= 90) gradeTitle = '👑 Huyền Thoại Kỷ Luật';
-    else if (completionPct >= 75) gradeTitle = '⚔️ Chiến Binh Bất Bại';
-    else if (completionPct >= 50) gradeTitle = '🔥 Kỷ Luật Vàng';
-    else if (completionPct >= 30) gradeTitle = '🍃 Kiên Trì Bền Bỉ';
+    let gradeTitle = 'Chiến Binh Tiên Phong';
+    if (completionPct >= 90) gradeTitle = 'Huyền Thoại Kỷ Luật';
+    else if (completionPct >= 75) gradeTitle = 'Chiến Binh Bất Bại';
+    else if (completionPct >= 50) gradeTitle = 'Kỷ Luật Vàng';
+    else if (completionPct >= 30) gradeTitle = 'Kiên Trì Bền Bỉ';
 
     const computed = calculateUserDPAndStreak(S);
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
+    const finalDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
 
     return {
         totalChecks,
@@ -5382,8 +5884,8 @@ function calculateWeeklyRecapData() {
         leastHabit,
         gradeTitle,
         streak: computed.currentStreak,
-        totalDP: computed.totalDP + (userBonusDP || 0),
-        rank: getRankLevel(computed.totalDP + (userBonusDP || 0))
+        totalDP: finalDP,
+        rank: getRankLevel(finalDP)
     };
 }
 window.calculateWeeklyRecapData = calculateWeeklyRecapData;
@@ -5421,7 +5923,7 @@ function renderRecapSlide() {
 
     if (recapCurrentSlide === 0) {
         html = `
-            <div class="recap-slide-icon">🏆</div>
+            <div class="recap-slide-icon"><svg class="rune-icon rune-xl" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg></div>
             <div class="recap-slide-title">KỶ LUẬT TUẦN QUA</div>
             <div class="recap-slide-value">${data.completionPct}%</div>
             <div class="recap-slide-subtitle">Bạn đã hoàn thành <strong>${data.totalChecks}/${data.targetChecks}</strong> mục tiêu thói quen trong 7 ngày gần nhất.</div>
@@ -5447,7 +5949,7 @@ function renderRecapSlide() {
         const bestName = data.bestHabit ? `${data.bestHabit.emoji || '✨'} ${data.bestHabit.name}` : 'Chưa có';
         const bestCount = data.bestHabit ? `${data.bestHabit.checksInWeek}/7 ngày` : '0';
         html = `
-            <div class="recap-slide-icon">🌟</div>
+            <div class="recap-slide-icon"><svg class="rune-icon rune-xl" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></div>
             <div class="recap-slide-title">THÓI QUEN QUÁN QUÂN</div>
             <div class="recap-slide-value" style="font-size:32px;">${escHtml(bestName)}</div>
             <div class="recap-slide-subtitle">Thói quen được rèn luyện xuất sắc nhất với <strong>${bestCount}</strong> hoàn thành trong tuần!</div>
@@ -5675,7 +6177,7 @@ function renderShareCardToCanvas(ratio = null, theme = null) {
 
             ctx.textAlign = 'right';
             ctx.fillStyle = '#10b981';
-            ctx.fillText('✅ Đã hoàn thành', cardX + cardW - 36, itemY);
+            ctx.fillText('Đã hoàn thành', cardX + cardW - 36, itemY);
             ctx.textAlign = 'left';
 
             itemY += 56;
@@ -5730,7 +6232,7 @@ function downloadShareCard() {
 
     const toast = document.createElement('div');
     toast.className = 'quest-toast';
-    toast.innerHTML = `<span>📥</span> ${t('cardDownloadedToast') || 'Đã tải ảnh thẻ về máy!'}`;
+    toast.innerHTML = `<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></span> ${t('cardDownloadedToast') || 'Đã tải ảnh thẻ về máy!'}`;
     document.body.appendChild(toast);
     setTimeout(() => toast.classList.add('show'), 10);
     setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
@@ -6094,7 +6596,7 @@ function openPomodoroModal(habitId = null) {
     // Populate habit selector
     const sel = document.getElementById('pomoHabitSelect');
     if (sel) {
-        let optHtml = '<option value="">-- Tập trung tự do (Deep Work) --</option>';
+        let optHtml = `<option value="">${t('pomoFreeDeepWork')}</option>`;
         (S.h || []).forEach(h => {
             optHtml += `<option value="${h.id}">${h.emoji || '✨'} ${h.name}</option>`;
         });
@@ -6126,7 +6628,7 @@ function switchPomoMode(mode) {
 
     const statusEl = document.getElementById('pomoStatusLabel');
     if (statusEl) {
-        statusEl.textContent = mode === 'pomodoro' ? 'Đang sẵn sàng' : (mode === 'short' ? 'Nghỉ ngơi 5 phút' : 'Nghỉ ngơi 15 phút');
+        statusEl.textContent = mode === 'pomodoro' ? t('pomoReady') : (mode === 'short' ? t('pomoShortRest') : t('pomoLongRest'));
     }
 
     updatePomoDisplay();
@@ -6141,12 +6643,12 @@ function startPomodoroTimer() {
     pomoState.isRunning = true;
     const startBtn = document.getElementById('pomoStartBtn');
     if (startBtn) {
-        startBtn.textContent = '⏸ Tạm Dừng';
+        startBtn.textContent = t('pomoPause');
         startBtn.classList.add('running');
     }
 
     const statusEl = document.getElementById('pomoStatusLabel');
-    if (statusEl) statusEl.textContent = pomoState.mode === 'pomodoro' ? '🔥 Đang tập trung...' : '☕ Đang nghỉ ngơi...';
+    if (statusEl) statusEl.textContent = pomoState.mode === 'pomodoro' ? t('pomoFocusing') : t('pomoResting');
 
     // Start ambient sound if selected
     if (pomoState.ambientType !== 'none') {
@@ -6172,12 +6674,12 @@ function pausePomodoroTimer() {
 
     const startBtn = document.getElementById('pomoStartBtn');
     if (startBtn) {
-        startBtn.textContent = '▶ Tiếp Tục';
+        startBtn.textContent = t('pomoContinue');
         startBtn.classList.remove('running');
     }
 
     const statusEl = document.getElementById('pomoStatusLabel');
-    if (statusEl) statusEl.textContent = 'Đang tạm dừng';
+    if (statusEl) statusEl.textContent = t('pomoPaused');
 
     stopAmbientSound();
 }
@@ -6186,9 +6688,9 @@ function resetPomodoroTimer() {
     pausePomodoroTimer();
     pomoState.secondsLeft = pomoState.totalSeconds;
     const startBtn = document.getElementById('pomoStartBtn');
-    if (startBtn) startBtn.textContent = '▶ Bắt Đầu';
+    if (startBtn) startBtn.textContent = t('pomoStart');
     const statusEl = document.getElementById('pomoStatusLabel');
-    if (statusEl) statusEl.textContent = 'Đang sẵn sàng';
+    if (statusEl) statusEl.textContent = t('pomoReady');
     updatePomoDisplay();
 }
 
@@ -6203,7 +6705,7 @@ function updatePomoDisplay() {
     // Update circular progress SVG
     const circle = document.getElementById('pomoCircleProgress');
     if (circle) {
-        const circumference = 628; // 2 * PI * 100
+        const circumference = 804.25; // 2 * PI * 128
         const progress = pomoState.secondsLeft / pomoState.totalSeconds;
         const offset = circumference * (1 - progress);
         circle.style.strokeDashoffset = offset;
