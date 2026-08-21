@@ -3967,29 +3967,28 @@ function showOrbitalPopup(btnEl, title, items) {
     const popupW = 200; // approximate popup width
 
     // Determine best placement based on button position on screen
-    if (btnCx < vw / 2) {
+    if (vw <= 480) {
+        popupLeft = Math.max(12, (vw - popupW) / 2);
+        popupTop = Math.max(50, Math.min(rect.top, vh - 220));
+        originX = '50%';
+        originY = '20px';
+    } else if (btnCx < vw / 2) {
         // Button on left half → show popup to the right
         popupLeft = rect.right + 8;
         originX = '0';
+        popupTop = (btnCy < vh / 2) ? rect.top - 10 : rect.bottom - 140;
+        originY = (btnCy < vh / 2) ? '20px' : 'calc(100% - 20px)';
     } else {
         // Button on right half → show popup to the left
         popupLeft = rect.left - popupW - 8;
         originX = '100%';
-    }
-
-    if (btnCy < vh / 2) {
-        // Button in top half → align popup top with button
-        popupTop = rect.top - 10;
-        originY = '20px';
-    } else {
-        // Button in bottom half → align popup bottom with button
-        popupTop = rect.bottom - 140; // rough popup height offset
-        originY = 'calc(100% - 20px)';
+        popupTop = (btnCy < vh / 2) ? rect.top - 10 : rect.bottom - 140;
+        originY = (btnCy < vh / 2) ? '20px' : 'calc(100% - 20px)';
     }
 
     // Clamp to viewport
     popupLeft = Math.max(8, Math.min(popupLeft, vw - popupW - 8));
-    popupTop = Math.max(8, popupTop);
+    popupTop = Math.max(8, Math.min(popupTop, vh - 180));
 
     popup.style.left = popupLeft + 'px';
     popup.style.top = popupTop + 'px';
@@ -4375,11 +4374,11 @@ function initProfileModal() {
         };
     }
 
-    // Settings panel and logout in profile body are always visible
+    // Hide settings panel and logout from profile body (accessible via orbital popups)
     const settingsPanel = document.getElementById('profileSettingsPanel');
-    if (settingsPanel) settingsPanel.style.display = 'flex';
+    if (settingsPanel) settingsPanel.style.display = 'none';
     const logoutWrap = document.querySelector('.profile-logout-wrap');
-    if (logoutWrap) logoutWrap.style.display = 'block';
+    if (logoutWrap) logoutWrap.style.display = 'none';
 
     // Change Name Button Handler
     const saveNameBtn = document.getElementById('saveNameBtn');
