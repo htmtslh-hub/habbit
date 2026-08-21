@@ -3325,36 +3325,160 @@ body {
     /* TAB: HABITS */
     [data-active-tab="habits"] .top-section {
         display: flex !important;
-        flex-direction: column;
-        gap: 10px;
-        padding: 8px 12px;
+        flex-direction: row !important;
+        gap: 8px !important;
+        padding: 6px 8px 4px 8px !important;
     }
-    [data-active-tab="habits"] .top-section .top-left,
+    [data-active-tab="habits"] .top-section .top-left {
+        display: flex !important;
+        flex: 1 1 50% !important;
+        min-height: 0 !important;
+        height: auto !important;
+    }
     [data-active-tab="habits"] .top-section .top-right {
         display: flex !important;
-        width: 100%;
-        min-height: 140px;
-        height: auto;
+        flex: 1 1 50% !important;
+        min-height: 0 !important;
+        height: auto !important;
+    }
+    [data-active-tab="habits"] .top-section .cal-card,
+    [data-active-tab="habits"] .top-section .stats-card {
+        height: auto !important;
+        min-height: 100px !important;
+        border-radius: 12px !important;
+        width: 100% !important;
+    }
+    [data-active-tab="habits"] .top-section .card-header {
+        padding: 5px 8px !important;
+        font-size: 0.65rem !important;
+        letter-spacing: 0.4px !important;
+    }
+    [data-active-tab="habits"] .top-section .cal-body {
+        padding: 6px 8px !important;
+    }
+    [data-active-tab="habits"] .top-section .cal-row {
+        margin-bottom: 3px !important;
+    }
+    [data-active-tab="habits"] .top-section .cal-row label {
+        font-size: 0.58rem !important;
+        margin-bottom: 2px !important;
+    }
+    [data-active-tab="habits"] .top-section .cal-row select {
+        padding: 3px 6px !important;
+        font-size: 0.75rem !important;
+        border-radius: 6px !important;
+    }
+    [data-active-tab="habits"] .top-section .stats-body {
+        padding: 6px 8px !important;
+        gap: 6px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+    [data-active-tab="habits"] .top-section .stats-ring-wrap {
+        width: 46px !important;
+        height: 46px !important;
+        flex-shrink: 0 !important;
+    }
+    [data-active-tab="habits"] .top-section .stats-ring-wrap svg {
+        width: 46px !important;
+        height: 46px !important;
+    }
+    [data-active-tab="habits"] .top-section .ring-pct {
+        font-size: 0.72rem !important;
+    }
+    [data-active-tab="habits"] .top-section .stats-info {
+        font-size: 0.7rem !important;
+        gap: 2px !important;
+    }
+    [data-active-tab="habits"] .top-section .si-row {
+        font-size: 0.68rem !important;
     }
     [data-active-tab="habits"] .top-section .top-center {
         display: none !important;
     }
+
     [data-active-tab="habits"] .grid-area {
         display: block !important;
-        padding: 0 12px 12px 12px;
+        padding: 4px 8px 10px 8px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
     }
+    [data-active-tab="habits"] .htable {
+        border-radius: 10px !important;
+        font-size: 0.78rem !important;
+        min-width: max-content !important;
+    }
+    [data-active-tab="habits"] .htable th.h-name,
+    [data-active-tab="habits"] .htable td.td-name {
+        position: sticky !important;
+        left: 0 !important;
+        z-index: 10 !important;
+        width: 130px !important;
+        min-width: 130px !important;
+        max-width: 145px !important;
+        padding: 6px 8px !important;
+        background: var(--bg-card) !important;
+        box-shadow: 2px 0 6px rgba(0, 0, 0, 0.15) !important;
+    }
+    [data-active-tab="habits"] .htable th.h-name {
+        background: var(--header-card-bg) !important;
+        z-index: 12 !important;
+    }
+    [data-active-tab="habits"] .htable th.h-day,
+    [data-active-tab="habits"] .htable td.td-chk {
+        width: 32px !important;
+        min-width: 32px !important;
+        max-width: 32px !important;
+        height: 38px !important;
+        padding: 2px 1px !important;
+        text-align: center !important;
+    }
+    [data-active-tab="habits"] .htable td.td-chk .cb {
+        width: 22px !important;
+        height: 22px !important;
+        border-radius: 6px !important;
+        margin: auto !important;
+    }
+    [data-active-tab="habits"] .htable th.h-day .dn {
+        font-size: 8px !important;
+        line-height: 1 !important;
+    }
+    [data-active-tab="habits"] .htable th.h-day .dd {
+        font-size: 10.5px !important;
+        font-weight: 700 !important;
+    }
+    [data-active-tab="habits"] .htable .td-an,
+    [data-active-tab="habits"] .htable .h-an {
+        min-width: 28px !important;
+        padding: 4px 2px !important;
+        font-size: 10px !important;
+    }
+    [data-active-tab="habits"] .htable .td-pg,
+    [data-active-tab="habits"] .htable .h-pg {
+        min-width: 48px !important;
+        padding: 4px 2px !important;
+    }
+    [data-active-tab="habits"] .htable .pg-wrap {
+        gap: 3px !important;
+    }
+    [data-active-tab="habits"] .htable .pg-pct {
+        font-size: 9.5px !important;
+    }
+
     [data-active-tab="habits"] .ms-row {
         display: flex !important;
-        flex-direction: column;
-        gap: 10px;
-        padding: 8px 12px;
+        flex-direction: column !important;
+        gap: 8px !important;
+        padding: 4px 8px 14px 8px !important;
     }
     [data-active-tab="habits"] .ms-row .ms-cell {
         width: 100% !important;
+        border-radius: 12px !important;
+        padding: 8px 12px !important;
     }
     [data-active-tab="habits"] .ms-row .add-cell {
         display: flex !important;
-        justify-content: center;
+        justify-content: center !important;
     }
 
     /* TAB: STATS */

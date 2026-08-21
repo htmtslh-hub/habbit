@@ -1534,6 +1534,7 @@ function renderStats(){
 function renderGrid(){
     const days=dim(cM,cY),DA=t('days');
     selectedDay = Math.min(selectedDay, days);
+    const esc = s => (s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '');
 
     const freezeClass = isColumnFrozen ? ' frozen-col' : '';
     const collapseClass = isColumnCollapsed ? ' collapsed-col' : '';
