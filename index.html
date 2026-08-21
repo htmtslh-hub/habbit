@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=4.8.2">
+    <link rel="stylesheet" href="style.css?v=4.8.3">
 
     <!-- Firebase SDK (CDN) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -918,6 +918,7 @@
     <!-- MORE FEATURES MENU MODAL (BOTTOM SHEET) -->
     <div class="modal-bg more-menu-modal-bg" id="moreMenuModalBg">
         <div class="more-menu-sheet">
+            <div class="sheet-drag-handle"></div>
             <div class="more-menu-header">
                 <div class="more-menu-title">
                     <svg class="rune-inline rune-md" viewBox="0 0 48 48"><use href="#i-core"></use></svg>
@@ -927,67 +928,40 @@
             </div>
             <div class="more-menu-grid">
                 <button class="more-grid-item" id="moreBtnQuests" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openQuests)window._openQuests();">
-                    <div class="more-item-icon quest-icon" style="background:rgba(239,68,68,0.15);color:#f87171;"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-duel"></use></svg></div>
-                    <div class="more-item-info">
-                        <span class="more-item-name" data-i18n="tabQuests">Nhiệm Vụ Rèn Luyện</span>
-                        <span class="more-item-desc" data-i18n="moreQuestsDesc">Nhiệm vụ ngày, tuần & nhận DP</span>
-                    </div>
+                    <div class="more-item-icon quest-icon" style="background:rgba(244,63,94,0.16);color:#f43f5e;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-duel"></use></svg></div>
+                    <span class="more-item-name" data-i18n="tabQuests">Nhiệm Vụ</span>
                 </button>
                 <button class="more-grid-item" id="moreBtnPomo" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openPomodoro)window._openPomodoro();">
-                    <div class="more-item-icon pomo-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-focus"></use></svg></div>
-                    <div class="more-item-info">
-                        <span class="more-item-name" data-i18n="tabPomodoro">Deep Work Focus</span>
-                        <span class="more-item-desc" data-i18n="morePomoDesc">Đồng hồ Pomodoro & Ambient</span>
-                    </div>
+                    <div class="more-item-icon pomo-icon" style="background:rgba(239,68,68,0.16);color:#ef4444;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-focus"></use></svg></div>
+                    <span class="more-item-name" data-i18n="tabPomodoro">Pomodoro</span>
                 </button>
                 <button class="more-grid-item" id="moreBtnStreak" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openStreakModal)window._openStreakModal();">
-                    <div class="more-item-icon streak-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-vault"></use></svg></div>
-                    <div class="more-item-info">
-                        <span class="more-item-name" data-i18n="tabStreakShield">Bảo Vệ Chuỗi</span>
-                        <span class="more-item-desc" data-i18n="moreStreakDesc">Bình đóng băng & Cứu chuỗi</span>
-                    </div>
+                    <div class="more-item-icon streak-icon" style="background:rgba(59,130,246,0.16);color:#3b82f6;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-vault"></use></svg></div>
+                    <span class="more-item-name" data-i18n="tabStreakShield">Bảo Vệ Chuỗi</span>
                 </button>
                 <button class="more-grid-item" id="moreBtnShop" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openShopModal)window._openShopModal();">
-                    <div class="more-item-icon shop-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-market"></use></svg></div>
-                    <div class="more-item-info">
-                        <span class="more-item-name" data-i18n="tabShop">Cửa Hàng DP</span>
-                        <span class="more-item-desc" data-i18n="moreShopDesc">Danh hiệu, theme & hiệu ứng</span>
-                    </div>
+                    <div class="more-item-icon shop-icon" style="background:rgba(245,158,11,0.16);color:#f59e0b;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-market"></use></svg></div>
+                    <span class="more-item-name" data-i18n="tabShop">Cửa Hàng DP</span>
                 </button>
                 <button class="more-grid-item" id="moreBtnSquad" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openSquadHub)window._openSquadHub();">
-                    <div class="more-item-icon squad-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg></div>
-                    <div class="more-item-info">
-                        <span class="more-item-name" data-i18n="tabSquad">Tổ Đội & 1v1</span>
-                        <span class="more-item-desc" data-i18n="moreSquadDesc">Bang hội kỷ luật & thách đấu</span>
-                    </div>
+                    <div class="more-item-icon squad-icon" style="background:rgba(168,85,247,0.16);color:#a855f7;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg></div>
+                    <span class="more-item-name" data-i18n="tabSquad">Tổ Đội & 1v1</span>
                 </button>
                 <button class="more-grid-item" id="moreBtnRecap" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openRecapModal)window._openRecapModal();">
-                    <div class="more-item-icon recap-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-metric"></use></svg></div>
-                    <div class="more-item-info">
-                        <span class="more-item-name" data-i18n="tabRecap">Tổng Kết Năm</span>
-                        <span class="more-item-desc" data-i18n="moreRecapDesc">Thẻ vinh danh Year in Review</span>
-                    </div>
+                    <div class="more-item-icon recap-icon" style="background:rgba(16,185,129,0.16);color:#10b981;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-metric"></use></svg></div>
+                    <span class="more-item-name" data-i18n="tabRecap">Tổng Kết Năm</span>
                 </button>
                 <button class="more-grid-item" id="moreBtnUpgrade" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openUpgrade)window._openUpgrade();">
-                    <div class="more-item-icon vip-icon" style="background:rgba(234,179,8,0.15);color:#facc15;"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></div>
-                    <div class="more-item-info">
-                        <span class="more-item-name" data-i18n="tabVip">Nâng Cấp VIP</span>
-                        <span class="more-item-desc" data-i18n="moreVipDesc">Mở khóa toàn bộ tính năng cao cấp</span>
-                    </div>
+                    <div class="more-item-icon vip-icon" style="background:rgba(234,179,8,0.18);color:#facc15;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></div>
+                    <span class="more-item-name" data-i18n="tabVip">Nâng Cấp VIP</span>
                 </button>
                 <button class="more-grid-item" id="moreBtnBackup" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._exportData)window._exportData();">
-                    <div class="more-item-icon backup-icon" style="background:rgba(6,182,212,0.15);color:#22d3ee;"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></div>
-                    <div class="more-item-info">
-                        <span class="more-item-name" data-i18n="tabBackup">Sao Lưu Dữ Liệu</span>
-                        <span class="more-item-desc" data-i18n="moreBackupDesc">Xuất & khôi phục file JSON</span>
-                    </div>
+                    <div class="more-item-icon backup-icon" style="background:rgba(6,182,212,0.18);color:#22d3ee;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></div>
+                    <span class="more-item-name" data-i18n="tabBackup">Sao Lưu JSON</span>
                 </button>
                 <button class="more-grid-item" id="moreBtnProfile" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openProfile)window._openProfile();">
-                    <div class="more-item-icon profile-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></div>
-                    <div class="more-item-info">
-                        <span class="more-item-name" data-i18n="editProfileTitle">Hồ Sơ & Cài Đặt</span>
-                        <span class="more-item-desc" data-i18n="moreProfileDesc">Đổi tên, avatar, đăng xuất</span>
-                    </div>
+                    <div class="more-item-icon profile-icon" style="background:rgba(148,163,184,0.16);color:#94a3b8;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-core"></use></svg></div>
+                    <span class="more-item-name" data-i18n="editProfileTitle">Hồ Sơ & Cài Đặt</span>
                 </button>
             </div>
         </div>
@@ -997,6 +971,6 @@
     <script src="gotiengviet.js"></script>
     <script src="nameplate_templates.js"></script>
     <script src="avatar_frames.js"></script>
-    <script src="app.js?v=4.8.2"></script>
+    <script src="app.js?v=4.8.3"></script>
 </body>
 </html>

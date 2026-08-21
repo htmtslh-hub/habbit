@@ -8920,101 +8920,124 @@ td.td-chk.frozen-day {
 .rune-card-gold .rune-card-title { color: #FFF6DE; }
 
 /* ==================== MORE FEATURES MENU (BOTTOM SHEET) ==================== */
-.more-menu-modal-bg {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    z-index: 10000 !important;
-    display: none;
-    align-items: flex-end;
-    justify-content: center;
+.modal-bg.more-menu-modal-bg {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.72) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    z-index: 10001 !important;
+    display: none !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
     opacity: 0;
     transition: opacity 0.25s ease;
 }
-.more-menu-modal-bg.show {
-    display: flex;
-    opacity: 1;
+.modal-bg.more-menu-modal-bg.show {
+    display: flex !important;
+    opacity: 1 !important;
 }
+
 .more-menu-sheet {
-    background: var(--bg-card, #0f172a);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #0b0f17;
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-bottom: none;
     border-radius: 24px 24px 0 0;
-    width: 100%;
-    max-width: 580px;
-    max-height: 85vh;
-    padding: 20px 18px calc(24px + env(safe-area-inset-bottom, 16px)) 18px;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+    width: 100% !important;
+    max-width: 480px !important;
+    max-height: 80vh !important;
+    max-height: 80dvh !important;
+    padding: 12px 14px calc(24px + env(safe-area-inset-bottom, 16px)) 14px !important;
+    box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.75);
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
+    box-sizing: border-box !important;
+    margin: 0 auto !important;
     transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    overflow-y: auto;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
     -webkit-overflow-scrolling: touch;
 }
-.more-menu-modal-bg.show .more-menu-sheet {
+.modal-bg.more-menu-modal-bg.show .more-menu-sheet {
     transform: translateY(0);
 }
+
+.sheet-drag-handle {
+    width: 36px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    margin: 0 auto 2px auto;
+    flex-shrink: 0;
+}
+
 .more-menu-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 12px;
+    padding-bottom: 8px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .more-menu-title {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 800;
     letter-spacing: 1px;
     color: var(--text-main, #f1f5f9);
     font-family: var(--font-heading, Outfit, sans-serif);
 }
+
 .more-menu-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
-@media (max-width: 360px) {
-    .more-menu-grid {
-        grid-template-columns: 1fr;
-    }
-}
+
 .more-grid-item {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.035);
     border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 14px;
-    padding: 12px 14px;
+    padding: 10px 4px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 12px;
-    text-align: left;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
     cursor: pointer;
     transition: all 0.2s ease;
     color: var(--text-main, #f1f5f9);
     font-family: inherit;
-    width: 100%;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    min-height: 80px;
 }
 .more-grid-item:hover, .more-grid-item:active {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--accent, #10b981);
     transform: translateY(-2px);
 }
+
 .more-item-icon {
-    width: 42px;
-    height: 42px;
-    min-width: 42px;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(16, 185, 129, 0.12);
-    color: var(--accent, #10b981);
+    flex-shrink: 0;
 }
 .more-item-icon.pomo-icon { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
 .more-item-icon.streak-icon { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
@@ -9026,29 +9049,19 @@ td.td-chk.frozen-day {
 .more-item-icon.backup-icon { background: rgba(6, 182, 212, 0.18); color: #22d3ee; }
 .more-item-icon.quest-icon { background: rgba(244, 63, 94, 0.18); color: #f43f5e; }
 
-.more-item-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    overflow: hidden;
-}
 .more-item-name {
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 11.5px;
+    font-weight: 600;
     color: var(--text-main, #f1f5f9);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-family: var(--font-heading, Outfit, sans-serif);
-}
-.more-item-desc {
-    font-size: 11px;
-    color: var(--text-muted, #64748b);
-    line-height: 1.3;
+    line-height: 1.2;
+    text-align: center;
+    white-space: normal;
+    word-break: break-word;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    font-family: var(--font-heading, Outfit, sans-serif);
 }
 
 /* Biến thể 3: Bảo Khố / Thời Gian (Frost Cyan) */
