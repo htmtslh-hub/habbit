@@ -4375,11 +4375,46 @@ function initProfileModal() {
         };
     }
 
-    // Hide settings panel and logout from profile body (now accessible via orbital popups)
+    // Settings panel and logout in profile body are always visible
     const settingsPanel = document.getElementById('profileSettingsPanel');
-    if (settingsPanel) settingsPanel.style.display = 'none';
+    if (settingsPanel) settingsPanel.style.display = 'flex';
     const logoutWrap = document.querySelector('.profile-logout-wrap');
-    if (logoutWrap) logoutWrap.style.display = 'none';
+    if (logoutWrap) logoutWrap.style.display = 'block';
+
+    // Change Name Button Handler
+    const saveNameBtn = document.getElementById('saveNameBtn');
+    const nameInput = document.getElementById('profileNewNameInput');
+    const nameErr = document.getElementById('profileNameError');
+    if (saveNameBtn && nameInput) {
+        saveNameBtn.onclick = async () => {
+            const val = nameInput.value.trim();
+            if (!val) { if(nameErr){ nameErr.textContent = 'Vui lòng nhập tên hiển thị!'; nameErr.style.display = 'block'; } return; }
+            if (val.length < 2 || val.length > 30) { if(nameErr){ nameErr.textContent = 'Tên phải từ 2 đến 30 ký tự!'; nameErr.style.display = 'block'; } return; }
+            saveNameBtn.textContent = '⏳...'; saveNameBtn.disabled = true; if(nameErr) nameErr.style.display = 'none';
+            try {
+                if (currentUser) await currentUser.updateProfile({ displayName: val });
+                if (userDocRef) await userDocRef.update({ displayName: val });
+                if (db && currentUser) await db.collection('leaderboard').doc(currentUser.uid).set({ displayName: val }, { merge: true });
+                showUserProfile(currentUser);
+                if (window._updateProfileModalUI) window._updateProfileModalUI();
+                saveNameBtn.textContent = 'Đã lưu ✓';
+                setTimeout(() => { saveNameBtn.textContent = 'Lưu'; saveNameBtn.disabled = false; }, 2000);
+            } catch (err) {
+                if(nameErr){ nameErr.textContent = 'Lỗi: ' + (err.message || err); nameErr.style.display = 'block'; }
+                saveNameBtn.textContent = 'Lưu'; saveNameBtn.disabled = false;
+            }
+        };
+    }
+
+    // Language switcher pills in settings
+    const langBtns = document.querySelectorAll('#profileLangRow .profile-lang-pill');
+    langBtns.forEach(btn => {
+        btn.onclick = () => {
+            const lang = btn.dataset.lang;
+            if (window._switchLang) window._switchLang(lang);
+            if (window._updateProfileModalUI) window._updateProfileModalUI();
+        };
+    });
 }
 
 function renderFramesGrid(currentLevel, imgUrl = '') {
