@@ -2,7 +2,7 @@
 :root{--bg-primary:#0a0a1a;--bg-secondary:#111128;--bg-card:rgba(20,20,50,0.85);--bg-input:rgba(255,255,255,0.06);--border-color:rgba(255,255,255,0.08);--border-focus:#00f5a0;--text-primary:#f0f0ff;--text-secondary:#8b8baf;--text-muted:#5a5a7a;--accent:#00f5a0;--accent-hover:#00d88d;--accent-glow:rgba(0,245,160,0.25);--gradient-brand:linear-gradient(135deg,#00f5a0 0%,#00d9f5 100%);--gradient-bg:linear-gradient(135deg,#0a0a1a 0%,#0d1b2a 50%,#0a0a1a 100%);--error:#ff4b72;--success:#00f5a0;--font-heading:'Outfit','Be Vietnam Pro','Inter',system-ui,sans-serif;--font-body:'Be Vietnam Pro','Inter',system-ui,sans-serif;--shadow-glow:0 0 30px rgba(0,245,160,0.15),0 0 60px rgba(0,245,160,0.05)}
 html,body{height:100%;font-family:var(--font-body);background:var(--bg-primary);color:var(--text-primary);overflow-x:hidden}
 #particleCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
-.auth-container{display:flex;height:100vh;position:relative;z-index:1}
+.auth-container{display:flex;min-height:100vh;min-height:100dvh;height:auto;position:relative;z-index:1}
 .auth-brand{flex:1;display:flex;align-items:center;justify-content:center;padding:48px;background:var(--gradient-bg);position:relative;overflow:hidden}
 .auth-brand::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 50%,rgba(0,245,160,0.06) 0%,transparent 50%),radial-gradient(circle at 70% 80%,rgba(0,217,245,0.04) 0%,transparent 40%);animation:brandGlow 8s ease-in-out infinite alternate}
 @keyframes brandGlow{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-5%,3%) scale(1.05)}}
@@ -51,8 +51,8 @@ html,body{height:100%;font-family:var(--font-body);background:var(--bg-primary);
 .btn-google:active{transform:translateY(0)}
 .google-icon{flex-shrink:0}
 .auth-footer{text-align:center;margin-top:28px;color:var(--text-muted);font-size:.7rem}
-@media(max-width:900px){.auth-container{flex-direction:column}.auth-brand{flex:0;padding:32px 24px;min-height:200px}.brand-title{font-size:2.5rem}.brand-features{display:none}.auth-form-area{flex:1;width:100%;min-width:auto;padding:24px}.auth-form-area::before{width:100%;height:1px;background:linear-gradient(to right,transparent,rgba(0,245,160,0.2),transparent)}}
-@media(max-width:480px){.auth-brand{padding:24px 16px;min-height:160px}.brand-icon{font-size:2.5rem}.brand-title{font-size:2rem}.brand-subtitle{font-size:.8rem;margin-bottom:0}.auth-form-area{padding:16px}.auth-card{max-width:100%}.auth-tabs{margin-bottom:20px}}
+@media(max-width:900px){.auth-container{flex-direction:column;min-height:100vh;min-height:100dvh;height:auto}.auth-brand{flex:0 0 auto;padding:32px 24px 20px;min-height:auto}.brand-title{font-size:2.5rem}.brand-features{display:none}.auth-form-area{flex:1 0 auto;width:100%;min-width:auto;padding:24px}.auth-form-area::before{width:100%;height:1px;background:linear-gradient(to right,transparent,rgba(0,245,160,0.2),transparent)}}
+@media(max-width:480px){.auth-brand{padding:20px 16px 12px;min-height:auto}.brand-icon{font-size:2.2rem;margin-bottom:8px}.brand-title{font-size:1.8rem;letter-spacing:2px;margin-bottom:8px}.brand-subtitle{font-size:.8rem;margin-bottom:0}.auth-form-area{padding:20px 16px 32px}.auth-card{max-width:100%}.auth-tabs{margin-bottom:20px}.input-wrapper input{font-size:16px}}
 
 /* ===== OTP VERIFICATION STYLES ===== */
 .otp-header{text-align:center;margin-bottom:28px}

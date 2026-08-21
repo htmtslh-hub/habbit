@@ -57,12 +57,12 @@ window.getNameplateCardHTML = function(level, imgUrl, scale = 0.6, displayName =
     const finalSub = subText || defaultSub;
 
     // Adjust font size dynamically based on name length to ensure prominent and crystal-clear text
-    let nameFontSize = '30px';
+    let nameFontSize = '36px';
     const nameLen = finalName.length;
-    if (nameLen > 24) nameFontSize = '20px';
-    else if (nameLen > 18) nameFontSize = '24px';
-    else if (nameLen > 14) nameFontSize = '27px';
-    else if (nameLen > 10) nameFontSize = '29px';
+    if (nameLen > 24) nameFontSize = '24px';
+    else if (nameLen > 18) nameFontSize = '28px';
+    else if (nameLen > 14) nameFontSize = '32px';
+    else if (nameLen > 10) nameFontSize = '34px';
 
     const safeUrl = imgUrl || `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>`;
     const imgTag = '<img src="' + safeUrl + '" style="width:100%;height:100%;object-fit:cover;" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>\';">';
@@ -72,7 +72,7 @@ window.getNameplateCardHTML = function(level, imgUrl, scale = 0.6, displayName =
 
     // Apply truncation and font size adjustment with prominent bold typography
     tpl = tpl.replace(/white-space:nowrap;/g, 'white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px; display:block; font-size:' + nameFontSize + ' !important; font-weight:800; line-height:1.2;');
-    tpl = tpl.replace(/font-size:11px;letter-spacing:\.34em;/g, "font-size:13px;letter-spacing:0.12em;font-weight:700;font-family:'Outfit','Be Vietnam Pro',sans-serif;");
+    tpl = tpl.replace(/font-size:11px;letter-spacing:\.34em;/g, "font-size:15px;letter-spacing:0.12em;font-weight:700;font-family:'Outfit','Be Vietnam Pro',sans-serif;");
     tpl = tpl.replace(/__NAME__/g, finalName);
     tpl = tpl.replace(/__SCORE__/g, finalSub);
     tpl = tpl.replace(/__AVATAR_IMG__/g, imgTag);

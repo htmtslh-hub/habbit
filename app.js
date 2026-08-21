@@ -44,7 +44,8 @@ const I18N = {
         heatmap:'Mật độ hoạt động cả năm',less:'Ít',more:'Nhiều',
         targetLabelModal:'Mục tiêu thói quen',targetHint:'ngày/tháng',
         dayMon:'T2',dayWed:'T4',dayFri:'T6',
-        tabHabits:'Thói quen',tabCharts:'Biểu đồ',tabHeatmap:'Mật độ',tabNotes:'Ghi chú',tabTop10:'Top 10',tabLeaderboard:'BXH',tabQuests:'Nhiệm vụ',
+        tabHabits:'Thói quen',tabStats:'Thống kê',tabCommunity:'Cộng đồng',tabArena:'Đấu trường',tabMore:'Khám phá',tabCharts:'Biểu đồ',tabHeatmap:'Mật độ',tabNotes:'Ghi chú',tabTop10:'Top 10',tabLeaderboard:'BXH',tabQuests:'Nhiệm vụ',
+        moreMenuTitle:'TÍNH NĂNG & TIỆN ÍCH',morePomoDesc:'Đồng hồ Pomodoro & Ambient',moreStreakDesc:'Bình đóng băng & Cứu chuỗi',moreShopDesc:'Danh hiệu, theme & hiệu ứng',moreSquadDesc:'Bang hội kỷ luật & thách đấu',moreRecapDesc:'Thẻ vinh danh Year in Review',moreProfileDesc:'Đổi tên, avatar, đăng xuất',
         freezeCol:'Đóng băng cột (Ghim)',unfreezeCol:'Bỏ đóng băng cột',
         collapseCol:'Thu gọn cột',expandCol:'Mở rộng cột',
         lbTitle:'BẢNG XẾP HẠNG CỘNG ĐỒNG',weeklySprint:'Tuần Này',topStreak:'Chuỗi Dài Nhất',topPlayers:'Xếp Hạng Top 50',
@@ -136,7 +137,8 @@ const I18N = {
         heatmap:'年度活动热力图',less:'少',more:'多',
         targetLabelModal:'习惯目标',targetHint:'天/月',
         dayMon:'一',dayWed:'三',dayFri:'五',
-        tabHabits:'习惯',tabCharts:'图表',tabHeatmap:'热力图',tabNotes:'笔记',tabTop10:'前十',tabLeaderboard:'排行榜',tabQuests:'任务',
+        tabHabits:'习惯',tabStats:'统计',tabCommunity:'社区',tabArena:'竞技场',tabMore:'探索',tabCharts:'图表',tabHeatmap:'热力图',tabNotes:'笔记',tabTop10:'前十',tabLeaderboard:'排行榜',tabQuests:'任务',
+        moreMenuTitle:'功能与实用工具',morePomoDesc:'番茄钟与白噪音',moreStreakDesc:'连胜冻结与恢复',moreShopDesc:'称号、主题与音效',moreSquadDesc:'战队公会与1v1挑战',moreRecapDesc:'年度成就总结',moreProfileDesc:'修改资料与登出',
         freezeCol:'冻结列',unfreezeCol:'解冻列',
         collapseCol:'折叠列',expandCol:'展开列',
         lbTitle:'社区排行榜',weeklySprint:'本周冲刺',topStreak:'最长连胜',topPlayers:'前50名',
@@ -228,7 +230,8 @@ const I18N = {
         heatmap:'Annual Activity Heatmap',less:'Less',more:'More',
         targetLabelModal:'Habit Target',targetHint:'days/month',
         dayMon:'Mon',dayWed:'Wed',dayFri:'Fri',
-        tabHabits:'Habits',tabCharts:'Charts',tabHeatmap:'Heatmap',tabNotes:'Notes',tabTop10:'Top 10',tabLeaderboard:'Rank',tabQuests:'Quests',
+        tabHabits:'Habits',tabStats:'Stats',tabCommunity:'Community',tabArena:'Arena',tabMore:'Explore',tabCharts:'Charts',tabHeatmap:'Heatmap',tabNotes:'Notes',tabTop10:'Top 10',tabLeaderboard:'Rank',tabQuests:'Quests',
+        moreMenuTitle:'FEATURES & TOOLS',morePomoDesc:'Pomodoro & Ambient Audio',moreStreakDesc:'Freeze Flask & Repair',moreShopDesc:'Titles, themes & sound FX',moreSquadDesc:'Guilds & 1v1 Duels',moreRecapDesc:'Year in Review card',moreProfileDesc:'Edit profile & logout',
         freezeCol:'Freeze column',unfreezeCol:'Unfreeze column',
         collapseCol:'Collapse column',expandCol:'Expand column',
         lbTitle:'COMMUNITY LEADERBOARD',weeklySprint:'Weekly Sprint',topStreak:'Top Streak',topPlayers:'Top 50',
@@ -787,13 +790,39 @@ function showUserProfile(user){
     const subText = getRankTierName(rank);
 
     if(userProfileEl) {
-        if(typeof window.getNameplateCardHTML === 'function') {
-            userProfileEl.innerHTML = window.getNameplateCardHTML(rank.level, imgUrl, 0.36, displayName, subText);
+        const vw = window.innerWidth;
+        if (vw <= 768) {
+            const avaHtml = (typeof window.getAvatarHTML === 'function') ? window.getAvatarHTML(rank.level, imgUrl, 34) : `<img src="${imgUrl}" style="width:34px;height:34px;border-radius:50%;">`;
+            userProfileEl.innerHTML = `
+                <div class="mobile-user-chip" title="${escHtml(displayName)} - ${escHtml(subText)}">
+                    <div class="mobile-user-ava">${avaHtml}</div>
+                    <div class="mobile-user-info">
+                        <span class="mobile-user-name">${escHtml(displayName)}</span>
+                        <span class="mobile-user-tier">${escHtml(subText)}</span>
+                    </div>
+                </div>
+            `;
+        } else if(typeof window.getNameplateCardHTML === 'function') {
+            let npScale = 0.36;
+            if (vw >= 1920) npScale = 0.54;
+            else if (vw >= 1600) npScale = 0.48;
+            else if (vw >= 1200) npScale = 0.42;
+            userProfileEl.innerHTML = window.getNameplateCardHTML(rank.level, imgUrl, npScale, displayName, subText);
         } else if(typeof window.getAvatarHTML === 'function') {
             userProfileEl.innerHTML = `<div style="display:flex;align-items:center;gap:6px;">${window.getAvatarHTML(rank.level, imgUrl, 40)}<span style="font-weight:700;font-size:0.85rem;">${escHtml(displayName)}</span></div>`;
         }
     }
 }
+
+let _npResizeTimeout = null;
+window.addEventListener('resize', () => {
+    if (_npResizeTimeout) clearTimeout(_npResizeTimeout);
+    _npResizeTimeout = setTimeout(() => {
+        if (typeof currentUser !== 'undefined' && currentUser) {
+            showUserProfile(currentUser);
+        }
+    }, 150);
+});
 
 async function ensureUserProfile(user){
     if(!userDocRef) return;
@@ -2089,6 +2118,23 @@ function initDragAndDrop() {
     });
 }
 
+// ==================== MORE FEATURES MENU MODAL HELPERS ====================
+window._openMoreMenu = function() {
+    const bg = document.getElementById('moreMenuModalBg');
+    if (bg) {
+        bg.style.display = 'flex';
+        requestAnimationFrame(() => bg.classList.add('show'));
+    }
+};
+
+window._closeMoreMenu = function() {
+    const bg = document.getElementById('moreMenuModalBg');
+    if (bg) {
+        bg.classList.remove('show');
+        setTimeout(() => { if (!bg.classList.contains('show')) bg.style.display = 'none'; }, 300);
+    }
+};
+
 function initMobileTabs() {
     const mainApp = document.getElementById('mainApp');
     const navItems = document.querySelectorAll('.mobile-nav-bar .mobile-nav-item');
@@ -2097,23 +2143,73 @@ function initMobileTabs() {
         mainApp.setAttribute('data-active-tab', 'habits');
     }
     
+    // Stats segment switcher
+    const segmentBtns = document.querySelectorAll('.stats-segment-btn');
+    segmentBtns.forEach(sBtn => {
+        sBtn.addEventListener('click', () => {
+            const sub = sBtn.getAttribute('data-subtab');
+            segmentBtns.forEach(b => b.classList.remove('active'));
+            sBtn.classList.add('active');
+            mainApp.setAttribute('data-stats-subtab', sub);
+            if (sub === 'charts') {
+                requestAnimationFrame(() => {
+                    renderBar();
+                    renderLine();
+                });
+            } else if (sub === 'heatmap') {
+                renderHeatmap();
+            } else if (sub === 'top10') {
+                renderT10();
+            } else if (sub === 'notes') {
+                renderNotes();
+            }
+        });
+    });
+
+    // More Menu close button and backdrop
+    const moreCloseBtn = document.getElementById('moreMenuCloseBtn');
+    if (moreCloseBtn) moreCloseBtn.onclick = window._closeMoreMenu;
+    const moreBg = document.getElementById('moreMenuModalBg');
+    if (moreBg) moreBg.onclick = (e) => { if (e.target === moreBg) window._closeMoreMenu(); };
+
     navItems.forEach(item => {
         item.addEventListener('click', () => {
             const tabId = item.getAttribute('data-tab');
             
-            if (tabId === 'community') { if(typeof window._openCommunity==='function') window._openCommunity(); return; }
-            if (tabId === 'leaderboard') { if(typeof openLeaderboardModal==='function') openLeaderboardModal('leaderboard'); return; }
-            if (tabId === 'quests') { if(typeof openQuestModal==='function') openQuestModal(); return; }
+            if (tabId === 'community') {
+                if(typeof window._openCommunity==='function') window._openCommunity();
+                return;
+            }
+            if (tabId === 'arena') {
+                if(typeof openLeaderboardModal==='function') openLeaderboardModal('leaderboard');
+                return;
+            }
+            if (tabId === 'more') {
+                if(typeof window._openMoreMenu==='function') window._openMoreMenu();
+                return;
+            }
 
             navItems.forEach(btn => btn.classList.remove('active'));
             item.classList.add('active');
             
             mainApp.setAttribute('data-active-tab', tabId);
             
-            if (tabId === 'charts') {
+            if (tabId === 'stats') {
+                if (!mainApp.getAttribute('data-stats-subtab')) {
+                    mainApp.setAttribute('data-stats-subtab', 'charts');
+                }
+                const activeSub = mainApp.getAttribute('data-stats-subtab') || 'charts';
                 requestAnimationFrame(() => {
-                    renderBar();
-                    renderLine();
+                    if (activeSub === 'charts') {
+                        renderBar();
+                        renderLine();
+                    } else if (activeSub === 'heatmap') {
+                        renderHeatmap();
+                    } else if (activeSub === 'top10') {
+                        renderT10();
+                    } else if (activeSub === 'notes') {
+                        renderNotes();
+                    }
                 });
             }
         });
@@ -6628,7 +6724,7 @@ function switchPomoMode(mode) {
 
     const statusEl = document.getElementById('pomoStatusLabel');
     if (statusEl) {
-        statusEl.textContent = mode === 'pomodoro' ? t('pomoReady') : (mode === 'short' ? t('pomoShortRest') : t('pomoLongRest'));
+        statusEl.innerHTML = mode === 'pomodoro' ? t('pomoReady') : (mode === 'short' ? t('pomoShortRest') : t('pomoLongRest'));
     }
 
     updatePomoDisplay();
@@ -6643,12 +6739,12 @@ function startPomodoroTimer() {
     pomoState.isRunning = true;
     const startBtn = document.getElementById('pomoStartBtn');
     if (startBtn) {
-        startBtn.textContent = t('pomoPause');
+        startBtn.innerHTML = t('pomoPause');
         startBtn.classList.add('running');
     }
 
     const statusEl = document.getElementById('pomoStatusLabel');
-    if (statusEl) statusEl.textContent = pomoState.mode === 'pomodoro' ? t('pomoFocusing') : t('pomoResting');
+    if (statusEl) statusEl.innerHTML = pomoState.mode === 'pomodoro' ? t('pomoFocusing') : t('pomoResting');
 
     // Start ambient sound if selected
     if (pomoState.ambientType !== 'none') {
@@ -6674,12 +6770,12 @@ function pausePomodoroTimer() {
 
     const startBtn = document.getElementById('pomoStartBtn');
     if (startBtn) {
-        startBtn.textContent = t('pomoContinue');
+        startBtn.innerHTML = t('pomoContinue');
         startBtn.classList.remove('running');
     }
 
     const statusEl = document.getElementById('pomoStatusLabel');
-    if (statusEl) statusEl.textContent = t('pomoPaused');
+    if (statusEl) statusEl.innerHTML = t('pomoPaused');
 
     stopAmbientSound();
 }
@@ -6688,9 +6784,9 @@ function resetPomodoroTimer() {
     pausePomodoroTimer();
     pomoState.secondsLeft = pomoState.totalSeconds;
     const startBtn = document.getElementById('pomoStartBtn');
-    if (startBtn) startBtn.textContent = t('pomoStart');
+    if (startBtn) startBtn.innerHTML = t('pomoStart');
     const statusEl = document.getElementById('pomoStatusLabel');
-    if (statusEl) statusEl.textContent = t('pomoReady');
+    if (statusEl) statusEl.innerHTML = t('pomoReady');
     updatePomoDisplay();
 }
 
@@ -6829,12 +6925,10 @@ const DAILY_STOIC_QUOTES = [
     { vi: "Kẻ thắng người là có sức, kẻ thắng mình là người mạnh.", zh: "胜人者有力，自胜者强。", en: "He who overcomes others has strength; he who overcomes himself is mighty.", author: "Lão Tử (Lao Tzu)" }
 ];
 
-let curQuoteIndex = 0;
+let curQuoteIndex = Math.floor(Math.random() * DAILY_STOIC_QUOTES.length);
 
 function getRandomStoicQuote() {
-    const d = new Date();
-    const daySeed = d.getFullYear() * 365 + d.getMonth() * 31 + d.getDate();
-    return DAILY_STOIC_QUOTES[daySeed % DAILY_STOIC_QUOTES.length];
+    return DAILY_STOIC_QUOTES[Math.floor(Math.random() * DAILY_STOIC_QUOTES.length)];
 }
 
 function renderDailyQuoteWidget() {

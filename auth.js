@@ -154,101 +154,54 @@ function disableVietnameseIME(inputId) {
     const inp = document.getElementById(inputId);
     if (!inp) return;
 
-    // Map physical key codes to ASCII characters
-    const codeMap = {};
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(c => {
-        codeMap['Key' + c] = { normal: c.toLowerCase(), shift: c };
-    });
-    '0123456789'.split('').forEach((c, i) => {
-        codeMap['Digit' + c] = { normal: c, shift: ')!@#$%^&*('.charAt(i) };
-    });
-    // Special character keys
-    Object.assign(codeMap, {
-        'Backquote':    { normal: '`', shift: '~' },
-        'Minus':        { normal: '-', shift: '_' },
-        'Equal':        { normal: '=', shift: '+' },
-        'BracketLeft':  { normal: '[', shift: '{' },
-        'BracketRight': { normal: ']', shift: '}' },
-        'Backslash':    { normal: '\\', shift: '|' },
-        'Semicolon':    { normal: ';', shift: ':' },
-        'Quote':        { normal: "'", shift: '"' },
-        'Comma':        { normal: ',', shift: '<' },
-        'Period':       { normal: '.', shift: '>' },
-        'Slash':        { normal: '/', shift: '?' },
-        'Space':        { normal: ' ', shift: ' ' },
-    });
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-    // Block ALL default key input — we handle insertion manually
-    inp.addEventListener('keydown', (e) => {
-        // Allow Tab, Enter, Escape
-        if (['Tab', 'Enter', 'Escape'].includes(e.key)) return;
-
-        // Allow Ctrl/Cmd combos (Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+Z)
-        if (e.ctrlKey || e.metaKey) return;
-
-        // Handle Backspace
-        if (e.key === 'Backspace') {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            const start = inp.selectionStart;
-            const end = inp.selectionEnd;
-            if (start !== end) {
-                inp.value = inp.value.slice(0, start) + inp.value.slice(end);
-                inp.setSelectionRange(start, start);
-            } else if (start > 0) {
-                inp.value = inp.value.slice(0, start - 1) + inp.value.slice(start);
-                inp.setSelectionRange(start - 1, start - 1);
-            }
-            return;
-        }
-
-        // Handle Delete
-        if (e.key === 'Delete') {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            const start = inp.selectionStart;
-            const end = inp.selectionEnd;
-            if (start !== end) {
-                inp.value = inp.value.slice(0, start) + inp.value.slice(end);
-            } else {
-                inp.value = inp.value.slice(0, start) + inp.value.slice(start + 1);
-            }
-            inp.setSelectionRange(start, start);
-            return;
-        }
-
-        // Handle arrow keys, Home, End
-        if (e.key.startsWith('Arrow') || e.key === 'Home' || e.key === 'End') return;
-
-        // Map physical key code to ASCII character
-        const mapping = codeMap[e.code];
-        if (mapping) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            const char = e.shiftKey ? mapping.shift : mapping.normal;
-            const start = inp.selectionStart;
-            const end = inp.selectionEnd;
-            inp.value = inp.value.slice(0, start) + char + inp.value.slice(end);
-            inp.setSelectionRange(start + 1, start + 1);
-            return;
-        }
-
-        // Block any unknown key to prevent IME injection
-        if (e.key.length === 1) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-        }
-    });
-
-    // Block composition events entirely
-    ['compositionstart', 'compositionupdate', 'compositionend'].forEach(evt => {
-        inp.addEventListener(evt, (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
+    if (!isTouchDevice) {
+        // Map physical key codes to ASCII characters for desktop physical keyboards
+        const codeMap = {};
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(c => {
+            codeMap['Key' + c] = { normal: c.toLowerCase(), shift: c };
         });
-    });
+        '0123456789'.split('').forEach((c, i) => {
+            codeMap['Digit' + c] = { normal: c, shift: ')!@#$%^&*('.charAt(i) };
+        });
+        // Special character keys
+        Object.assign(codeMap, {
+            'Backquote':    { normal: '`', shift: '~' },
+            'Minus':        { normal: '-', shift: '_' },
+            'Equal':        { normal: '=', shift: '+' },
+            'BracketLeft':  { normal: '[', shift: '{' },
+            'BracketRight': { normal: ']', shift: '}' },
+            'Backslash':    { normal: '\\', shift: '|' },
+            'Semicolon':    { normal: ';', shift: ':' },
+            'Quote':        { normal: "'", shift: '"' },
+            'Comma':        { normal: ',', shift: '<' },
+            'Period':       { normal: '.', shift: '>' },
+            'Slash':        { normal: '/', shift: '?' },
+            'Space':        { normal: ' ', shift: ' ' },
+        });
 
-    // Safety: strip any Vietnamese chars that somehow get through (e.g. autofill)
+        // Desktop physical keycode interception to block Unikey/GoTiengViet injected characters
+        inp.addEventListener('keydown', (e) => {
+            if (['Tab', 'Enter', 'Escape'].includes(e.key)) return;
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            if (e.key === 'Backspace' || e.key === 'Delete') return;
+            if (e.key.startsWith('Arrow') || e.key === 'Home' || e.key === 'End') return;
+
+            if (e.code && codeMap[e.code]) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                const mapping = codeMap[e.code];
+                const char = e.shiftKey ? mapping.shift : mapping.normal;
+                const start = inp.selectionStart;
+                const end = inp.selectionEnd;
+                inp.value = inp.value.slice(0, start) + char + inp.value.slice(end);
+                inp.setSelectionRange(start + 1, start + 1);
+            }
+        });
+    }
+
+    // Universal safety: strip any Vietnamese accented chars from input (e.g. mobile IME or autofill)
     inp.addEventListener('input', (e) => {
         const cleaned = inp.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
                         .replace(/đ/g, 'd').replace(/Đ/g, 'D');
@@ -915,15 +868,37 @@ function initGoogle(){
             return;
         }
 
-        // Web: use popup normally
+        // Web / Mobile: try popup with fallback to redirect
         try {
+            const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) {
+                try {
+                    const result = await auth.signInWithPopup(provider);
+                    const isNew = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
+                    await createUserProfile(result.user, isNew);
+                    showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
+                    setTimeout(() => { window.location.href = 'index.html'; }, 600);
+                    return;
+                } catch (mobErr) {
+                    if (mobErr.code === 'auth/popup-blocked' || mobErr.code === 'auth/cancelled-popup-request' || mobErr.code === 'auth/popup-closed-by-user') {
+                        console.log('[Mobile Auth] Popup blocked/closed, redirecting...');
+                        await auth.signInWithRedirect(provider);
+                        return;
+                    }
+                    showError(translateFirebaseError(mobErr.code));
+                    return;
+                }
+            }
+
             const result = await auth.signInWithPopup(provider);
             const isNew = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
             await createUserProfile(result.user, isNew);
             showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
             setTimeout(() => { window.location.href = 'index.html'; }, 800);
         } catch(err) {
-            if(err.code !== 'auth/popup-closed-by-user'){
+            if(err.code === 'auth/popup-blocked'){
+                await auth.signInWithRedirect(provider);
+            } else if(err.code !== 'auth/popup-closed-by-user'){
                 showError(translateFirebaseError(err.code));
             }
         }
@@ -1022,12 +997,30 @@ function initDesktopGateway() {
 }
 
 // ===== AUTH STATE CHECK =====
-function checkAuth(){
+async function checkAuth(){
     const urlParams = new URLSearchParams(window.location.search);
     const mode = urlParams.get('mode');
     if (mode === 'desktop') {
         return;
     }
+
+    // Process redirect result for mobile / redirect sign-in
+    try {
+        const result = await auth.getRedirectResult();
+        if (result && result.user) {
+            const isNew = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
+            await createUserProfile(result.user, isNew);
+            showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
+            setTimeout(() => { window.location.href = 'index.html'; }, 600);
+            return;
+        }
+    } catch (redirectErr) {
+        console.error('Redirect result error:', redirectErr);
+        if (redirectErr.code && redirectErr.code !== 'auth/popup-closed-by-user') {
+            showError(translateFirebaseError(redirectErr.code));
+        }
+    }
+
     auth.onAuthStateChanged(user => {
         if(user && !_otpInProgress){
             window.location.href = 'index.html';

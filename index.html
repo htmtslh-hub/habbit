@@ -125,6 +125,14 @@
             </div>
         </div>
 
+        <!-- STATS SEGMENTED CONTROL (MOBILE ONLY) -->
+        <div class="stats-segmented-control" id="statsSegmentedControl">
+            <button class="stats-segment-btn active" data-subtab="charts"><svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-metric"></use></svg> <span data-i18n="tabCharts">Biểu đồ</span></button>
+            <button class="stats-segment-btn" data-subtab="heatmap"><svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-target"></use></svg> <span data-i18n="tabHeatmap">Mật độ</span></button>
+            <button class="stats-segment-btn" data-subtab="top10"><svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg> <span data-i18n="tabTop10">Top 10</span></button>
+            <button class="stats-segment-btn" data-subtab="notes"><svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> <span data-i18n="tabNotes">Ghi chú</span></button>
+        </div>
+
         <!-- TOP SECTION: Calendar + Chart + Stats -->
         <div class="top-section">
             <!-- Left: Calendar settings -->
@@ -252,59 +260,27 @@
             </div>
         </div>
 
-        <!-- MOBILE BOTTOM NAVBAR -->
-        <div class="mobile-nav-bar">
-            <button class="mobile-nav-item active" data-tab="habits">
+        <!-- MOBILE BOTTOM NAVBAR (5 CORE TABS) -->
+        <div class="mobile-nav-bar" id="mobileNavBar">
+            <button class="mobile-nav-item active" data-tab="habits" id="mobTabHabits">
                 <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span>
                 <span class="mobile-nav-text" data-i18n="tabHabits">Thói quen</span>
             </button>
-            <button class="mobile-nav-item" data-tab="charts">
+            <button class="mobile-nav-item" data-tab="stats" id="mobTabStats">
                 <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-metric"></use></svg></span>
-                <span class="mobile-nav-text" data-i18n="tabCharts">Biểu đồ</span>
+                <span class="mobile-nav-text" data-i18n="tabStats">Thống kê</span>
             </button>
-            <button class="mobile-nav-item" data-tab="heatmap">
-                <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-target"></use></svg></span>
-                <span class="mobile-nav-text" data-i18n="tabHeatmap">Mật độ</span>
-            </button>
-            <button class="mobile-nav-item" data-tab="notes">
-                <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></span>
-                <span class="mobile-nav-text" data-i18n="tabNotes">Ghi chú</span>
-            </button>
-            <button class="mobile-nav-item" data-tab="top10">
-                <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg></span>
-                <span class="mobile-nav-text" data-i18n="tabTop10">Top 10</span>
-            </button>
-            <button class="mobile-nav-item" data-tab="community" id="mobileCommunityBtn">
+            <button class="mobile-nav-item" data-tab="community" id="mobTabCommunity">
                 <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-echo"></use></svg></span>
                 <span class="mobile-nav-text" data-i18n="tabCommunity">Cộng đồng</span>
             </button>
-            <button class="mobile-nav-item" data-tab="leaderboard" id="mobileLbBtn">
-                <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg></span>
-                <span class="mobile-nav-text" data-i18n="tabLeaderboard">BXH</span>
-            </button>
-            <button class="mobile-nav-item" data-tab="quests" id="mobileQuestBtn">
+            <button class="mobile-nav-item" data-tab="arena" id="mobTabArena">
                 <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-duel"></use></svg></span>
-                <span class="mobile-nav-text" data-i18n="tabQuests">Nhiệm vụ</span>
+                <span class="mobile-nav-text" data-i18n="tabArena">Đấu trường</span>
             </button>
-            <button class="mobile-nav-item" data-tab="streak" id="mobileStreakBtn">
-                <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-vault"></use></svg></span>
-                <span class="mobile-nav-text" data-i18n="tabStreakShield">Cứu chuỗi</span>
-            </button>
-            <button class="mobile-nav-item" data-tab="pomo" id="mobilePomodoroBtn">
-                <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-focus"></use></svg></span>
-                <span class="mobile-nav-text" data-i18n="tabPomodoro">Focus</span>
-            </button>
-            <button class="mobile-nav-item" data-tab="squad" id="mobileSquadBtn">
-                <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg></span>
-                <span class="mobile-nav-text" data-i18n="tabSquad">Tổ đội</span>
-            </button>
-            <button class="mobile-nav-item" data-tab="recap" id="mobileRecapBtn">
-                <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-metric"></use></svg></span>
-                <span class="mobile-nav-text" data-i18n="tabRecap">Tổng kết</span>
-            </button>
-            <button class="mobile-nav-item" data-tab="shop" id="mobileShopBtn">
-                <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-market"></use></svg></span>
-                <span class="mobile-nav-text" data-i18n="tabShop">Shop</span>
+            <button class="mobile-nav-item" data-tab="more" id="mobTabMore">
+                <span class="mobile-nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-core"></use></svg></span>
+                <span class="mobile-nav-text" data-i18n="tabMore">Khám phá</span>
             </button>
         </div>
     </div>
@@ -538,15 +514,10 @@
                     <div class="profile-orbital-ring">
                         <!-- SVG Constellation & Orbital Tracks -->
                         <svg class="orbital-svg-bg" viewBox="0 0 280 280">
-                            <!-- Background glow aura -->
-                            <circle cx="140" cy="140" r="130" fill="var(--accent)" fill-opacity="0.04" />
                             <!-- Outer dashed orbit track -->
                             <circle class="orb-track-outer" cx="140" cy="140" r="110" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 5" opacity="0.35" />
-                            <!-- Outer solid faint ring -->
-                            <circle cx="140" cy="140" r="126" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.12" />
                             <!-- Inner concentric rune rings -->
                             <circle class="orb-track-inner" cx="140" cy="140" r="62" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="2 6" opacity="0.3" />
-                            <circle cx="140" cy="140" r="54" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.18" />
                             <!-- 6 Spoke lines connecting center to nodes -->
                             <line x1="140" y1="86" x2="140" y2="48" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="2 3" opacity="0.4" />
                             <line x1="187" y1="113" x2="220" y2="94" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="2 3" opacity="0.4" />
@@ -943,10 +914,67 @@
         </div>
     </div>
 
+    <!-- MORE FEATURES MENU MODAL (BOTTOM SHEET) -->
+    <div class="modal-bg more-menu-modal-bg" id="moreMenuModalBg">
+        <div class="more-menu-sheet">
+            <div class="more-menu-header">
+                <div class="more-menu-title">
+                    <svg class="rune-inline rune-md" viewBox="0 0 48 48"><use href="#i-core"></use></svg>
+                    <span data-i18n="moreMenuTitle">TÍNH NĂNG & TIỆN ÍCH</span>
+                </div>
+                <button class="lb-close-btn" id="moreMenuCloseBtn"><svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-close"></use></svg></button>
+            </div>
+            <div class="more-menu-grid">
+                <button class="more-grid-item" id="moreBtnPomo" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openPomodoro)window._openPomodoro();">
+                    <div class="more-item-icon pomo-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-focus"></use></svg></div>
+                    <div class="more-item-info">
+                        <span class="more-item-name" data-i18n="tabPomodoro">Deep Work Focus</span>
+                        <span class="more-item-desc" data-i18n="morePomoDesc">Đồng hồ Pomodoro & Ambient</span>
+                    </div>
+                </button>
+                <button class="more-grid-item" id="moreBtnStreak" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openStreakModal)window._openStreakModal();">
+                    <div class="more-item-icon streak-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-vault"></use></svg></div>
+                    <div class="more-item-info">
+                        <span class="more-item-name" data-i18n="tabStreakShield">Bảo Vệ Chuỗi</span>
+                        <span class="more-item-desc" data-i18n="moreStreakDesc">Bình đóng băng & Cứu chuỗi</span>
+                    </div>
+                </button>
+                <button class="more-grid-item" id="moreBtnShop" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openShopModal)window._openShopModal();">
+                    <div class="more-item-icon shop-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-market"></use></svg></div>
+                    <div class="more-item-info">
+                        <span class="more-item-name" data-i18n="tabShop">Cửa Hàng DP</span>
+                        <span class="more-item-desc" data-i18n="moreShopDesc">Danh hiệu, theme & hiệu ứng</span>
+                    </div>
+                </button>
+                <button class="more-grid-item" id="moreBtnSquad" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openSquadHub)window._openSquadHub();">
+                    <div class="more-item-icon squad-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg></div>
+                    <div class="more-item-info">
+                        <span class="more-item-name" data-i18n="tabSquad">Tổ Đội & 1v1</span>
+                        <span class="more-item-desc" data-i18n="moreSquadDesc">Bang hội kỷ luật & thách đấu</span>
+                    </div>
+                </button>
+                <button class="more-grid-item" id="moreBtnRecap" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openRecapModal)window._openRecapModal();">
+                    <div class="more-item-icon recap-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-metric"></use></svg></div>
+                    <div class="more-item-info">
+                        <span class="more-item-name" data-i18n="tabRecap">Tổng Kết Năm</span>
+                        <span class="more-item-desc" data-i18n="moreRecapDesc">Thẻ vinh danh Year in Review</span>
+                    </div>
+                </button>
+                <button class="more-grid-item" id="moreBtnProfile" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openProfile)window._openProfile();">
+                    <div class="more-item-icon profile-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></div>
+                    <div class="more-item-info">
+                        <span class="more-item-name" data-i18n="editProfileTitle">Hồ Sơ & Cài Đặt</span>
+                        <span class="more-item-desc" data-i18n="moreProfileDesc">Đổi tên, avatar, đăng xuất</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- SCRIPTS -->
     <script src="gotiengviet.js"></script>
     <script src="nameplate_templates.js"></script>
     <script src="avatar_frames.js"></script>
-    <script src="app.js?v=4.7.0"></script>
+    <script src="app.js?v=4.8.0"></script>
 </body>
 </html>
