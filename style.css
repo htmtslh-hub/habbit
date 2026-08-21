@@ -5050,31 +5050,63 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 9990;
+    z-index: 999990 !important;
     pointer-events: all;
 }
 
 .orbital-popup {
     position: fixed;
-    min-width: 180px;
-    max-width: 220px;
-    background: linear-gradient(165deg, rgba(30, 32, 48, 0.96), rgba(18, 20, 32, 0.98));
-    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    min-width: 190px;
+    max-width: 230px;
+    background: linear-gradient(165deg, rgba(30, 32, 48, 0.98), rgba(18, 20, 32, 0.99));
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
     border-radius: 16px;
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
     box-shadow:
-        0 12px 40px rgba(0, 0, 0, 0.55),
-        0 0 0 1px rgba(255, 255, 255, 0.05),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    padding: 6px;
+        0 16px 48px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    padding: 8px;
     pointer-events: all;
     opacity: 0;
     transform: scale(0.6);
     transform-origin: var(--popup-origin, center center);
     animation: orbPopupIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     overflow: hidden;
-    z-index: 9991;
+    z-index: 999999 !important;
+}
+
+[data-theme="light"] .orbital-popup {
+    background: linear-gradient(165deg, rgba(255, 255, 255, 0.98), rgba(246, 248, 250, 0.99)) !important;
+    border: 1.5px solid rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18), 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .orbital-popup-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+    color: var(--accent) !important;
+}
+
+[data-theme="light"] .orbital-popup-item-label {
+    color: #0f172a !important;
+}
+
+[data-theme="light"] .orbital-popup-item-desc {
+    color: #64748b !important;
+}
+
+[data-theme="light"] .orbital-popup-item:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .orbital-popup-item-icon {
+    background: rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .orbital-popup-divider {
+    background: rgba(0, 0, 0, 0.08) !important;
 }
 
 .orbital-popup.closing {
@@ -5271,7 +5303,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 9999;
+    z-index: 999999 !important;
     display: flex;
     align-items: center;
     justify-content: center;
