@@ -1575,8 +1575,8 @@ function renderGrid(){
         else if(streak>=3) streakHtml=`<span class="streak-badge warm">🔥${streak}</span>`;
         else if(streak>=2) streakHtml=`<span class="streak-badge cool">🔥${streak}</span>`;
 
-        const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-        bb+=`<tr draggable="true" data-id="${h.id}">`;
+        const isMobile = window.innerWidth <= 768;
+        bb+=`<tr ${isMobile ? '' : 'draggable="true"'} data-id="${h.id}">`;
         bb+=`<td class="td-name${freezeClass}${collapseClass}" title="${esc(h.emoji+' '+h.name)}"><div class="td-name-content"><span class="drag-handle">☰</span><span class="hname">${esc(h.emoji)} <span class="hname-text">${esc(h.name)}</span></span>${streakHtml}<button class="he" data-id="${h.id}">✏️</button><button class="hd" data-id="${h.id}">✕</button></div></td>`;
         for(let d=1;d<=days;d++){
             const on=S.c[ck(h.id,d)];if(on)dn++;
@@ -2118,7 +2118,7 @@ function initDragAndDrop() {
     });
 }
 
-// ==================== MORE FEATURES MENU MODAL HELPERS ====================
+// ==================== MORE FEATURES & MODAL OPEN HELPERS ====================
 window._openMoreMenu = function() {
     const bg = document.getElementById('moreMenuModalBg');
     if (bg) {
@@ -2135,9 +2135,39 @@ window._closeMoreMenu = function() {
     }
 };
 
+window._openPomodoro = function() {
+    if (typeof openPomodoroModal === 'function') openPomodoroModal();
+};
+
+window._openStreakModal = function() {
+    if (typeof openStreakModal === 'function') openStreakModal();
+};
+
+window._openShopModal = function(tab) {
+    if (typeof openShopModal === 'function') openShopModal(tab);
+};
+
+window._openSquadHub = function(tab) {
+    if (typeof openSquadModal === 'function') openSquadModal(tab);
+};
+
+window._openRecapModal = function() {
+    if (typeof openWeeklyRecapModal === 'function') openWeeklyRecapModal();
+};
+
+window._openLeaderboard = function(tab = 'leaderboard') {
+    if (typeof openLeaderboardModal === 'function') openLeaderboardModal(tab);
+};
+
+window._openQuests = function() {
+    if (typeof openQuestModal === 'function') openQuestModal();
+};
+
 function initMobileTabs() {
     const mainApp = document.getElementById('mainApp');
+    if (!mainApp) return;
     const navItems = document.querySelectorAll('.mobile-nav-bar .mobile-nav-item');
+    if (!navItems.length) return;
     
     if (!mainApp.getAttribute('data-active-tab')) {
         mainApp.setAttribute('data-active-tab', 'habits');
@@ -2146,7 +2176,10 @@ function initMobileTabs() {
     // Stats segment switcher
     const segmentBtns = document.querySelectorAll('.stats-segment-btn');
     segmentBtns.forEach(sBtn => {
-        sBtn.addEventListener('click', () => {
+        if (sBtn.dataset.bound) return;
+        sBtn.dataset.bound = 'true';
+        sBtn.addEventListener('click', (e) => {
+            e.preventDefault();
             const sub = sBtn.getAttribute('data-subtab');
             segmentBtns.forEach(b => b.classList.remove('active'));
             sBtn.classList.add('active');
@@ -2168,12 +2201,21 @@ function initMobileTabs() {
 
     // More Menu close button and backdrop
     const moreCloseBtn = document.getElementById('moreMenuCloseBtn');
-    if (moreCloseBtn) moreCloseBtn.onclick = window._closeMoreMenu;
+    if (moreCloseBtn && !moreCloseBtn.dataset.bound) {
+        moreCloseBtn.dataset.bound = 'true';
+        moreCloseBtn.onclick = window._closeMoreMenu;
+    }
     const moreBg = document.getElementById('moreMenuModalBg');
-    if (moreBg) moreBg.onclick = (e) => { if (e.target === moreBg) window._closeMoreMenu(); };
+    if (moreBg && !moreBg.dataset.bound) {
+        moreBg.dataset.bound = 'true';
+        moreBg.onclick = (e) => { if (e.target === moreBg) window._closeMoreMenu(); };
+    }
 
     navItems.forEach(item => {
-        item.addEventListener('click', () => {
+        if (item.dataset.bound) return;
+        item.dataset.bound = 'true';
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
             const tabId = item.getAttribute('data-tab');
             
             if (tabId === 'community') {
@@ -2194,7 +2236,11 @@ function initMobileTabs() {
             
             mainApp.setAttribute('data-active-tab', tabId);
             
-            if (tabId === 'stats') {
+            if (tabId === 'habits') {
+                requestAnimationFrame(() => {
+                    renderGrid();
+                });
+            } else if (tabId === 'stats') {
                 if (!mainApp.getAttribute('data-stats-subtab')) {
                     mainApp.setAttribute('data-stats-subtab', 'charts');
                 }
@@ -3716,6 +3762,7 @@ function initAuthGuard(){
     const app = document.getElementById('mainApp');
     const logoutBtn = document.getElementById('logoutBtn');
     if(logoutBtn) logoutBtn.onclick = () => { auth.signOut().then(()=>{ window.location.href='auth.html'; }); };
+    if (typeof initMobileTabs === 'function') initMobileTabs();
     auth.onAuthStateChanged(user => {
         if(user){
             if(loading) loading.style.display = 'none';
@@ -6824,8 +6871,8 @@ async function onPomodoroFinished() {
         const k = ck(habitId, now.getDate());
         if (!S.c[k]) {
             S.c[k] = true;
-            save();
-            render();
+            sv();
+            renderAll();
             if (typeof onHabitCheckedSyncSquadAndDuel === 'function') {
                 onHabitCheckedSyncSquadAndDuel();
             }

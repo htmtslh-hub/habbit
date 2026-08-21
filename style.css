@@ -3444,8 +3444,8 @@ body {
 .nav-action-btn:hover { background:var(--accent-light, rgba(16,185,129,.2)); border-color:var(--accent); transform:translateY(-1px); box-shadow:0 4px 12px var(--accent-light, rgba(16,185,129,.3)); }
 
 /* ==================== MODAL SYSTEM ==================== */
-.modal-bg { position:fixed; inset:0; background:rgba(0,0,0,.7); backdrop-filter:blur(8px); z-index:9000; display:none; align-items:center; justify-content:center; opacity:0; transition:opacity .3s; }
-.modal-bg.show { display:flex; opacity:1; }
+.modal-bg, .upgrade-modal-bg, .recap-modal-bg { position:fixed; inset:0; background:rgba(0,0,0,.75); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:10000 !important; display:none; align-items:center; justify-content:center; opacity:0; transition:opacity .25s ease; }
+.modal-bg.show, .upgrade-modal-bg.show, .recap-modal-bg.show { display:flex; opacity:1; }
 
 .lb-modal { background:#0d1117; border:1px solid rgba(255,255,255,.08); border-radius:20px; width:min(560px,95vw); max-height:85vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.6); }
 .lb-modal-header { display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid rgba(255,255,255,.06); }
