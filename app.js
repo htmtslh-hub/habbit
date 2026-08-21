@@ -44,8 +44,8 @@ const I18N = {
         heatmap:'Mật độ hoạt động cả năm',less:'Ít',more:'Nhiều',
         targetLabelModal:'Mục tiêu thói quen',targetHint:'ngày/tháng',
         dayMon:'T2',dayWed:'T4',dayFri:'T6',
-        tabHabits:'Thói quen',tabStats:'Thống kê',tabCommunity:'Cộng đồng',tabArena:'Đấu trường',tabMore:'Khám phá',tabCharts:'Biểu đồ',tabHeatmap:'Mật độ',tabNotes:'Ghi chú',tabTop10:'Top 10',tabLeaderboard:'BXH',tabQuests:'Nhiệm vụ',
-        moreMenuTitle:'TÍNH NĂNG & TIỆN ÍCH',morePomoDesc:'Đồng hồ Pomodoro & Ambient',moreStreakDesc:'Bình đóng băng & Cứu chuỗi',moreShopDesc:'Danh hiệu, theme & hiệu ứng',moreSquadDesc:'Bang hội kỷ luật & thách đấu',moreRecapDesc:'Thẻ vinh danh Year in Review',moreProfileDesc:'Đổi tên, avatar, đăng xuất',
+        tabHabits:'Thói quen',tabStats:'Thống kê',tabCommunity:'Cộng đồng',tabArena:'Đấu trường',tabMore:'Khám phá',tabCharts:'Biểu đồ',tabHeatmap:'Mật độ',tabNotes:'Ghi chú',tabTop10:'Top 10',tabLeaderboard:'BXH',tabQuests:'Nhiệm vụ',tabBackup:'Sao Lưu Dữ Liệu',tabVip:'Nâng Cấp VIP',
+        moreMenuTitle:'TÍNH NĂNG & TIỆN ÍCH',moreQuestsDesc:'Nhiệm vụ ngày, tuần & nhận DP',morePomoDesc:'Đồng hồ Pomodoro & Ambient',moreStreakDesc:'Bình đóng băng & Cứu chuỗi',moreShopDesc:'Danh hiệu, theme & hiệu ứng',moreSquadDesc:'Bang hội kỷ luật & thách đấu',moreRecapDesc:'Thẻ vinh danh Year in Review',moreVipDesc:'Mở khóa toàn bộ tính năng cao cấp',moreBackupDesc:'Xuất & khôi phục file JSON',moreProfileDesc:'Đổi tên, avatar, đăng xuất',
         freezeCol:'Đóng băng cột (Ghim)',unfreezeCol:'Bỏ đóng băng cột',
         collapseCol:'Thu gọn cột',expandCol:'Mở rộng cột',
         lbTitle:'BẢNG XẾP HẠNG CỘNG ĐỒNG',weeklySprint:'Tuần Này',topStreak:'Chuỗi Dài Nhất',topPlayers:'Xếp Hạng Top 50',
@@ -137,8 +137,8 @@ const I18N = {
         heatmap:'年度活动热力图',less:'少',more:'多',
         targetLabelModal:'习惯目标',targetHint:'天/月',
         dayMon:'一',dayWed:'三',dayFri:'五',
-        tabHabits:'习惯',tabStats:'统计',tabCommunity:'社区',tabArena:'竞技场',tabMore:'探索',tabCharts:'图表',tabHeatmap:'热力图',tabNotes:'笔记',tabTop10:'前十',tabLeaderboard:'排行榜',tabQuests:'任务',
-        moreMenuTitle:'功能与实用工具',morePomoDesc:'番茄钟与白噪音',moreStreakDesc:'连胜冻结与恢复',moreShopDesc:'称号、主题与音效',moreSquadDesc:'战队公会与1v1挑战',moreRecapDesc:'年度成就总结',moreProfileDesc:'修改资料与登出',
+        tabHabits:'习惯',tabStats:'统计',tabCommunity:'社区',tabArena:'竞技场',tabMore:'探索',tabCharts:'图表',tabHeatmap:'热力图',tabNotes:'笔记',tabTop10:'前十',tabLeaderboard:'排行榜',tabQuests:'任务',tabBackup:'数据备份',tabVip:'升级VIP',
+        moreMenuTitle:'功能与实用工具',moreQuestsDesc:'每日、每周任务与DP奖励',morePomoDesc:'番茄钟与白噪音',moreStreakDesc:'连胜冻结与恢复',moreShopDesc:'称号、主题与音效',moreSquadDesc:'战队公会与1v1挑战',moreRecapDesc:'年度成就总结',moreVipDesc:'解锁所有高级专属功能',moreBackupDesc:'导出与恢复JSON文件',moreProfileDesc:'修改资料与登出',
         freezeCol:'冻结列',unfreezeCol:'解冻列',
         collapseCol:'折叠列',expandCol:'展开列',
         lbTitle:'社区排行榜',weeklySprint:'本周冲刺',topStreak:'最长连胜',topPlayers:'前50名',
@@ -230,8 +230,8 @@ const I18N = {
         heatmap:'Annual Activity Heatmap',less:'Less',more:'More',
         targetLabelModal:'Habit Target',targetHint:'days/month',
         dayMon:'Mon',dayWed:'Wed',dayFri:'Fri',
-        tabHabits:'Habits',tabStats:'Stats',tabCommunity:'Community',tabArena:'Arena',tabMore:'Explore',tabCharts:'Charts',tabHeatmap:'Heatmap',tabNotes:'Notes',tabTop10:'Top 10',tabLeaderboard:'Rank',tabQuests:'Quests',
-        moreMenuTitle:'FEATURES & TOOLS',morePomoDesc:'Pomodoro & Ambient Audio',moreStreakDesc:'Freeze Flask & Repair',moreShopDesc:'Titles, themes & sound FX',moreSquadDesc:'Guilds & 1v1 Duels',moreRecapDesc:'Year in Review card',moreProfileDesc:'Edit profile & logout',
+        tabHabits:'Habits',tabStats:'Stats',tabCommunity:'Community',tabArena:'Arena',tabMore:'Explore',tabCharts:'Charts',tabHeatmap:'Heatmap',tabNotes:'Notes',tabTop10:'Top 10',tabLeaderboard:'Rank',tabQuests:'Quests',tabBackup:'Backup & Restore',tabVip:'Upgrade VIP',
+        moreMenuTitle:'FEATURES & TOOLS',moreQuestsDesc:'Daily, weekly quests & DP rewards',morePomoDesc:'Pomodoro & Ambient Audio',moreStreakDesc:'Freeze Flask & Repair',moreShopDesc:'Titles, themes & sound FX',moreSquadDesc:'Guilds & 1v1 Duels',moreRecapDesc:'Year in Review card',moreVipDesc:'Unlock all premium features',moreBackupDesc:'Export & restore JSON backup',moreProfileDesc:'Edit profile & logout',
         freezeCol:'Freeze column',unfreezeCol:'Unfreeze column',
         collapseCol:'Collapse column',expandCol:'Expand column',
         lbTitle:'COMMUNITY LEADERBOARD',weeklySprint:'Weekly Sprint',topStreak:'Top Streak',topPlayers:'Top 50',
@@ -2161,6 +2161,15 @@ window._openLeaderboard = function(tab = 'leaderboard') {
 
 window._openQuests = function() {
     if (typeof openQuestModal === 'function') openQuestModal();
+};
+
+window._exportData = function() {
+    if (typeof exportData === 'function') exportData();
+};
+
+window._importData = function() {
+    const f = document.getElementById('importFile');
+    if (f) f.click();
 };
 
 function initMobileTabs() {

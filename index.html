@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=4.8.1">
+    <link rel="stylesheet" href="style.css?v=4.8.2">
 
     <!-- Firebase SDK (CDN) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -405,10 +405,11 @@
                 <h2 data-i18n="lbTitle"><svg class="rune-inline rune-md" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg> BẢNG XẾP HẠNG</h2>
                 <button class="lb-close-btn" id="lbCloseBtn"><svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-close"></use></svg></button>
             </div>
-            <div class="lb-summary" id="lbSummary"></div>
             <div class="lb-tabs">
                 <button class="lb-tab-btn active" data-tab="leaderboard"><span data-i18n="topPlayers"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg> Top 50</span></button>
                 <button class="lb-tab-btn" data-tab="ranks"><span data-i18n="rankTiers"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Cấp bậc</span></button>
+                <button class="lb-tab-btn" type="button" onclick="closeLeaderboardModal(); if(window._openQuests) window._openQuests();"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-duel"></use></svg> <span data-i18n="tabQuests">Nhiệm vụ</span></button>
+                <button class="lb-tab-btn" type="button" onclick="closeLeaderboardModal(); if(window._openSquadHub) window._openSquadHub();"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> <span data-i18n="tabSquad">Tổ đội</span></button>
             </div>
             <div class="lb-tab-panel" id="lbPanelLeaderboard">
                 <div class="lb-feed-container" id="lbFeedContainer"></div>
@@ -925,6 +926,13 @@
                 <button class="lb-close-btn" id="moreMenuCloseBtn"><svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-close"></use></svg></button>
             </div>
             <div class="more-menu-grid">
+                <button class="more-grid-item" id="moreBtnQuests" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openQuests)window._openQuests();">
+                    <div class="more-item-icon quest-icon" style="background:rgba(239,68,68,0.15);color:#f87171;"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-duel"></use></svg></div>
+                    <div class="more-item-info">
+                        <span class="more-item-name" data-i18n="tabQuests">Nhiệm Vụ Rèn Luyện</span>
+                        <span class="more-item-desc" data-i18n="moreQuestsDesc">Nhiệm vụ ngày, tuần & nhận DP</span>
+                    </div>
+                </button>
                 <button class="more-grid-item" id="moreBtnPomo" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openPomodoro)window._openPomodoro();">
                     <div class="more-item-icon pomo-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-focus"></use></svg></div>
                     <div class="more-item-info">
@@ -960,6 +968,20 @@
                         <span class="more-item-desc" data-i18n="moreRecapDesc">Thẻ vinh danh Year in Review</span>
                     </div>
                 </button>
+                <button class="more-grid-item" id="moreBtnUpgrade" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openUpgrade)window._openUpgrade();">
+                    <div class="more-item-icon vip-icon" style="background:rgba(234,179,8,0.15);color:#facc15;"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></div>
+                    <div class="more-item-info">
+                        <span class="more-item-name" data-i18n="tabVip">Nâng Cấp VIP</span>
+                        <span class="more-item-desc" data-i18n="moreVipDesc">Mở khóa toàn bộ tính năng cao cấp</span>
+                    </div>
+                </button>
+                <button class="more-grid-item" id="moreBtnBackup" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._exportData)window._exportData();">
+                    <div class="more-item-icon backup-icon" style="background:rgba(6,182,212,0.15);color:#22d3ee;"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></div>
+                    <div class="more-item-info">
+                        <span class="more-item-name" data-i18n="tabBackup">Sao Lưu Dữ Liệu</span>
+                        <span class="more-item-desc" data-i18n="moreBackupDesc">Xuất & khôi phục file JSON</span>
+                    </div>
+                </button>
                 <button class="more-grid-item" id="moreBtnProfile" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openProfile)window._openProfile();">
                     <div class="more-item-icon profile-icon"><svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></div>
                     <div class="more-item-info">
@@ -975,6 +997,6 @@
     <script src="gotiengviet.js"></script>
     <script src="nameplate_templates.js"></script>
     <script src="avatar_frames.js"></script>
-    <script src="app.js?v=4.8.1"></script>
+    <script src="app.js?v=4.8.2"></script>
 </body>
 </html>
