@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=4.8.5">
+    <link rel="stylesheet" href="style.css?v=4.8.6">
 
     <!-- Firebase SDK (CDN) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -539,23 +539,13 @@
                         </div>
                     </div>
 
-                    <!-- Quick Shortcuts Row -->
-                    <div class="profile-quick-actions">
-                        <button class="profile-qa-btn" id="orbShopBtn" title="Cửa hàng" onclick="document.getElementById('profileModalBg').classList.remove('show'); if(window._openShopModal) window._openShopModal();">
-                            <svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-market"></use></svg>
-                            <span data-i18n="tabShop">Cửa Hàng</span>
+                    <!-- Action Buttons -->
+                    <div class="profile-hero-actions" style="display:flex; gap:10px; justify-content:center; width:100%; margin-top:6px;">
+                        <button type="button" class="profile-change-avatar-btn" id="orbAvatarBtn" onclick="document.getElementById('avatarFileInput').click()">
+                            <svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-lens"></use></svg> <span>Đổi Ảnh Đại Diện</span>
                         </button>
-                        <button class="profile-qa-btn" id="orbStreakBtn" title="Bảo vệ chuỗi" onclick="document.getElementById('profileModalBg').classList.remove('show'); if(window._openStreakModal) window._openStreakModal();">
-                            <svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>
-                            <span data-i18n="tabStreakShield">Cứu Chuỗi</span>
-                        </button>
-                        <button class="profile-qa-btn" id="orbRecapBtn" title="Tổng kết" onclick="document.getElementById('profileModalBg').classList.remove('show'); if(window._openWeeklyRecapModal) window._openWeeklyRecapModal();">
-                            <svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-metric"></use></svg>
-                            <span data-i18n="tabRecap">Tổng Kết</span>
-                        </button>
-                        <button class="profile-qa-btn" id="orbShareBtn" title="Khoe thẻ rank" onclick="if(typeof openShareCardModal==='function') openShareCardModal();">
-                            <svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>
-                            <span>Khoe Rank</span>
+                        <button type="button" class="profile-change-avatar-btn" id="orbShareBtn" onclick="if(typeof openShareCardModal==='function') openShareCardModal();" style="border-color:rgba(234,179,8,0.4); color:#facc15;">
+                            <svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> <span>Khoe Thẻ Rank</span>
                         </button>
                     </div>
                 </div>
@@ -927,10 +917,6 @@
                 <button class="lb-close-btn" id="moreMenuCloseBtn"><svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-close"></use></svg></button>
             </div>
             <div class="more-menu-grid">
-                <button class="more-grid-item" id="moreBtnQuests" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openQuests)window._openQuests();">
-                    <div class="more-item-icon quest-icon" style="background:rgba(244,63,94,0.16);color:#f43f5e;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-duel"></use></svg></div>
-                    <span class="more-item-name" data-i18n="tabQuests">Nhiệm Vụ</span>
-                </button>
                 <button class="more-grid-item" id="moreBtnPomo" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openPomodoro)window._openPomodoro();">
                     <div class="more-item-icon pomo-icon" style="background:rgba(239,68,68,0.16);color:#ef4444;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-focus"></use></svg></div>
                     <span class="more-item-name" data-i18n="tabPomodoro">Pomodoro</span>
@@ -943,9 +929,9 @@
                     <div class="more-item-icon shop-icon" style="background:rgba(245,158,11,0.16);color:#f59e0b;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-market"></use></svg></div>
                     <span class="more-item-name" data-i18n="tabShop">Cửa Hàng DP</span>
                 </button>
-                <button class="more-grid-item" id="moreBtnSquad" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openSquadHub)window._openSquadHub();">
-                    <div class="more-item-icon squad-icon" style="background:rgba(168,85,247,0.16);color:#a855f7;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg></div>
-                    <span class="more-item-name" data-i18n="tabSquad">Tổ Đội & 1v1</span>
+                <button class="more-grid-item" id="moreBtnShare" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(typeof openShareCardModal==='function')openShareCardModal();">
+                    <div class="more-item-icon share-icon" style="background:rgba(236,72,153,0.16);color:#ec4899;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></div>
+                    <span class="more-item-name">Khoe Thẻ Rank</span>
                 </button>
                 <button class="more-grid-item" id="moreBtnRecap" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openRecapModal)window._openRecapModal();">
                     <div class="more-item-icon recap-icon" style="background:rgba(16,185,129,0.16);color:#10b981;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-metric"></use></svg></div>
@@ -957,7 +943,11 @@
                 </button>
                 <button class="more-grid-item" id="moreBtnBackup" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._exportData)window._exportData();">
                     <div class="more-item-icon backup-icon" style="background:rgba(6,182,212,0.18);color:#22d3ee;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></div>
-                    <span class="more-item-name" data-i18n="tabBackup">Sao Lưu JSON</span>
+                    <span class="more-item-name">Xuất Sao Lưu</span>
+                </button>
+                <button class="more-grid-item" id="moreBtnRestore" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._importData)window._importData();">
+                    <div class="more-item-icon restore-icon" style="background:rgba(168,85,247,0.16);color:#a855f7;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-vault"></use></svg></div>
+                    <span class="more-item-name">Khôi Phục Data</span>
                 </button>
                 <button class="more-grid-item" id="moreBtnProfile" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openProfile)window._openProfile();">
                     <div class="more-item-icon profile-icon" style="background:rgba(148,163,184,0.16);color:#94a3b8;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-core"></use></svg></div>
@@ -971,6 +961,6 @@
     <script src="gotiengviet.js"></script>
     <script src="nameplate_templates.js"></script>
     <script src="avatar_frames.js"></script>
-    <script src="app.js?v=4.8.5"></script>
+    <script src="app.js?v=4.8.6"></script>
 </body>
 </html>
