@@ -72,7 +72,7 @@ window.getNameplateCardHTML = function(level, imgUrl, scale = 0.6, displayName =
 
     // Apply truncation and font size adjustment with prominent bold typography
     tpl = tpl.replace(/white-space:nowrap;/g, 'white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px; display:block; font-size:' + nameFontSize + ' !important; font-weight:800; line-height:1.2;');
-    tpl = tpl.replace(/font-size:11px;letter-spacing:\.34em;/g, "font-size:15px;letter-spacing:0.12em;font-weight:700;font-family:'Outfit','Be Vietnam Pro',sans-serif;");
+    tpl = tpl.replace(/font-size:11px;letter-spacing:\.34em;/g, "font-size:13px;letter-spacing:0.03em;font-weight:700;font-family:'Outfit','Be Vietnam Pro',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:290px;");
     tpl = tpl.replace(/__NAME__/g, finalName);
     tpl = tpl.replace(/__SCORE__/g, finalSub);
     tpl = tpl.replace(/__AVATAR_IMG__/g, imgTag);
