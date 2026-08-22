@@ -688,20 +688,20 @@ async function loadAdminQuests() {
     try {
         const snap = await db.collection('surprise_quests').orderBy('createdAt', 'desc').limit(20).get();
         if (snap.empty) {
-            container.innerHTML = '<p style="color:#64748b;padding:12px;">Chưa có nhiệm vụ nào</p>';
+            container.innerHTML = '<p style="color:#94a3b8;padding:16px;font-weight:600;">Chưa có nhiệm vụ nào</p>';
         } else {
             let html = '';
             snap.forEach(doc => {
                 const q = doc.data();
                 const deadline = q.deadline ? new Date(q.deadline.toDate()).toLocaleDateString('vi-VN') : 'Không';
-                const statusColor = q.status === 'active' ? '#10b981' : '#64748b';
-                html += `<div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;margin-bottom:8px;">
+                const statusColor = q.status === 'active' ? '#34d399' : '#94a3b8';
+                html += `<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:#1e293b;border:1px solid rgba(148,163,184,0.22);border-radius:12px;margin-bottom:10px;box-shadow:0 4px 16px rgba(0,0,0,0.3);">
                     <div style="flex:1;">
-                        <div style="font-weight:600;color:#f1f5f9;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> ${escapeHtml(q.title || '')}</div>
-                        <div style="font-size:12px;color:#94a3b8;margin-top:2px;">${escapeHtml(q.description || '')} | +${q.rewardDP || 0} <svg class="rune-inline" style="width:14px;height:14px;" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> | Hạn: ${deadline}</div>
+                        <div style="font-weight:700;color:#ffffff;font-size:14.5px;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> ${escapeHtml(q.title || '')}</div>
+                        <div style="font-size:13px;color:#cbd5e1;margin-top:4px;line-height:1.4;">${escapeHtml(q.description || '')} | <strong style="color:#fcd34d;">+${q.rewardDP || 0}</strong> <svg class="rune-inline" style="width:14px;height:14px;vertical-align:-2px;" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> | Hạn: <span style="color:#93c5fd;">${deadline}</span></div>
                     </div>
-                    <span style="color:${statusColor};font-size:12px;font-weight:600;">${q.status === 'active' ? 'Đang mở' : 'Đã đóng'}</span>
-                    ${q.status === 'active' ? `<button onclick="window._deactivateQuest('${doc.id}')" style="background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.2);padding:4px 10px;border-radius:8px;cursor:pointer;font-size:11px;">Đóng</button>` : ''}
+                    <span style="color:${statusColor};font-size:12.5px;font-weight:700;padding:4px 10px;background:rgba(255,255,255,0.06);border-radius:8px;">${q.status === 'active' ? 'Đang mở' : 'Đã đóng'}</span>
+                    ${q.status === 'active' ? `<button onclick="window._deactivateQuest('${doc.id}')" style="background:rgba(244,63,94,0.18);color:#fb7185;border:1px solid rgba(244,63,94,0.4);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Đóng</button>` : ''}
                 </div>`;
             });
             container.innerHTML = html;
@@ -719,20 +719,20 @@ async function loadAdminQuests() {
                 subs.forEach(sub => {
                     const s = sub.data();
                     pendingCount++;
-                    subHtml += `<div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.15);border-radius:12px;margin-bottom:8px;">
+                    subHtml += `<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:linear-gradient(135deg, rgba(139,92,246,0.18), #1e293b);border:1px solid rgba(139,92,246,0.35);border-radius:12px;margin-bottom:10px;box-shadow:0 4px 16px rgba(0,0,0,0.3);">
                         <div style="flex:1;">
-                            <div style="font-weight:600;color:#f1f5f9;">${escapeHtml(s.displayName || 'User')}</div>
-                            <div style="font-size:12px;color:#94a3b8;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> ${escapeHtml(q.title || '')} | +${q.rewardDP || 0} <svg class="rune-inline" style="width:14px;height:14px;" viewBox="0 0 48 48"><use href="#i-coin"></use></svg></div>
+                            <div style="font-weight:700;color:#ffffff;font-size:14.5px;">${escapeHtml(s.displayName || 'User')}</div>
+                            <div style="font-size:13px;color:#cbd5e1;margin-top:4px;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> ${escapeHtml(q.title || '')} | <strong style="color:#fcd34d;">+${q.rewardDP || 0}</strong> <svg class="rune-inline" style="width:14px;height:14px;vertical-align:-2px;" viewBox="0 0 48 48"><use href="#i-coin"></use></svg></div>
                         </div>
-                        <button onclick="window._approveSubmission('${doc.id}','${sub.id}','${sub.data().uid}',${q.rewardDP || 0})" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;">✅ Duyệt</button>
-                        <button onclick="window._rejectSubmission('${doc.id}','${sub.id}')" style="background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.2);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;">❌ Từ chối</button>
+                        <button onclick="window._approveSubmission('${doc.id}','${sub.id}','${sub.data().uid}',${q.rewardDP || 0})" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;box-shadow:0 2px 10px rgba(16,185,129,0.35);">✅ Duyệt</button>
+                        <button onclick="window._rejectSubmission('${doc.id}','${sub.id}')" style="background:rgba(244,63,94,0.18);color:#fb7185;border:1px solid rgba(244,63,94,0.4);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;">❌ Từ chối</button>
                     </div>`;
                 });
             } catch (e) { console.warn('Load submissions error:', e); }
         }
 
         if (subContainer) {
-            subContainer.innerHTML = subHtml || '<p style="color:#64748b;padding:12px;">Không có báo cáo chờ duyệt</p>';
+            subContainer.innerHTML = subHtml || '<p style="color:#94a3b8;padding:16px;font-weight:600;">Không có báo cáo chờ duyệt</p>';
         }
 
         // Update badge
