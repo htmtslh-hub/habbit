@@ -7,7 +7,7 @@
 ## 📌 1. THÔNG TIN DỰ ÁN & TRIỂN KHAI
 - **Tên ứng dụng**: **Habit Mastery** (Ứng dụng Rèn luyện Thói quen & Game hóa Kỷ luật)
 - **Công nghệ cốt lõi**: HTML5, Vanilla CSS3 (Design System chuẩn Dark/Light Mode), Vanilla JavaScript (ES6+), Firebase (Authentication, Firestore, Hosting), PWA (Service Worker), Vercel Production.
-- **Phiên bản Cache / Scripts**: `v=4.9.1` (trong `index.html`) & Service Worker `3.6.4` (trong `sw.js`)
+- **Phiên bản Cache / Scripts**: `v=4.9.6` (trong `index.html`) & Service Worker `4.9.9` (trong `sw.js`)
 - **Kho mã nguồn (GitHub)**: `https://github.com/htmtslh-hub/habbit.git` (Nhánh `main`)
 - **Biểu tượng tiền tệ**: **Prism Nexus Coin** (Phương án 1) — Đồng xu tròn viền vàng hoàng kim công nghệ, lõi Lăng Kính Kim Cương Ngọc Bích (Emerald & Cyan Neon) tỏa sáng, thay thế hoàn toàn chữ text "DP" trên toàn hệ thống.
 - **Địa chỉ Production đang hoạt động**:
@@ -20,13 +20,13 @@
 
 | Tệp tin | Vai trò chính |
 | :--- | :--- |
-| [`index.html`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/index.html) | Giao diện ứng dụng chính, thanh điều hướng, các Modal độc lập (Cộng đồng, BXH, Nhiệm vụ, Hồ sơ, Cửa hàng, Tổ đội, Lightbox ảnh, Nâng cấp). |
-| [`app.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/app.js) | Toàn bộ logic ứng dụng: Bảng thói quen, tính điểm DP/Streak, hệ thống 7 Bước Lớn & 21 Cảnh Giới Nhỏ, đồng bộ Firestore, bảng xếp hạng Top 50, hệ thống nhiệm vụ & nhận thưởng, bảng tin cộng đồng & bình luận, quản lý hồ sơ, Pomodoro, Spotify-style Recap. |
-| [`style.css`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/style.css) | Hệ thống biến CSS variables, hiệu ứng Glow/Spotlight, giao diện Dark/Light mode, thẻ nhân vật 10 cấp bậc đồ họa, giao diện bảng tin cộng đồng, khung bình luận, responsive mobile. |
+| [`index.html`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/index.html) | Giao diện ứng dụng chính, thanh điều hướng, các Modal độc lập (Cộng đồng, BXH, Nhiệm vụ, Hồ sơ, Cửa hàng, Tổ đội, Túi đồ, Kho Tài Liệu, Thẻ Gói Tài Khoản & Hạn Dùng, Mở Rương Bí Ẩn, Bộ Đọc Sách Trực Tiếp, Lightbox ảnh, Nâng cấp). |
+| [`app.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/app.js) | Toàn bộ logic ứng dụng: Bảng thói quen, khóa thói quen từ thứ 4 khi hết hạn Pro/Premium (giữ nguyên dữ liệu), tính điểm DP/Streak, hệ thống 7 Bước Lớn & 21 Cảnh Giới Nhỏ, đồng bộ Firestore, bảng xếp hạng Top 50, hệ thống nhiệm vụ & nhận thưởng, bảng tin cộng đồng, Túi Đồ Cá Nhân (Backpack), Kho Tài Liệu & Sách Trực Tuyến (Document Reader), Pomodoro, Spotify-style Recap. |
+| [`style.css`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/style.css) | Hệ thống biến CSS variables, hiệu ứng Glow/Spotlight, giao diện Dark/Light mode, thẻ nhân vật 10 cấp bậc đồ họa, animation mở Rương Bí Ẩn, giao diện Túi Đồ & Shop, giao diện Đọc Sách Trực Tuyến 3 chế độ (Dark / Sepia / Light), thẻ thông tin Gói Tài Khoản & Hạn Sử Dụng trong Hồ sơ, responsive mobile. |
 | [`nameplate_templates.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/nameplate_templates.js) | Thẻ tên Dynamic Nameplate Card cho thanh Navbar (`getNameplateCardHTML`) và Thẻ nhân vật chi tiết (`getFullRankCardHTML`). |
 | [`avatar_frames.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/avatar_frames.js) | Khung viền Avatar động 10 mốc đồ họa (Khung 1 đến Khung 10). |
 | [`auth.html`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/auth.html) / [`auth.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/auth.js) | Trang đăng nhập/đăng ký tài khoản, xác thực Email/Mật khẩu, OTP. |
-| [`admin.html`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/admin.html) / [`admin.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/admin.js) | Bảng điều khiển quản trị viên: Quản lý người dùng, cộng điểm DP bonus, duyệt nhiệm vụ đột xuất. |
+| [`admin.html`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/admin.html) / [`admin.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/admin.js) | Bảng điều khiển quản trị viên: Quản lý người dùng, phân cấp gói Free/Trial/Pro/Premium kèm thời hạn (30/90/365 ngày/Vĩnh viễn), cộng điểm DP bonus, duyệt nhiệm vụ đột xuất. |
 | [`ideas.txt`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/ideas.txt) | Tài liệu lưu trữ 5 Trụ cột chiến lược giữ chân người dùng (Retention Roadmap). |
 | [`sw.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/sw.js) | Service Worker phục vụ PWA và bộ nhớ đệm Offline. |
 
@@ -62,6 +62,9 @@
 ### 1. Bảng Theo Dõi Thói Quen (Habit Tracker Core)
 - Bảng lưới tháng theo ngày với tính năng đóng băng cột (Freeze) và thu gọn cột (Collapse).
 - Check-in thói quen kèm hiệu ứng âm thanh Web Audio API.
+- **Cơ chế Khóa Thói Quen Tự Động (Habit Locking for Free/Expired Accounts)**:
+  - Tài khoản Free hoặc Pro/Premium đã hết hạn bị giới hạn **tối đa 3 thói quen hoạt động**.
+  - Các thói quen từ thứ 4 trở đi (`index >= 3`) được **khóa tự động** (hiển thị mờ, huy hiệu `🔒 Khóa (Free)`, ô check-in biểu tượng khóa) và **tuyệt đối không bị xóa dữ liệu**. Khi nâng cấp hoặc gia hạn gói, toàn bộ dữ liệu lập tức mở khóa trở lại.
 - Theo dõi Tâm trạng (Mood) & Thời gian ngủ (Sleep hours).
 - Ghi chú nhật ký hàng ngày (Daily Notes) và Bản đồ nhiệt hoạt động cả năm (Year Heatmap).
 - Xuất / Nhập dữ liệu sao lưu dạng file JSON.
@@ -82,40 +85,68 @@
 - Tặng Kudos (khen ngợi) đồng đội.
 - Danh mục Cảnh giới (Showcase) hiển thị chi tiết tiến độ cảnh giới hiện tại và 21 cảnh giới.
 
-### 5. Hồ Sơ Nhân Vật & Đăng Xuất
+### 5. Hồ Sơ Nhân Vật, Thẻ Gói Tài Khoản & Hạn Sử Dụng
+- **Thẻ Gói Tài Khoản & Hạn Sử Dụng (Profile Subscription Card)**:
+  - 🏷️ **Gói hiện tại**: `👑 Premium VIP`, `⚡ Gói Pro`, `⏳ Dùng thử (Trial)`, `🌱 Gói Free`.
+  - 📅 **Ngày đăng ký**: Hiển thị chính xác ngày kích hoạt / tạo tài khoản.
+  - ⏳ **Hạn sử dụng**: Hiển thị ngày hết hạn, đếm ngược số ngày còn lại (`Còn X ngày`) hoặc `Vĩnh viễn (Trọn đời)`. Khi hết hạn, hiển thị cảnh báo đỏ `⚠️ Đã hết hạn` kèm hướng dẫn gia hạn.
+  - 📊 **Số thói quen**: Hiển thị trạng thái thói quen khả dụng (Không giới hạn hoặc `3/N thói quen - Đã khóa N-3`).
+  - 🚀 **Nút Nâng Cấp / Gia Hạn Gói**: Mở trực tiếp Modal thanh toán & nâng cấp VIP.
 - Đổi tên hiển thị (2-30 ký tự), đổi avatar.
 - Hiển thị nổi bật: `Bước thứ [X] - [Tên tiểu cảnh giới]` kèm trích dẫn định nghĩa tâm thức.
 - Bộ chọn 10 Mẫu Khung viền avatar (`Khung 1` đến `Khung 10`).
 - Nút Đăng xuất tài khoản nằm gọn trong Modal Hồ sơ.
 
 ### 6. Trụ Cột 1: Cơ Chế Bảo Vệ & Cứu Chuỗi (Streak Protection & Recovery)
-- Bình Đóng Băng Chuỗi (*Streak Freeze* - tối đa 2 bình).
+- Bình Đóng Băng Chuỗi (*Streak Freeze* - tối đa 3 bình).
 - Vá Chuỗi Trong 24h (*Streak Repair* - 150 DP).
 - Trung Tâm Bảo Vệ Chuỗi (*Streak Protection Modal*).
+- Bùa Nghỉ Phép (Vacation Pass) & Khiên Bất Hoại (Invincible Shield).
 
-### 7. Trụ Cột 2: Cửa Hàng Kỷ Luật & Nền Kinh Tế DP (Shop)
+### 7. Trụ Cột 2: Cửa Hàng Kỷ Luật & Túi Đồ Cá Nhân (Shop & Backpack)
+- **Túi Đồ Cá Nhân (Backpack)**: Quản lý kho bùa lợi, theo dõi trạng thái Buffs đang hoạt động (Vé Boost, Khiên, Nghỉ Phép, Focus Elixir...) và **Tủ Sách Tri Thức**.
+- **Rương Kỷ Luật Bí Ẩn (Mystery Chest)**: Mở quà may mắn với animation lắc rương, hiệu ứng hào quang và tỷ lệ trúng Jackpot thần thoại.
+- **Kho Tài Liệu & Sách Tinh Hoa (Documents Hub)**:
+  1. 📜 **Tuyệt Mật Nhân Tính** *(Miễn phí)*: Tâm lý học hành vi & đối nhân xử thế.
+  2. 👁️ **Thức Tỉnh Nhận Thức** *(350 Coins)*: Phá vỡ bẫy tư duy vô thức, làm chủ tâm trí.
+  3. 🦁 **Tư Duy Cường Giả** *(500 Coins)*: Ý chí sắt đá & nguyên tắc kẻ mạnh.
+  4. ⚔️ **Thương Chiến** *(750 Coins)*: Mưu lược kinh doanh, đòn bẩy dòng tiền.
+  5. 🔮 **Ẩn Chứa Huyền Cơ** *(1.000 Coins)*: Đọc vị thế cục ngầm & quy luật âm dương.
+  6. 🌌 **Tư Duy Sâu Sắc** *(1.200 Coins)*: First Principles & giải mã bài toán phức tạp.
+- **Bộ Đọc Sách Trực Tuyến (Document Reader Modal)**:
+  - 3 Chế độ đọc: Dark Slate, Warm Sepia (Giấy cổ điển), Paper Light (Sáng).
+  - Tùy chỉnh kích thước chữ linh hoạt (A- / A+), chế độ toàn màn hình.
+  - Nút nhận thưởng +20 Coins khi hoàn thành bài đọc.
+- **Vật phẩm tiêu thụ cao cấp**:
+  - 🏖️ **Bùa Nghỉ Phép (3 Ngày)**: Tự động bảo toàn streak khi có việc bận/đi du lịch.
+  - 🚀 **Vé Siêu Cấp x3 Boost (12H)**: Nhân 3 toàn bộ điểm check-in.
+  - ⚡ **Vé Nhân Đôi x2 Boost (24H)**: Nhân 2 toàn bộ điểm check-in.
+  - 🧪 **Thuốc Tiên Focus**: +30 Coins thưởng cho 3 phiên Pomodoro.
+  - 🛡️ **Khiên Bất Hoại (7 Ngày)**: Miễn nhiễm mất chuỗi tuyệt đối trong 7 ngày.
+  - ⚡ **Nước Tăng Lực Đồng Đội**: Tăng 50 năng lượng cho toàn tổ đội.
 - 8 Danh Hiệu Độc Quyền (*Character Titles*).
 - 7 Bộ Theme Skins Độc Đáo (*Dark, Light, Cyberpunk, Gold Luxury, Sakura, Matrix, Forest Zen*).
 - Gói Hiệu Ứng Âm Thanh & Thị Giác khi tick ô.
-- Thẻ x2 DP Boost 24h.
 
 ### 8. Trụ Cột 3: Tổ Đội Rèn Luyện & Đấu Trường Thách Đấu 1v1 (Social Hub)
 - Tổ Đội Rèn Luyện (Squads 3-5 người, Mã mời 6 ký tự, Nudge sấm sét đồng đội).
 - Đấu Trường Thách Đấu 1v1 7 Ngày (Staking DP 50/100/200/500 DP).
-- *(Lưu ý: Cấp bậc tổ đội sẽ được thảo luận và nâng cấp ở các phiên sau theo yêu cầu)*.
 
 ### 9. Trụ Cột 4: Báo Cáo Tổng Kết & Khoe Thành Tích (Recap & Story Cards)
 - Báo Cáo Tổng Kết Tuần (*Weekly Recap* 5 slide kiểu Spotify Wrapped).
 - Bộ Xuất Ảnh Khoe Kỷ Luật Canvas High-DPI (Story 9:16 & Square 1:1).
 
 ### 10. Trụ Cột 5: Pomodoro Focus Station & Daily Stoic Quotes
-- Đồng Hồ Pomodoro (25/5/15 phút) gắn liền với thói quen, thưởng +15 DP Deep Work Bonus.
+- Đồng Hồ Pomodoro (25/5/15 phút) gắn liền với thói quen, thưởng +15 DP Deep Work Bonus (+30 DP khi có Thuốc Tiên Focus).
 - 4 Trạm Nhạc Sóng Não & Âm Thanh Trắng (Mưa rơi, Sóng biển, Tiếng ồn trắng, Lo-fi chords).
 - Widget Trích Dẫn Khắc Kỷ & Động Lực Mỗi Ngày trên Dashboard.
 
 ---
 
-## 🎯 5. KẾ HOẠCH CHO PHIÊN LÀM VIỆC TIẾP THEO (BUỔI CHIỀU)
-1. **Kiểm tra phản hồi & trải nghiệm người dùng** trên phiên bản Live `v=4.9.0`.
-2. **Cấp bậc Tổ Đội (Squad Ranks)**: Bàn thảo và triển khai hệ thống cấp bậc tổ đội mới nếu anh có thiết kế riêng cho tổ đội.
-3. **Tối ưu hóa & Nâng cấp tính năng tiếp theo** theo chỉ đạo trực tiếp của anh.
+## 🎯 5. KẾ HOẠCH BƯỚC TIẾP THEO
+1. **Tiếp nhận các file thiết kế HTML chi tiết** cho 6 quyển sách để nạp trực tiếp vào Reader.
+2. **Cấp bậc Tổ Đội (Squad Ranks)**: Thiết kế và triển khai hệ thống phân cấp tổ đội theo tổng điểm đóng góp của các thành viên.
+3. **Nâng cấp Hệ thống Thông báo Đẩy (Push Notifications)** & Lời nhắc nhở hàng ngày cho PWA/Mobile.
+4. **Triển khai đóng gói bản Desktop / Mobile** hoặc tối ưu theo yêu cầu cụ thể.
+
+

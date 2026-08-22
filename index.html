@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=4.9.3">
+    <link rel="stylesheet" href="style.css?v=4.9.6">
 
     <!-- Firebase SDK (CDN) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -567,6 +567,37 @@
                     </div>
                 </div>
 
+                <!-- SUBSCRIPTION & PLAN INFO CARD -->
+                <div class="profile-plan-card" id="profilePlanCard">
+                    <div class="ppc-header">
+                        <div class="ppc-badge-wrap">
+                            <span class="ppc-badge" id="ppcPlanBadge">🌱 Gói Free</span>
+                            <span class="ppc-status-tag" id="ppcStatusTag">Đang hoạt động</span>
+                        </div>
+                        <button class="ppc-upgrade-btn" id="ppcUpgradeBtn" onclick="window._openUpgrade()">
+                            <svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Nâng Cấp Gói
+                        </button>
+                    </div>
+                    <div class="ppc-details-grid">
+                        <div class="ppc-detail-item">
+                            <span class="ppc-label">📅 Ngày đăng ký:</span>
+                            <span class="ppc-val" id="ppcStartDate">—</span>
+                        </div>
+                        <div class="ppc-detail-item">
+                            <span class="ppc-label">⏳ Hạn sử dụng:</span>
+                            <span class="ppc-val" id="ppcExpireDate">Vĩnh viễn</span>
+                        </div>
+                        <div class="ppc-detail-item">
+                            <span class="ppc-label">📊 Số thói quen:</span>
+                            <span class="ppc-val" id="ppcHabitsLimit">Tối đa 3 thói quen</span>
+                        </div>
+                    </div>
+                    <div class="ppc-notice-box" id="ppcNoticeWrap" style="display:none;">
+                        <span class="ppc-notice-icon">⚠️</span>
+                        <span class="ppc-notice-text" id="ppcNoticeText"></span>
+                    </div>
+                </div>
+
                 <!-- Hidden inputs for avatar change -->
                 <input type="file" id="profileAvatarInput" accept="image/*" style="display:none;">
 
@@ -640,12 +671,62 @@
                 <div class="swb-extra" id="shopWalletExtra"></div>
             </div>
             <div class="lb-tabs shop-tabs">
-                <button class="lb-tab-btn shop-tab-btn active" data-tab="titles"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> <span data-i18n="shopTabTitles">Danh hiệu</span></button>
+                <button class="lb-tab-btn shop-tab-btn active" data-tab="items"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> <span data-i18n="shopTabItems">Vật phẩm</span></button>
+                <button class="lb-tab-btn shop-tab-btn" data-tab="backpack"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> <span data-i18n="shopTabBackpack">Túi Đồ</span></button>
+                <button class="lb-tab-btn shop-tab-btn" data-tab="docs"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> <span data-i18n="shopTabDocs">Tài liệu</span></button>
+                <button class="lb-tab-btn shop-tab-btn" data-tab="titles"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> <span data-i18n="shopTabTitles">Danh hiệu</span></button>
                 <button class="lb-tab-btn shop-tab-btn" data-tab="themes"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-lens"></use></svg> <span data-i18n="shopTabThemes">Giao diện</span></button>
                 <button class="lb-tab-btn shop-tab-btn" data-tab="fx"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-audio"></use></svg> <span data-i18n="shopTabFX">Hiệu ứng</span></button>
-                <button class="lb-tab-btn shop-tab-btn" data-tab="items"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> <span data-i18n="shopTabItems">Vật phẩm</span></button>
             </div>
             <div class="shop-feed-container" id="shopFeedContainer"></div>
+        </div>
+    </div>
+
+    <!-- MYSTERY CHEST OPENING MODAL -->
+    <div class="modal-bg mystery-modal-bg" id="mysteryModalBg">
+        <div class="mystery-chest-modal">
+            <button class="lb-close-btn mystery-close-btn" id="mysteryCloseBtn"><svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-close"></use></svg></button>
+            <div class="mystery-modal-body" id="mysteryModalBody">
+                <!-- Injected dynamically via app.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- DOCUMENT READER MODAL -->
+    <div class="modal-bg doc-reader-modal-bg" id="docReaderModalBg">
+        <div class="doc-reader-modal" id="docReaderModal">
+            <header class="doc-reader-header">
+                <div class="dr-header-left">
+                    <div class="dr-book-badge" id="drBadge">TÀI LIỆU</div>
+                    <div class="dr-title-wrap">
+                        <h3 class="dr-book-title" id="drBookTitle">Tuyệt Mật Nhân Tính</h3>
+                        <span class="dr-book-category" id="drBookCategory">Tâm Lý Học Hành Vi</span>
+                    </div>
+                </div>
+                <div class="dr-header-actions">
+                    <div class="dr-font-controls">
+                        <button class="dr-ctrl-btn" id="drFontDec" title="Thu nhỏ chữ">A-</button>
+                        <span class="dr-font-size-label" id="drFontSizeLabel">100%</span>
+                        <button class="dr-ctrl-btn" id="drFontInc" title="Phóng to chữ">A+</button>
+                    </div>
+                    <button class="dr-ctrl-btn dr-theme-btn" id="drThemeToggle" title="Đổi chủ đề đọc">🎨</button>
+                    <button class="dr-ctrl-btn dr-fullscreen-btn" id="drFullscreenBtn" title="Toàn màn hình">⛶</button>
+                    <button class="lb-close-btn dr-close-btn" id="drCloseBtn" title="Đóng đọc sách"><svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-close"></use></svg></button>
+                </div>
+            </header>
+            <div class="doc-reader-body" id="docReaderBody">
+                <!-- Dynamic Content injected via app.js -->
+            </div>
+            <footer class="doc-reader-footer">
+                <div class="dr-footer-left">
+                    <span class="dr-progress-text" id="drProgressText">📖 Bản đọc trực tiếp trên ứng dụng</span>
+                </div>
+                <div class="dr-footer-right">
+                    <button class="dr-mark-read-btn" id="drMarkReadBtn" onclick="window._markDocCompleted()">
+                        ✨ Đã Đọc Xong (+20 Coins Thưởng)
+                    </button>
+                </div>
+            </footer>
         </div>
     </div>
 
@@ -959,8 +1040,8 @@
 
     <!-- SCRIPTS -->
     <script src="gotiengviet.js"></script>
-    <script src="nameplate_templates.js?v=4.9.3"></script>
-    <script src="avatar_frames.js?v=4.9.3"></script>
-    <script src="app.js?v=4.9.3"></script>
+    <script src="nameplate_templates.js?v=4.9.6"></script>
+    <script src="avatar_frames.js?v=4.9.6"></script>
+    <script src="app.js?v=4.9.6"></script>
 </body>
 </html>

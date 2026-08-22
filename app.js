@@ -80,8 +80,9 @@ const I18N = {
         historyTitle:'LỊCH SỬ BẢO VỆ CHUỖI',noHistory:'Chưa có lượt bảo vệ nào gần đây.',
         daysUnit:'ngày',maxStreakLabel:'Kỷ lục',currentStreakLabel:'Chuỗi hiện tại',
         tabShop:'Cửa hàng',shopModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-market"></use></svg> CỬA HÀNG KỶ LUẬT',
-        shopTabTitles:'Danh hiệu',shopTabThemes:'Giao diện',shopTabFX:'Hiệu ứng',shopTabItems:'Vật phẩm',
-        btnBuy:'Mua',btnEquip:'Trang bị',btnEquipped:'Đang dùng',
+        shopTabTitles:'Danh hiệu',shopTabThemes:'Giao diện',shopTabFX:'Hiệu ứng',shopTabItems:'Vật phẩm',shopTabBackpack:'Túi Đồ',shopTabDocs:'Tài liệu',
+        btnBuy:'Mua',btnEquip:'Trang bị',btnEquipped:'Đang dùng',btnUse:'Dùng ngay',btnOpenChest:'Mở Rương',
+        noBackpackItems:'Túi đồ đang trống. Hãy ghé tab Vật phẩm để sở hữu các bùa lợi kỷ luật!',activeBuffsTitle:'BÙA LỢI & HIỆU ỨNG ĐANG HOẠT ĐỘNG',
         itemBoughtToast:'Đã mua thành công!',itemEquippedToast:'Đã trang bị thành công!',
         boostActivatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> Đã kích hoạt Vé Nhân Đôi 2X trong 24h!',
         tabSquad:'Tổ đội',squadHubTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> TỔ ĐỘI & THÁCH ĐẤU 1V1',
@@ -173,8 +174,9 @@ const I18N = {
         historyTitle:'连胜保护历史',noHistory:'近期暂无保护记录。',
         daysUnit:'天',maxStreakLabel:'最高记录',currentStreakLabel:'当前连胜',
         tabShop:'商店',shopModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-market"></use></svg> 自律商店',
-        shopTabTitles:'头衔',shopTabThemes:'主题',shopTabFX:'特效',shopTabItems:'道具',
-        btnBuy:'购买',btnEquip:'装备',btnEquipped:'已装备',
+        shopTabTitles:'头衔',shopTabThemes:'主题',shopTabFX:'特效',shopTabItems:'道具',shopTabBackpack:'背包',shopTabDocs:'文档/书阁',
+        btnBuy:'购买',btnEquip:'装备',btnEquipped:'已装备',btnUse:'立即使用',btnOpenChest:'开启宝箱',
+        noBackpackItems:'你的背包空空如也，快去道具商店挑选吧！',activeBuffsTitle:'当前激活的增益效果',
         itemBoughtToast:'购买成功！',itemEquippedToast:'装备成功！',
         boostActivatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> 2X 加速卡已激活（24小时）！',
         tabSquad:'战队',squadHubTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> 战队与1V1对决',
@@ -266,7 +268,7 @@ const I18N = {
         historyTitle:'PROTECTION HISTORY',noHistory:'No recent protection records.',
         daysUnit:'days',maxStreakLabel:'Record',currentStreakLabel:'Current Streak',
         tabShop:'Shop',shopModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-market"></use></svg> DISCIPLINE SHOP',
-        shopTabTitles:'Titles',shopTabThemes:'Themes',shopTabFX:'FX & Sound',shopTabItems:'Items',
+        shopTabTitles:'Titles',shopTabThemes:'Themes',shopTabFX:'FX & Sound',shopTabItems:'Items',shopTabDocs:'Library',
         btnBuy:'Buy',btnEquip:'Equip',btnEquipped:'Equipped',
         itemBoughtToast:'Purchased successfully!',itemEquippedToast:'Equipped successfully!',
         boostActivatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> 2X Boost activated for 24h!',
@@ -307,6 +309,8 @@ const I18N = {
         squadJoinByCode:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Join by Invite Code',
         squadCodePh:'Enter invite code...',squadJoinBtn:'Join',
         shopOwned:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Owned',
+        shopTabBackpack:'Backpack',btnUse:'Use Now',btnOpenChest:'Open Chest',
+        noBackpackItems:'Your backpack is empty. Stock up in the Items tab!',activeBuffsTitle:'ACTIVE BUFFS & BOOSTS',
     }
 };
 
@@ -640,17 +644,34 @@ let isColumnCollapsed = localStorage.getItem('hg_col_collapsed') === 'true';
 
 function sanitizeInventory(inv) {
     const defaultInv = {
-        titles:[],
-        equippedTitle:'',
-        soundFx:'default',
-        soundFxOwned:['default'],
-        visualFx:'default',
-        visualFxOwned:['default'],
-        themes:['dark','light'],
-        equippedTheme:localStorage.getItem('hg_theme')||'dark',
-        boost2xExpiresAt:0
+        titles: [],
+        equippedTitle: '',
+        soundFx: 'default',
+        soundFxOwned: ['default'],
+        visualFx: 'default',
+        visualFxOwned: ['default'],
+        themes: ['dark', 'light'],
+        equippedTheme: localStorage.getItem('hg_theme') || 'dark',
+        boost2xExpiresAt: 0,
+        boost3xExpiresAt: 0,
+        vacationUntil: 0,
+        focusElixirCharges: 0,
+        invincibleShieldUntil: 0,
+        unlockedDocs: ['doc_nhan_tinh'],
+        backpack: {
+            mystery_chest: 0,
+            vacation_pass: 0,
+            boost3x: 0,
+            boost2x: 0,
+            focus_elixir: 0,
+            shield7d: 0,
+            squad_energy: 0
+        }
     };
     if (!inv || typeof inv !== 'object') return defaultInv;
+    const bp = (inv.backpack && typeof inv.backpack === 'object') ? inv.backpack : {};
+    const docs = Array.isArray(inv.unlockedDocs) ? [...inv.unlockedDocs] : ['doc_nhan_tinh'];
+    if (!docs.includes('doc_nhan_tinh')) docs.unshift('doc_nhan_tinh');
     return {
         titles: Array.isArray(inv.titles) ? inv.titles : [],
         equippedTitle: typeof inv.equippedTitle === 'string' ? inv.equippedTitle : '',
@@ -658,9 +679,23 @@ function sanitizeInventory(inv) {
         soundFxOwned: Array.isArray(inv.soundFxOwned) ? inv.soundFxOwned : ['default'],
         visualFx: typeof inv.visualFx === 'string' ? inv.visualFx : 'default',
         visualFxOwned: Array.isArray(inv.visualFxOwned) ? inv.visualFxOwned : ['default'],
-        themes: Array.isArray(inv.themes) ? inv.themes : ['dark','light'],
-        equippedTheme: typeof inv.equippedTheme === 'string' ? inv.equippedTheme : (localStorage.getItem('hg_theme')||'dark'),
-        boost2xExpiresAt: typeof inv.boost2xExpiresAt === 'number' ? inv.boost2xExpiresAt : 0
+        themes: Array.isArray(inv.themes) ? inv.themes : ['dark', 'light'],
+        equippedTheme: typeof inv.equippedTheme === 'string' ? inv.equippedTheme : (localStorage.getItem('hg_theme') || 'dark'),
+        boost2xExpiresAt: typeof inv.boost2xExpiresAt === 'number' ? inv.boost2xExpiresAt : 0,
+        boost3xExpiresAt: typeof inv.boost3xExpiresAt === 'number' ? inv.boost3xExpiresAt : 0,
+        vacationUntil: typeof inv.vacationUntil === 'number' ? inv.vacationUntil : 0,
+        focusElixirCharges: typeof inv.focusElixirCharges === 'number' ? inv.focusElixirCharges : 0,
+        invincibleShieldUntil: typeof inv.invincibleShieldUntil === 'number' ? inv.invincibleShieldUntil : 0,
+        unlockedDocs: docs,
+        backpack: {
+            mystery_chest: typeof bp.mystery_chest === 'number' ? Math.max(0, bp.mystery_chest) : 0,
+            vacation_pass: typeof bp.vacation_pass === 'number' ? Math.max(0, bp.vacation_pass) : 0,
+            boost3x: typeof bp.boost3x === 'number' ? Math.max(0, bp.boost3x) : 0,
+            boost2x: typeof bp.boost2x === 'number' ? Math.max(0, bp.boost2x) : 0,
+            focus_elixir: typeof bp.focus_elixir === 'number' ? Math.max(0, bp.focus_elixir) : 0,
+            shield7d: typeof bp.shield7d === 'number' ? Math.max(0, bp.shield7d) : 0,
+            squad_energy: typeof bp.squad_energy === 'number' ? Math.max(0, bp.squad_energy) : 0
+        }
     };
 }
 
@@ -732,11 +767,15 @@ const SHOP_CATALOG = {
         { id: 'early_bird', name: 'Chim Sớm', nameEn: 'Early Bird', nameZh: '早起鸟', icon: '🌅', desc: 'Dành cho những người dậy sớm làm chủ bình minh.', descEn: 'For those who wake up early to conquer dawn.', descZh: '献给早起掌控清晨的人。', price: 300 },
         { id: 'night_owl', name: 'Kẻ Thức Khuya', nameEn: 'Night Owl', nameZh: '夜猫子', icon: '🦉', desc: 'Dành cho những cú đêm miệt mài rèn luyện.', descEn: 'For dedicated night owls forging habits.', descZh: '献给深夜不辍前行的人。', price: 300 },
         { id: 'warrior', name: 'Chiến Binh Kỷ Luật', nameEn: 'Discipline Warrior', nameZh: '自律战士', icon: '⚔️', desc: 'Ý chí kiên cường không ngại gian khó.', descEn: 'Unbreakable willpower against all odds.', descZh: '坚韧不拔，无惧困难。', price: 500 },
-        { id: 'alpha_wolf', name: 'Sói Đầu Đàn', nameEn: 'Alpha Wolf', nameZh: '头狼领袖', icon: '🐺', desc: 'Dẫn đầu bầy đàn, kỷ luật thép đỉnh cao.', descEn: 'Leading the pack with apex discipline.', descZh: '领航团队，钢铁意志。', price: 800 },
-        { id: 'invincible', name: 'Bất Khả Xâm Phạm', nameEn: 'Invincible', nameZh: '坚不可摧', icon: '🛡️', desc: 'Thành trì bất hoại trước mọi cám dỗ.', descEn: 'An impenetrable fortress against temptations.', descZh: '百毒不侵，坚如磐石。', price: 1200 },
-        { id: 'conqueror', name: 'Kẻ Chinh Phục Thói Quen', nameEn: 'Habit Conqueror', nameZh: '习惯征服者', icon: '👑', desc: 'Bá chủ kỷ luật, chinh phục mọi giới hạn.', descEn: 'Absolute master conquering all limits.', descZh: '自律霸主，征服极限。', price: 2000 },
         { id: 'flash_will', name: 'Thần Tốc Kỷ Luật', nameEn: 'Flash of Will', nameZh: '极速意志', icon: '⚡', desc: 'Check-in nhanh như chớp, hành động dứt khoát.', descEn: 'Lightning-fast execution & instant check-ins.', descZh: '闪电自律，雷厉风行。', price: 600 },
-        { id: 'zen_master', name: 'Tâm Bất Biến', nameEn: 'Zen Master', nameZh: '禅心大师', icon: '🧘', desc: 'Tĩnh lặng trong tâm hồn, bền bỉ mỗi ngày.', descEn: 'Inner calm with relentless daily focus.', descZh: '宁静致远，持之以恒。', price: 500 }
+        { id: 'zen_master', name: 'Tâm Bất Biến', nameEn: 'Zen Master', nameZh: '禅心大师', icon: '🧘', desc: 'Tĩnh lặng trong tâm hồn, bền bỉ mỗi ngày.', descEn: 'Inner calm with relentless daily focus.', descZh: '宁静致远，持之以恒。', price: 500 },
+        { id: 'alpha_wolf', name: 'Sói Đầu Đàn', nameEn: 'Alpha Wolf', nameZh: '头狼领袖', icon: '🐺', desc: 'Dẫn đầu bầy đàn, kỷ luật thép đỉnh cao.', descEn: 'Leading the pack with apex discipline.', descZh: '领航团队，钢铁意志。', price: 800 },
+        { id: 'future_architect', name: 'Kiến Trúc Sư Tương Lai', nameEn: 'Future Architect', nameZh: '未来建筑师', icon: '🌌', desc: 'Kiến tạo tương lai rực rỡ từ thói quen hôm nay.', descEn: 'Building a stellar future through daily habits.', descZh: '从每日习惯筑造辉煌未来。', price: 1000 },
+        { id: 'dragon_soul', name: 'Long Hồn Thức Tỉnh', nameEn: 'Dragon Soul Awakened', nameZh: '龙魂觉醒', icon: '🐉', desc: 'Sức mạnh rồng thiêng thức tỉnh trong từng hành động.', descEn: 'Awakening the primal dragon within every action.', descZh: '龙魂觉醒，势如破竹。', price: 1200 },
+        { id: 'invincible', name: 'Bất Khả Xâm Phạm', nameEn: 'Invincible', nameZh: '坚不可摧', icon: '🛡️', desc: 'Thành trì bất hoại trước mọi cám dỗ.', descEn: 'An impenetrable fortress against temptations.', descZh: '百毒不侵，坚如磐石。', price: 1200 },
+        { id: 'undefeated', name: 'Bậc Thầy Bất Bại', nameEn: 'Undefeated Legend', nameZh: '不败传奇', icon: '👑', desc: 'Kỷ lục bất bại không bao giờ bỏ cuộc.', descEn: 'Undefeated record of relentless consistency.', descZh: '不败战绩，永不放弃。', price: 1500 },
+        { id: 'conqueror', name: 'Kẻ Chinh Phục Thói Quen', nameEn: 'Habit Conqueror', nameZh: '习惯征服者', icon: '👑', desc: 'Bá chủ kỷ luật, chinh phục mọi giới hạn.', descEn: 'Absolute master conquering all limits.', descZh: '自律霸主，征服极限。', price: 2000 },
+        { id: 'supreme_destiny', name: 'Vận Mệnh Tối Thượng', nameEn: 'Supreme Destiny', nameZh: '至尊宿命', icon: '🌟', desc: 'Chạm đỉnh vận mệnh, hào quang thần thoại bất tử.', descEn: 'Apex of destiny with immortal mythic aura.', descZh: '触及宿命巅峰，不朽神话光芒。', price: 3500, mythic: true }
     ],
     themes: [
         { id: 'dark', name: 'Dark Mode', desc: 'Giao diện tối cổ điển huyền bí.', price: 0, free: true, bg: '#0f172a', accent: '#10b981' },
@@ -745,7 +784,9 @@ const SHOP_CATALOG = {
         { id: 'luxury', name: 'Gold Luxury', desc: 'Vàng kim hoàng gia quý phái obsidian.', price: 800, bg: '#0b0b0e', accent: '#d4af37' },
         { id: 'sakura', name: 'Minimalist Sakura', desc: 'Hồng hoa anh đào thanh tao Nhật Bản.', price: 500, bg: '#fcf5f8', accent: '#ec4899' },
         { id: 'matrix', name: 'Midnight Matrix', desc: 'Xanh terminal hacker thế giới ma trận.', price: 600, bg: '#000c04', accent: '#00ff66' },
-        { id: 'forest', name: 'Forest Zen', desc: 'Rừng ngọc bích thiên nhiên dịu mát an lành.', price: 500, bg: '#081711', accent: '#10b981' }
+        { id: 'forest', name: 'Forest Zen', desc: 'Rừng ngọc bích thiên nhiên dịu mát an lành.', price: 500, bg: '#081711', accent: '#10b981' },
+        { id: 'cosmic', name: 'Cosmic Nexus', desc: 'Vũ trụ không gian sao đêm huyền ảo với ánh sáng tím dạ quang & lam ngọc.', price: 700, bg: '#050716', accent: '#00f5a0' },
+        { id: 'volcano', name: 'Crimson Volcano', desc: 'Dung nham hỏa diệm sơn obsidian rực lửa vàng kim.', price: 700, bg: '#160505', accent: '#ff4d4d' }
     ],
     soundFx: [
         { id: 'default', name: 'Chime Mặc Định', desc: 'Âm thanh trong trẻo êm tai.', price: 0, free: true },
@@ -763,8 +804,22 @@ const SHOP_CATALOG = {
         { id: 'sakura', name: 'Cánh Hoa Bay', desc: 'Cánh hoa anh đào rơi lãng mạn.', price: 350 }
     ],
     items: [
-        { id: 'freeze', name: 'Bình Đóng Băng Chuỗi', icon: '🧊', desc: 'Tự động bảo vệ chuỗi khi quên check-in (Tối đa 2 bình).', price: 200 },
-        { id: 'boost2x', name: 'Vé Nhân Đôi Điểm (2X DP 24h)', icon: '⚡', desc: 'Nhân đôi tất cả điểm thưởng DP khi check-in trong suốt 24 giờ!', price: 300 }
+        { id: 'mystery_chest', name: 'Rương Kỷ Luật Bí Ẩn', icon: '🎁', desc: 'Mở ngay tại chỗ nhận quà ngẫu nhiên: 100-600 Coins, Vé Boost x2/x3, Bình Đóng Băng, Bùa Nghỉ Phép hoặc Danh hiệu thần thoại!', price: 250, badge: 'HOT', type: 'chest' },
+        { id: 'vacation_pass', name: 'Bùa Nghỉ Phép (3 Ngày)', icon: '🏖️', desc: 'Tự động bảo lưu toàn bộ Streak của tất cả thói quen trong 3 ngày liên tiếp (thích hợp khi đi du lịch, công tác, thi cử).', price: 350, badge: 'TIỆN ÍCH', type: 'consumable' },
+        { id: 'boost3x', name: 'Vé Siêu Cấp x3 Boost (12H)', icon: '🚀', desc: 'Nhân 3 toàn bộ Coins nhận được từ Check-in thói quen & Hoàn thành mục tiêu trong suốt 12 giờ!', price: 450, badge: 'SIÊU LỢI', type: 'consumable' },
+        { id: 'focus_elixir', name: 'Thuốc Tiên Tập Trung Focus', icon: '🧪', desc: 'Tăng gấp đôi thưởng: Nhận ngay +30 Coins thưởng cho 3 phiên Pomodoro hoàn thành kế tiếp!', price: 150, badge: 'FOCUS', type: 'consumable' },
+        { id: 'shield7d', name: 'Bùa Khiên Bất Hoại (7 Ngày)', icon: '🛡️', desc: 'Bảo vệ tuyệt đối toàn bộ chuỗi ngày trong 7 ngày liên tiếp kể từ khi kích hoạt.', price: 500, badge: 'BẢO HỘ', type: 'consumable' },
+        { id: 'squad_energy', name: 'Nước Tăng Lực Đồng Đội', icon: '⚡', desc: 'Tặng ngay 50 Năng lượng & 50 Coins cho toàn bộ thành viên trong Tổ Đội và vinh danh trên bảng tin!', price: 300, badge: 'ĐỒNG ĐỘI', type: 'consumable' },
+        { id: 'freeze', name: 'Bình Đóng Băng Chuỗi', icon: '🧊', desc: 'Tự động bảo vệ chuỗi khi quên check-in (Tối đa 3 bình).', price: 200, badge: 'DỰ TRỮ', type: 'flask' },
+        { id: 'boost2x', name: 'Vé Nhân Đôi Điểm (2X DP 24h)', icon: '⚡', desc: 'Nhân đôi tất cả Coins khi check-in trong suốt 24 giờ!', price: 300, badge: 'PHỔ BIẾN', type: 'consumable' }
+    ],
+    docs: [
+        { id: 'doc_nhan_tinh', name: 'Tuyệt Mật Nhân Tính', desc: 'Thấu hiểu bản chất con người, quy luật tâm lý ẩn sâu, nghệ thuật đối nhân xử thế và thu phục nhân tâm.', icon: '📜', badge: 'MIỄN PHÍ', price: 0, free: true, gradient: 'linear-gradient(135deg, #059669, #10b981)', accent: '#10b981', category: 'Tâm Lý Học Hành Vi' },
+        { id: 'doc_thuc_tinh', name: 'Thức Tỉnh Nhận Thức', desc: 'Phá vỡ giới hạn tư duy vô thức, thoát khỏi bẫy định kiến, nhìn thấu các tầng thực tại và làm chủ tâm trí.', icon: '👁️', badge: 'TÂM THỨC', price: 350, gradient: 'linear-gradient(135deg, #0284c7, #38bdf8)', accent: '#38bdf8', category: 'Phát Triển Tâm Thức' },
+        { id: 'doc_cuong_gia', name: 'Tư Duy Cường Giả', desc: 'Ý chí sắt đá, định luật kẻ mạnh, nghệ thuật tôi rèn kỷ luật thép và nguyên tắc không khuất phục trước nghịch cảnh.', icon: '🦁', badge: 'BẢN LĨNH', price: 500, gradient: 'linear-gradient(135deg, #d97706, #fbbf24)', accent: '#fbbf24', category: 'Kỷ Luật & Ý Chí' },
+        { id: 'doc_thuong_chien', name: 'Thương Chiến', desc: 'Mưu lược kinh doanh đỉnh cao, nghệ thuật đàm phán, đòn bẩy dòng tiền và chiến lược thống lĩnh thị trường.', icon: '⚔️', badge: 'CHIẾN LƯỢC', price: 750, gradient: 'linear-gradient(135deg, #dc2626, #f87171)', accent: '#f87171', category: 'Kinh Doanh & Mưu Lược' },
+        { id: 'doc_huyen_co', name: 'Ẩn Chứa Huyền Cơ', desc: 'Đọc vị thế cục ngầm, quy luật âm dương tương hỗ, giải mã những biến số vô hình đằng sau mọi sự kiện lớn.', icon: '🔮', badge: 'HUYỀN CƠ', price: 1000, gradient: 'linear-gradient(135deg, #7c3aed, #a78bfa)', accent: '#a78bfa', category: 'Quy Luật Thế Cục' },
+        { id: 'doc_sau_sac', name: 'Tư Duy Sâu Sắc', desc: 'Tư duy đa chiều, giải mã bản chất bằng Nguyên lý đệ nhất (First Principles) và giải quyết các bài toán phức tạp.', icon: '🌌', badge: 'TINH HOA', price: 1200, gradient: 'linear-gradient(135deg, #4f46e5, #818cf8)', accent: '#818cf8', category: 'Tư Duy Đỉnh Cao' }
     ]
 };
 window.SHOP_CATALOG = SHOP_CATALOG;
@@ -889,7 +944,7 @@ async function ensureUserProfile(user){
     }
 }
 
-/* ===== PREMIUM PLAN SYSTEM ===== */
+/* ===== PREMIUM & PRO PLAN SYSTEM ===== */
 async function loadUserPlan(){
     if(!userDocRef) return;
     try {
@@ -897,29 +952,141 @@ async function loadUserPlan(){
         if(doc.exists){
             const data = doc.data();
             userPlan = {
-                plan: data.plan || 'free',
+                plan: data.plan || 'free', // 'free' | 'pro' | 'premium' | 'trial'
+                trialStartedAt: data.trialStartedAt || null,
                 trialExpiresAt: data.trialExpiresAt || null,
+                planStartedAt: data.planStartedAt || data.planUpdatedAt || data.createdAt || null,
                 planExpiresAt: data.planExpiresAt || null,
                 disabled: data.disabled || false,
                 role: data.role || 'customer',
+                createdAt: data.createdAt || null,
             };
         }
     } catch(e){ console.warn('Load plan error:', e); }
 }
 
 function getEffectivePlan(){
-    if(userPlan.plan === 'premium') return 'premium';
+    if(!userPlan) return 'free';
+    if(userPlan.role === 'admin') return 'premium';
+
+    const now = new Date();
+
+    // Premium or Pro plan
+    if(userPlan.plan === 'premium' || userPlan.plan === 'pro'){
+        if(userPlan.planExpiresAt){
+            const exp = userPlan.planExpiresAt.toDate ? userPlan.planExpiresAt.toDate() : new Date(userPlan.planExpiresAt);
+            if(exp < now) return 'free'; // Plan has expired! Fallback to free with locked features
+        }
+        return userPlan.plan;
+    }
+
+    // Trial plan
     if(userPlan.plan === 'trial'){
         if(!userPlan.trialExpiresAt) return 'free';
         const exp = userPlan.trialExpiresAt.toDate ? userPlan.trialExpiresAt.toDate() : new Date(userPlan.trialExpiresAt);
-        if(exp > new Date()) return 'trial';
-        return 'free';
+        if(exp < now) return 'free'; // Trial has expired! Fallback to free
+        return 'trial';
     }
+
     return 'free';
 }
 
+function getUserPlanDetails(){
+    const effectivePlan = getEffectivePlan();
+    const rawPlan = userPlan?.plan || 'free';
+    const now = new Date();
+    let isExpired = false;
+    let startDateStr = '—';
+    let expDateStr = 'Vĩnh viễn (Trọn đời)';
+    let daysLeft = null;
+    let badgeClass = 'free';
+    let badgeName = '🌱 Free (Miễn phí)';
+    let statusTag = 'Đang hoạt động';
+    let statusClass = 'active';
+
+    // Start date
+    const startTs = userPlan?.planStartedAt || userPlan?.trialStartedAt || userPlan?.createdAt;
+    if(startTs){
+        const sd = startTs.toDate ? startTs.toDate() : new Date(startTs);
+        startDateStr = sd.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+
+    // Expiry date calculation
+    if(rawPlan === 'premium' || rawPlan === 'pro'){
+        if(userPlan?.planExpiresAt){
+            const exp = userPlan.planExpiresAt.toDate ? userPlan.planExpiresAt.toDate() : new Date(userPlan.planExpiresAt);
+            const expFormatted = exp.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const diff = exp.getTime() - now.getTime();
+            daysLeft = Math.ceil(diff / (24 * 60 * 60 * 1000));
+            if(diff <= 0){
+                isExpired = true;
+                expDateStr = `Đã hết hạn (${expFormatted})`;
+                statusTag = '⚠️ Đã hết hạn';
+                statusClass = 'expired';
+            } else {
+                expDateStr = `${expFormatted} (Còn ${daysLeft} ngày)`;
+                statusTag = `Còn ${daysLeft} ngày`;
+                statusClass = 'active';
+            }
+        } else {
+            expDateStr = 'Vĩnh viễn (Trọn đời)';
+            statusTag = '👑 Trọn đời';
+            statusClass = 'active';
+        }
+    } else if(rawPlan === 'trial'){
+        if(userPlan?.trialExpiresAt){
+            const exp = userPlan.trialExpiresAt.toDate ? userPlan.trialExpiresAt.toDate() : new Date(userPlan.trialExpiresAt);
+            const expFormatted = exp.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const diff = exp.getTime() - now.getTime();
+            daysLeft = Math.ceil(diff / (24 * 60 * 60 * 1000));
+            if(diff <= 0){
+                isExpired = true;
+                expDateStr = `Đã hết hạn (${expFormatted})`;
+                statusTag = '⚠️ Đã hết hạn';
+                statusClass = 'expired';
+            } else {
+                expDateStr = `${expFormatted} (Còn ${daysLeft} ngày)`;
+                statusTag = `Dùng thử (${daysLeft} ngày)`;
+                statusClass = 'trial';
+            }
+        }
+    } else {
+        expDateStr = 'Không giới hạn thời gian';
+        statusTag = 'Miễn phí';
+        statusClass = 'free';
+    }
+
+    if(effectivePlan === 'premium'){
+        badgeClass = 'premium';
+        badgeName = '👑 Premium VIP';
+    } else if(effectivePlan === 'pro'){
+        badgeClass = 'pro';
+        badgeName = '⚡ Gói Pro';
+    } else if(effectivePlan === 'trial'){
+        badgeClass = 'trial';
+        badgeName = '⏳ Dùng thử (Trial)';
+    } else {
+        badgeClass = isExpired ? 'expired' : 'free';
+        badgeName = isExpired ? `⚠️ Hết hạn (${rawPlan.toUpperCase()})` : '🌱 Gói Free';
+    }
+
+    return {
+        effectivePlan,
+        rawPlan,
+        isExpired,
+        startDateStr,
+        expDateStr,
+        daysLeft,
+        badgeClass,
+        badgeName,
+        statusTag,
+        statusClass,
+        role: userPlan?.role || 'customer'
+    };
+}
+
 function getTrialDaysLeft(){
-    if(!userPlan.trialExpiresAt) return 0;
+    if(!userPlan?.trialExpiresAt) return 0;
     const exp = userPlan.trialExpiresAt.toDate ? userPlan.trialExpiresAt.toDate() : new Date(userPlan.trialExpiresAt);
     const diff = exp.getTime() - Date.now();
     return Math.max(0, Math.ceil(diff / (24*60*60*1000)));
@@ -927,13 +1094,12 @@ function getTrialDaysLeft(){
 
 function isPremiumFeature(feature){
     const plan = getEffectivePlan();
-    if(plan === 'premium' || plan === 'trial') return true;
-    return false;
+    return (plan === 'premium' || plan === 'pro' || plan === 'trial');
 }
 
 function canAddHabit(){
     const plan = getEffectivePlan();
-    if(plan === 'premium' || plan === 'trial') return true;
+    if(plan === 'premium' || plan === 'pro' || plan === 'trial') return true;
     return S.h.length < MAX_FREE_HABITS;
 }
 
@@ -943,13 +1109,22 @@ function renderPremiumBanner(){
     if(old) old.remove();
 
     const plan = getEffectivePlan();
-    if(plan === 'premium') return;
+    if(plan === 'premium' || plan === 'pro') return;
 
+    const planDetails = getUserPlanDetails();
     const banner = document.createElement('div');
     banner.id = 'premiumBanner';
     banner.className = 'premium-banner';
 
-    if(plan === 'trial'){
+    if(planDetails.isExpired){
+        banner.classList.add('expired');
+        banner.innerHTML = `
+            <span class="pb-icon">⚠️</span>
+            <span class="pb-text">Gói <strong>${planDetails.rawPlan.toUpperCase()}</strong> đã hết hạn. Hệ thống tạm khóa thói quen từ thứ 4 trở đi (không mất dữ liệu).</span>
+            <button class="pb-btn" onclick="window._openUpgrade()">Gia hạn ngay</button>
+            <button class="pb-close" onclick="this.parentElement.remove()">✕</button>
+        `;
+    } else if(plan === 'trial'){
         const days = getTrialDaysLeft();
         banner.classList.add('trial');
         banner.innerHTML = `
@@ -963,7 +1138,7 @@ function renderPremiumBanner(){
         banner.innerHTML = `
             <span class="pb-icon">🔒</span>
             <span class="pb-text">Bạn đang dùng gói <strong>Free</strong> (giới hạn ${MAX_FREE_HABITS} thói quen)</span>
-            <button class="pb-btn" onclick="window._openUpgrade()">👑 Nâng cấp Premium</button>
+            <button class="pb-btn" onclick="window._openUpgrade()">👑 Nâng cấp Pro/Premium</button>
             <button class="pb-close" onclick="this.parentElement.remove()">✕</button>
         `;
     }
@@ -975,7 +1150,7 @@ function renderPremiumBanner(){
 
 function applyPremiumGate(){
     const plan = getEffectivePlan();
-    const isFree = plan === 'free';
+    const isFree = (plan === 'free');
 
     // Heatmap
     const heatmap = document.querySelector('.heatmap-section');
@@ -983,7 +1158,7 @@ function applyPremiumGate(){
         if(isFree){
             heatmap.classList.add('locked-feature');
             if(!heatmap.querySelector('.lock-overlay')){
-                heatmap.insertAdjacentHTML('beforeend', '<div class="lock-overlay" onclick="window._openUpgrade()"><span>🔒</span><p>Premium Feature</p></div>');
+                heatmap.insertAdjacentHTML('beforeend', '<div class="lock-overlay" onclick="window._openUpgrade()"><span>🔒</span><p>Tính năng Pro/Premium</p></div>');
             }
         } else {
             heatmap.classList.remove('locked-feature');
@@ -997,7 +1172,7 @@ function applyPremiumGate(){
         if(isFree){
             notes.classList.add('locked-feature');
             if(!notes.querySelector('.lock-overlay')){
-                notes.insertAdjacentHTML('beforeend', '<div class="lock-overlay" onclick="window._openUpgrade()"><span>🔒</span><p>Premium Feature</p></div>');
+                notes.insertAdjacentHTML('beforeend', '<div class="lock-overlay" onclick="window._openUpgrade()"><span>🔒</span><p>Tính năng Pro/Premium</p></div>');
             }
         } else {
             notes.classList.remove('locked-feature');
@@ -1011,7 +1186,7 @@ function applyPremiumGate(){
         if(isFree){
             lineBox.classList.add('locked-feature');
             if(!lineBox.querySelector('.lock-overlay')){
-                lineBox.insertAdjacentHTML('beforeend', '<div class="lock-overlay" onclick="window._openUpgrade()"><span>🔒</span><p>Premium</p></div>');
+                lineBox.insertAdjacentHTML('beforeend', '<div class="lock-overlay" onclick="window._openUpgrade()"><span>🔒</span><p>Tính năng Pro/Premium</p></div>');
             }
         } else {
             lineBox.classList.remove('locked-feature');
@@ -1024,7 +1199,7 @@ function applyPremiumGate(){
     if(addBtn){
         if(!canAddHabit()){
             addBtn.classList.add('btn-locked');
-            addBtn.title = `Giới hạn ${MAX_FREE_HABITS} thói quen (Free). Nâng cấp Premium!`;
+            addBtn.title = `Giới hạn ${MAX_FREE_HABITS} thói quen (Free). Nâng cấp Pro/Premium!`;
         } else {
             addBtn.classList.remove('btn-locked');
             addBtn.title = '';
@@ -1034,7 +1209,7 @@ function applyPremiumGate(){
     // Admin link — show in profile modal instead of navbar
     const adminSection = document.getElementById('profileAdminSection');
     if (adminSection) {
-        adminSection.style.display = userPlan.role === 'admin' ? 'block' : 'none';
+        adminSection.style.display = (userPlan && userPlan.role === 'admin') ? 'block' : 'none';
     }
 }
 
@@ -1580,17 +1755,24 @@ function renderGrid(){
     $('#thead').innerHTML=hh;
 
     let bb='';
-    S.h.forEach(h=>{
+    const effectivePlan = getEffectivePlan();
+    const isFreeUser = (effectivePlan === 'free');
+
+    S.h.forEach((h, hIdx) => {
+        const isLocked = isFreeUser && (hIdx >= MAX_FREE_HABITS);
         let dn=0;
         const streak=getStreak(h.id);
         let streakHtml='';
-        if(streak>=7) streakHtml=`<span class="streak-badge hot">🔥${streak}</span>`;
+        if(isLocked) {
+            streakHtml = `<span class="habit-lock-pill" onclick="event.stopPropagation(); if(window._openUpgrade) window._openUpgrade();" title="Thói quen tạm khóa do gói Free chỉ hỗ trợ 3 thói quen. Bấm để nâng cấp Pro/Premium!">🔒 Khóa (Free)</span>`;
+        } else if(streak>=7) streakHtml=`<span class="streak-badge hot">🔥${streak}</span>`;
         else if(streak>=3) streakHtml=`<span class="streak-badge warm">🔥${streak}</span>`;
         else if(streak>=2) streakHtml=`<span class="streak-badge cool">🔥${streak}</span>`;
 
         const isMobile = window.innerWidth <= 768;
-        bb+=`<tr ${isMobile ? '' : 'draggable="true"'} data-id="${h.id}">`;
-        bb+=`<td class="td-name${freezeClass}${collapseClass}" title="${esc(h.emoji+' '+h.name)}"><div class="td-name-content"><span class="drag-handle">☰</span><span class="hname">${esc(h.emoji)} <span class="hname-text">${esc(h.name)}</span></span>${streakHtml}<button class="he" data-id="${h.id}">✏️</button><button class="hd" data-id="${h.id}">✕</button></div></td>`;
+        const lockedRowClass = isLocked ? ' habit-row-locked' : '';
+        bb+=`<tr ${isMobile || isLocked ? '' : 'draggable="true"'} data-id="${h.id}" class="${lockedRowClass}" data-locked="${isLocked ? 'true' : 'false'}">`;
+        bb+=`<td class="td-name${freezeClass}${collapseClass}${isLocked ? ' td-name-locked' : ''}" title="${esc(h.emoji+' '+h.name)}"><div class="td-name-content"><span class="drag-handle">${isLocked ? '🔒' : '☰'}</span><span class="hname">${esc(h.emoji)} <span class="hname-text">${esc(h.name)}</span></span>${streakHtml}<button class="he" data-id="${h.id}" title="${isLocked ? 'Thói quen bị khóa' : 'Sửa'}">✏️</button><button class="hd" data-id="${h.id}">✕</button></div></td>`;
         for(let d=1;d<=days;d++){
             const on=S.c[ck(h.id,d)];if(on)dn++;
             const tc=isToday(d)?' today':'';
@@ -1605,9 +1787,11 @@ function renderGrid(){
                 cellInner = `<div class="cb-frozen" title="🧊 Đã đóng băng chuỗi">🧊</div>`;
             } else if(!on && isRepaired){
                 cellInner = `<div class="cb-repaired" title="⚡ Đã hồi sinh chuỗi">⚡</div>`;
+            } else if(isLocked){
+                cellInner = `<div class="cb-locked-dot" title="🔒 Khóa">🔒</div>`;
             }
 
-            bb+=`<td class="td-chk${tc}${frozenClass}" data-h="${h.id}" data-d="${d}" title="${esc(h.emoji)} ${esc(h.name)} (${dateStr})">${cellInner}</td>`;
+            bb+=`<td class="td-chk${tc}${frozenClass}${isLocked ? ' cell-locked' : ''}" data-h="${h.id}" data-d="${d}" data-locked="${isLocked ? 'true' : 'false'}" title="${isLocked ? '🔒 Thói quen đang bị khóa (Gói Free giới hạn 3 thói quen)' : esc(h.emoji)+' '+esc(h.name)+' ('+dateStr+')'}">${cellInner}</td>`;
         }
         const targetVal = h.target !== undefined ? h.target : days;
         const lt = Math.max(0, targetVal - dn);
@@ -1651,6 +1835,12 @@ function renderGrid(){
 
     $$('.td-chk').forEach(td=>{
         td.onclick=()=>{
+            if(td.dataset.locked === 'true' || td.classList.contains('cell-locked')){
+                alert('🔒 Thói quen này đang bị tạm khóa vì tài khoản của bạn đang ở gói Miễn phí (tối đa 3 thói quen).\n\nToàn bộ dữ liệu của bạn vẫn được lưu giữ an toàn 100%. Hãy nâng cấp gói Pro hoặc Premium để mở khóa và tiếp tục check-in!');
+                if(window._openUpgrade) window._openUpgrade();
+                return;
+            }
+
             const k=ck(td.dataset.h,td.dataset.d);S.c[k]=!S.c[k];sv();
             if(S.c[k]) {
                 if(typeof playCheckSound === 'function') playCheckSound();
@@ -1691,7 +1881,19 @@ function renderGrid(){
         };
     });
     $$('.hd').forEach(b=>{b.onclick=e=>{e.stopPropagation();if(confirm(t('deleteConfirm'))){S.h=S.h.filter(h=>h.id!==+b.dataset.id);sv();renderAll()}}});
-    $$('.he').forEach(b=>{b.onclick=e=>{e.stopPropagation();openEditModal(+b.dataset.id)}});
+    $$('.he').forEach(b=>{
+        b.onclick=e=>{
+            e.stopPropagation();
+            const hId = +b.dataset.id;
+            const hIdx = S.h.findIndex(x => x.id === hId);
+            if(isFreeUser && hIdx >= MAX_FREE_HABITS){
+                alert('🔒 Thói quen này đang bị tạm khóa trong gói Free. Hãy nâng cấp Pro hoặc Premium để mở khóa và chỉnh sửa!');
+                if(window._openUpgrade) window._openUpgrade();
+                return;
+            }
+            openEditModal(hId);
+        };
+    });
 }
 let barAnimFrame = null;
 function renderBar(){
@@ -2965,6 +3167,14 @@ function calculateUserDPAndStreak(sData = S) {
             // Checked yesterday, active today
         } else if (daysDiffFromToday > 1) {
             // Missed yesterday!
+            const isVacationProtected = sData.inventory && sData.inventory.vacationUntil && Date.now() < sData.inventory.vacationUntil;
+            const isShieldProtected = sData.inventory && sData.inventory.invincibleShieldUntil && Date.now() < sData.inventory.invincibleShieldUntil;
+
+            if ((isVacationProtected || isShieldProtected) && !sData.frozenDays.includes(yesterdayKey) && !sData.repairedDays.includes(yesterdayKey)) {
+                sData.frozenDays.push(yesterdayKey);
+                return calculateUserDPAndStreak(sData);
+            }
+
             if (daysDiffFromToday === 2 && !sData.frozenDays.includes(yesterdayKey) && !sData.repairedDays.includes(yesterdayKey)) {
                 if (sData.freezes > 0 && runningStreak >= 1) {
                     // Auto-freeze!
@@ -2997,9 +3207,10 @@ function calculateUserDPAndStreak(sData = S) {
         currentStreak = 0;
     }
 
-    // Calculate Base DP & Bonuses (with 2X Booster support)
-    const isBoostActive = sData.inventory && sData.inventory.boost2xExpiresAt && Date.now() < sData.inventory.boost2xExpiresAt;
-    const checkMultiplier = isBoostActive ? 2 : 1;
+    // Calculate Base DP & Bonuses (with 2X & 3X Booster support)
+    const isBoost3xActive = sData.inventory && sData.inventory.boost3xExpiresAt && Date.now() < sData.inventory.boost3xExpiresAt;
+    const isBoost2xActive = sData.inventory && sData.inventory.boost2xExpiresAt && Date.now() < sData.inventory.boost2xExpiresAt;
+    const checkMultiplier = isBoost3xActive ? 3 : (isBoost2xActive ? 2 : 1);
     let totalDP = totalChecks * 10 * checkMultiplier;
     totalDP += perfectDays * 30;
     if (maxStreak >= 7) totalDP += 50;
@@ -4396,6 +4607,63 @@ window._updateProfileModalUI = () => {
         themeGrid.innerHTML = themeHtml;
     }
 
+    // === RENDER SUBSCRIPTION & PLAN INFO IN PROFILE ===
+    const planDetails = getUserPlanDetails();
+    const ppcBadge = document.getElementById('ppcPlanBadge');
+    const ppcStatus = document.getElementById('ppcStatusTag');
+    const ppcStart = document.getElementById('ppcStartDate');
+    const ppcExp = document.getElementById('ppcExpireDate');
+    const ppcLimit = document.getElementById('ppcHabitsLimit');
+    const ppcNoticeWrap = document.getElementById('ppcNoticeWrap');
+    const ppcNoticeText = document.getElementById('ppcNoticeText');
+    const ppcUpgradeBtn = document.getElementById('ppcUpgradeBtn');
+
+    if (ppcBadge) {
+        ppcBadge.textContent = planDetails.badgeName;
+        ppcBadge.className = `ppc-badge ${planDetails.badgeClass}`;
+    }
+    if (ppcStatus) {
+        ppcStatus.textContent = planDetails.statusTag;
+        ppcStatus.className = `ppc-status-tag ${planDetails.statusClass}`;
+    }
+    if (ppcStart) ppcStart.textContent = planDetails.startDateStr;
+    if (ppcExp) ppcExp.textContent = planDetails.expDateStr;
+    if (ppcLimit) {
+        if (planDetails.effectivePlan === 'premium' || planDetails.effectivePlan === 'pro') {
+            ppcLimit.innerHTML = `<span style="color:#10b981;font-weight:700;">Không giới hạn</span> (${S.h.length} thói quen)`;
+        } else {
+            const lockedCount = Math.max(0, S.h.length - MAX_FREE_HABITS);
+            if (lockedCount > 0) {
+                ppcLimit.innerHTML = `<span style="color:#f59e0b;font-weight:700;">${MAX_FREE_HABITS} / ${S.h.length}</span> thói quen (<span style="color:#ef4444;font-weight:700;">Đã khóa ${lockedCount}</span>)`;
+            } else {
+                ppcLimit.innerHTML = `Tối đa ${MAX_FREE_HABITS} thói quen (${S.h.length}/3 đang dùng)`;
+            }
+        }
+    }
+    if (ppcNoticeWrap && ppcNoticeText) {
+        if (planDetails.isExpired) {
+            ppcNoticeWrap.style.display = 'flex';
+            ppcNoticeText.textContent = `Gói ${planDetails.rawPlan.toUpperCase()} của bạn đã hết hạn. Hệ thống đang áp dụng gói Free (giới hạn 3 thói quen). Toàn bộ dữ liệu của các thói quen khác vẫn được lưu giữ an toàn, hãy gia hạn để tiếp tục sử dụng!`;
+        } else if (planDetails.effectivePlan === 'free' && S.h.length > MAX_FREE_HABITS) {
+            ppcNoticeWrap.style.display = 'flex';
+            ppcNoticeText.textContent = `Tài khoản của bạn đang có ${S.h.length} thói quen nhưng gói Free chỉ hỗ trợ tối đa 3 thói quen. Các thói quen từ thứ 4 trở đi đã được tạm khóa để bảo vệ dữ liệu. Nâng cấp Pro hoặc Premium để mở khóa lại!`;
+        } else {
+            ppcNoticeWrap.style.display = 'none';
+        }
+    }
+    if (ppcUpgradeBtn) {
+        if (planDetails.effectivePlan === 'premium' && !planDetails.isExpired && !userPlan?.planExpiresAt) {
+            ppcUpgradeBtn.innerHTML = `<span>👑 Đã là VIP</span>`;
+            ppcUpgradeBtn.style.opacity = '0.7';
+        } else if (planDetails.isExpired) {
+            ppcUpgradeBtn.innerHTML = `<svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Gia Hạn Ngay`;
+            ppcUpgradeBtn.style.opacity = '1';
+        } else {
+            ppcUpgradeBtn.innerHTML = `<svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Nâng Cấp Gói`;
+            ppcUpgradeBtn.style.opacity = '1';
+        }
+    }
+
     // === RENDER LANGUAGE ACTIVE STATE ===
     const langBtns = document.querySelectorAll('#profileLangRow .profile-lang-pill');
     langBtns.forEach(btn => {
@@ -4889,6 +5157,10 @@ function initProfileModal() {
                     });
                 });
             }},
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', label: 'Gói tài khoản', desc: 'Gói Free, Pro, Premium & hạn dùng', action: () => {
+                closeOrbitalPopup();
+                if (window._openUpgrade) window._openUpgrade();
+            }},
             { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Đăng xuất', danger: true, action: () => {
                 if (confirm('Bạn có chắc chắn muốn đăng xuất tài khoản không?')) {
                     auth.signOut().then(() => {
@@ -5350,27 +5622,34 @@ function initStreakModal() {
     if (bg) bg.onclick = (e) => { if (e.target === bg) bg.classList.remove('show'); };
 }
 
-let shopActiveTab = 'titles';
+let shopActiveTab = 'items';
 let boostIntervalId = null;
 
 function updateBoost2xTimer() {
     const badge = document.getElementById('navBoostBadge');
     const countdownEl = document.getElementById('navBoostCountdown');
-    if (!badge || !countdownEl) return;
-
-    const expiresAt = (typeof S !== 'undefined' && S && S.inventory && S.inventory.boost2xExpiresAt) ? S.inventory.boost2xExpiresAt : 0;
+    
+    const exp3x = (typeof S !== 'undefined' && S && S.inventory && S.inventory.boost3xExpiresAt) ? S.inventory.boost3xExpiresAt : 0;
+    const exp2x = (typeof S !== 'undefined' && S && S.inventory && S.inventory.boost2xExpiresAt) ? S.inventory.boost2xExpiresAt : 0;
     const now = Date.now();
-    const remainingMs = expiresAt - now;
+    
+    const is3x = exp3x > now;
+    const is2x = exp2x > now;
+    const remainingMs = is3x ? (exp3x - now) : (is2x ? (exp2x - now) : 0);
 
-    if (remainingMs > 0) {
-        badge.style.display = 'inline-flex';
-        const totalSecs = Math.floor(remainingMs / 1000);
-        const hours = Math.floor(totalSecs / 3600);
-        const mins = Math.floor((totalSecs % 3600) / 60);
-        const secs = totalSecs % 60;
-        countdownEl.textContent = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-    } else {
-        badge.style.display = 'none';
+    if (badge && countdownEl) {
+        if (remainingMs > 0) {
+            badge.style.display = 'inline-flex';
+            badge.className = is3x ? 'nav-boost-badge boost-3x' : 'nav-boost-badge';
+            const totalSecs = Math.floor(remainingMs / 1000);
+            const hours = Math.floor(totalSecs / 3600);
+            const mins = Math.floor((totalSecs % 3600) / 60);
+            const secs = totalSecs % 60;
+            const prefix = is3x ? '🚀 3X ' : '⚡ 2X ';
+            countdownEl.textContent = `${prefix}${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        } else {
+            badge.style.display = 'none';
+        }
     }
 }
 
@@ -5380,13 +5659,126 @@ function startBoostCountdown() {
     boostIntervalId = setInterval(updateBoost2xTimer, 1000);
 }
 
-function openShopModal(tab = 'titles') {
+function openShopModal(tab = 'items') {
     const modal = document.getElementById('shopModalBg');
     if (!modal) return;
     modal.classList.add('show');
     renderShopUI(tab);
 }
 window._openShopModal = openShopModal;
+
+function closeMysteryModal() {
+    const modal = document.getElementById('mysteryModalBg');
+    if (modal) modal.classList.remove('show');
+}
+window._closeMysteryModal = closeMysteryModal;
+
+async function openMysteryChest() {
+    if (!S.inventory) S.inventory = sanitizeInventory(null);
+    if (!S.inventory.backpack) S.inventory.backpack = {};
+    const bp = S.inventory.backpack;
+
+    if ((bp.mystery_chest || 0) <= 0) {
+        alert('Bạn không còn Rương Kỷ Luật Bí Ẩn nào trong túi đồ! Hãy ghé tab Vật Phẩm để sở hữu nhé.');
+        return;
+    }
+
+    bp.mystery_chest--;
+    sv();
+
+    const modal = document.getElementById('mysteryModalBg');
+    const body = document.getElementById('mysteryModalBody');
+    if (!modal || !body) return;
+
+    modal.classList.add('show');
+
+    // Step 1: Suspense animation
+    body.innerHTML = `
+        <div class="chest-opening-wrap">
+            <div class="chest-icon-anim chest-shake">🎁</div>
+            <div class="chest-opening-title">ĐANG MỞ RƯƠNG BÍ ẨN...</div>
+            <div class="chest-opening-desc">Vận mệnh kỷ luật đang thức tỉnh...</div>
+            <div class="chest-sparkles">✨ ✨ ✨</div>
+        </div>
+    `;
+
+    if (typeof playResurrectSound === 'function') playResurrectSound();
+
+    // Step 2: Reveal reward after 1.2s
+    setTimeout(async () => {
+        const roll = Math.random() * 100;
+        let rewardTitle = '';
+        let rewardDesc = '';
+        let rewardIcon = '';
+
+        if (roll < 4) {
+            // JACKPOT!
+            rewardIcon = '🌟';
+            rewardTitle = 'JACKPOT THẦN THOẠI!';
+            rewardDesc = `Mở khóa Danh Hiệu Thần Thoại <strong>"Vận Mệnh Tối Thượng"</strong> + <strong>1.000 Coins</strong>!`;
+            if (!S.inventory.titles.includes('supreme_destiny')) S.inventory.titles.push('supreme_destiny');
+            S.inventory.equippedTitle = 'supreme_destiny';
+            userBonusDP = (userBonusDP || 0) + 1000;
+        } else if (roll < 10) {
+            // Vacation Pass
+            rewardIcon = '🏖️';
+            rewardTitle = 'BÙA NGHỈ PHÉP (3 NGÀY)!';
+            rewardDesc = 'Đã thêm 1 Bùa Nghỉ Phép Kỷ Luật vào Túi đồ của bạn.';
+            bp.vacation_pass = (bp.vacation_pass || 0) + 1;
+        } else if (roll < 20) {
+            // Boost 3X
+            rewardIcon = '🚀';
+            rewardTitle = 'VÉ SIÊU CẤP x3 BOOST (12H)!';
+            rewardDesc = 'Đã thêm 1 Vé x3 Super Boost vào Túi đồ của bạn.';
+            bp.boost3x = (bp.boost3x || 0) + 1;
+        } else if (roll < 35) {
+            // Boost 2X
+            rewardIcon = '⚡';
+            rewardTitle = 'VÉ NHÂN ĐÔI x2 BOOST (24H)!';
+            rewardDesc = 'Đã thêm 1 Vé x2 Boost vào Túi đồ của bạn.';
+            bp.boost2x = (bp.boost2x || 0) + 1;
+        } else if (roll < 60) {
+            // Freeze flask
+            rewardIcon = '🧊';
+            rewardTitle = 'BÌNH ĐÓNG BĂNG CHUỖI!';
+            rewardDesc = 'Đã nạp thêm 1 Bình Đóng Băng bảo vệ chuỗi kỷ luật.';
+            S.freezes = Math.min(3, (S.freezes || 0) + 1);
+        } else {
+            // Random Coins 150 - 600
+            const coinsWon = Math.floor(Math.random() * 451) + 150;
+            rewardIcon = '💰';
+            rewardTitle = `+${coinsWon} COINS THƯỞNG!`;
+            rewardDesc = `Bạn nhận được hoàn trả <strong>${coinsWon.toLocaleString()} Coins</strong> từ Rương Bí Ẩn!`;
+            userBonusDP = (userBonusDP || 0) + coinsWon;
+        }
+
+        sv();
+        updateUserDPState(true);
+        if (currentUser && db) {
+            try {
+                await userDocRef.update({ bonusDP: userBonusDP });
+                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
+            } catch(e) {}
+        }
+
+        if (typeof fireConfetti === 'function') fireConfetti();
+        if (typeof playResurrectSound === 'function') playResurrectSound();
+
+        body.innerHTML = `
+            <div class="chest-reward-wrap">
+                <div class="chest-reward-glow"></div>
+                <div class="chest-reward-icon">${rewardIcon}</div>
+                <div class="chest-reward-title">${rewardTitle}</div>
+                <div class="chest-reward-desc">${rewardDesc}</div>
+                <button class="chest-claim-btn" onclick="window._closeMysteryModal()">
+                    🎉 NHẬN THƯỞNG & ĐÓNG
+                </button>
+            </div>
+        `;
+        renderShopUI();
+    }, 1200);
+}
+window._openMysteryChest = openMysteryChest;
 
 function renderShopUI(targetTab = null) {
     if (targetTab) shopActiveTab = targetTab;
@@ -5403,14 +5795,23 @@ function renderShopUI(targetTab = null) {
 
     if (walletDP) walletDP.innerHTML = `${myDP.toLocaleString()} ${coinSm}`;
     
-    // Check 2x boost active
-    const isBoostActive = S.inventory && S.inventory.boost2xExpiresAt && Date.now() < S.inventory.boost2xExpiresAt;
+    // Active Buffs detection
+    const now = Date.now();
+    const is3xActive = S.inventory && S.inventory.boost3xExpiresAt && now < S.inventory.boost3xExpiresAt;
+    const is2xActive = S.inventory && S.inventory.boost2xExpiresAt && now < S.inventory.boost2xExpiresAt;
+    const isVacationActive = S.inventory && S.inventory.vacationUntil && now < S.inventory.vacationUntil;
+    const isShieldActive = S.inventory && S.inventory.invincibleShieldUntil && now < S.inventory.invincibleShieldUntil;
+    const focusCharges = (S.inventory && S.inventory.focusElixirCharges) ? S.inventory.focusElixirCharges : 0;
+
     if (extraEl) {
-        if (isBoostActive) {
-            extraEl.innerHTML = '<span style="font-size:12px; color:#ef4444; font-weight:800;">⚡ 2X BOOST ĐANG KÍCH HOẠT</span>';
-        } else {
-            extraEl.innerHTML = '';
-        }
+        const activeBuffTags = [];
+        if (is3xActive) activeBuffTags.push('<span class="swb-tag boost3x">🚀 3X BOOST</span>');
+        else if (is2xActive) activeBuffTags.push('<span class="swb-tag boost2x">⚡ 2X BOOST</span>');
+        if (isVacationActive) activeBuffTags.push('<span class="swb-tag vacation">🏖️ NGHỈ PHÉP</span>');
+        if (isShieldActive) activeBuffTags.push('<span class="swb-tag shield">🛡️ KHIÊN 7D</span>');
+        if (focusCharges > 0) activeBuffTags.push(`<span class="swb-tag focus">🧪 FOCUS (${focusCharges}P)</span>`);
+
+        extraEl.innerHTML = activeBuffTags.length > 0 ? activeBuffTags.join(' ') : '';
     }
 
     // Update active tab buttons
@@ -5420,7 +5821,243 @@ function renderShopUI(targetTab = null) {
 
     let html = '';
 
-    if (shopActiveTab === 'titles') {
+    if (shopActiveTab === 'items') {
+        const freezes = S.freezes || 0;
+        const bp = (S.inventory && S.inventory.backpack) ? S.inventory.backpack : {};
+
+        html += `
+            <div class="shop-banner-highlight">
+                <div class="sbh-icon">🎁</div>
+                <div class="sbh-content">
+                    <div class="sbh-title">VẬT PHẨM TIÊU THỤ & BÙA LỢI KỶ LUẬT</div>
+                    <div class="sbh-desc">Sử dụng điểm rèn luyện để tích trữ bùa lợi, bảo vệ chuỗi ngày và nhân cấp phần thưởng!</div>
+                </div>
+            </div>
+        `;
+
+        SHOP_CATALOG.items.forEach(item => {
+            const canAfford = myDP >= item.price || isAdmin;
+            let statusText = '';
+            let btnDisabled = false;
+            let btnText = t('btnBuy') || 'Mua';
+            const ownedQty = bp[item.id] || 0;
+
+            if (item.id === 'freeze') {
+                statusText = `Hiện có: ${freezes}/3 bình`;
+                if (freezes >= 3) {
+                    btnDisabled = true;
+                    btnText = 'Đầy túi (3/3)';
+                }
+            } else if (item.id === 'mystery_chest') {
+                statusText = ownedQty > 0 ? `Trong túi: ${ownedQty} rương` : 'Mở ngẫu nhiên quà khủng';
+            } else if (item.id === 'vacation_pass') {
+                statusText = isVacationActive ? '🏖️ Đang nghỉ phép' : (ownedQty > 0 ? `Trong túi: ${ownedQty} bùa` : 'Bảo lưu chuỗi 3 ngày');
+            } else if (item.id === 'boost3x') {
+                statusText = is3xActive ? '🚀 Đang kích hoạt' : (ownedQty > 0 ? `Trong túi: ${ownedQty} vé` : 'Nhân 3 Coins trong 12h');
+            } else if (item.id === 'boost2x') {
+                statusText = is2xActive ? '⚡ Đang kích hoạt' : (ownedQty > 0 ? `Trong túi: ${ownedQty} vé` : 'Nhân 2 Coins trong 24h');
+            } else if (item.id === 'focus_elixir') {
+                statusText = focusCharges > 0 ? `🧪 Còn ${focusCharges} phiên (+30)` : (ownedQty > 0 ? `Trong túi: ${ownedQty} lọ` : '+30 Coins cho 3 phiên Pomo');
+            } else if (item.id === 'shield7d') {
+                statusText = isShieldActive ? '🛡️ Khiên đang kích hoạt' : (ownedQty > 0 ? `Trong túi: ${ownedQty} bùa` : 'Bảo vệ chuỗi 7 ngày');
+            } else if (item.id === 'squad_energy') {
+                statusText = ownedQty > 0 ? `Trong túi: ${ownedQty} gói` : 'Buff 50 năng lượng toàn đội';
+            }
+
+            html += `
+                <div class="shop-card ${item.badge ? 'has-badge' : ''}">
+                    ${item.badge ? `<span class="shop-card-badge">${item.badge}</span>` : ''}
+                    <div class="shop-card-header">
+                        <div class="shop-card-art">${item.icon}</div>
+                        <div class="shop-card-meta">
+                            <div class="shop-card-title">${item.name}</div>
+                            <div class="shop-card-desc">${item.desc}</div>
+                        </div>
+                    </div>
+                    <div class="shop-card-footer">
+                        <div class="shop-card-price">
+                            <div style="display:flex; align-items:center; gap:3px;">${item.price.toLocaleString()} ${coinXs}</div>
+                            <div style="font-size:11.5px;color:var(--text-muted);font-weight:600;">${statusText}</div>
+                        </div>
+                        <div>
+                            <button class="shop-action-btn btn-buy" onclick="window._buyShopItem('items', '${item.id}', ${item.price})" ${btnDisabled || (!canAfford && !isAdmin) ? 'disabled' : ''}>
+                                ${btnText}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    } else if (shopActiveTab === 'backpack') {
+        const bp = (S.inventory && S.inventory.backpack) ? S.inventory.backpack : {};
+        const freezes = S.freezes || 0;
+
+        // Active buffs status section
+        let activeBuffsHtml = '';
+        if (is3xActive) {
+            const remSec = Math.max(0, Math.floor((S.inventory.boost3xExpiresAt - now) / 1000));
+            const h = Math.floor(remSec / 3600), m = Math.floor((remSec % 3600) / 60);
+            activeBuffsHtml += `<div class="active-buff-pill boost3x"><span class="ab-icon">🚀</span> <div><strong>Vé Siêu Cấp 3X:</strong> Còn ${h}h ${m}m (x3 Coins toàn bộ check-in)</div></div>`;
+        } else if (is2xActive) {
+            const remSec = Math.max(0, Math.floor((S.inventory.boost2xExpiresAt - now) / 1000));
+            const h = Math.floor(remSec / 3600), m = Math.floor((remSec % 3600) / 60);
+            activeBuffsHtml += `<div class="active-buff-pill boost2x"><span class="ab-icon">⚡</span> <div><strong>Vé Nhân Đôi 2X:</strong> Còn ${h}h ${m}m (x2 Coins toàn bộ check-in)</div></div>`;
+        }
+        if (isVacationActive) {
+            const daysLeft = Math.ceil((S.inventory.vacationUntil - now) / (24 * 60 * 60 * 1000));
+            activeBuffsHtml += `<div class="active-buff-pill vacation"><span class="ab-icon">🏖️</span> <div><strong>Bùa Nghỉ Phép:</strong> Còn ${daysLeft} ngày (Tự động bảo toàn streak)</div></div>`;
+        }
+        if (isShieldActive) {
+            const daysLeft = Math.ceil((S.inventory.invincibleShieldUntil - now) / (24 * 60 * 60 * 1000));
+            activeBuffsHtml += `<div class="active-buff-pill shield"><span class="ab-icon">🛡️</span> <div><strong>Khiên Bất Hoại:</strong> Còn ${daysLeft} ngày (Miễn nhiễm mất chuỗi)</div></div>`;
+        }
+        if (focusCharges > 0) {
+            activeBuffsHtml += `<div class="active-buff-pill focus"><span class="ab-icon">🧪</span> <div><strong>Thuốc Tiên Focus:</strong> Còn ${focusCharges} phiên Pomodoro (+30 Coins/phiên)</div></div>`;
+        }
+
+        if (activeBuffsHtml) {
+            html += `
+                <div class="backpack-active-section">
+                    <div class="backpack-sec-title"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> ${t('activeBuffsTitle') || 'HIỆU ỨNG ĐANG HOẠT ĐỘNG'}</div>
+                    <div class="active-buffs-list">${activeBuffsHtml}</div>
+                </div>
+            `;
+        }
+
+        // Inventory items grid
+        const backpackItems = [
+            { id: 'mystery_chest', name: 'Rương Kỷ Luật Bí Ẩn', icon: '🎁', qty: bp.mystery_chest || 0, actionText: 'Mở Rương', action: "window._openMysteryChest()" },
+            { id: 'vacation_pass', name: 'Bùa Nghỉ Phép (3 Ngày)', icon: '🏖️', qty: bp.vacation_pass || 0, actionText: 'Dùng (+3 Ngày)', action: "window._useBackpackItem('vacation_pass')" },
+            { id: 'boost3x', name: 'Vé Siêu Cấp x3 Boost (12H)', icon: '🚀', qty: bp.boost3x || 0, actionText: 'Dùng (+12H)', action: "window._useBackpackItem('boost3x')" },
+            { id: 'boost2x', name: 'Vé Nhân Đôi x2 Boost (24H)', icon: '⚡', qty: bp.boost2x || 0, actionText: 'Dùng (+24H)', action: "window._useBackpackItem('boost2x')" },
+            { id: 'focus_elixir', name: 'Thuốc Tiên Tập Trung Focus', icon: '🧪', qty: bp.focus_elixir || 0, actionText: 'Uống (+3 Nạp)', action: "window._useBackpackItem('focus_elixir')" },
+            { id: 'shield7d', name: 'Bùa Khiên Bất Hoại (7 Ngày)', icon: '🛡️', qty: bp.shield7d || 0, actionText: 'Kích Hoạt (+7 Ngày)', action: "window._useBackpackItem('shield7d')" },
+            { id: 'squad_energy', name: 'Nước Tăng Lực Đồng Đội', icon: '⚡', qty: bp.squad_energy || 0, actionText: 'Tặng Đội (+50⚡)', action: "window._useBackpackItem('squad_energy')" }
+        ];
+
+        // Add Freeze flasks card in backpack
+        html += `
+            <div class="backpack-header-row">
+                <div class="backpack-sec-title">🎒 KHO VẬT PHẨM CÁ NHÂN</div>
+                <div class="backpack-freeze-pill">🧊 Bình Freeze: <strong>${freezes}/3</strong></div>
+            </div>
+        `;
+
+        let itemsRendered = 0;
+        let backpackCardsHtml = '';
+
+        backpackItems.forEach(item => {
+            if (item.qty <= 0) return;
+            itemsRendered++;
+            backpackCardsHtml += `
+                <div class="backpack-card">
+                    <div class="backpack-card-art">${item.icon}</div>
+                    <div class="backpack-card-info">
+                        <div class="backpack-card-name">${item.name}</div>
+                        <div class="backpack-card-qty">Số lượng: <strong>x${item.qty}</strong></div>
+                    </div>
+                    <button class="backpack-use-btn" onclick="${item.action}">
+                        ${item.actionText}
+                    </button>
+                </div>
+            `;
+        });
+
+        if (itemsRendered === 0) {
+            html += `
+                <div class="backpack-empty-box">
+                    <div class="beb-icon">🎒</div>
+                    <div class="beb-title">Túi Đồ Đang Trống</div>
+                    <div class="beb-desc">${t('noBackpackItems') || 'Hãy ghé tab Vật phẩm để sở hữu các bùa lợi kỷ luật!'}</div>
+                    <button class="beb-shop-btn" onclick="window._openShopModal('items')">
+                        🛒 Đến Cửa Hàng Vật Phẩm
+                    </button>
+                </div>
+            `;
+        } else {
+            html += `<div class="backpack-grid">${backpackCardsHtml}</div>`;
+        }
+
+        // ==================== TỦ SÁCH TRI THỨC TRONG TÚI ĐỒ ====================
+        const unlockedDocs = (S.inventory && Array.isArray(S.inventory.unlockedDocs)) ? S.inventory.unlockedDocs : ['doc_nhan_tinh'];
+        const myUnlockedBooks = (SHOP_CATALOG.docs || []).filter(d => d.free || unlockedDocs.includes(d.id));
+
+        html += `
+            <div class="backpack-header-row" style="margin-top: 20px;">
+                <div class="backpack-sec-title">📚 TỦ SÁCH TRI THỨC ĐÃ MỞ KHÓA (${myUnlockedBooks.length}/6 Quyển)</div>
+                <button class="doc-browse-shop-btn" onclick="window._openShopModal('docs')">
+                    + Thêm Sách Mới
+                </button>
+            </div>
+            <div class="backpack-grid doc-backpack-grid">
+        `;
+
+        myUnlockedBooks.forEach(doc => {
+            html += `
+                <div class="backpack-card doc-backpack-card">
+                    <div class="backpack-card-art doc-art-mini" style="background:${doc.gradient};">${doc.icon}</div>
+                    <div class="backpack-card-info">
+                        <div class="backpack-card-name">${doc.name}</div>
+                        <div class="backpack-card-qty">${doc.category || 'Tài liệu'} • <span style="color:#10b981;font-weight:700;">Đã sẵn sàng</span></div>
+                    </div>
+                    <button class="backpack-use-btn doc-read-btn" onclick="window._openDocReader('${doc.id}')">
+                        📖 Đọc
+                    </button>
+                </div>
+            `;
+        });
+
+        html += `</div>`;
+
+    } else if (shopActiveTab === 'docs') {
+        const unlockedDocs = (S.inventory && Array.isArray(S.inventory.unlockedDocs)) ? S.inventory.unlockedDocs : ['doc_nhan_tinh'];
+
+        html += `
+            <div class="shop-banner-highlight doc-banner">
+                <div class="sbh-icon">📚</div>
+                <div class="sbh-content">
+                    <div class="sbh-title">KHO TÀI LIỆU & SÁCH TINH HOA TÂM THỨC</div>
+                    <div class="sbh-desc">Mở khóa các tuyệt tác về nhân tính, mưu lược, thương chiến và tư duy đỉnh cao để đọc trực tiếp trên ứng dụng!</div>
+                </div>
+            </div>
+        `;
+
+        SHOP_CATALOG.docs.forEach(doc => {
+            const isOwned = doc.free || unlockedDocs.includes(doc.id);
+            const canAfford = myDP >= doc.price || isAdmin;
+            const priceLabel = doc.free ? '<span style="color:#10b981;font-weight:800;">Miễn phí</span>' : (isOwned ? '<span style="color:#10b981;font-weight:800;">✓ Đã sở hữu</span>' : `<span style="font-weight:800;">${doc.price.toLocaleString()}</span> ${coinXs}`);
+
+            html += `
+                <div class="shop-card doc-card ${isOwned ? 'doc-owned' : ''}">
+                    ${doc.badge ? `<span class="shop-card-badge ${doc.free ? 'free-badge' : 'doc-badge'}">${doc.badge}</span>` : ''}
+                    <div class="shop-card-header">
+                        <div class="shop-card-art doc-cover-art" style="background:${doc.gradient};">${doc.icon}</div>
+                        <div class="shop-card-meta">
+                            <div class="shop-card-category">${doc.category || 'Tài Liệu Đặc Biệt'}</div>
+                            <div class="shop-card-title">${doc.name}</div>
+                            <div class="shop-card-desc">${doc.desc}</div>
+                        </div>
+                    </div>
+                    <div class="shop-card-footer">
+                        <div class="shop-card-price">
+                            <div style="display:flex; align-items:center; gap:4px;">${priceLabel}</div>
+                        </div>
+                        <div>
+                            ${isOwned ? `
+                                <button class="shop-action-btn btn-read-doc" onclick="window._openDocReader('${doc.id}')">
+                                    📖 Đọc ngay
+                                </button>
+                            ` : `
+                                <button class="shop-action-btn btn-buy doc-buy-btn" onclick="window._buyShopItem('docs', '${doc.id}', ${doc.price})" ${!canAfford && !isAdmin ? 'disabled' : ''}>
+                                    ${doc.free ? 'Nhận miễn phí' : 'Mở khóa'}
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    } else if (shopActiveTab === 'titles') {
         const owned = S.inventory?.titles || [];
         const equipped = S.inventory?.equippedTitle || '';
 
@@ -5432,7 +6069,8 @@ function renderShopUI(targetTab = null) {
             const canAfford = myDP >= item.price || isAdmin;
 
             html += `
-                <div class="shop-card ${isEquipped ? 'equipped' : ''}">
+                <div class="shop-card ${isEquipped ? 'equipped' : ''} ${item.mythic ? 'mythic-card' : ''}">
+                    ${item.mythic ? '<span class="shop-card-badge mythic">MYTHIC</span>' : ''}
                     <div class="shop-card-header">
                         <div class="shop-card-art">${item.icon}</div>
                         <div class="shop-card-meta">
@@ -5442,7 +6080,7 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${isOwned ? `<span style="color:#10b981;">${t('shopOwned')}</span>` : `${item.price.toLocaleString()} ${coinXs}`}
+                            ${isOwned ? `<span style="color:#10b981;font-weight:700;">${t('shopOwned')}</span>` : `${item.price.toLocaleString()} ${coinXs}`}
                         </div>
                         <div>
                             ${isEquipped ? `<button class="shop-action-btn btn-equipped" onclick="window._unequipShopItem('titles', '${item.id}')">${t('btnEquipped') || 'Đang dùng'}</button>` :
@@ -5474,7 +6112,7 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${item.free ? '<span style="color:#10b981;">Miễn phí</span>' : isOwned ? '<span style="color:#10b981;">Đã sở hữu</span>' : `${item.price.toLocaleString()} ${coinXs}`}
+                            ${item.free ? '<span style="color:#10b981;">Miễn phí</span>' : isOwned ? '<span style="color:#10b981;font-weight:700;">Đã sở hữu</span>' : `${item.price.toLocaleString()} ${coinXs}`}
                         </div>
                         <div>
                             ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
@@ -5508,7 +6146,7 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${item.free ? '<span style="color:#10b981;">Mặc định</span>' : isOwned ? '<span style="color:#10b981;">Đã sở hữu</span>' : `${item.price.toLocaleString()} ${coinXs}`}
+                            ${item.free ? '<span style="color:#10b981;">Mặc định</span>' : isOwned ? '<span style="color:#10b981;font-weight:700;">Đã sở hữu</span>' : `${item.price.toLocaleString()} ${coinXs}`}
                         </div>
                         <div>
                             ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
@@ -5537,60 +6175,12 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${item.free ? '<span style="color:#10b981;">Mặc định</span>' : isOwned ? '<span style="color:#10b981;">Đã sở hữu</span>' : `${item.price.toLocaleString()} ${coinXs}`}
+                            ${item.free ? '<span style="color:#10b981;">Mặc định</span>' : isOwned ? '<span style="color:#10b981;font-weight:700;">Đã sở hữu</span>' : `${item.price.toLocaleString()} ${coinXs}`}
                         </div>
                         <div>
                             ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
                               isOwned ? `<button class="shop-action-btn btn-equip" onclick="window._equipShopItem('visualFx', '${item.id}')">${t('btnEquip') || 'Trang bị'}</button>` :
                               `<button class="shop-action-btn btn-buy" onclick="window._buyShopItem('visualFx', '${item.id}', ${item.price})" ${!canAfford ? 'disabled' : ''}>${t('btnBuy') || 'Mua'}</button>`}
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-    } else if (shopActiveTab === 'items') {
-        const freezes = S.freezes || 0;
-        const isBoostActive = S.inventory && S.inventory.boost2xExpiresAt && Date.now() < S.inventory.boost2xExpiresAt;
-
-        SHOP_CATALOG.items.forEach(item => {
-            const canAfford = myDP >= item.price || isAdmin;
-            let statusText = '';
-            let btnDisabled = false;
-            let btnText = `Mua (${item.price.toLocaleString()})`;
-
-            if (item.id === 'freeze') {
-                statusText = `Hiện có: ${freezes}/2 bình`;
-                if (freezes >= 2) {
-                    btnDisabled = true;
-                    btnText = 'Đầy túi (2/2)';
-                }
-            } else if (item.id === 'boost2x') {
-                if (isBoostActive) {
-                    statusText = '⚡ Đang kích hoạt';
-                    btnText = 'Gia hạn (+24h)';
-                } else {
-                    statusText = 'Chưa kích hoạt';
-                }
-            }
-
-            html += `
-                <div class="shop-card">
-                    <div class="shop-card-header">
-                        <div class="shop-card-art">${item.icon}</div>
-                        <div class="shop-card-meta">
-                            <div class="shop-card-title">${item.name}</div>
-                            <div class="shop-card-desc">${item.desc}</div>
-                        </div>
-                    </div>
-                    <div class="shop-card-footer">
-                        <div class="shop-card-price">
-                            <div style="display:flex; align-items:center;">${item.price.toLocaleString()} ${coinXs}</div>
-                            <div style="font-size:11.5px;color:var(--text-muted);font-weight:600;">${statusText}</div>
-                        </div>
-                        <div>
-                            <button class="shop-action-btn btn-buy" onclick="window._buyShopItem('items', '${item.id}', ${item.price})" ${btnDisabled || (!canAfford && !isAdmin) ? 'disabled' : ''}>
-                                ${btnText}
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -5606,24 +6196,30 @@ async function buyShopItem(type, itemId, cost) {
     const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
     const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
 
-    if (myDP < cost && !isAdmin) {
-        alert(`Bạn cần ít nhất ${cost.toLocaleString()} điểm để mua vật phẩm này! (Hiện có: ${myDP.toLocaleString()})`);
-        return;
-    }
+    if (cost > 0) {
+        if (myDP < cost && !isAdmin) {
+            alert(`Bạn cần ít nhất ${cost.toLocaleString()} điểm để mở khóa vật phẩm này! (Hiện có: ${myDP.toLocaleString()})`);
+            return;
+        }
 
-    if (!confirm(`Xác nhận dùng ${cost.toLocaleString()} để mở khóa / mua vật phẩm này?`)) return;
+        if (!confirm(`Xác nhận dùng ${cost.toLocaleString()} Coins để mở khóa / mua vật phẩm này?`)) return;
 
-    if (!isAdmin) {
-        userBonusDP = (userBonusDP || 0) - cost;
-        if (currentUser && db) {
-            try {
-                await userDocRef.update({ bonusDP: userBonusDP });
-                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
-            } catch(e) { console.warn(e); }
+        if (!isAdmin) {
+            userBonusDP = (userBonusDP || 0) - cost;
+            if (currentUser && db) {
+                try {
+                    await userDocRef.update({ bonusDP: userBonusDP });
+                    await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
+                } catch(e) { console.warn(e); }
+            }
         }
     }
 
     if (!S.inventory) S.inventory = sanitizeInventory(null);
+    if (!S.inventory.backpack) S.inventory.backpack = {};
+    if (!Array.isArray(S.inventory.unlockedDocs)) S.inventory.unlockedDocs = ['doc_nhan_tinh'];
+
+    let toastMsg = t('itemBoughtToast') || 'Đã mua thành công!';
 
     if (type === 'titles') {
         if (!S.inventory.titles.includes(itemId)) S.inventory.titles.push(itemId);
@@ -5643,13 +6239,21 @@ async function buyShopItem(type, itemId, cost) {
         S.inventory.visualFx = itemId;
     } else if (type === 'items') {
         if (itemId === 'freeze') {
-            S.freezes = (S.freezes || 0) + 1;
+            S.freezes = Math.min(3, (S.freezes || 0) + 1);
             if (typeof playFreezeSound === 'function') playFreezeSound();
-        } else if (itemId === 'boost2x') {
-            const currentExp = Math.max(Date.now(), S.inventory.boost2xExpiresAt || 0);
-            S.inventory.boost2xExpiresAt = currentExp + 24 * 60 * 60 * 1000;
-            if (typeof playResurrectSound === 'function') playResurrectSound();
+            toastMsg = '🧊 Đã nạp thêm 1 Bình Đóng Băng!';
+        } else {
+            // Add into backpack
+            S.inventory.backpack[itemId] = (S.inventory.backpack[itemId] || 0) + 1;
+            toastMsg = '🎒 Đã thêm vật phẩm vào Túi Đồ! Hãy vào tab Túi Đồ để sử dụng bất kỳ lúc nào.';
         }
+    } else if (type === 'docs') {
+        if (!S.inventory.unlockedDocs.includes(itemId)) {
+            S.inventory.unlockedDocs.push(itemId);
+        }
+        const docObj = (SHOP_CATALOG.docs || []).find(d => d.id === itemId);
+        const docName = docObj ? docObj.name : 'Tài liệu';
+        toastMsg = `📚 Đã mở khóa thành công "${docName}"! Sách đã được lưu trữ trong Túi Đồ.`;
     }
 
     sv();
@@ -5659,10 +6263,10 @@ async function buyShopItem(type, itemId, cost) {
     // Show Toast
     const toast = document.createElement('div');
     toast.className = 'quest-toast';
-    toast.innerHTML = `<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></span> ${t('itemBoughtToast') || 'Đã mua thành công!'}`;
+    toast.innerHTML = `<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></span> ${toastMsg}`;
     document.body.appendChild(toast);
     setTimeout(() => toast.classList.add('show'), 10);
-    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3200);
 
     updateUserDPState(true);
     if (typeof syncUserLeaderboard === 'function') syncUserLeaderboard();
@@ -5670,6 +6274,82 @@ async function buyShopItem(type, itemId, cost) {
     renderShopUI();
 }
 window._buyShopItem = buyShopItem;
+
+async function useBackpackItem(itemId) {
+    if (!S.inventory) S.inventory = sanitizeInventory(null);
+    if (!S.inventory.backpack) S.inventory.backpack = {};
+    const bp = S.inventory.backpack;
+
+    if ((bp[itemId] || 0) <= 0) {
+        alert('Bạn không có vật phẩm này trong túi đồ!');
+        return;
+    }
+
+    bp[itemId]--;
+    let toastMsg = 'Đã kích hoạt thành công!';
+
+    if (itemId === 'vacation_pass') {
+        const currentExp = Math.max(Date.now(), S.inventory.vacationUntil || 0);
+        S.inventory.vacationUntil = currentExp + 3 * 24 * 60 * 60 * 1000;
+        const daysLeft = Math.ceil((S.inventory.vacationUntil - Date.now()) / (24 * 60 * 60 * 1000));
+        toastMsg = `🏖️ Bùa Nghỉ Phép đã kích hoạt! Chuỗi thói quen được bảo lưu an toàn trong ${daysLeft} ngày tới.`;
+        if (typeof playResurrectSound === 'function') playResurrectSound();
+    } else if (itemId === 'boost3x') {
+        const currentExp = Math.max(Date.now(), S.inventory.boost3xExpiresAt || 0);
+        S.inventory.boost3xExpiresAt = currentExp + 12 * 60 * 60 * 1000;
+        toastMsg = '🚀 Vé Siêu Cấp 3X Boost đã kích hoạt! Tất cả điểm check-in được nhân 3 trong 12 giờ!';
+        if (typeof playResurrectSound === 'function') playResurrectSound();
+    } else if (itemId === 'boost2x') {
+        const currentExp = Math.max(Date.now(), S.inventory.boost2xExpiresAt || 0);
+        S.inventory.boost2xExpiresAt = currentExp + 24 * 60 * 60 * 1000;
+        toastMsg = '⚡ Vé Nhân Đôi 2X Boost đã kích hoạt! Tất cả điểm check-in được nhân 2 trong 24 giờ!';
+        if (typeof playResurrectSound === 'function') playResurrectSound();
+    } else if (itemId === 'focus_elixir') {
+        S.inventory.focusElixirCharges = (S.inventory.focusElixirCharges || 0) + 3;
+        toastMsg = `🧪 Thuốc Tiên Focus đã uống! Nhận +30 Coins thưởng cho 3 phiên Pomodoro hoàn thành tiếp theo.`;
+        if (typeof playResurrectSound === 'function') playResurrectSound();
+    } else if (itemId === 'shield7d') {
+        const currentExp = Math.max(Date.now(), S.inventory.invincibleShieldUntil || 0);
+        S.inventory.invincibleShieldUntil = currentExp + 7 * 24 * 60 * 60 * 1000;
+        toastMsg = '🛡️ Khiên Bất Hoại đã kích hoạt! Chuỗi ngày của bạn được bảo vệ tuyệt đối trong 7 ngày!';
+        if (typeof playResurrectSound === 'function') playResurrectSound();
+    } else if (itemId === 'squad_energy') {
+        userBonusDP = (userBonusDP || 0) + 50;
+        if (currentUser && db) {
+            try {
+                await userDocRef.update({ bonusDP: userBonusDP });
+                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
+                if (S.squadId) {
+                    await db.collection('squads').doc(S.squadId).collection('messages').add({
+                        senderId: currentUser.uid,
+                        senderName: currentUser.displayName || 'Chiến Binh',
+                        text: '⚡ Đã kích hoạt Nước Tăng Lực Đồng Đội! Tặng 50 Năng lượng cho toàn đội!',
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            } catch(e) {}
+        }
+        toastMsg = '⚡ Đã gửi Nước Tăng Lực Đồng Đội thành công (+50 Coins bonus cho bạn)!';
+        if (typeof playResurrectSound === 'function') playResurrectSound();
+    }
+
+    sv();
+    if (typeof fireConfetti === 'function') fireConfetti();
+
+    // Show Toast
+    const toast = document.createElement('div');
+    toast.className = 'quest-toast';
+    toast.innerHTML = `<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></span> ${toastMsg}`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3500);
+
+    updateUserDPState(true);
+    if (typeof syncUserLeaderboard === 'function') syncUserLeaderboard();
+    showUserProfile(currentUser);
+    renderShopUI();
+}
+window._useBackpackItem = useBackpackItem;
 
 async function equipShopItem(type, itemId) {
     if (!S.inventory) S.inventory = sanitizeInventory(null);
@@ -5724,6 +6404,31 @@ function initShopModal() {
     const bg = document.getElementById('shopModalBg');
     if (bg) bg.onclick = (e) => { if (e.target === bg) bg.classList.remove('show'); };
 
+    const mysteryClose = document.getElementById('mysteryCloseBtn');
+    if (mysteryClose) mysteryClose.onclick = closeMysteryModal;
+
+    const mysteryBg = document.getElementById('mysteryModalBg');
+    if (mysteryBg) mysteryBg.onclick = (e) => { if (e.target === mysteryBg) closeMysteryModal(); };
+
+    // Document Reader Modal Listeners
+    const drClose = document.getElementById('drCloseBtn');
+    if (drClose) drClose.onclick = closeDocReader;
+
+    const drBg = document.getElementById('docReaderModalBg');
+    if (drBg) drBg.onclick = (e) => { if (e.target === drBg) closeDocReader(); };
+
+    const fontDec = document.getElementById('drFontDec');
+    if (fontDec) fontDec.onclick = () => adjustDocFontSize(-10);
+
+    const fontInc = document.getElementById('drFontInc');
+    if (fontInc) fontInc.onclick = () => adjustDocFontSize(10);
+
+    const themeToggle = document.getElementById('drThemeToggle');
+    if (themeToggle) themeToggle.onclick = toggleDocReaderTheme;
+
+    const fsBtn = document.getElementById('drFullscreenBtn');
+    if (fsBtn) fsBtn.onclick = toggleDocFullscreen;
+
     // Tab buttons
     document.querySelectorAll('.shop-tab-btn').forEach(btn => {
         btn.onclick = () => {
@@ -5731,6 +6436,309 @@ function initShopModal() {
         };
     });
 }
+
+// ==================== HỆ THỐNG ĐỌC TÀI LIỆU TRỰC TIẾP (DOCUMENT READER) ====================
+
+const DOC_CONTENT_MAP = {
+    doc_nhan_tinh: {
+        title: 'Tuyệt Mật Nhân Tính',
+        category: 'Tâm Lý Học Hành Vi & Đối Nhân Xử Thế',
+        badge: 'MIỄN PHÍ',
+        gradient: 'linear-gradient(135deg, #059669, #10b981)',
+        quote: '“Người nhìn thấu nhân tính sẽ không oán trách thế gian. Kẻ làm chủ nhân tính sẽ xoay chuyển cờ tàn.”',
+        chapters: [
+            {
+                title: 'Chương 1: Quy Luật Lợi Ích & Bản Năng Sơ Khai',
+                content: `
+                    <p class="dr-lead">Tất cả các mối quan hệ bền vững trong xã hội loài người đều được xây dựng trên một nền tảng ngầm: <strong>Cân bằng giá trị trao đổi</strong>. Khi bạn hiểu rằng con người hành động trước hết vì sự an toàn, danh dự và lợi ích của chính họ, bạn sẽ không còn cảm giác thất vọng hay hụt hẫng.</p>
+                    <div class="dr-callout gold">
+                        <div class="dr-callout-title">💡 NGUYÊN TẮC CỐT LÕI</div>
+                        <p>Đừng bao giờ thử thách nhân tính bằng sự cả tin hoặc dựa dẫm vô điều kiện. Hãy tạo cho mình giá trị mà người khác cần, đó là cách đối nhân xử thế an toàn và thông thái nhất.</p>
+                    </div>
+                    <h4>3 Bí Mật Trong Tâm Lý Học Giao Tiếp:</h4>
+                    <ul>
+                        <li><strong>Bí mật 1 - Lời khen ngợi chân thành:</strong> Con người thèm khát sự công nhận hơn bất kỳ điều gì. Một lời khen đúng lúc mở ra nhiều cánh cửa hơn ngàn lời tranh luận.</li>
+                        <li><strong>Bí mật 2 - Giữ kín con bài tẩy:</strong> Không bao giờ phơi bày 100% năng lực hay kế hoạch trước khi kết quả thành hình.</li>
+                        <li><strong>Bí mật 3 - Lắng nghe chủ động:</strong> Người làm chủ cuộc đối thoại không phải là người nói nhiều nhất, mà là người biết đặt câu hỏi sắc bén và lắng nghe thấu suốt.</li>
+                    </ul>
+                `
+            },
+            {
+                title: 'Chương 2: Nghệ Thuật Thu Phục Nhân Tâm',
+                content: `
+                    <p>Muốn người khác ủng hộ lý tưởng của bạn, đừng bắt đầu bằng việc thuyết phục bằng logic khô khan. Hãy chạm vào cảm xúc, sự tôn nghiêm và lợi ích tương lai của họ.</p>
+                    <blockquote>“Kẻ tầm thường dùng quyền lực ép buộc. Bậc cao thủ dùng nhân tâm dẫn lối.”</blockquote>
+                    <p><em>(Hệ thống đang tích hợp file thiết kế chi tiết hoàn chỉnh từ bạn...).</em></p>
+                `
+            }
+        ]
+    },
+    doc_thuc_tinh: {
+        title: 'Thức Tỉnh Nhận Thức',
+        category: 'Phát Triển Tâm Thức & Làm Chủ Bản Thân',
+        badge: 'TÂM THỨC',
+        gradient: 'linear-gradient(135deg, #0284c7, #38bdf8)',
+        quote: '“Cho đến khi bạn biến vô thức thành nhận thức, nó sẽ điều khiển cuộc đời bạn và bạn sẽ gọi đó là số phận.” — Carl Jung',
+        chapters: [
+            {
+                title: 'Chương 1: Phá Vỡ Vòng Lặp Vô Thức',
+                content: `
+                    <p class="dr-lead">Hơn 95% hành vi và phản ứng hàng ngày của con người diễn ra hoàn toàn tự động dựa trên các định kiến, thói quen cũ và tổn thương trong quá khứ. Thức tỉnh nhận thức là khoảnh khắc bạn bước lùi lại một bước, quan sát chính suy nghĩ của mình như một người thứ ba.</p>
+                    <div class="dr-callout cyan">
+                        <div class="dr-callout-title">🌀 3 TẦNG THỰC TẠI CỦA TÂM TRÍ</div>
+                        <p><strong>1. Tầng Nạn Nhân (Vô minh):</strong> Luôn đổ lỗi cho hoàn cảnh, người khác và số phận.<br>
+                        <strong>2. Tầng Người Làm Chủ (Kỷ luật):</strong> Chịu trách nhiệm 100% về mọi kết quả trong cuộc sống.<br>
+                        <strong>3. Tầng Siêu Nhận Thức (Tự tại):</strong> Nhìn thấy bản chất vận hành của vạn vật mà không bị dính mắc hay lung lay.</p>
+                    </div>
+                    <p><em>(Hệ thống đang tích hợp file thiết kế chi tiết hoàn chỉnh từ bạn...).</em></p>
+                `
+            }
+        ]
+    },
+    doc_cuong_gia: {
+        title: 'Tư Duy Cường Giả',
+        category: 'Kỷ Luật Thép & Bản Lĩnh Đột Phá',
+        badge: 'BẢN LĨNH',
+        gradient: 'linear-gradient(135deg, #d97706, #fbbf24)',
+        quote: '“Kẻ yếu tìm lý do bào chữa. Cường giả tìm giải pháp hành động.”',
+        chapters: [
+            {
+                title: 'Chương 1: Định Luật Của Kẻ Mạnh',
+                content: `
+                    <p class="dr-lead">Tư duy cường giả không phải là sự tàn nhẫn hay chèn ép người khác, mà là khả năng tự gánh vác trách nhiệm tuyệt đối, biến mọi áp lực nghịch cảnh thành bàn đạp để tôi luyện ý chí.</p>
+                    <div class="dr-callout amber">
+                        <div class="dr-callout-title">🦁 5 NGUYÊN TẮC CỦA CƯỜNG GIẢ</div>
+                        <ol>
+                            <li><strong>Không than thở:</strong> Năng lượng dùng để phàn nàn là năng lượng bị lãng phí.</li>
+                            <li><strong>Chấp nhận sự khắc nghiệt:</strong> Thế giới không nợ bạn bất cứ điều gì.</li>
+                            <li><strong>Hành động bất chấp cảm xúc:</strong> Kỷ luật là làm điều cần làm ngay cả khi không có hứng.</li>
+                            <li><strong>Tập trung vào biến số kiểm soát được:</strong> Bỏ qua những thứ ngoài tầm tay.</li>
+                            <li><strong>Liên tục nâng cấp giá trị bản thân:</strong> Sức mạnh nội tại là tấm khiên vững chắc nhất.</li>
+                        </ol>
+                    </div>
+                    <p><em>(Hệ thống đang tích hợp file thiết kế chi tiết hoàn chỉnh từ bạn...).</em></p>
+                `
+            }
+        ]
+    },
+    doc_thuong_chien: {
+        title: 'Thương Chiến',
+        category: 'Kinh Doanh, Đàm Phán & Mưu Lược Dòng Tiền',
+        badge: 'CHIẾN LƯỢC',
+        gradient: 'linear-gradient(135deg, #dc2626, #f87171)',
+        quote: '“Thương trường như chiến trường. Không chuẩn bị là chuẩn bị cho sự thất bại.”',
+        chapters: [
+            {
+                title: 'Chương 1: Mưu Lược Cạnh Tranh & Đòn Bẩy',
+                content: `
+                    <p class="dr-lead">Trong kinh doanh hiện đại, thắng bại không chỉ nằm ở sản phẩm mà nằm ở chiến lược tiếp cận, tốc độ thực thi và cấu trúc dòng tiền vững chắc.</p>
+                    <div class="dr-callout red">
+                        <div class="dr-callout-title">⚔️ NGHỆ THUẬT THƯƠNG CHIẾN</div>
+                        <p>Tránh đối đầu trực diện ở đại dương đỏ. Luôn tìm kiếm ngách thị trường chưa được khai phá và tạo ra lợi thế cạnh tranh độc quyền (Moat) không thể sao chép.</p>
+                    </div>
+                    <p><em>(Hệ thống đang tích hợp file thiết kế chi tiết hoàn chỉnh từ bạn...).</em></p>
+                `
+            }
+        ]
+    },
+    doc_huyen_co: {
+        title: 'Ẩn Chứa Huyền Cơ',
+        category: 'Quy Luật Vận Hành Của Thời Cuộc',
+        badge: 'HUYỀN CƠ',
+        gradient: 'linear-gradient(135deg, #7c3aed, #a78bfa)',
+        quote: '“Người thấy cái hiển nhiên là người thường. Kẻ thấy được huyền cơ ẩn giấu mới là bậc kỳ tài.”',
+        chapters: [
+            {
+                title: 'Chương 1: Đọc Vị Biến Số Ngầm',
+                content: `
+                    <p class="dr-lead">Bề nổi của mọi sự kiện chỉ là kết quả của những đợt sóng ngầm đã tích tụ từ rất lâu trước đó. Nhìn thấu huyền cơ là khả năng dự báo xu hướng trước khi đám đông nhận ra.</p>
+                    <div class="dr-callout purple">
+                        <div class="dr-callout-title">🔮 QUY LUẬT ÂM DƯƠNG TƯƠNG HỖ</div>
+                        <p>Thịnh cực tất suy, bĩ cực thái lai. Khi ở đỉnh cao hãy chuẩn bị cho giông bão; khi ở đáy sâu hãy tích lũy nội lực chờ ngày bứt phá.</p>
+                    </div>
+                    <p><em>(Hệ thống đang tích hợp file thiết kế chi tiết hoàn chỉnh từ bạn...).</em></p>
+                `
+            }
+        ]
+    },
+    doc_sau_sac: {
+        title: 'Tư Duy Sâu Sắc',
+        category: 'Tư Duy Đa Chiều & Nguyên Lý Đệ Nhất',
+        badge: 'TINH HOA',
+        gradient: 'linear-gradient(135deg, #4f46e5, #818cf8)',
+        quote: '“Người tầm thường giải quyết triệu chứng. Người sâu sắc giải quyết nguồn gốc căn nguyên.”',
+        chapters: [
+            {
+                title: 'Chương 1: First Principles Thinking (Nguyên Lý Đệ Nhất)',
+                content: `
+                    <p class="dr-lead">Bóc tách mọi vấn đề phức tạp về những chân lý nền tảng không thể phủ nhận, từ đó xây dựng giải pháp hoàn toàn mới thay vì suy luận theo lối mòn bắt chước.</p>
+                    <div class="dr-callout indigo">
+                        <div class="dr-callout-title">🌌 4 BƯỚC RÈN LUYỆN TƯ DUY SÂU</div>
+                        <ol>
+                            <li>Hoài nghi các giả định sẵn có.</li>
+                            <li>Tách biệt sự thật (Fact) khỏi cảm xúc (Emotion) và ý kiến (Opinion).</li>
+                            <li>Đặt câu hỏi "Tại sao" ít nhất 5 lần để tìm nguyên nhân gốc rễ.</li>
+                            <li>Tổng hợp các mô hình tư duy đa ngành (Mental Models).</li>
+                        </ol>
+                    </div>
+                    <p><em>(Hệ thống đang tích hợp file thiết kế chi tiết hoàn chỉnh từ bạn...).</em></p>
+                `
+            }
+        ]
+    }
+};
+
+let currentReadingDocId = null;
+let docReaderFontSize = 100;
+let docReaderTheme = 'dark'; // 'dark' | 'sepia' | 'light'
+
+function openDocReader(docId) {
+    currentReadingDocId = docId;
+    const docObj = (SHOP_CATALOG.docs || []).find(d => d.id === docId);
+    if (!docObj) return;
+
+    const modal = document.getElementById('docReaderModalBg');
+    const modalEl = document.getElementById('docReaderModal');
+    const titleEl = document.getElementById('drBookTitle');
+    const catEl = document.getElementById('drBookCategory');
+    const badgeEl = document.getElementById('drBadge');
+    const bodyEl = document.getElementById('docReaderBody');
+
+    if (!modal || !bodyEl) return;
+
+    if (titleEl) titleEl.textContent = docObj.name;
+    if (catEl) catEl.textContent = docObj.category || 'Tài Liệu Đặc Biệt';
+    if (badgeEl) badgeEl.textContent = docObj.badge || 'TÀI LIỆU';
+
+    // Apply reader theme & font size
+    if (modalEl) {
+        modalEl.dataset.theme = docReaderTheme;
+        modalEl.style.fontSize = `${docReaderFontSize}%`;
+    }
+
+    const docData = DOC_CONTENT_MAP[docId];
+
+    if (docData) {
+        let chaptersHtml = '';
+        if (Array.isArray(docData.chapters)) {
+            docData.chapters.forEach((chap, idx) => {
+                chaptersHtml += `
+                    <div class="dr-chapter">
+                        <div class="dr-chapter-header">
+                            <span class="dr-chapter-pill">PHẦN ${idx + 1}</span>
+                            <h2 class="dr-chapter-title">${chap.title}</h2>
+                        </div>
+                        <div class="dr-chapter-content">
+                            ${chap.content}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        bodyEl.innerHTML = `
+            <div class="dr-book-cover-banner" style="background:${docObj.gradient};">
+                <div class="dr-banner-icon">${docObj.icon}</div>
+                <div class="dr-banner-meta">
+                    <span class="dr-banner-badge">${docObj.badge}</span>
+                    <h1 class="dr-banner-title">${docObj.name}</h1>
+                    <p class="dr-banner-desc">${docObj.desc}</p>
+                </div>
+            </div>
+            ${docData.quote ? `
+                <div class="dr-quote-box">
+                    <div class="dr-quote-symbol">❝</div>
+                    <div class="dr-quote-body">${docData.quote}</div>
+                </div>
+            ` : ''}
+            <div class="dr-content-container">
+                ${chaptersHtml}
+            </div>
+        `;
+    } else {
+        bodyEl.innerHTML = `
+            <div class="dr-placeholder-wrap">
+                <div class="dr-placeholder-icon">${docObj.icon}</div>
+                <h2>${docObj.name}</h2>
+                <p>${docObj.desc}</p>
+                <div class="dr-callout gold" style="margin-top:20px;">
+                    <div class="dr-callout-title">📌 ĐANG KẾT NỐI TÀI LIỆU</div>
+                    <p>Hệ thống đang sẵn sàng nạp file thiết kế HTML hoàn chỉnh cho quyển sách này. Hãy cập nhật file thiết kế khi bạn sẵn sàng!</p>
+                </div>
+            </div>
+        `;
+    }
+
+    // Scroll to top
+    bodyEl.scrollTop = 0;
+    modal.classList.add('show');
+}
+window._openDocReader = openDocReader;
+
+function closeDocReader() {
+    const modal = document.getElementById('docReaderModalBg');
+    if (modal) modal.classList.remove('show');
+    if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+    }
+}
+window._closeDocReader = closeDocReader;
+
+function adjustDocFontSize(delta) {
+    docReaderFontSize = Math.min(150, Math.max(80, docReaderFontSize + delta));
+    const modalEl = document.getElementById('docReaderModal');
+    const labelEl = document.getElementById('drFontSizeLabel');
+    if (modalEl) modalEl.style.fontSize = `${docReaderFontSize}%`;
+    if (labelEl) labelEl.textContent = `${docReaderFontSize}%`;
+}
+
+function toggleDocReaderTheme() {
+    const themes = ['dark', 'sepia', 'light'];
+    const nextIdx = (themes.indexOf(docReaderTheme) + 1) % themes.length;
+    docReaderTheme = themes[nextIdx];
+    const modalEl = document.getElementById('docReaderModal');
+    if (modalEl) modalEl.dataset.theme = docReaderTheme;
+}
+
+function toggleDocFullscreen() {
+    const modal = document.getElementById('docReaderModalBg');
+    if (!modal) return;
+    if (!document.fullscreenElement) {
+        modal.requestFullscreen().catch(() => {});
+    } else {
+        document.exitFullscreen().catch(() => {});
+    }
+}
+
+async function markDocCompleted() {
+    if (!currentReadingDocId) return;
+    const bonus = 20;
+    userBonusDP = (userBonusDP || 0) + bonus;
+    localStorage.setItem('hg_bonus_dp', userBonusDP);
+
+    if (currentUser && db) {
+        try {
+            await userDocRef.update({ bonusDP: userBonusDP });
+            await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
+        } catch(e) {}
+    }
+
+    if (typeof fireConfetti === 'function') fireConfetti();
+    if (typeof playResurrectSound === 'function') playResurrectSound();
+
+    const toast = document.createElement('div');
+    toast.className = 'quest-toast';
+    toast.innerHTML = `<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></span> 📖 Chúc mừng bạn đã hoàn thành bài đọc! Nhận thưởng +20 Coins rèn luyện!`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3500);
+
+    updateUserDPState(true);
+    if (typeof syncUserLeaderboard === 'function') syncUserLeaderboard();
+    showUserProfile(currentUser);
+    renderShopUI();
+}
+window._markDocCompleted = markDocCompleted;
 
 // ==================== TRỤ CỘT 3: TỔ ĐỘI RÈN LUYỆN & ĐẤU TRƯỜNG THÁCH ĐẤU 1V1 ====================
 
@@ -7466,8 +8474,18 @@ async function onPomodoroFinished() {
         }
     }
 
-    // Award bonus 15 DP
-    userBonusDP = (userBonusDP || 0) + 15;
+    // Award bonus DP (Check Focus Elixir boost)
+    let bonusAmount = 15;
+    if (S.inventory && S.inventory.focusElixirCharges > 0) {
+        bonusAmount = 30;
+        S.inventory.focusElixirCharges--;
+        sv();
+        toastMsg = `🧪 [Thuốc Tiên Focus] Hoàn thành phiên tập trung! +30 Coins (Còn ${S.inventory.focusElixirCharges} nạp)`;
+    } else {
+        toastMsg = t('pomoCompletedToast') || '🎉 Hoàn thành phiên tập trung! +15 Coins';
+    }
+
+    userBonusDP = (userBonusDP || 0) + bonusAmount;
     localStorage.setItem('hg_bonus_dp', userBonusDP);
     updateUserDPState(true);
     if (typeof syncUserLeaderboard === 'function') syncUserLeaderboard();

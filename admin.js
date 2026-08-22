@@ -28,16 +28,27 @@ function avatarHtml(photoURL, name){
     return `<div style="width:32px;height:32px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:600;flex-shrink:0">${c}</div>`;
 }
 
-function isTrialExpired(user){
-    if(user.plan !== 'trial') return false;
-    if(!user.trialExpiresAt) return true;
-    const exp = user.trialExpiresAt.toDate ? user.trialExpiresAt.toDate() : new Date(user.trialExpiresAt);
-    return exp < new Date();
+function isPlanExpired(user){
+    const now = new Date();
+    if(user.plan === 'trial'){
+        if(!user.trialExpiresAt) return true;
+        const exp = user.trialExpiresAt.toDate ? user.trialExpiresAt.toDate() : new Date(user.trialExpiresAt);
+        return exp < now;
+    }
+    if(user.plan === 'premium' || user.plan === 'pro'){
+        if(user.planExpiresAt){
+            const exp = user.planExpiresAt.toDate ? user.planExpiresAt.toDate() : new Date(user.planExpiresAt);
+            return exp < now;
+        }
+        return false; // Lifetime
+    }
+    return false;
 }
 
 function getEffectivePlan(user){
-    if(user.plan === 'premium') return 'premium';
-    if(user.plan === 'trial' && !isTrialExpired(user)) return 'trial';
+    if(user.plan === 'premium' && !isPlanExpired(user)) return 'premium';
+    if(user.plan === 'pro' && !isPlanExpired(user)) return 'pro';
+    if(user.plan === 'trial' && !isPlanExpired(user)) return 'trial';
     return 'free';
 }
 
@@ -352,19 +363,26 @@ function initModal(){
     document.getElementById('modalSavePlan').onclick = async () => {
         if(!currentModalUid) return;
         const newPlan = document.getElementById('modalPlanSelect').value;
+        const duration = document.getElementById('modalPlanDuration')?.value || 'forever';
+        const now = new Date();
         const updates = {
             plan: newPlan,
             planUpdatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            planStartedAt: firebase.firestore.Timestamp.fromDate(now),
             upgradeRequested: false,
         };
         
         if(newPlan === 'trial'){
-            const now = new Date();
             updates.trialStartedAt = firebase.firestore.Timestamp.fromDate(now);
             updates.trialExpiresAt = firebase.firestore.Timestamp.fromDate(new Date(now.getTime() + 14*24*60*60*1000));
             updates.planExpiresAt = null;
-        } else if(newPlan === 'premium'){
-            updates.planExpiresAt = null; // Permanent for now
+        } else if(newPlan === 'premium' || newPlan === 'pro'){
+            if(duration === 'forever'){
+                updates.planExpiresAt = null;
+            } else {
+                const days = parseInt(duration, 10) || 30;
+                updates.planExpiresAt = firebase.firestore.Timestamp.fromDate(new Date(now.getTime() + days*24*60*60*1000));
+            }
         } else {
             updates.planExpiresAt = null;
         }
