@@ -703,28 +703,39 @@ body {
 }
 
 .td-name .hd, .td-name .he {
-    opacity: 0;
-    background: none;
-    border: none;
+    opacity: 0.5;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     flex-shrink: 0;
-    transition: opacity 0.15s, transform 0.15s;
-    padding: 2px;
+    transition: all 0.18s ease;
+    padding: 2px 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted, #94a3b8);
 }
 
 .td-name:hover .hd, .td-name:hover .he {
-    opacity: 0.6;
+    opacity: 0.85;
 }
 
 .td-name .hd:hover {
     opacity: 1;
-    transform: scale(1.2);
+    transform: scale(1.15);
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+    color: #f87171;
 }
 
 .td-name .he:hover {
     opacity: 1;
-    transform: scale(1.2);
+    transform: scale(1.15);
+    background: rgba(56, 189, 248, 0.2);
+    border-color: rgba(56, 189, 248, 0.5);
+    color: #38bdf8;
 }
 
 /* Drag & Drop */

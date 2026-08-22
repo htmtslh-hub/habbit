@@ -1665,6 +1665,20 @@ function openEditModal(id){
     $$('#emojiRow span').forEach(s=>{s.classList.toggle('sel',s.dataset.e===sE)});
     const targetVal = h.target !== undefined ? h.target : dim(cM, cY);
     $('#newTarget').value = targetVal;
+
+    const delBtn = $('#mDeleteHabit');
+    if(delBtn){
+        delBtn.style.display = 'inline-flex';
+        delBtn.onclick = (e) => {
+            e.stopPropagation();
+            if(confirm(`Bạn có chắc chắn muốn xóa thói quen "${h.emoji} ${h.name}" không?\n\n(Thao tác này sẽ xóa toàn bộ dữ liệu của thói quen và giải phóng vị trí để bạn có thể thêm thói quen mới)`)){
+                S.h = S.h.filter(x => x.id !== id);
+                sv();
+                bg.classList.remove('show');
+                renderAll();
+            }
+        };
+    }
     bg.classList.add('show');
 }
 
@@ -1880,15 +1894,34 @@ function renderGrid(){
             }
         };
     });
-    $$('.hd').forEach(b=>{b.onclick=e=>{e.stopPropagation();if(confirm(t('deleteConfirm'))){S.h=S.h.filter(h=>h.id!==+b.dataset.id);sv();renderAll()}}});
+    $$('.hd').forEach(b=>{
+        b.onclick=e=>{
+            e.stopPropagation();
+            const hId = +b.dataset.id;
+            const habit = S.h.find(x => x.id === hId);
+            const name = habit ? (habit.emoji + ' ' + habit.name) : 'thói quen này';
+            if(confirm(`Bạn có chắc chắn muốn xóa "${name}" không?\n\n(Thao tác này sẽ xóa dữ liệu thói quen và giải phóng vị trí để bạn thêm thói quen mới)`)){
+                S.h = S.h.filter(h => h.id !== hId);
+                sv();
+                renderAll();
+            }
+        };
+    });
     $$('.he').forEach(b=>{
         b.onclick=e=>{
             e.stopPropagation();
             const hId = +b.dataset.id;
             const hIdx = S.h.findIndex(x => x.id === hId);
             if(isFreeUser && hIdx >= MAX_FREE_HABITS){
-                alert('🔒 Thói quen này đang bị tạm khóa trong gói Free. Hãy nâng cấp Pro hoặc Premium để mở khóa và chỉnh sửa!');
-                if(window._openUpgrade) window._openUpgrade();
+                const habit = S.h.find(x => x.id === hId);
+                const name = habit ? (habit.emoji + ' ' + habit.name) : 'thói quen này';
+                if(confirm(`🔒 Thói quen "${name}" đang bị tạm khóa trong gói Free.\n\nBạn có muốn XÓA thói quen này để giải phóng chỗ trống không?\n- Bấm "OK": Xóa thói quen này.\n- Bấm "Hủy": Nâng cấp Pro/Premium để mở khóa.`)){
+                    S.h = S.h.filter(h => h.id !== hId);
+                    sv();
+                    renderAll();
+                } else {
+                    if(window._openUpgrade) window._openUpgrade();
+                }
                 return;
             }
             openEditModal(hId);
@@ -2114,10 +2147,15 @@ function initModal(){
     const bg=$('#modalBg');
     $('#btnAdd').onclick=()=>{
         if(!canAddHabit()){
+            if(confirm(`🌱 Tài khoản của bạn đang ở gói Free (giới hạn tối đa 3 thói quen).\n\nBạn có muốn XÓA bớt thói quen cũ để thêm thói quen mới không?\n\n- Bấm "OK": Để xem danh sách và xóa bớt thói quen cũ.\n- Bấm "Hủy": Để nâng cấp Pro hoặc Premium sử dụng không giới hạn.`)){
+                return;
+            }
             openUpgradeModal();
             return;
         }
         editId=null;
+        const delBtn = $('#mDeleteHabit');
+        if(delBtn) delBtn.style.display = 'none';
         $('#modalTitle').textContent=t('addNewHabit');
         $('#newName').value='';
         $$('#emojiRow span').forEach(x=>x.classList.remove('sel'));
