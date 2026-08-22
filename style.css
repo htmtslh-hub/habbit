@@ -7210,17 +7210,20 @@ td.td-chk.frozen-day {
 
 .shop-card-badge {
     position: absolute;
-    top: -8px;
+    top: 12px;
     right: 12px;
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 800;
     font-family: var(--font-heading);
     background: linear-gradient(135deg, #ef4444, #f59e0b);
     color: #fff;
-    padding: 2px 8px;
-    border-radius: 99px;
-    letter-spacing: 0.04em;
-    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+    padding: 3px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    z-index: 2;
+    line-height: 1.2;
+    text-transform: uppercase;
 }
 
 .shop-card-badge.mythic {
@@ -9819,16 +9822,17 @@ td.td-chk.frozen-day {
 }
 
 .shop-card-badge.doc-badge {
-    background: rgba(14, 165, 233, 0.15);
+    background: rgba(14, 165, 233, 0.16);
     color: #38bdf8;
-    border: 1px solid rgba(56, 189, 248, 0.3);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
 }
 
 .shop-card-badge.free-badge {
     background: rgba(16, 185, 129, 0.18);
-    color: #10b981;
+    color: #34d399;
     border: 1px solid rgba(16, 185, 129, 0.4);
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.25);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.25);
 }
 
 .shop-action-btn.btn-read-doc {
