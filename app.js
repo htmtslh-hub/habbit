@@ -83,10 +83,10 @@ const I18N = {
         shopTabTitles:'Danh hiệu',shopTabThemes:'Giao diện',shopTabFX:'Hiệu ứng',shopTabItems:'Vật phẩm',
         btnBuy:'Mua',btnEquip:'Trang bị',btnEquipped:'Đang dùng',
         itemBoughtToast:'Đã mua thành công!',itemEquippedToast:'Đã trang bị thành công!',
-        boostActivatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> Đã kích hoạt Vé Nhân Đôi 2X DP trong 24h!',
+        boostActivatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> Đã kích hoạt Vé Nhân Đôi 2X trong 24h!',
         tabSquad:'Tổ đội',squadHubTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> TỔ ĐỘI & THÁCH ĐẤU 1V1',
         squadTabGuild:'Tổ Đội Rèn Luyện',squadTabDuel:'Đấu Trường 1v1',
-        btnNudge:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> Thúc giục',nudgeSentToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> Đã gửi lời thúc giục sấm sét đến đồng đội!',
+        btnNudge:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Thúc giục',nudgeSentToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Đã gửi lời thúc giục sấm sét đến đồng đội!',
         squadCreatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Đã tạo tổ đội thành công!',squadJoinedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Đã gia nhập tổ đội!',
         squadLeftToast:'Đã rời tổ đội.',duelCreatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg> Đã tạo phòng thách đấu 7 ngày!',
         duelAcceptedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg> Trận chiến 1v1 chính thức bắt đầu!',duelWonToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg> Chúc mừng! Bạn đã chiến thắng trận đấu 1v1!',
@@ -94,15 +94,15 @@ const I18N = {
         recapTitle:'Bản Tin Tổng Kết Tuần',cardDownloadedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> Đã tải ảnh thẻ về máy!',
         cardCopiedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> Đã sao chép ảnh thẻ vào Clipboard!',
         tabPomodoro:'Focus',pomoModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-focus"></use></svg> ĐỒNG HỒ TẬP TRUNG (DEEP WORK)',
-        pomoCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Hoàn thành phiên tập trung! +15 DP Deep Work Bonus',
-        pomoHabitCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Đã hoàn thành 25p! Thói quen đã tự động check-in (+15 DP)',
+        pomoCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Hoàn thành phiên tập trung! +15 Điểm thưởng Bonus',
+        pomoHabitCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Đã hoàn thành 25p! Thói quen đã tự động check-in (+15 Điểm)',
         quoteCopiedToast:'Đã sao chép câu trích dẫn!',
         pomoLinkHabit:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg> GẮN VỚI THÓI QUEN:',pomoFreeDeepWork:'-- Tập trung tự do (Deep Work) --',
         pomoPomodoro:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cycle"></use></svg> Pomodoro (25m)',pomoShortBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> Nghỉ ngắn (5m)',pomoLongBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg> Nghỉ dài (15m)',
         pomoStart:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Bắt Đầu',pomoReset:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-reset"></use></svg> Đặt Lại',pomoPause:'⏸ Tạm Dừng',pomoContinue:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Tiếp Tục',
         pomoReady:'Đang sẵn sàng',pomoFocusing:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg> Đang tập trung...',pomoResting:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> Đang nghỉ ngơi...',
         pomoPaused:'Đang tạm dừng',pomoShortRest:'Nghỉ ngơi 5 phút',pomoLongRest:'Nghỉ ngơi 15 phút',
-        pomoRewardHint:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Thưởng +15 DP khi hoàn thành',
+        pomoRewardHint:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> Thưởng +15 khi hoàn thành',
         pomoAmbientLabel:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-audio"></use></svg> NHẠC NỀN TẬP TRUNG (AMBIENT SOUND):',
         pomoSoundOff:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-mute"></use></svg> Tắt',pomoSoundRain:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-rain"></use></svg> Mưa Rơi',pomoSoundOcean:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-tide"></use></svg> Sóng Biển',
         pomoSoundNoise:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-static"></use></svg> Tiếng Ồn Trắng',pomoSoundLofi:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-disc"></use></svg> Lo-fi Chords',
@@ -176,10 +176,10 @@ const I18N = {
         shopTabTitles:'头衔',shopTabThemes:'主题',shopTabFX:'特效',shopTabItems:'道具',
         btnBuy:'购买',btnEquip:'装备',btnEquipped:'已装备',
         itemBoughtToast:'购买成功！',itemEquippedToast:'装备成功！',
-        boostActivatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> 2X DP加速卡已激活（24小时）！',
+        boostActivatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> 2X 加速卡已激活（24小时）！',
         tabSquad:'战队',squadHubTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> 战队与1V1对决',
         squadTabGuild:'自律战队',squadTabDuel:'1V1对决场',
-        btnNudge:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> 催促',nudgeSentToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> 已向队友发送闪电提醒！',
+        btnNudge:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 催促',nudgeSentToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 已向队友发送闪电提醒！',
         squadCreatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> 战队创建成功！',squadJoinedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> 成功加入战队！',
         squadLeftToast:'已退出战队。',duelCreatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg> 已创建7天对决房间！',
         duelAcceptedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg> 1V1对决正式开启！',duelWonToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg> 恭喜！你赢得了1V1对决！',
@@ -187,15 +187,15 @@ const I18N = {
         recapTitle:'每周自律总结',cardDownloadedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> 成就卡已保存！',
         cardCopiedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> 成就卡已复制到剪贴板！',
         tabPomodoro:'专注',pomoModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-focus"></use></svg> 专注时钟 (DEEP WORK)',
-        pomoCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 专注完成！获得 +15 DP 奖励',
-        pomoHabitCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 25分钟专注完成！习惯已自动打卡 (+15 DP)',
+        pomoCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 专注完成！获得 +15 奖励',
+        pomoHabitCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 25分钟专注完成！习惯已自动打卡 (+15)',
         quoteCopiedToast:'格言已复制到剪贴板！',
         pomoLinkHabit:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg> 关联习惯:',pomoFreeDeepWork:'-- 自由专注 (Deep Work) --',
         pomoPomodoro:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cycle"></use></svg> 番茄钟 (25m)',pomoShortBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> 短休 (5m)',pomoLongBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg> 长休 (15m)',
         pomoStart:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> 开始',pomoReset:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-reset"></use></svg> 重置',pomoPause:'⏸ 暂停',pomoContinue:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> 继续',
         pomoReady:'准备就绪',pomoFocusing:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg> 专注中...',pomoResting:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> 休息中...',
         pomoPaused:'已暂停',pomoShortRest:'休息5分钟',pomoLongRest:'休息15分钟',
-        pomoRewardHint:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 完成可获得 +15 DP',
+        pomoRewardHint:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> 完成可获得 +15 奖励',
         pomoAmbientLabel:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-audio"></use></svg> 专注背景音:',
         pomoSoundOff:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-mute"></use></svg> 关闭',pomoSoundRain:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-rain"></use></svg> 雨声',pomoSoundOcean:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-tide"></use></svg> 海浪',
         pomoSoundNoise:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-static"></use></svg> 白噪声',pomoSoundLofi:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-disc"></use></svg> Lo-fi和弦',
@@ -269,10 +269,10 @@ const I18N = {
         shopTabTitles:'Titles',shopTabThemes:'Themes',shopTabFX:'FX & Sound',shopTabItems:'Items',
         btnBuy:'Buy',btnEquip:'Equip',btnEquipped:'Equipped',
         itemBoughtToast:'Purchased successfully!',itemEquippedToast:'Equipped successfully!',
-        boostActivatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> 2X DP Boost activated for 24h!',
+        boostActivatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> 2X Boost activated for 24h!',
         tabSquad:'Squads',squadHubTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> SQUADS & 1V1 DUELS',
         squadTabGuild:'Discipline Squads',squadTabDuel:'1v1 Arena',
-        btnNudge:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> Nudge',nudgeSentToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg> Thunder poke sent to your teammate!',
+        btnNudge:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Nudge',nudgeSentToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Thunder poke sent to your teammate!',
         squadCreatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Squad created successfully!',squadJoinedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Joined squad successfully!',
         squadLeftToast:'Left squad.',duelCreatedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg> 7-Day Duel created!',
         duelAcceptedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg> 1v1 Duel has begun!',duelWonToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg> Congratulations! You won the 1v1 duel!',
@@ -280,15 +280,15 @@ const I18N = {
         recapTitle:'Weekly Habit Recap',cardDownloadedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> Card image downloaded!',
         cardCopiedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> Card image copied to clipboard!',
         tabPomodoro:'Focus',pomoModalTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-focus"></use></svg> FOCUS TIMER (DEEP WORK)',
-        pomoCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Deep work session completed! +15 DP Bonus',
-        pomoHabitCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 25m Focus done! Habit automatically checked-in (+15 DP)',
+        pomoCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Deep work session completed! +15 Bonus',
+        pomoHabitCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 25m Focus done! Habit automatically checked-in (+15)',
         quoteCopiedToast:'Quote copied to clipboard!',
         pomoLinkHabit:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg> LINK TO HABIT:',pomoFreeDeepWork:'-- Free Focus (Deep Work) --',
         pomoPomodoro:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cycle"></use></svg> Pomodoro (25m)',pomoShortBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> Short Break (5m)',pomoLongBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg> Long Break (15m)',
         pomoStart:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Start',pomoReset:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-reset"></use></svg> Reset',pomoPause:'⏸ Pause',pomoContinue:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Resume',
         pomoReady:'Ready',pomoFocusing:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg> Focusing...',pomoResting:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> Resting...',
         pomoPaused:'Paused',pomoShortRest:'5 min break',pomoLongRest:'15 min break',
-        pomoRewardHint:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> +15 DP reward on completion',
+        pomoRewardHint:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> +15 reward on completion',
         pomoAmbientLabel:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-audio"></use></svg> AMBIENT SOUND:',
         pomoSoundOff:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-mute"></use></svg> Off',pomoSoundRain:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-rain"></use></svg> Rain',pomoSoundOcean:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-tide"></use></svg> Ocean',
         pomoSoundNoise:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-static"></use></svg> White Noise',pomoSoundLofi:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-disc"></use></svg> Lo-fi Chords',
@@ -779,6 +779,18 @@ function getUserTitleBadgeHTML(titleId = null) {
     return `<span class="user-title-badge">${escHtml(tName)}</span>`;
 }
 window.getUserTitleBadgeHTML = getUserTitleBadgeHTML;
+
+window.getCoinIconHTML = function(size = 'sm', extraStyle = '') {
+    const sizeMap = {
+        xs: '13px',
+        sm: '15px',
+        md: '19px',
+        lg: '24px',
+        xl: '32px'
+    };
+    const s = sizeMap[size] || (typeof size === 'number' ? size + 'px' : size);
+    return `<svg class="coin-icon" viewBox="0 0 48 48" style="width:${s};height:${s};${extraStyle}" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="22" stroke="#fbbf24" stroke-width="2.2" fill="#090d16"/><circle cx="24" cy="24" r="18" stroke="#10b981" stroke-width="1" stroke-dasharray="3 2" opacity="0.85"/><polygon points="24,9 36,30 12,30" stroke="#10b981" stroke-width="1.2" fill="none" opacity="0.5"/><polygon points="24,39 36,18 12,18" stroke="#10b981" stroke-width="1.2" fill="none" opacity="0.5"/><polygon points="24,10 34,24 24,38 14,24" fill="#10b981"/><polygon points="24,10 24,38 14,24" fill="#ffffff" opacity="0.35"/><polygon points="24,15 30,24 24,33 18,24" fill="#042f2e" opacity="0.6"/><circle cx="24" cy="24" r="2.8" fill="#00f2fe"/></svg>`;
+};
 
 function showUserProfile(user){
     const userProfileEl = document.querySelector('#userProfile');
@@ -3210,7 +3222,7 @@ function renderLeaderboard() {
                     </div>
                     <div class="lb-podium-name" title="${escHtml(entry.displayName || 'User')}">${escHtml(entry.displayName || 'User')}${getUserTitleBadgeHTML(entry.equippedTitle)}${adminBadge}${meBadge}</div>
                     <div class="lb-podium-tier" style="color:${tier.color}" title="${escHtml(tier.stepFullName || '')}">${tier.realmName ? `Bước thứ ${tier.step} - ${tier.realmName}` : getRankTierName(tier)}</div>
-                    <div class="lb-podium-dp">${(entry.totalDP || 0).toLocaleString()} DP</div>
+                    <div class="lb-podium-dp">${(entry.totalDP || 0).toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div>
                     <div class="lb-podium-streak">🔥 ${entry.streak || 0}</div>
                     ${!isMe ? `<button class="lb-kudos-btn lb-podium-kudos ${hasKudos ? 'given' : ''}" onclick="window._giveKudos('${entry.uid}')" ${hasKudos ? 'disabled' : ''} title="Kudos">${hasKudos ? '❤️' : '👏'}</button>` : ''}
                 </div>
@@ -3261,7 +3273,7 @@ function renderLeaderboard() {
                             </div>
                             <div class="lb-info">
                                 <div class="lb-name">${escHtml(entry.displayName || 'User')}${getUserTitleBadgeHTML(entry.equippedTitle)}${adminBadge}${meBadge}</div>
-                                <div class="lb-tier" title="${escHtml(tier.stepFullName || '')}">${tier.realmName ? `Bước thứ ${tier.step} - ${tier.realmName}` : getRankTierName(tier)} · ${(entry.totalDP || 0).toLocaleString()} DP</div>
+                                <div class="lb-tier" title="${escHtml(tier.stepFullName || '')}">${tier.realmName ? `Bước thứ ${tier.step} - ${tier.realmName}` : getRankTierName(tier)} · ${(entry.totalDP || 0).toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div>
                             </div>
                             <div class="lb-stats">
                                 <span class="lb-streak">🔥 ${entry.streak || 0}</span>
@@ -3836,7 +3848,7 @@ function renderRankTiersShowcase() {
                     BƯỚC THỨ ${myRank.step} • ${myRank.stepName}
                 </span>
                 <span style="font-size:12.5px; font-weight:800; color:var(--text-main); font-family:var(--font-mono, monospace);">
-                    ${myDP.toLocaleString()} DP
+                    ${myDP.toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('sm') : ''}
                 </span>
             </div>
             <div style="font-size:17.5px; font-weight:800; color:${myRank.color}; margin-bottom:4px;">
@@ -3848,7 +3860,7 @@ function renderRankTiersShowcase() {
             <div style="margin-top:8px;">
                 <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-sub); margin-bottom:5px;">
                     <span>Tiến độ cảnh giới</span>
-                    <span style="font-weight:700; color:${myRank.color};">${myRank.realmInfo.dpToNext > 0 ? `Còn ${myRank.realmInfo.dpToNext.toLocaleString()} DP ➔ Bước thứ ${myRank.realmInfo.nextRealm.step} - ${myRank.realmInfo.nextRealm.name}` : 'Đã đạt đỉnh cao Niết Bàn'}</span>
+                    <span style="font-weight:700; color:${myRank.color};">${myRank.realmInfo.dpToNext > 0 ? `Còn ${myRank.realmInfo.dpToNext.toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''} ➔ Bước thứ ${myRank.realmInfo.nextRealm.step} - ${myRank.realmInfo.nextRealm.name}` : 'Đã đạt đỉnh cao Niết Bàn'}</span>
                 </div>
                 <div style="height:7px; background:rgba(255,255,255,0.08); border-radius:6px; overflow:hidden;">
                     <div style="height:100%; width:${myRank.realmInfo.pct}%; background:${myRank.color}; border-radius:6px; transition:width 0.3s ease;"></div>
@@ -3863,7 +3875,8 @@ function renderRankTiersShowcase() {
         const level = idx + 1;
         const achieved = myDP >= tier.minDp;
         const cardHtml = window.getFullRankCardHTML ? window.getFullRankCardHTML(level, imgUrl, 0.65, currentUser?.displayName || 'User', getRankTierName(tier)) : '';
-        const dpText = `${tier.minDp.toLocaleString()} DP${tier.maxDp !== Infinity ? ` – ${tier.maxDp.toLocaleString()} DP` : '+'}`;
+        const coinIcon = window.getCoinIconHTML ? window.getCoinIconHTML('xs') : '';
+        const dpText = `${tier.minDp.toLocaleString()} ${coinIcon}${tier.maxDp !== Infinity ? ` – ${tier.maxDp.toLocaleString()} ${coinIcon}` : '+'}`;
         
         // Find sub-realms belonging to this Level
         const levelRealms = REALM_TIERS.filter(r => r.level === level);
@@ -3882,7 +3895,7 @@ function renderRankTiersShowcase() {
                         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
                             <div style="font-size:12.5px; font-weight:700; color:${isCurrent ? r.color : 'var(--text-main)'};">
                                 Bước thứ ${r.step} - ${r.name}
-                                <span style="font-size:11px; font-weight:400; color:var(--text-sub); opacity:0.8; margin-left:4px;">(${r.minDp.toLocaleString()} - ${r.maxDp !== Infinity ? r.maxDp.toLocaleString() : '∞'} DP)</span>
+                                <span style="font-size:11px; font-weight:400; color:var(--text-sub); opacity:0.8; margin-left:4px;">(${r.minDp.toLocaleString()} - ${r.maxDp !== Infinity ? r.maxDp.toLocaleString() : '∞'} ${coinIcon})</span>
                             </div>
                             <div>${statusBadge}</div>
                         </div>
@@ -4167,7 +4180,7 @@ function renderQuestPanel() {
                             <div class="quest-name">${escHtml(sq.title || 'Nhiệm vụ')}</div>
                             <div class="quest-desc">${escHtml(sq.description || '')}</div>
                         </div>
-                        <div class="quest-dp-badge">+${sq.rewardDP || 0} DP</div>
+                        <div class="quest-dp-badge">+${sq.rewardDP || 0} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div>
                     </div>
                     ${deadline ? `<div class="quest-deadline">⏰ Hạn: ${deadline}</div>` : ''}
                     <button class="quest-claim-btn surprise-btn" onclick="window._reportSurpriseQuest('${sq.id}')">${t('questReportDone')}</button>
@@ -4188,7 +4201,7 @@ function renderQuestPanel() {
                         <div class="quest-name">${qName}</div>
                         <div class="quest-desc">${q.desc}</div>
                     </div>
-                    <div class="quest-dp-badge">+${q.dp} DP</div>
+                    <div class="quest-dp-badge">+${q.dp} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div>
                 </div>
                 <div class="quest-card-footer">
                     ${claimed ? `<span class="quest-status-done"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> ${t('questClaimed')}</span>` :
@@ -4207,7 +4220,7 @@ function renderQuestPanel() {
         const total = QUEST_DEFINITIONS.length;
         const done = QUEST_DEFINITIONS.filter(q => S.questData.claimed[q.id]).length;
         summaryEl.innerHTML = `<div class="lb-stat-card"><div class="lb-stat-value">${done}/${total}</div><div class="lb-stat-label">${t('questProgress')}</div></div>
-            <div class="lb-stat-card"><div class="lb-stat-value">${S.questData.totalDP || 0}</div><div class="lb-stat-label">Quest DP</div></div>`;
+            <div class="lb-stat-card"><div class="lb-stat-value">${(S.questData.totalDP || 0).toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div><div class="lb-stat-label">Tổng Thưởng</div></div>`;
     }
 }
 
@@ -4666,7 +4679,7 @@ function initProfileModal() {
             { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', label: 'Sao chép thống kê', desc: 'Copy vào clipboard', action: () => {
                 const computed = typeof calculateUserDPAndStreak === 'function' ? calculateUserDPAndStreak() : {};
                 const name = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User';
-                const text = `${name} — Habit Mastery\nDP: ${(computed.totalDP || 0).toLocaleString()}\nStreak: ${computed.currentStreak || 0} ngày\nMax Streak: ${computed.maxStreak || 0} ngày\nTổng check-in: ${computed.totalChecks || 0}`;
+                const text = `${name} — Habit Mastery\nĐiểm: ${(computed.totalDP || 0).toLocaleString()}\nStreak: ${computed.currentStreak || 0} ngày\nMax Streak: ${computed.maxStreak || 0} ngày\nTổng check-in: ${computed.totalChecks || 0}`;
                 navigator.clipboard.writeText(text).then(() => {
                     const toast = document.createElement('div');
                     toast.className = 'quest-toast';
@@ -4689,7 +4702,7 @@ function initProfileModal() {
             { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', label: 'Sao chép thành tích', desc: 'Copy text thành tích', action: () => {
                 const computed = typeof calculateUserDPAndStreak === 'function' ? calculateUserDPAndStreak() : {};
                 const name = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User';
-                const text = `${name} đang trên chuỗi ${computed.currentStreak || 0} ngày liên tiếp!\nTổng DP: ${(computed.totalDP || 0).toLocaleString()}\nMax Streak: ${computed.maxStreak || 0} ngày\n— Habit Mastery`;
+                const text = `${name} đang trên chuỗi ${computed.currentStreak || 0} ngày liên tiếp!\nĐiểm tích lũy: ${(computed.totalDP || 0).toLocaleString()}\nMax Streak: ${computed.maxStreak || 0} ngày\n— Habit Mastery`;
                 navigator.clipboard.writeText(text).then(() => {
                     const toast = document.createElement('div');
                     toast.className = 'quest-toast';
@@ -4727,7 +4740,7 @@ function initProfileModal() {
                         html += `<div class="${cls}" data-level="${i}">
                             ${!isUnlocked ? '<div class="ocp-frame-lock"><svg class="rune-icon rune-xs" viewBox="0 0 48 48"><use href="#i-close"></use></svg></div>' : ''}
                             ${frameHTML}
-                            <div class="ocp-frame-lv">${isCurrent ? 'Đang dùng' : isUnlocked ? 'Lv ' + i : 'Lv ' + i}</div>
+                            <div class="ocp-frame-lv">${isCurrent ? 'Đang dùng' : isUnlocked ? 'Khung ' + i : 'Khung ' + i}</div>
                         </div>`;
                     }
                     html += '</div>';
@@ -5385,14 +5398,16 @@ function renderShopUI(targetTab = null) {
     const computed = calculateUserDPAndStreak(S);
     const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
     const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+    const coinSm = window.getCoinIconHTML ? window.getCoinIconHTML('sm') : '';
+    const coinXs = window.getCoinIconHTML ? window.getCoinIconHTML('xs') : '';
 
-    if (walletDP) walletDP.textContent = `${myDP.toLocaleString()} DP`;
+    if (walletDP) walletDP.innerHTML = `${myDP.toLocaleString()} ${coinSm}`;
     
     // Check 2x boost active
     const isBoostActive = S.inventory && S.inventory.boost2xExpiresAt && Date.now() < S.inventory.boost2xExpiresAt;
     if (extraEl) {
         if (isBoostActive) {
-            extraEl.innerHTML = '<span style="font-size:12px; color:#ef4444; font-weight:800;">⚡ 2X DP ĐANG KÍCH HOẠT</span>';
+            extraEl.innerHTML = '<span style="font-size:12px; color:#ef4444; font-weight:800;">⚡ 2X BOOST ĐANG KÍCH HOẠT</span>';
         } else {
             extraEl.innerHTML = '';
         }
@@ -5427,7 +5442,7 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${isOwned ? `<span style="color:#10b981;">${t('shopOwned')}</span>` : `${item.price} DP`}
+                            ${isOwned ? `<span style="color:#10b981;">${t('shopOwned')}</span>` : `${item.price.toLocaleString()} ${coinXs}`}
                         </div>
                         <div>
                             ${isEquipped ? `<button class="shop-action-btn btn-equipped" onclick="window._unequipShopItem('titles', '${item.id}')">${t('btnEquipped') || 'Đang dùng'}</button>` :
@@ -5459,7 +5474,7 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${item.free ? '<span style="color:#10b981;">Miễn phí</span>' : isOwned ? '<span style="color:#10b981;">Đã sở hữu</span>' : `${item.price} DP`}
+                            ${item.free ? '<span style="color:#10b981;">Miễn phí</span>' : isOwned ? '<span style="color:#10b981;">Đã sở hữu</span>' : `${item.price.toLocaleString()} ${coinXs}`}
                         </div>
                         <div>
                             ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
@@ -5493,7 +5508,7 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${item.free ? '<span style="color:#10b981;">Mặc định</span>' : isOwned ? '<span style="color:#10b981;">Đã sở hữu</span>' : `${item.price} DP`}
+                            ${item.free ? '<span style="color:#10b981;">Mặc định</span>' : isOwned ? '<span style="color:#10b981;">Đã sở hữu</span>' : `${item.price.toLocaleString()} ${coinXs}`}
                         </div>
                         <div>
                             ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
@@ -5522,7 +5537,7 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${item.free ? '<span style="color:#10b981;">Mặc định</span>' : isOwned ? '<span style="color:#10b981;">Đã sở hữu</span>' : `${item.price} DP`}
+                            ${item.free ? '<span style="color:#10b981;">Mặc định</span>' : isOwned ? '<span style="color:#10b981;">Đã sở hữu</span>' : `${item.price.toLocaleString()} ${coinXs}`}
                         </div>
                         <div>
                             ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
@@ -5541,7 +5556,7 @@ function renderShopUI(targetTab = null) {
             const canAfford = myDP >= item.price || isAdmin;
             let statusText = '';
             let btnDisabled = false;
-            let btnText = `Mua (${item.price} DP)`;
+            let btnText = `Mua (${item.price.toLocaleString()})`;
 
             if (item.id === 'freeze') {
                 statusText = `Hiện có: ${freezes}/2 bình`;
@@ -5569,7 +5584,7 @@ function renderShopUI(targetTab = null) {
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            <div>${item.price} DP</div>
+                            <div style="display:flex; align-items:center;">${item.price.toLocaleString()} ${coinXs}</div>
                             <div style="font-size:11.5px;color:var(--text-muted);font-weight:600;">${statusText}</div>
                         </div>
                         <div>
@@ -5592,11 +5607,11 @@ async function buyShopItem(type, itemId, cost) {
     const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
 
     if (myDP < cost && !isAdmin) {
-        alert(`Bạn cần ít nhất ${cost} DP để mua vật phẩm này! (Hiện có: ${myDP} DP)`);
+        alert(`Bạn cần ít nhất ${cost.toLocaleString()} điểm để mua vật phẩm này! (Hiện có: ${myDP.toLocaleString()})`);
         return;
     }
 
-    if (!confirm(`Xác nhận dùng ${cost} DP để mua vật phẩm này?`)) return;
+    if (!confirm(`Xác nhận dùng ${cost.toLocaleString()} để mở khóa / mua vật phẩm này?`)) return;
 
     if (!isAdmin) {
         userBonusDP = (userBonusDP || 0) - cost;
@@ -5846,7 +5861,7 @@ async function renderSquadHubUI(targetTab = null) {
                     <div class="squad-progress-section">
                         <div class="squad-progress-header">
                             <span>Tiến độ hoàn thành hôm nay: ${checkedCount}/${members.length} thành viên (${completionPct}%)</span>
-                            <span>Tổng EXP: ${(squadData.totalDP || 0).toLocaleString()} DP</span>
+                            <span>Tổng EXP: ${(squadData.totalDP || 0).toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</span>
                         </div>
                         <div class="squad-progress-track">
                             <div class="squad-progress-fill" style="width:${completionPct}%;"></div>
@@ -5924,6 +5939,7 @@ async function renderSquadHubUI(targetTab = null) {
         const computed = calculateUserDPAndStreak(S);
         const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
         const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+        const coinXs = window.getCoinIconHTML ? window.getCoinIconHTML('xs') : '';
 
         let html = '';
 
@@ -5961,7 +5977,7 @@ async function renderSquadHubUI(targetTab = null) {
                             ${draw ? 'KẾT QUẢ HÒA CÂN NÃO (7/7)!' : won ? 'BẠN ĐÃ CHIẾN THẮNG TRẬN ĐẤU!' : 'BẠN ĐÃ THUA TRẬN ĐẤU!'}
                         </div>
                         <button class="squad-btn-primary" style="margin-top:10px;" onclick="window._claimDuelReward('${activeDuel.id}')">
-                            ${won ? `Nhận Thưởng ${pot} DP 💎` : 'Đóng trận đấu & Nhận kết quả'}
+                            ${won ? `Nhận Thưởng ${pot.toLocaleString()} ${coinXs}` : 'Đóng trận đấu & Nhận kết quả'}
                         </button>
                     </div>
                 `;
@@ -5984,7 +6000,7 @@ async function renderSquadHubUI(targetTab = null) {
 
                         <div class="duel-vs-center">
                             <div class="duel-vs-text">VS</div>
-                            <div class="duel-pot-pill"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg> HŨ THƯỞNG: ${pot} DP</div>
+                            <div class="duel-pot-pill"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg> HŨ THƯỞNG: ${pot.toLocaleString()} ${coinXs}</div>
                         </div>
 
                         <div class="duel-fighter opponent">
@@ -6003,12 +6019,12 @@ async function renderSquadHubUI(targetTab = null) {
                 <div class="duel-vs-banner">
                     <div class="duel-vs-header">
                         <span class="duel-badge-live" style="background:#f59e0b;">⏳ ĐANG CHỜ ĐỐI THỦ NHẬN KÈO</span>
-                        <button style="background:none;border:none;color:#ef4444;font-size:12px;font-weight:700;cursor:pointer;" onclick="window._cancelDuel('${activeDuel.id}', ${activeDuel.betDP || 50})">Hủy thách đấu (Hoàn lại ${activeDuel.betDP} DP) ✕</button>
+                        <button style="background:none;border:none;color:#ef4444;font-size:12px;font-weight:700;cursor:pointer;" onclick="window._cancelDuel('${activeDuel.id}', ${activeDuel.betDP || 50})">Hủy thách đấu (Hoàn lại ${activeDuel.betDP} ${coinXs}) ✕</button>
                     </div>
                     <div style="text-align:center;padding:16px;">
                         <div style="font-size:24px;margin-bottom:6px;">⚔️</div>
-                        <div style="font-size:16px;font-weight:800;color:var(--text-primary);">Phòng thách đấu cược ${activeDuel.betDP || 50} DP của bạn đã sẵn sàng!</div>
-                        <div style="font-size:13px;color:var(--text-secondary);margin-top:4px;">Hũ thưởng: <strong>${(activeDuel.betDP || 50) * 2} DP</strong> đang chờ một đấu thủ vào nhận kèo.</div>
+                        <div style="font-size:16px;font-weight:800;color:var(--text-primary);display:flex;align-items:center;justify-content:center;gap:4px;">Phòng thách đấu cược ${activeDuel.betDP || 50} ${coinXs} của bạn đã sẵn sàng!</div>
+                        <div style="font-size:13px;color:var(--text-secondary);margin-top:4px;display:flex;align-items:center;justify-content:center;gap:4px;">Hũ thưởng: <strong>${(activeDuel.betDP || 50) * 2} ${coinXs}</strong> đang chờ một đấu thủ vào nhận kèo.</div>
                     </div>
                 </div>
             `;
@@ -6018,16 +6034,16 @@ async function renderSquadHubUI(targetTab = null) {
                 <div class="squad-welcome-card" style="background:radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.12), rgba(15, 23, 42, 0.85)); border-color:rgba(239, 68, 68, 0.35);">
                     <div class="squad-welcome-title" style="color:#ef4444;">⚔️ Đấu Trường Thách Đấu 1v1 (7-Day Streak Duel)</div>
                     <div class="squad-welcome-desc">
-                        Đặt cược điểm rèn luyện DP và so tài kỷ luật trong 7 ngày liên tiếp không đứt chuỗi! Người chiến thắng sẽ ăn trọn toàn bộ hũ thưởng DP.
+                        Đặt cược và so tài kỷ luật trong 7 ngày liên tiếp không đứt chuỗi! Người chiến thắng sẽ ăn trọn toàn bộ hũ thưởng.
                     </div>
 
                     <div style="background:rgba(0,0,0,0.3);padding:14px;border-radius:10px;display:inline-block;border:1px solid rgba(255,255,255,0.08);">
-                        <div style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px;">CHỌN MỨC CƯỢC DP:</div>
+                        <div style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px;">CHỌN MỨC CƯỢC:</div>
                         <div class="bet-chips-row" style="justify-content:center;">
-                            <div class="bet-chip active" onclick="window._selectBet(this, 50)">💎 50 DP</div>
-                            <div class="bet-chip" onclick="window._selectBet(this, 100)">💎 100 DP</div>
-                            <div class="bet-chip" onclick="window._selectBet(this, 200)">💎 200 DP</div>
-                            <div class="bet-chip" onclick="window._selectBet(this, 500)">💎 500 DP</div>
+                            <div class="bet-chip active" onclick="window._selectBet(this, 50)">50 ${coinXs}</div>
+                            <div class="bet-chip" onclick="window._selectBet(this, 100)">100 ${coinXs}</div>
+                            <div class="bet-chip" onclick="window._selectBet(this, 200)">200 ${coinXs}</div>
+                            <div class="bet-chip" onclick="window._selectBet(this, 500)">500 ${coinXs}</div>
                         </div>
                         <button class="squad-btn-primary" style="background:linear-gradient(135deg,#ef4444,#dc2626);margin-top:10px;" onclick="window._createDuel()">
                             ⚔️ Tạo Phòng Thách Đấu Mới
@@ -6054,7 +6070,7 @@ async function renderSquadHubUI(targetTab = null) {
                                         ${escHtml(od.challenger?.displayName || 'Challenger')}
                                         ${getUserTitleBadgeHTML(od.challenger?.equippedTitle)}
                                     </div>
-                                    <div style="font-size:12px;color:#f59e0b;font-weight:700;">Cược: ${od.betDP} DP · Hũ: ${od.betDP * 2} DP</div>
+                                    <div style="font-size:12px;color:#f59e0b;font-weight:700;display:flex;align-items:center;gap:4px;">Cược: ${od.betDP} ${coinXs} · Hũ: ${od.betDP * 2} ${coinXs}</div>
                                 </div>
                             </div>
                             <div>
@@ -6641,12 +6657,14 @@ function renderRecapSlide() {
             <div class="recap-slide-pill">${data.gradeTitle}</div>
         `;
     } else if (recapCurrentSlide === 1) {
+        const coinLg = window.getCoinIconHTML ? window.getCoinIconHTML('lg') : '';
+        const coinXs = window.getCoinIconHTML ? window.getCoinIconHTML('xs') : '';
         html = `
             <div class="recap-slide-icon">⚡</div>
-            <div class="recap-slide-title">NĂNG LƯỢNG DP THU VỀ</div>
-            <div class="recap-slide-value">+${data.weeklyDP} DP</div>
+            <div class="recap-slide-title">ĐIỂM NĂNG LƯỢNG THU VỀ</div>
+            <div class="recap-slide-value">+${data.weeklyDP.toLocaleString()} ${coinLg}</div>
             <div class="recap-slide-subtitle">Bao gồm điểm tick thói quen và thưởng <strong>${data.perfectDays} ngày rèn luyện hoàn hảo</strong> (100%).</div>
-            <div class="recap-slide-pill">💎 Ví hiện có: ${data.totalDP.toLocaleString()} DP</div>
+            <div class="recap-slide-pill">Ví hiện có: ${data.totalDP.toLocaleString()} ${coinXs}</div>
         `;
     } else if (recapCurrentSlide === 2) {
         html = `
@@ -6857,8 +6875,8 @@ function renderShareCardToCanvas(ratio = null, theme = null) {
 
     // Badge 1: Streak
     drawMetricBox(ctx, cardX, currentY, badgeW, badgeH, '🔥 CHUỖI STREAK', `${data.streak} NGÀY`, '#ef4444');
-    // Badge 2: DP
-    drawMetricBox(ctx, cardX + badgeW + 20, currentY, badgeW, badgeH, '💎 TỔNG ĐIỂM DP', `${data.totalDP.toLocaleString()}`, '#10b981');
+    // Badge 2: Điểm tích lũy
+    drawMetricBox(ctx, cardX + badgeW + 20, currentY, badgeW, badgeH, '💎 ĐIỂM TÍCH LŨY', `${data.totalDP.toLocaleString()}`, '#10b981');
     // Badge 3: Rate
     drawMetricBox(ctx, cardX + (badgeW + 20) * 2, currentY, badgeW, badgeH, '🎯 KỶ LUẬT TUẦN', `${data.completionPct}%`, '#06b6d4');
 

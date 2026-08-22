@@ -6965,7 +6965,33 @@ td.td-chk.frozen-day {
     color: #fbbf24;
     background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(239, 68, 68, 0.2));
     border-color: rgba(245, 158, 11, 0.7);
-    box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+/* ==================== PRISM NEXUS COIN ICON & BADGE ==================== */
+.coin-icon {
+    display: inline-block;
+    vertical-align: -0.22em;
+    width: 1.22em;
+    height: 1.22em;
+    margin-left: 0.18em;
+    margin-right: 0.08em;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.45));
+    transition: transform 0.25s ease, filter 0.25s ease;
+}
+.coin-icon:hover {
+    transform: scale(1.15) rotate(5deg);
+    filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.8));
+}
+.coin-icon-xs { width: 13px; height: 13px; }
+.coin-icon-sm { width: 16px; height: 16px; }
+.coin-icon-md { width: 20px; height: 20px; }
+.coin-icon-lg { width: 26px; height: 26px; }
+.coin-icon-xl { width: 36px; height: 36px; }
+
+.coin-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 800;
 }
 
 /* SHOP MODAL */
