@@ -1224,8 +1224,8 @@ function openUpgradeModal(){
                 <button class="upgrade-close" onclick="document.querySelector('#upgradeModal').classList.remove('show')">✕</button>
                 <div class="upgrade-header">
                     <span class="upgrade-crown">👑</span>
-                    <h2>Nâng cấp Premium</h2>
-                    <p>Mở khóa toàn bộ tính năng Habit Mastery</p>
+                    <h2>Nâng Cấp Gói VIP</h2>
+                    <p>Mở khóa toàn bộ sức mạnh Habit Mastery: Gói Pro (Tháng) & Gói Premium (Năm)</p>
                 </div>
 
                 <!-- Step indicators -->
@@ -1241,40 +1241,41 @@ function openUpgradeModal(){
                 <div id="payView1">
                     <div class="upgrade-compare">
                         <div class="compare-col free-col">
-                            <h3>Free</h3>
+                            <h3>Free (Miễn phí)</h3>
                             <ul>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> ${MAX_FREE_HABITS} thói quen</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Theo dõi hàng ngày</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> ${MAX_FREE_HABITS} thói quen hoạt động</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Theo dõi & check-in ngày</li>
                                 <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Đồng bộ đám mây</li>
                                 <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg> Biểu đồ phân tích</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg> Heatmap năm</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg> Ghi chú hàng ngày</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg> Heatmap cả năm</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg> Nhật ký Daily Notes</li>
                             </ul>
                             <div class="compare-price">0đ</div>
                         </div>
                         <div class="compare-col premium-col">
-                            <h3>Premium <svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg></h3>
+                            <h3>Pro & Premium <svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg></h3>
                             <ul>
                                 <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Không giới hạn thói quen</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Biểu đồ phân tích</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Heatmap cả năm</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Ghi chú hàng ngày</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Ưu tiên hỗ trợ</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Biểu đồ phân tích chi tiết</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Heatmap hoạt động cả năm</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Ghi chú nhật ký Daily Notes</li>
+                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Không khóa thói quen</li>
                             </ul>
                         </div>
                     </div>
                     <div class="plan-selector">
                         <div class="plan-card" data-plan="monthly" onclick="window._selectPlan('monthly')">
                             <span class="plan-check"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span>
-                            <div class="plan-name">Gói Tháng</div>
+                            <div class="plan-name">⚡ Gói Pro (Tháng)</div>
                             <div class="plan-price">99.000đ<small>/tháng</small></div>
+                            <div class="plan-save" style="color:#38bdf8;">Thời hạn: 30 ngày (1 tháng)</div>
                         </div>
                         <div class="plan-card" data-plan="yearly" onclick="window._selectPlan('yearly')">
-                            <span class="plan-badge">Tiết kiệm 30%</span>
+                            <span class="plan-badge">Tiết kiệm 65%</span>
                             <span class="plan-check"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span>
-                            <div class="plan-name">Gói Năm</div>
+                            <div class="plan-name">👑 Gói Premium (Năm)</div>
                             <div class="plan-price">399.000đ<small>/năm</small></div>
-                            <div class="plan-save">~33.250đ/tháng</div>
+                            <div class="plan-save" style="color:#fbbf24;">~33.250đ/tháng (365 ngày)</div>
                         </div>
                     </div>
                     <button class="btn-pay-next" id="btnPayNext" disabled onclick="window._goToPayment()">Tiếp tục thanh toán →</button>
@@ -1291,7 +1292,7 @@ function openUpgradeModal(){
                         <div class="qr-desc" id="qrDescDisplay"></div>
                         <div class="qr-bank-info">
                             Ngân hàng: <strong>VietinBank</strong><br>
-                            STK: <strong>109887120806</strong> — <strong>NGUYEN VAN A</strong>
+                            STK: <strong>109887120806</strong> — <strong>DINH VAN TRIEN</strong>
                         </div>
                     </div>
                     <div class="pay-waiting">
@@ -1314,10 +1315,10 @@ function openUpgradeModal(){
                     <div class="pay-success">
                         <div class="success-icon">✓</div>
                         <h3>🎉 Thanh toán thành công!</h3>
-                        <p>Tài khoản của bạn đã được nâng cấp lên Premium</p>
+                        <p id="paySuccessSubTitle">Tài khoản của bạn đã được kích hoạt VIP</p>
                         <div class="success-details" id="successDetails"></div>
                     </div>
-                    <button class="btn-pay-next" onclick="window._closePaymentSuccess()">Bắt đầu sử dụng Premium →</button>
+                    <button class="btn-pay-next" onclick="window._closePaymentSuccess()">Bắt đầu sử dụng ngay →</button>
                 </div>
 
                 <!-- EXPIRED -->
@@ -1342,12 +1343,12 @@ function openUpgradeModal(){
 // ===== SEPAY PAYMENT CONFIG =====
 const SEPAY_CONFIG = {
     bank: 'VietinBank',
-    bankCode: 'VietinBank',  // Mã ngân hàng VietinBank cho SePay QR
+    bankCode: 'VietinBank',
     accountNumber: '109887120806',
     accountName: 'DINH VAN TRIEN',
     plans: {
-        monthly: { amount: 99000, label: 'Gói Tháng', duration: '1 tháng' },
-        yearly:  { amount: 399000, label: 'Gói Năm', duration: '1 năm' },
+        monthly: { amount: 99000, label: 'Gói Pro (Tháng)', targetPlan: 'pro', duration: '1 tháng (30 ngày)', days: 30 },
+        yearly:  { amount: 399000, label: 'Gói Premium (Năm)', targetPlan: 'premium', duration: '1 năm (365 ngày)', days: 365 },
     },
     timeoutMinutes: 15,
 };
@@ -1408,6 +1409,7 @@ window._goToPayment = async function(){
             uid: currentUser.uid,
             email: currentUser.email || '',
             plan: _selectedPlan,
+            targetPlan: planInfo.targetPlan || 'pro',
             amount: planInfo.amount,
             status: 'pending',
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -1474,21 +1476,33 @@ function _onPaymentSuccess(paymentData){
     if(_paymentListener){ _paymentListener(); _paymentListener = null; }
     if(_countdownTimer){ clearInterval(_countdownTimer); _countdownTimer = null; }
 
+    const planInfo = SEPAY_CONFIG.plans[paymentData.plan] || {};
+    const targetPlan = planInfo.targetPlan || (paymentData.plan === 'monthly' ? 'pro' : 'premium');
+    const now = new Date();
+    const days = planInfo.days || (paymentData.plan === 'monthly' ? 30 : 365);
+    const expiresAt = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+
     // Update local plan state
-    userPlan.plan = 'premium';
+    userPlan = userPlan || {};
+    userPlan.plan = targetPlan;
+    userPlan.planStartedAt = firebase.firestore.Timestamp ? firebase.firestore.Timestamp.fromDate(now) : now;
+    userPlan.planExpiresAt = firebase.firestore.Timestamp ? firebase.firestore.Timestamp.fromDate(expiresAt) : expiresAt;
     applyPremiumGate();
+    if(window._updateProfileModalUI) window._updateProfileModalUI();
 
     // Show success step
     _payShowStep(3);
 
+    const subTitle = document.getElementById('paySuccessSubTitle');
+    if(subTitle) subTitle.textContent = `Tài khoản của bạn đã được kích hoạt ${planInfo.label || 'VIP'}`;
+
     const details = document.getElementById('successDetails');
     if(details){
-        const planInfo = SEPAY_CONFIG.plans[paymentData.plan] || {};
         details.innerHTML = `
-            <div><span>Gói</span><span>${planInfo.label || paymentData.plan}</span></div>
+            <div><span>Gói kích hoạt</span><span style="font-weight:800; color:#10b981;">${planInfo.label || targetPlan.toUpperCase()}</span></div>
             <div><span>Số tiền</span><span>${(paymentData.amount||0).toLocaleString('vi-VN')}đ</span></div>
             <div><span>Mã đơn</span><span style="font-family:var(--font-mono);font-size:12px">${paymentData.orderNumber}</span></div>
-            <div><span>Thời hạn</span><span>${planInfo.duration || ''}</span></div>
+            <div><span>Thời hạn</span><span>${planInfo.duration || (days + ' ngày')}</span></div>
         `;
     }
 
