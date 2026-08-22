@@ -1659,7 +1659,16 @@ function openEditModal(id){
     const h=S.h.find(x=>x.id===id);if(!h)return;
     editId=id;
     const bg=$('#modalBg');
-    $('#modalTitle').textContent=t('editHabit');
+    const hIdx = S.h.findIndex(x => x.id === id);
+    const effectivePlan = getEffectivePlan();
+    const isFreeUser = (effectivePlan === 'free');
+    const isLocked = isFreeUser && (hIdx >= MAX_FREE_HABITS);
+
+    if (isLocked) {
+        $('#modalTitle').innerHTML = `${t('editHabit')} <span style="font-size:11px;color:#f87171;background:rgba(239,68,68,0.18);border:1px solid rgba(239,68,68,0.4);border-radius:99px;padding:2px 8px;margin-left:6px;font-family:var(--font-heading);">🔒 Tạm khóa (Gói Free)</span>`;
+    } else {
+        $('#modalTitle').textContent = t('editHabit');
+    }
     $('#newName').value=h.name;
     sE=h.emoji;
     $$('#emojiRow span').forEach(s=>{s.classList.toggle('sel',s.dataset.e===sE)});
@@ -1671,7 +1680,7 @@ function openEditModal(id){
         delBtn.style.display = 'inline-flex';
         delBtn.onclick = (e) => {
             e.stopPropagation();
-            if(confirm(`Bạn có chắc chắn muốn xóa thói quen "${h.emoji} ${h.name}" không?\n\n(Thao tác này sẽ xóa toàn bộ dữ liệu của thói quen và giải phóng vị trí để bạn có thể thêm thói quen mới)`)){
+            if(confirm(`Bạn có chắc chắn muốn xóa thói quen "${h.emoji} ${h.name}" không?\n\n(Thao tác này sẽ xóa dữ liệu thói quen và giải phóng vị trí để bạn có thể thêm thói quen mới)`)){
                 S.h = S.h.filter(x => x.id !== id);
                 sv();
                 bg.classList.remove('show');
@@ -1786,7 +1795,7 @@ function renderGrid(){
         const isMobile = window.innerWidth <= 768;
         const lockedRowClass = isLocked ? ' habit-row-locked' : '';
         bb+=`<tr ${isMobile || isLocked ? '' : 'draggable="true"'} data-id="${h.id}" class="${lockedRowClass}" data-locked="${isLocked ? 'true' : 'false'}">`;
-        bb+=`<td class="td-name${freezeClass}${collapseClass}${isLocked ? ' td-name-locked' : ''}" title="${esc(h.emoji+' '+h.name)}"><div class="td-name-content"><span class="drag-handle">${isLocked ? '🔒' : '☰'}</span><span class="hname">${esc(h.emoji)} <span class="hname-text">${esc(h.name)}</span></span>${streakHtml}<button class="he" data-id="${h.id}" title="${isLocked ? 'Thói quen bị khóa' : 'Sửa'}">✏️</button><button class="hd" data-id="${h.id}">✕</button></div></td>`;
+        bb+=`<td class="td-name${freezeClass}${collapseClass}${isLocked ? ' td-name-locked' : ''}" title="${esc(h.emoji+' '+h.name)}"><div class="td-name-content"><span class="drag-handle">${isLocked ? '🔒' : '☰'}</span><span class="hname">${esc(h.emoji)} <span class="hname-text">${esc(h.name)}</span></span>${streakHtml}<button class="he" data-id="${h.id}" title="${isLocked ? 'Thói quen bị khóa - Bấm để chỉnh sửa hoặc xóa' : 'Chỉnh sửa & Xóa thói quen'}">✏️</button></div></td>`;
         for(let d=1;d<=days;d++){
             const on=S.c[ck(h.id,d)];if(on)dn++;
             const tc=isToday(d)?' today':'';
@@ -1894,36 +1903,10 @@ function renderGrid(){
             }
         };
     });
-    $$('.hd').forEach(b=>{
-        b.onclick=e=>{
-            e.stopPropagation();
-            const hId = +b.dataset.id;
-            const habit = S.h.find(x => x.id === hId);
-            const name = habit ? (habit.emoji + ' ' + habit.name) : 'thói quen này';
-            if(confirm(`Bạn có chắc chắn muốn xóa "${name}" không?\n\n(Thao tác này sẽ xóa dữ liệu thói quen và giải phóng vị trí để bạn thêm thói quen mới)`)){
-                S.h = S.h.filter(h => h.id !== hId);
-                sv();
-                renderAll();
-            }
-        };
-    });
     $$('.he').forEach(b=>{
         b.onclick=e=>{
             e.stopPropagation();
             const hId = +b.dataset.id;
-            const hIdx = S.h.findIndex(x => x.id === hId);
-            if(isFreeUser && hIdx >= MAX_FREE_HABITS){
-                const habit = S.h.find(x => x.id === hId);
-                const name = habit ? (habit.emoji + ' ' + habit.name) : 'thói quen này';
-                if(confirm(`🔒 Thói quen "${name}" đang bị tạm khóa trong gói Free.\n\nBạn có muốn XÓA thói quen này để giải phóng chỗ trống không?\n- Bấm "OK": Xóa thói quen này.\n- Bấm "Hủy": Nâng cấp Pro/Premium để mở khóa.`)){
-                    S.h = S.h.filter(h => h.id !== hId);
-                    sv();
-                    renderAll();
-                } else {
-                    if(window._openUpgrade) window._openUpgrade();
-                }
-                return;
-            }
             openEditModal(hId);
         };
     });
