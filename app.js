@@ -815,11 +815,11 @@ const SHOP_CATALOG = {
     ],
     docs: [
         { id: 'doc_nhan_tinh', name: 'Tuyệt Mật Nhân Tính', desc: 'Thấu hiểu bản chất con người, quy luật tâm lý ẩn sâu, nghệ thuật đối nhân xử thế và thu phục nhân tâm.', icon: '📜', badge: 'MIỄN PHÍ', price: 0, free: true, gradient: 'linear-gradient(135deg, #059669, #10b981)', accent: '#10b981', category: 'Tâm Lý Học Hành Vi' },
-        { id: 'doc_thuc_tinh', name: 'Thức Tỉnh Nhận Thức', desc: 'Phá vỡ giới hạn tư duy vô thức, thoát khỏi bẫy định kiến, nhìn thấu các tầng thực tại và làm chủ tâm trí.', icon: '👁️', badge: 'TÂM THỨC', price: 350, gradient: 'linear-gradient(135deg, #0284c7, #38bdf8)', accent: '#38bdf8', category: 'Phát Triển Tâm Thức' },
-        { id: 'doc_cuong_gia', name: 'Tư Duy Cường Giả', desc: 'Ý chí sắt đá, định luật kẻ mạnh, nghệ thuật tôi rèn kỷ luật thép và nguyên tắc không khuất phục trước nghịch cảnh.', icon: '🦁', badge: 'BẢN LĨNH', price: 500, gradient: 'linear-gradient(135deg, #d97706, #fbbf24)', accent: '#fbbf24', category: 'Kỷ Luật & Ý Chí' },
-        { id: 'doc_thuong_chien', name: 'Thương Chiến', desc: 'Mưu lược kinh doanh đỉnh cao, nghệ thuật đàm phán, đòn bẩy dòng tiền và chiến lược thống lĩnh thị trường.', icon: '⚔️', badge: 'CHIẾN LƯỢC', price: 750, gradient: 'linear-gradient(135deg, #dc2626, #f87171)', accent: '#f87171', category: 'Kinh Doanh & Mưu Lược' },
-        { id: 'doc_huyen_co', name: 'Ẩn Chứa Huyền Cơ', desc: 'Đọc vị thế cục ngầm, quy luật âm dương tương hỗ, giải mã những biến số vô hình đằng sau mọi sự kiện lớn.', icon: '🔮', badge: 'HUYỀN CƠ', price: 1000, gradient: 'linear-gradient(135deg, #7c3aed, #a78bfa)', accent: '#a78bfa', category: 'Quy Luật Thế Cục' },
-        { id: 'doc_sau_sac', name: 'Tư Duy Sâu Sắc', desc: 'Tư duy đa chiều, giải mã bản chất bằng Nguyên lý đệ nhất (First Principles) và giải quyết các bài toán phức tạp.', icon: '🌌', badge: 'TINH HOA', price: 1200, gradient: 'linear-gradient(135deg, #4f46e5, #818cf8)', accent: '#818cf8', category: 'Tư Duy Đỉnh Cao' }
+        { id: 'doc_thuc_tinh', name: 'Thức Tỉnh Nhận Thức', desc: 'Phá vỡ giới hạn tư duy vô thức, thoát khỏi bẫy định kiến, nhìn thấu các tầng thực tại và làm chủ tâm trí.', icon: '👁️', badge: 'TÂM THỨC', price: 8000, gradient: 'linear-gradient(135deg, #0284c7, #38bdf8)', accent: '#38bdf8', category: 'Phát Triển Tâm Thức' },
+        { id: 'doc_cuong_gia', name: 'Tư Duy Cường Giả', desc: 'Ý chí sắt đá, định luật kẻ mạnh, nghệ thuật tôi rèn kỷ luật thép và nguyên tắc không khuất phục trước nghịch cảnh.', icon: '🦁', badge: 'BẢN LĨNH', price: 8500, gradient: 'linear-gradient(135deg, #d97706, #fbbf24)', accent: '#fbbf24', category: 'Kỷ Luật & Ý Chí' },
+        { id: 'doc_thuong_chien', name: 'Thương Chiến', desc: 'Mưu lược kinh doanh đỉnh cao, nghệ thuật đàm phán, đòn bẩy dòng tiền và chiến lược thống lĩnh thị trường.', icon: '⚔️', badge: 'CHIẾN LƯỢC', price: 9000, gradient: 'linear-gradient(135deg, #dc2626, #f87171)', accent: '#f87171', category: 'Kinh Doanh & Mưu Lược' },
+        { id: 'doc_huyen_co', name: 'Ẩn Chứa Huyền Cơ', desc: 'Đọc vị thế cục ngầm, quy luật âm dương tương hỗ, giải mã những biến số vô hình đằng sau mọi sự kiện lớn.', icon: '🔮', badge: 'HUYỀN CƠ', price: 9500, gradient: 'linear-gradient(135deg, #7c3aed, #a78bfa)', accent: '#a78bfa', category: 'Quy Luật Thế Cục' },
+        { id: 'doc_sau_sac', name: 'Tư Duy Sâu Sắc', desc: 'Tư duy đa chiều, giải mã bản chất bằng Nguyên lý đệ nhất (First Principles) và giải quyết các bài toán phức tạp.', icon: '🌌', badge: 'TINH HOA', price: 10000, gradient: 'linear-gradient(135deg, #4f46e5, #818cf8)', accent: '#818cf8', category: 'Tư Duy Đỉnh Cao' }
     ]
 };
 window.SHOP_CATALOG = SHOP_CATALOG;
@@ -8360,10 +8360,34 @@ let pomoState = {
     volume: 0.5
 };
 
+const MAX_DAILY_POMO_REWARDS = 4; // Giới hạn tối đa 4 phiên nhận Coins / ngày
+
+function updatePomoLimitBadge() {
+    const todayKey = getLocalDateKey();
+    if (!S.pomoDailyRewards || S.pomoDailyRewards.date !== todayKey) {
+        S.pomoDailyRewards = { date: todayKey, count: 0 };
+    }
+    const badge = document.getElementById('pomoDailyLimitBadge');
+    if (badge) {
+        const count = S.pomoDailyRewards.count || 0;
+        const reached = count >= MAX_DAILY_POMO_REWARDS;
+        badge.classList.toggle('reached', reached);
+        if (reached) {
+            badge.innerHTML = `🎁 Thưởng hôm nay: ${count}/${MAX_DAILY_POMO_REWARDS} (Đã hết)`;
+        } else {
+            const left = MAX_DAILY_POMO_REWARDS - count;
+            badge.innerHTML = `🎁 Thưởng hôm nay: ${count}/${MAX_DAILY_POMO_REWARDS} (còn ${left} phiên)`;
+        }
+    }
+}
+
 function openPomodoroModal(habitId = null) {
     const modal = document.getElementById('pomodoroModalBg');
     if (!modal) return;
     modal.classList.add('show');
+
+    // Update daily reward limit badge
+    updatePomoLimitBadge();
 
     // Populate habit selector
     const sel = document.getElementById('pomoHabitSelect');
@@ -8489,7 +8513,7 @@ async function onPomodoroFinished() {
     playPomodoroEndChime();
     if (typeof fireConfetti === 'function') fireConfetti();
 
-    let toastMsg = t('pomoCompletedToast') || '🎉 Hoàn thành phiên tập trung! +15 DP';
+    let toastMsg = t('pomoCompletedToast') || '🎉 Hoàn thành phiên tập trung!';
 
     // If pomodoro mode and habit was selected -> auto check-in!
     const sel = document.getElementById('pomoHabitSelect');
@@ -8505,25 +8529,41 @@ async function onPomodoroFinished() {
             if (typeof onHabitCheckedSyncSquadAndDuel === 'function') {
                 onHabitCheckedSyncSquadAndDuel();
             }
-            toastMsg = t('pomoHabitCompletedToast') || '🎉 Đã hoàn thành 25p! Thói quen đã tự động check-in (+15 DP)';
         }
     }
 
-    // Award bonus DP (Check Focus Elixir boost)
-    let bonusAmount = 15;
-    if (S.inventory && S.inventory.focusElixirCharges > 0) {
-        bonusAmount = 30;
-        S.inventory.focusElixirCharges--;
-        sv();
-        toastMsg = `🧪 [Thuốc Tiên Focus] Hoàn thành phiên tập trung! +30 Coins (Còn ${S.inventory.focusElixirCharges} nạp)`;
-    } else {
-        toastMsg = t('pomoCompletedToast') || '🎉 Hoàn thành phiên tập trung! +15 Coins';
+    // Daily Pomodoro anti-abuse limit (Max 4 rewarded sessions/day)
+    const todayKey = getLocalDateKey();
+    if (!S.pomoDailyRewards || S.pomoDailyRewards.date !== todayKey) {
+        S.pomoDailyRewards = { date: todayKey, count: 0 };
     }
 
-    userBonusDP = (userBonusDP || 0) + bonusAmount;
-    localStorage.setItem('hg_bonus_dp', userBonusDP);
-    updateUserDPState(true);
-    if (typeof syncUserLeaderboard === 'function') syncUserLeaderboard();
+    const canEarnPomoCoins = (S.pomoDailyRewards.count < MAX_DAILY_POMO_REWARDS);
+    let bonusAmount = 0;
+
+    if (canEarnPomoCoins) {
+        S.pomoDailyRewards.count++;
+        sv();
+
+        bonusAmount = 15;
+        if (S.inventory && S.inventory.focusElixirCharges > 0) {
+            bonusAmount = 30;
+            S.inventory.focusElixirCharges--;
+            sv();
+            toastMsg = `🧪 [Thuốc Tiên Focus] Hoàn thành phiên tập trung! +30 Coins (Phiên ${S.pomoDailyRewards.count}/${MAX_DAILY_POMO_REWARDS} hôm nay)`;
+        } else {
+            toastMsg = `🎉 Hoàn thành phiên tập trung! +15 Coins (Phiên ${S.pomoDailyRewards.count}/${MAX_DAILY_POMO_REWARDS} hôm nay)`;
+        }
+
+        userBonusDP = (userBonusDP || 0) + bonusAmount;
+        localStorage.setItem('hg_bonus_dp', userBonusDP);
+        updateUserDPState(true);
+        if (typeof syncUserLeaderboard === 'function') syncUserLeaderboard();
+    } else {
+        toastMsg = `⏱️ Hoàn thành 25p tập trung sâu! (Hôm nay đã đạt giới hạn nhận thưởng ${MAX_DAILY_POMO_REWARDS}/${MAX_DAILY_POMO_REWARDS} phiên)`;
+    }
+
+    updatePomoLimitBadge();
 
     // Show Toast
     const toast = document.createElement('div');
@@ -8531,7 +8571,7 @@ async function onPomodoroFinished() {
     toast.innerHTML = `<span>⏱️</span> ${toastMsg}`;
     document.body.appendChild(toast);
     setTimeout(() => toast.classList.add('show'), 10);
-    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3200);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3500);
 
     resetPomodoroTimer();
 }
