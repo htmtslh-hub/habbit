@@ -2288,9 +2288,9 @@ function renderAll(){
 async function startApp(user){
     currentUser = user;
     userDocRef = db.collection('users').doc(user.uid);
-    showUserProfile(user);
+    try { showUserProfile(user); } catch(e) { console.error('showUserProfile error:', e); }
     // Ensure profile exists and is populated
-    await ensureUserProfile(user);
+    try { await ensureUserProfile(user); } catch(e) { console.error('ensureUserProfile error:', e); }
     // Load user plan
     await loadUserPlan();
     // Check if disabled

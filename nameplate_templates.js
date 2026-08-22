@@ -48,6 +48,7 @@ window.getNameplateCardHTML = function(level, imgUrl, scale = 0.6, displayName =
     const activeMode = mode || getCurrentNameplateThemeMode();
     const templates = (activeMode === 'dark') ? NAMEPLATE_LEVEL_TEMPLATES_DARK : NAMEPLATE_LEVEL_TEMPLATES_LIGHT;
     const lvl = Math.max(1, Math.min(10, parseInt(level, 10) || 1));
+    let tpl = templates[lvl] || templates[1];
     const defaultName = 'Người Dùng';
     const defaultSub = '';
 
