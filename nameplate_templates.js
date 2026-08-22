@@ -48,10 +48,8 @@ window.getNameplateCardHTML = function(level, imgUrl, scale = 0.6, displayName =
     const activeMode = mode || getCurrentNameplateThemeMode();
     const templates = (activeMode === 'dark') ? NAMEPLATE_LEVEL_TEMPLATES_DARK : NAMEPLATE_LEVEL_TEMPLATES_LIGHT;
     const lvl = Math.max(1, Math.min(10, parseInt(level, 10) || 1));
-    let tpl = templates[lvl] || templates[1];
-    const defaultNames = ['Tân Binh', 'Chiến Binh', 'Dũng Sĩ', 'Kiếm Sĩ', 'Cao Thủ', 'Đại Sư', 'Chiến Thần', 'Bất Tử', 'Huyền Thoại', 'Thần Thoại'];
-    const defaultName = defaultNames[lvl - 1] || 'Tân Binh';
-    const defaultSub = 'Lv ' + String(lvl).padStart(2, '0');
+    const defaultName = 'Người Dùng';
+    const defaultSub = '';
 
     const finalName = displayName || defaultName;
     const finalSub = subText || defaultSub;

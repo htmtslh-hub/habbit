@@ -2345,16 +2345,16 @@ async function startApp(user){
 
 // ==================== RANK TIERS & SCORING ====================
 const RANK_TIERS = [
-    { level:1, name:'Tân Binh', nameEn:'Recruit', nameZh:'新兵', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', minDp:0, maxDp:1500, color:'#94a3b8' },
-    { level:2, name:'Chiến Binh', nameEn:'Warrior', nameZh:'战士', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg>', minDp:1501, maxDp:4500, color:'#22c55e' },
-    { level:3, name:'Dũng Sĩ', nameEn:'Champion', nameZh:'勇士', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg>', minDp:4501, maxDp:9000, color:'#3b82f6' },
-    { level:4, name:'Kiếm Sĩ', nameEn:'Swordsman', nameZh:'剑士', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg>', minDp:9001, maxDp:15000, color:'#a855f7' },
-    { level:5, name:'Cao Thủ', nameEn:'Expert', nameZh:'高手', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg>', minDp:15001, maxDp:24000, color:'#f97316' },
-    { level:6, name:'Đại Sư', nameEn:'Grand Master', nameZh:'大师', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', minDp:24001, maxDp:36000, color:'#06b6d4' },
-    { level:7, name:'Chiến Thần', nameEn:'War God', nameZh:'战神', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', minDp:36001, maxDp:54000, color:'#eab308' },
-    { level:8, name:'Bất Tử', nameEn:'Immortal', nameZh:'不朽', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', minDp:54001, maxDp:75000, color:'#ec4899' },
-    { level:9, name:'Huyền Thoại', nameEn:'Legend', nameZh:'传说', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', minDp:75001, maxDp:105000, color:'#ef4444' },
-    { level:10, name:'Thần Thoại', nameEn:'Mythic', nameZh:'神话', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', minDp:105001, maxDp:Infinity, color:'#fbbf24' },
+    { level:1, minDp:0, maxDp:1500, color:'#94a3b8' },
+    { level:2, minDp:1501, maxDp:4500, color:'#22c55e' },
+    { level:3, minDp:4501, maxDp:9000, color:'#3b82f6' },
+    { level:4, minDp:9001, maxDp:15000, color:'#a855f7' },
+    { level:5, minDp:15001, maxDp:24000, color:'#f97316' },
+    { level:6, minDp:24001, maxDp:36000, color:'#06b6d4' },
+    { level:7, minDp:36001, maxDp:54000, color:'#eab308' },
+    { level:8, minDp:54001, maxDp:75000, color:'#ec4899' },
+    { level:9, minDp:75001, maxDp:105000, color:'#ef4444' },
+    { level:10, minDp:105001, maxDp:Infinity, color:'#fbbf24' },
 ];
 
 // ==================== 7 MAJOR STEPS & 21 REALM TIERS ====================
@@ -2770,7 +2770,13 @@ window.REALM_TIERS = REALM_TIERS;
 
 function getRankTierName(tier) {
     if (!tier) return '';
-    return curLang === 'en' ? tier.nameEn : (curLang === 'zh' ? tier.nameZh : tier.name);
+    if (tier.realmName && tier.step) {
+        return `Bước thứ ${tier.step} - ${tier.realmName}`;
+    }
+    if (tier.step && tier.name) {
+        return `Bước thứ ${tier.step} - ${tier.name}`;
+    }
+    return tier.name || (tier.realmName || '');
 }
 
 function getRankLevel(dp) {
@@ -2784,6 +2790,7 @@ function getRankLevel(dp) {
     const realmInfo = getUserRealmInfo(dp);
     return {
         ...tier,
+        name: `Bước thứ ${realmInfo.step} - ${realmInfo.name}`,
         realm: realmInfo.realm,
         realmName: realmInfo.name,
         realmDesc: realmInfo.desc,
@@ -3818,7 +3825,7 @@ function renderRankTiersShowcase() {
                 ✦ Hành Trình Chuyển Hóa: 7 Bước & 21 Cảnh Giới ✦
             </div>
             <div style="font-size:12px; color:var(--text-sub, #94a3b8); line-height:1.45;">
-                10 Cấp bậc nhân vật kết tinh từ 7 bước tôi luyện tâm thức — Từ Vô thức hỗn mang đến Siêu thoát Niết bàn.
+                Hành trình tôi luyện tâm thức qua 7 Bước và 21 Cảnh Giới — Từ Vô thức đến Siêu thoát Niết bàn.
             </div>
         </div>
 
@@ -3832,9 +3839,8 @@ function renderRankTiersShowcase() {
                     ${myDP.toLocaleString()} DP
                 </span>
             </div>
-            <div style="font-size:17.5px; font-weight:800; color:${myRank.color}; margin-bottom:4px; display:flex; align-items:baseline; gap:8px;">
+            <div style="font-size:17.5px; font-weight:800; color:${myRank.color}; margin-bottom:4px;">
                 <span>Bước thứ ${myRank.step} - ${myRank.realmName}</span>
-                <span style="font-size:12px; font-weight:600; opacity:0.8; color:var(--text-sub);">(Lv.${myRank.level})</span>
             </div>
             <div style="font-size:12px; font-style:italic; color:var(--text-sub, #94a3b8); line-height:1.45; margin-bottom:12px;">
                 "${myRank.realmDesc}"
@@ -3893,7 +3899,7 @@ function renderRankTiersShowcase() {
             <div class="rank-card-wrapper ${achieved ? 'achieved' : 'locked'}" style="width:100%; max-width:480px; padding:16px; border-radius:18px; display:flex; flex-direction:column; align-items:center;">
                 ${cardHtml}
                 <div class="rank-card-requirement" style="margin-top:10px; font-size:12px;">
-                    Cấp bậc Level ${level}: <span style="color:${tier.color}; font-weight:700;">${dpText}</span> · ${achieved ? '<span style="color:#10b981; font-weight:700;">Đã mở khóa</span>' : '<span style="color:#ef4444; font-weight:700;">Chưa mở khóa</span>'}
+                    Yêu cầu mở khóa: <span style="color:${tier.color}; font-weight:700;">${dpText}</span> · ${achieved ? '<span style="color:#10b981; font-weight:700;">✓ Đã mở khóa</span>' : '<span style="color:#ef4444; font-weight:700;">🔒 Chưa mở khóa</span>'}
                 </div>
                 ${realmsListHtml}
             </div>
@@ -4326,12 +4332,9 @@ window._updateProfileModalUI = () => {
     if (pLevel) {
         pLevel.innerHTML = `
             <div style="display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:2px;">
-                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:center;">
-                    <span style="font-size:14.5px; font-weight:800; color:${rank.color}; text-shadow:0 0 12px ${rank.color}66; letter-spacing:0.02em;">
-                        Bước thứ ${rank.step} - ${rank.realmName}
-                    </span>
-                    <span style="font-size:11px; opacity:0.85; color:var(--text-sub, #94a3b8);">(Lv.${rank.level} - ${getRankTierName(rank)})</span>
-                </div>
+                <span style="font-size:15px; font-weight:800; color:${rank.color}; text-shadow:0 0 12px ${rank.color}66; letter-spacing:0.02em;">
+                    Bước thứ ${rank.step} - ${rank.realmName}
+                </span>
                 <div style="font-size:11.5px; color:var(--text-sub, #94a3b8); font-style:italic; line-height:1.4; text-align:center; max-width:320px; margin-top:2px;">"${rank.realmDesc}"</div>
             </div>
         `;
@@ -4950,14 +4953,14 @@ function renderFramesGrid(currentLevel, imgUrl = '') {
         
         let frameHTML = '';
         if (window.getFullRankCardHTML) {
-            frameHTML = window.getFullRankCardHTML(i, imgUrl, 0.5, currentUser?.displayName || 'User', getRankTierName(RANK_TIERS[i-1]));
+            frameHTML = window.getFullRankCardHTML(i, imgUrl, 0.5, currentUser?.displayName || 'User', 'Mẫu ' + i);
         } else if (window.getAvatarHTML) {
             frameHTML = window.getAvatarHTML(i, imgUrl, 56);
         }
         
         html += `<div class="${classes}" onclick="if(${isUnlocked}) window._setProfileFrame(${i})">
             ${frameHTML}
-            <div class="frame-lv">Lv ${i}</div>
+            <div class="frame-lv">Khung ${i}</div>
         </div>`;
     }
     grid.innerHTML = html;
