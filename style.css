@@ -6965,6 +6965,9 @@ td.td-chk.frozen-day {
     color: #fbbf24;
     background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(239, 68, 68, 0.2));
     border-color: rgba(245, 158, 11, 0.7);
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+}
+
 /* ==================== PRISM NEXUS COIN ICON & BADGE ==================== */
 .coin-icon {
     display: inline-block;
