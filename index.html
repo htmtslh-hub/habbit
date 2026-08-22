@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=4.9.2">
+    <link rel="stylesheet" href="style.css?v=4.9.3">
 
     <!-- Firebase SDK (CDN) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -570,8 +570,8 @@
                 <!-- Hidden inputs for avatar change -->
                 <input type="file" id="profileAvatarInput" accept="image/*" style="display:none;">
 
-                <!-- Form Fields -->
-                <div class="profile-settings-section">
+                <!-- Form Fields (Housed in Orbital Settings Planet) -->
+                <div class="profile-settings-section" id="profileLegacySettings" style="display:none;">
                     <div class="profile-section-title"><svg class="rune-inline rune-md" viewBox="0 0 48 48"><use href="#i-core"></use></svg> CÀI ĐẶT CÁ NHÂN</div>
                     <div class="settings-sub-section">
                         <div class="settings-sub-label">Tên hiển thị</div>
@@ -959,8 +959,8 @@
 
     <!-- SCRIPTS -->
     <script src="gotiengviet.js"></script>
-    <script src="nameplate_templates.js?v=4.9.2"></script>
-    <script src="avatar_frames.js?v=4.9.2"></script>
-    <script src="app.js?v=4.9.2"></script>
+    <script src="nameplate_templates.js?v=4.9.3"></script>
+    <script src="avatar_frames.js?v=4.9.3"></script>
+    <script src="app.js?v=4.9.3"></script>
 </body>
 </html>
