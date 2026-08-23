@@ -848,13 +848,27 @@ window.getCoinIconHTML = function(size = 'sm', extraStyle = '') {
     return `<svg class="coin-icon" viewBox="0 0 48 48" style="width:${s};height:${s};${extraStyle}" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="22" stroke="#fbbf24" stroke-width="2.2" fill="#090d16"/><circle cx="24" cy="24" r="18" stroke="#10b981" stroke-width="1" stroke-dasharray="3 2" opacity="0.85"/><polygon points="24,9 36,30 12,30" stroke="#10b981" stroke-width="1.2" fill="none" opacity="0.5"/><polygon points="24,39 36,18 12,18" stroke="#10b981" stroke-width="1.2" fill="none" opacity="0.5"/><polygon points="24,10 34,24 24,38 14,24" fill="#10b981"/><polygon points="24,10 24,38 14,24" fill="#ffffff" opacity="0.35"/><polygon points="24,15 30,24 24,33 18,24" fill="#042f2e" opacity="0.6"/><circle cx="24" cy="24" r="2.8" fill="#00f2fe"/></svg>`;
 };
 
+let userCustomAvatar = '';
+function getUserAvatar(user) {
+    if (userCustomAvatar) return userCustomAvatar;
+    if (user && user.customPhotoURL) return user.customPhotoURL;
+    if (user && user.photoURL) return user.photoURL;
+    if (typeof currentUser !== 'undefined' && currentUser) {
+        if (currentUser.customPhotoURL) return currentUser.customPhotoURL;
+        if (currentUser.photoURL) return currentUser.photoURL;
+    }
+    return '';
+}
+window.getUserAvatar = getUserAvatar;
+
 function showUserProfile(user){
     const userProfileEl = document.querySelector('#userProfile');
     const computed = (typeof calculateUserDPAndStreak === 'function') ? calculateUserDPAndStreak(S) : { totalDP: 0 };
     const dp = (typeof S !== 'undefined' && S && typeof S.dp === 'number') ? S.dp : (computed.totalDP + (typeof userBonusDP !== 'undefined' ? userBonusDP : 0));
     const rank = getRankLevel(dp);
-    const imgUrl = user.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(user.displayName||user.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
-    const displayName = user.displayName || user.email?.split('@')[0] || 'User';
+    const customAva = getUserAvatar(user);
+    const imgUrl = customAva || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${((user?.displayName||user?.email||'U')).charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
+    const displayName = user?.displayName || user?.email?.split('@')[0] || 'User';
     const subText = rank.realmName ? `Bước thứ ${rank.step} - ${rank.realmName}` : getRankTierName(rank);
 
     if(userProfileEl) {
@@ -921,7 +935,8 @@ async function ensureUserProfile(user){
             let needsUpdate = false;
             
             if (data.photoURL) {
-                currentUser.photoURL = data.photoURL;
+                userCustomAvatar = data.photoURL;
+                if (currentUser) currentUser.customPhotoURL = data.photoURL;
             }
             
             if(!data.email && user.email) { updates.email = user.email; needsUpdate = true; }
@@ -4612,7 +4627,8 @@ window._updateProfileModalUI = () => {
     const pAvatar = document.getElementById('profileAvatar');
     const pFrame = document.getElementById('profileAvatarFrame');
     
-    const imgUrl = currentUser.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser.displayName||currentUser.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
+    const customAva = getUserAvatar(currentUser);
+    const imgUrl = customAva || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser.displayName||currentUser.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
     const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
     const rankTitle = getRankTierName(rank);
 
@@ -5265,7 +5281,7 @@ window._setProfileFrame = (level) => {
     // Ignore setting if level is locked
     if (level > rank.level) return;
 
-    const imgUrl = currentUser.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser.displayName||currentUser.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
+    const imgUrl = getUserAvatar(currentUser) || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser.displayName||currentUser.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
     const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
     const selectedRank = RANK_TIERS[level - 1] || rank;
     const rankTitle = getRankTierName(selectedRank);
@@ -5300,7 +5316,6 @@ async function saveUserAvatar(photoURL) {
     try {
         // 1. Firebase Auth updateProfile only accepts HTTP/HTTPS URLs (<2048 chars).
         // If photoURL is Base64 data URL, updateProfile throws "Photo URL too long".
-        // We only call Auth updateProfile for valid short web URLs.
         if (photoURL && !photoURL.startsWith('data:') && photoURL.length <= 2000) {
             try {
                 await currentUser.updateProfile({ photoURL: photoURL });
@@ -5315,8 +5330,9 @@ async function saveUserAvatar(photoURL) {
             }
         }
 
-        // 2. Always update in-memory currentUser
-        currentUser.photoURL = photoURL || '';
+        // 2. Update customPhotoURL safely without touching getter-only photoURL property
+        userCustomAvatar = photoURL || '';
+        currentUser.customPhotoURL = photoURL || '';
 
         // 3. Save to Firestore users document
         if (userDocRef) {
@@ -5405,7 +5421,7 @@ window.handleAvatarUpload = handleAvatarUpload;
 
 function openAvatarStudio() {
     showOrbitalContentPopup('<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-lens"></use></svg> Đổi Ảnh Đại Diện', () => {
-        const curImg = currentUser?.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser?.displayName||currentUser?.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
+        const curImg = getUserAvatar(currentUser) || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser?.displayName||currentUser?.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
         
         const presetList = [
             { id: 'Cyber', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=CyberWarrior' },
