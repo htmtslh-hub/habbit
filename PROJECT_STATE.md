@@ -11,7 +11,8 @@
 - **Kho mã nguồn (GitHub)**: `https://github.com/htmtslh-hub/habbit.git` (Nhánh `main`)
 - **Biểu tượng tiền tệ**: **Prism Nexus Coin** (Phương án 1) — Đồng xu tròn viền vàng hoàng kim công nghệ, lõi Lăng Kính Kim Cương Ngọc Bích (Emerald & Cyan Neon) tỏa sáng, thay thế hoàn toàn chữ text "DP" trên toàn hệ thống.
 - **Địa chỉ Production đang hoạt động**:
-  - 🌐 **Firebase Hosting**: [https://habitmastery.web.app](https://habitmastery.web.app)
+  - 🌐 **Tên miền chính (Custom Domain)**: [https://habit-mastery.com](https://habit-mastery.com) *(và https://www.habit-mastery.com)*
+  - 🌐 **Firebase Hosting**: [https://habitmastery.web.app](https://habitmastery.web.app) / [https://sonnhai-2600f.web.app](https://sonnhai-2600f.web.app)
   - 🌐 **Vercel Production**: [https://habbit-opal.vercel.app](https://habbit-opal.vercel.app)
 
 ---

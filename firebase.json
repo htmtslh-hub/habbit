@@ -8,45 +8,86 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "hosting": {
-    "site": "habitmastery",
-    "public": "./",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**",
-      "electron/**",
-      "dist/**",
-      "functions/**",
-      "api/**",
-      "skills/**",
-      "traffice/**",
-      "create_test_user.js",
-      "*.exe",
-      "*.zip",
-      "*.tar.gz",
-      "vercel.json",
-      "package.json",
-      "package-lock.json",
-      "firestore.rules",
-      "firestore.indexes.json",
-      "*.md"
-    ],
-    "headers": [
-      {
-        "source": "**/*.@(js|css)",
-        "headers": [
-          { "key": "Cache-Control", "value": "max-age=3600" }
-        ]
-      },
-      {
-        "source": "**/*.@(png|jpg|ico|svg)",
-        "headers": [
-          { "key": "Cache-Control", "value": "max-age=86400" }
-        ]
-      }
-    ]
-  },
+  "hosting": [
+    {
+      "site": "habitmastery",
+      "public": "./",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**",
+        "electron/**",
+        "dist/**",
+        "functions/**",
+        "api/**",
+        "skills/**",
+        "traffice/**",
+        "create_test_user.js",
+        "*.exe",
+        "*.zip",
+        "*.tar.gz",
+        "vercel.json",
+        "package.json",
+        "package-lock.json",
+        "firestore.rules",
+        "firestore.indexes.json",
+        "*.md"
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(js|css)",
+          "headers": [
+            { "key": "Cache-Control", "value": "max-age=3600" }
+          ]
+        },
+        {
+          "source": "**/*.@(png|jpg|ico|svg)",
+          "headers": [
+            { "key": "Cache-Control", "value": "max-age=86400" }
+          ]
+        }
+      ]
+    },
+    {
+      "site": "sonnhai-2600f",
+      "public": "./",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**",
+        "electron/**",
+        "dist/**",
+        "functions/**",
+        "api/**",
+        "skills/**",
+        "traffice/**",
+        "create_test_user.js",
+        "*.exe",
+        "*.zip",
+        "*.tar.gz",
+        "vercel.json",
+        "package.json",
+        "package-lock.json",
+        "firestore.rules",
+        "firestore.indexes.json",
+        "*.md"
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(js|css)",
+          "headers": [
+            { "key": "Cache-Control", "value": "max-age=3600" }
+          ]
+        },
+        {
+          "source": "**/*.@(png|jpg|ico|svg)",
+          "headers": [
+            { "key": "Cache-Control", "value": "max-age=86400" }
+          ]
+        }
+      ]
+    }
+  ],
   "auth": {
     "providers": {
       "emailPassword": true,
