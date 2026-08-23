@@ -104,7 +104,8 @@ const I18N = {
         pomoReady:'Đang sẵn sàng',pomoFocusing:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg> Đang tập trung...',pomoResting:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> Đang nghỉ ngơi...',
         pomoPaused:'Đang tạm dừng',pomoShortRest:'Nghỉ ngơi 5 phút',pomoLongRest:'Nghỉ ngơi 15 phút',
         pomoRewardHint:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> Thưởng +15 khi hoàn thành',
-        pomoAmbientLabel:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-audio"></use></svg> NHẠC NỀN TẬP TRUNG (AMBIENT SOUND):',
+        pomoSoundMixerTitle:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-mixer"></use></svg> BỘ HÒA ÂM TẬP TRUNG (SOUND MIXER):',
+        pomoAmbientLabel:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-mixer"></use></svg> BỘ HÒA ÂM TẬP TRUNG (SOUND MIXER):',
         pomoSoundOff:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-mute"></use></svg> Tắt',pomoSoundRain:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-rain"></use></svg> Mưa Rơi',pomoSoundOcean:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-tide"></use></svg> Sóng Biển',
         pomoSoundNoise:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-static"></use></svg> Tiếng Ồn Trắng',pomoSoundLofi:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-disc"></use></svg> Lo-fi Chords',
         cmPlaceholder:'Chia sẻ câu chuyện, thành tích hoặc động lực rèn luyện của bạn...',
@@ -5018,66 +5019,29 @@ function initProfileModal() {
         ]);
     };
 
-    // 📷 Avatar (pos 5)
+    // 📷 Avatar Studio (pos 5 & Central Avatar click)
     const orbAvatar = document.getElementById('orbAvatarBtn');
     if (orbAvatar) orbAvatar.onclick = (e) => {
         e.stopPropagation();
         showOrbitalPopup(orbAvatar, 'Ảnh đại diện', [
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: 'Tải ảnh lên', desc: 'Chọn ảnh từ thiết bị', action: () => { if (fileInput) fileInput.click(); } },
-            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: 'Chọn khung Rank', desc: 'Đổi khung cấp bậc', action: () => {
-                showOrbitalContentPopup('<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Chọn khung Rank', () => {
-                    const computed = calculateUserDPAndStreak();
-                    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (currentUser && currentUser.email === 'admin@gmail.com');
-                    const dp = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
-                    const rank = getRankLevel(dp);
-                    const imgUrl = currentUser.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser.displayName||currentUser.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
-                    let html = '<div class="ocp-frames-grid">';
-                    for (let i = 1; i <= 10; i++) {
-                        const isUnlocked = rank.level >= i;
-                        const isCurrent = rank.level === i;
-                        let cls = 'ocp-frame-item';
-                        if (isCurrent) cls += ' current';
-                        if (!isUnlocked) cls += ' locked';
-                        let frameHTML = '';
-                        if (window.getAvatarHTML) frameHTML = window.getAvatarHTML(i, imgUrl, 56);
-                        html += `<div class="${cls}" data-level="${i}">
-                            ${!isUnlocked ? '<div class="ocp-frame-lock"><svg class="rune-icon rune-xs" viewBox="0 0 48 48"><use href="#i-close"></use></svg></div>' : ''}
-                            ${frameHTML}
-                            <div class="ocp-frame-lv">${isCurrent ? 'Đang dùng' : isUnlocked ? 'Khung ' + i : 'Khung ' + i}</div>
-                        </div>`;
-                    }
-                    html += '</div>';
-                    return html;
-                }, (body) => {
-                    body.querySelectorAll('.ocp-frame-item:not(.locked)').forEach(el => {
-                        el.onclick = () => {
-                            const level = parseInt(el.dataset.level);
-                            if (window._setProfileFrame) window._setProfileFrame(level);
-                            closeOrbitalContentPopup();
-                        };
-                    });
-                });
-            }},
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: 'Studio Đổi Avatar', desc: 'Tải ảnh, URL & Mẫu đẹp', action: () => { openAvatarStudio(); } },
+            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: 'Tải ảnh từ máy', desc: 'Chọn tệp hình ảnh', action: () => { if (fileInput) fileInput.click(); } },
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: 'Chọn khung Rank', desc: 'Đổi khung cấp bậc', action: () => { openAvatarStudio(); } },
             { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Xóa ảnh đại diện', desc: 'Về avatar mặc định', danger: true, action: async () => {
                 if (!confirm('Bạn có chắc muốn xóa ảnh đại diện?')) return;
-                try {
-                    if (currentUser) await currentUser.updateProfile({ photoURL: '' });
-                    if (userDocRef) await userDocRef.update({ photoURL: '' });
-                    showUserProfile(currentUser);
-                    if (window._updateProfileModalUI) window._updateProfileModalUI();
-                    const toast = document.createElement('div');
-                    toast.className = 'quest-toast';
-                    toast.innerHTML = '<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span> Đã xóa ảnh đại diện!';
-                    document.body.appendChild(toast);
-                    setTimeout(() => toast.classList.add('show'), 10);
-                    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2200);
-                } catch (err) {
-                    console.error('Remove avatar error:', err);
-                    alert('Lỗi xóa ảnh: ' + (err.message || err));
-                }
+                await saveUserAvatar('');
             }},
         ]);
     };
+
+    // Direct click on Central Avatar in Profile Modal
+    const profileCenter = document.getElementById('profileAvatarCenter');
+    if (profileCenter) {
+        profileCenter.onclick = (e) => {
+            e.stopPropagation();
+            openAvatarStudio();
+        };
+    }
 
     // ⚙️ Cài đặt (pos 6) — all content is shown inside content popups
     const orbSettings = document.getElementById('orbSettingsBtn');
@@ -5312,51 +5276,273 @@ window._setProfileFrame = (level) => {
     if(allPreviews[level-1]) allPreviews[level-1].classList.add('current');
 };
 
-async function handleAvatarUpload(e) {
-    const file = e.target.files[0];
-    if (!file) return;
+// ==================== AVATAR STUDIO & UPLOAD ENGINE ====================
+
+async function saveUserAvatar(photoURL) {
+    if (!currentUser) {
+        alert('Vui lòng đăng nhập để đổi ảnh đại diện!');
+        return;
+    }
     
-    const uploadBtn = document.getElementById('avatarUploadBtn');
-    uploadBtn.textContent = '⏳ Đang tải...';
-    uploadBtn.disabled = true;
-    
+    // Show saving toast
+    const savingToast = document.createElement('div');
+    savingToast.className = 'quest-toast show';
+    savingToast.innerHTML = '<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg></span> Đang lưu ảnh đại diện...';
+    document.body.appendChild(savingToast);
+
     try {
-        const img = new Image();
-        img.src = URL.createObjectURL(file);
-        await new Promise(res => img.onload = res);
-        
-        const canvas = document.createElement('canvas');
-        const MAX_SIZE = 250;
-        let w = img.width, h = img.height;
-        if (w > h) { if (w > MAX_SIZE) { h *= MAX_SIZE / w; w = MAX_SIZE; } }
-        else { if (h > MAX_SIZE) { w *= MAX_SIZE / h; h = MAX_SIZE; } }
-        
-        canvas.width = w; canvas.height = h;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, w, h);
-        
-        const base64Str = canvas.toDataURL('image/jpeg', 0.85);
-        
-        await currentUser.updateProfile({ photoURL: base64Str });
+        await currentUser.updateProfile({ photoURL: photoURL });
         if (userDocRef) {
-            await userDocRef.update({ photoURL: base64Str });
+            await userDocRef.update({ photoURL: photoURL });
+        }
+        if (typeof db !== 'undefined' && db && currentUser) {
+            await db.collection('leaderboard').doc(currentUser.uid).set({ photoURL: photoURL }, { merge: true });
         }
         
         showUserProfile(currentUser);
-        if (window._openProfile) window._openProfile();
-        uploadBtn.textContent = 'Xong';
+        if (window._updateProfileModalUI) window._updateProfileModalUI();
+        
+        savingToast.remove();
+        
+        // Show success toast
+        const toast = document.createElement('div');
+        toast.className = 'quest-toast';
+        toast.innerHTML = '<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span> Đã cập nhật ảnh đại diện thành công!';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2500);
     } catch (err) {
-        console.error(err);
-        alert('Lỗi tải ảnh: ' + err.message);
-        uploadBtn.textContent = '❌ Lỗi';
+        console.error('Save user avatar error:', err);
+        savingToast.remove();
+        alert('Lỗi cập nhật ảnh đại diện: ' + (err.message || err));
     }
-    
-    setTimeout(() => {
-        uploadBtn.textContent = '📷 Đổi ảnh đại diện';
-        uploadBtn.disabled = false;
-        e.target.value = '';
-    }, 2000);
 }
+window.saveUserAvatar = saveUserAvatar;
+
+async function handleAvatarUpload(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        alert('Vui lòng chọn tệp hình ảnh hợp lệ (PNG, JPG, WebP, GIF)!');
+        e.target.value = '';
+        return;
+    }
+
+    // Processing indicator
+    const procToast = document.createElement('div');
+    procToast.className = 'quest-toast show';
+    procToast.innerHTML = '<span>⏳</span> Đang nén & tối ưu hóa ảnh...';
+    document.body.appendChild(procToast);
+
+    try {
+        const img = new Image();
+        const objUrl = URL.createObjectURL(file);
+        img.src = objUrl;
+        await new Promise((res, rej) => {
+            img.onload = () => { URL.revokeObjectURL(objUrl); res(); };
+            img.onerror = (err) => { URL.revokeObjectURL(objUrl); rej(err); };
+        });
+
+        const canvas = document.createElement('canvas');
+        const MAX_SIZE = 280;
+        let w = img.width, h = img.height;
+        if (w > h) {
+            if (w > MAX_SIZE) { h = Math.round(h * (MAX_SIZE / w)); w = MAX_SIZE; }
+        } else {
+            if (h > MAX_SIZE) { w = Math.round(w * (MAX_SIZE / h)); h = MAX_SIZE; }
+        }
+
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+
+        const base64Str = canvas.toDataURL('image/jpeg', 0.86);
+        procToast.remove();
+
+        await saveUserAvatar(base64Str);
+        if (typeof closeOrbitalContentPopup === 'function') closeOrbitalContentPopup();
+    } catch (err) {
+        console.error('Avatar upload processing error:', err);
+        procToast.remove();
+        alert('Lỗi xử lý ảnh: ' + (err.message || err));
+    }
+
+    e.target.value = '';
+}
+window.handleAvatarUpload = handleAvatarUpload;
+
+function openAvatarStudio() {
+    showOrbitalContentPopup('<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-lens"></use></svg> Đổi Ảnh Đại Diện', () => {
+        const curImg = currentUser?.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser?.displayName||currentUser?.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
+        
+        const presetList = [
+            { id: 'Cyber', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=CyberWarrior' },
+            { id: 'Samurai', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Samurai' },
+            { id: 'Zen', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=ZenMaster' },
+            { id: 'Phoenix', url: 'https://api.dicebear.com/7.x/identicon/svg?seed=Phoenix' },
+            { id: 'Neon', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Cyberpunk' },
+            { id: 'Explorer', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Explorer' },
+            { id: 'Dragon', url: 'https://api.dicebear.com/7.x/thumbs/svg?seed=Dragon' },
+            { id: 'Star', url: 'https://api.dicebear.com/7.x/shapes/svg?seed=Starlight' },
+            { id: 'Shadow', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Shadow' },
+            { id: 'Aurora', url: 'https://api.dicebear.com/7.x/thumbs/svg?seed=Aurora' },
+            { id: 'Titan', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Titan' },
+            { id: 'Stoic', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Marcus' }
+        ];
+
+        return `
+        <div class="ocp-avatar-studio">
+            <div class="ocp-av-preview-wrap">
+                <img src="${curImg}" class="ocp-av-preview-img" id="ocpAvPreviewImg" alt="Preview">
+                <div class="ocp-av-preview-hint">Ảnh đại diện hiện tại</div>
+            </div>
+
+            <div class="ocp-av-tabs">
+                <button class="ocp-av-tab active" data-tab="upload">📤 Tải lên</button>
+                <button class="ocp-av-tab" data-tab="url">🔗 Dán URL</button>
+                <button class="ocp-av-tab" data-tab="presets">🎲 Mẫu đẹp</button>
+                <button class="ocp-av-tab" data-tab="frames">🖼️ Khung</button>
+            </div>
+
+            <div class="ocp-av-tab-pane active" id="ocpPaneUpload">
+                <div class="ocp-av-dropzone" id="ocpAvDropzone" title="Bấm để chọn tệp ảnh từ máy">
+                    <svg class="rune-icon rune-lg" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>
+                    <div class="ocp-dz-title">Bấm để chọn ảnh từ máy</div>
+                    <div class="ocp-dz-sub">Hỗ trợ JPG, PNG, WebP, GIF (Tự động nén tối ưu)</div>
+                </div>
+            </div>
+
+            <div class="ocp-av-tab-pane" id="ocpPaneUrl">
+                <div class="ocp-av-url-wrap">
+                    <input type="url" class="ocp-name-input" id="ocpAvUrlInput" placeholder="Dán link ảnh (https://...)" value="">
+                    <button class="ocp-name-save-btn" id="ocpAvUrlSaveBtn"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> Lưu ảnh URL</button>
+                </div>
+            </div>
+
+            <div class="ocp-av-tab-pane" id="ocpPanePresets">
+                <div class="ocp-av-presets-grid">
+                    ${presetList.map(p => `
+                        <div class="ocp-av-preset-item" data-url="${p.url}" title="${p.id}">
+                            <img src="${p.url}" alt="${p.id}" loading="lazy">
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div class="ocp-av-tab-pane" id="ocpPaneFrames">
+                <div class="ocp-frames-grid" id="ocpFramesGrid"></div>
+            </div>
+
+            <div class="ocp-av-footer">
+                <button class="ocp-av-remove-btn" id="ocpAvRemoveBtn"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg> Về ảnh mặc định</button>
+            </div>
+        </div>`;
+    }, (body) => {
+        // Tab switching
+        const tabs = body.querySelectorAll('.ocp-av-tab');
+        const panes = body.querySelectorAll('.ocp-av-tab-pane');
+        tabs.forEach(t => {
+            t.onclick = () => {
+                tabs.forEach(x => x.classList.remove('active'));
+                panes.forEach(x => x.classList.remove('active'));
+                t.classList.add('active');
+                const targetId = 'ocpPane' + t.dataset.tab.charAt(0).toUpperCase() + t.dataset.tab.slice(1);
+                const target = body.querySelector('#' + targetId);
+                if (target) target.classList.add('active');
+            };
+        });
+
+        // Dropzone click -> file input
+        const dz = body.querySelector('#ocpAvDropzone');
+        const fileInput = document.getElementById('avatarFileInput');
+        if (dz && fileInput) {
+            dz.onclick = () => fileInput.click();
+        }
+
+        // URL Input & Save
+        const urlInput = body.querySelector('#ocpAvUrlInput');
+        const urlSaveBtn = body.querySelector('#ocpAvUrlSaveBtn');
+        const previewImg = body.querySelector('#ocpAvPreviewImg');
+        if (urlInput) {
+            urlInput.oninput = () => {
+                const u = urlInput.value.trim();
+                if (u && (u.startsWith('http://') || u.startsWith('https://') || u.startsWith('data:image/'))) {
+                    if (previewImg) previewImg.src = u;
+                }
+            };
+        }
+        if (urlSaveBtn) {
+            urlSaveBtn.onclick = async () => {
+                const u = urlInput.value.trim();
+                if (!u || (!u.startsWith('http://') && !u.startsWith('https://') && !u.startsWith('data:image/'))) {
+                    alert('Vui lòng nhập đường dẫn URL ảnh hợp lệ (bắt đầu bằng https://)!');
+                    return;
+                }
+                urlSaveBtn.textContent = '⏳ Đang lưu...';
+                urlSaveBtn.disabled = true;
+                await saveUserAvatar(u);
+                closeOrbitalContentPopup();
+            };
+        }
+
+        // Preset items click
+        body.querySelectorAll('.ocp-av-preset-item').forEach(item => {
+            item.onclick = async () => {
+                const u = item.dataset.url;
+                if (!u) return;
+                item.style.borderColor = 'var(--accent)';
+                await saveUserAvatar(u);
+                closeOrbitalContentPopup();
+            };
+        });
+
+        // Render Frames tab
+        const framesGrid = body.querySelector('#ocpFramesGrid');
+        if (framesGrid) {
+            const computed = typeof calculateUserDPAndStreak === 'function' ? calculateUserDPAndStreak() : {};
+            const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (currentUser && currentUser.email === 'admin@gmail.com');
+            const dp = isAdmin ? 999999 : ((computed.totalDP || 0) + (userBonusDP || 0));
+            const rank = typeof getRankLevel === 'function' ? getRankLevel(dp) : { level: 1 };
+            const imgUrl = currentUser.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser.displayName||currentUser.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
+            let fHtml = '';
+            for (let i = 1; i <= 10; i++) {
+                const isUnlocked = rank.level >= i;
+                const isCurrent = rank.level === i;
+                let cls = 'ocp-frame-item';
+                if (isCurrent) cls += ' current';
+                if (!isUnlocked) cls += ' locked';
+                let frameHTML = '';
+                if (window.getAvatarHTML) frameHTML = window.getAvatarHTML(i, imgUrl, 56);
+                fHtml += `<div class="${cls}" data-level="${i}">
+                    ${!isUnlocked ? '<div class="ocp-frame-lock"><svg class="rune-icon rune-xs" viewBox="0 0 48 48"><use href="#i-close"></use></svg></div>' : ''}
+                    ${frameHTML}
+                    <div class="ocp-frame-lv">${isCurrent ? 'Đang dùng' : 'Khung ' + i}</div>
+                </div>`;
+            }
+            framesGrid.innerHTML = fHtml;
+            framesGrid.querySelectorAll('.ocp-frame-item:not(.locked)').forEach(el => {
+                el.onclick = () => {
+                    const level = parseInt(el.dataset.level);
+                    if (window._setProfileFrame) window._setProfileFrame(level);
+                    closeOrbitalContentPopup();
+                };
+            });
+        }
+
+        // Remove avatar
+        const removeBtn = body.querySelector('#ocpAvRemoveBtn');
+        if (removeBtn) {
+            removeBtn.onclick = async () => {
+                if (!confirm('Bạn có chắc muốn xóa ảnh đại diện về mặc định?')) return;
+                await saveUserAvatar('');
+                closeOrbitalContentPopup();
+            };
+        }
+    });
+}
+window.openAvatarStudio = openAvatarStudio;
 
 // ==================== TRỤ CỘT 1: STREAK SHIELD & RECOVERY MODAL ====================
 
@@ -5400,7 +5586,7 @@ function openStreakModal() {
 window._openStreakModal = openStreakModal;
 
 function renderStreakProtectionUI() {
-    const body = document.getElementById('streakModalBody');
+    const body = document.getElementById('streakModalBody') || document.getElementById('streakHubContent');
     if (!body) return;
 
     const computed = calculateUserDPAndStreak(S);
@@ -5409,28 +5595,36 @@ function renderStreakProtectionUI() {
     const streak = computed.currentStreak;
     const maxStreak = computed.maxStreak;
     const freezes = S.freezes || 0;
+    
+    const now = new Date();
+    const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const yesterdayMidnight = todayMidnight - 24 * 60 * 60 * 1000;
+    const yObj = new Date(yesterdayMidnight);
+    const yesterdayKey = `${yObj.getFullYear()}-${String(yObj.getMonth() + 1).padStart(2, '0')}-${String(yObj.getDate()).padStart(2, '0')}`;
+    
     const sBreak = S.lastStreakBreak;
-    const hasBrokenStreak = sBreak && !sBreak.repaired && (Date.now() - (sBreak.timestamp || 0) < 48 * 60 * 60 * 1000);
+    const hasBrokenStreak = (sBreak && !sBreak.repaired && (Date.now() - (sBreak.timestamp || 0) < 48 * 60 * 60 * 1000)) || (streak === 0 && maxStreak > 0 && !(S.repairedDays || []).includes(yesterdayKey));
 
     let statusBadgeHtml = '';
     let statusDescText = '';
     if (hasBrokenStreak) {
-        statusBadgeHtml = `<span class="sm-status-badge danger">🚨 ${t('streakBroken')}</span>`;
-        statusDescText = t('streakBrokenDesc');
+        statusBadgeHtml = `<span class="sm-status-badge danger">🚨 ${t('streakBroken') || 'Chuỗi đã bị đứt!'}</span>`;
+        statusDescText = t('streakBrokenDesc') || 'Bạn có 48h để Hồi sinh lại chuỗi trước khi mất vĩnh viễn!';
     } else if (freezes > 0) {
-        statusBadgeHtml = `<span class="sm-status-badge safe">🛡️ ${t('streakProtected')} (x${freezes})</span>`;
-        statusDescText = t('streakSafeDesc');
+        statusBadgeHtml = `<span class="sm-status-badge safe">🛡️ ${t('streakProtected') || 'Đang bảo vệ'} (x${freezes})</span>`;
+        statusDescText = t('streakSafeDesc') || 'Bình đóng băng sẵn sàng tự động bảo vệ nếu bạn quên điểm danh.';
     } else {
-        statusBadgeHtml = `<span class="sm-status-badge warning">⚠️ ${t('streakDangerDesc')}</span>`;
-        statusDescText = t('streakDangerDesc');
+        statusBadgeHtml = `<span class="sm-status-badge warning">⚠️ ${t('streakDangerDesc') || 'Chưa có bảo vệ!'}</span>`;
+        statusDescText = t('streakDangerDesc') || 'Hãy mua Bình Đóng Băng để bảo vệ chuỗi kỷ luật không bị đứt.';
     }
 
-    // Flask 1 & Flask 2
+    // 3 Flasks (Capacity up to 3)
     const flask1Filled = freezes >= 1;
     const flask2Filled = freezes >= 2;
+    const flask3Filled = freezes >= 3;
 
     // Shop buttons availability
-    const canBuyFreeze = freezes < 2 && (myDP >= 200 || isAdmin);
+    const canBuyFreeze = freezes < 3 && (myDP >= 200 || isAdmin);
     const canRepairStreak = hasBrokenStreak && (myDP >= 150 || isAdmin);
 
     // History items
@@ -5443,14 +5637,14 @@ function renderStreakProtectionUI() {
 
     let historyHtml = '';
     if (allHistory.length === 0) {
-        historyHtml = `<div class="sm-history-row" style="justify-content:center; opacity:0.6;">${t('noHistory')}</div>`;
+        historyHtml = `<div class="sm-history-row" style="justify-content:center; opacity:0.6;">${t('noHistory') || 'Chưa có lịch sử bảo vệ chuỗi'}</div>`;
     } else {
         allHistory.slice(0, 5).forEach(h => {
             const parts = h.date.split('-');
             const dateStr = parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : h.date;
             const badge = h.type === 'freeze' ? 
-                `<span style="color:#0284c7; font-weight:700;">🧊 ${t('streakFreeze')}</span>` : 
-                `<span style="color:#f59e0b; font-weight:700;">⚡ ${t('repairStreak')}</span>`;
+                `<span style="color:#0284c7; font-weight:700;">🧊 ${t('streakFreeze') || 'Đóng băng chuỗi'}</span>` : 
+                `<span style="color:#f59e0b; font-weight:700;">⚡ ${t('repairStreak') || 'Cứu chuỗi'}</span>`;
             historyHtml += `<div class="sm-history-row"><span>📅 ${dateStr}</span>${badge}</div>`;
         });
     }
@@ -5461,8 +5655,8 @@ function renderStreakProtectionUI() {
             <div class="sm-streak-main">
                 <div class="sm-fire-icon">🔥</div>
                 <div>
-                    <div class="sm-streak-num">${streak} <span style="font-size:15px; font-weight:600; color:var(--text-muted);">${t('daysUnit')}</span></div>
-                    <div class="sm-streak-label">${t('currentStreakLabel')} · ${t('maxStreakLabel')}: ${maxStreak} ${t('daysUnit')}</div>
+                    <div class="sm-streak-num">${streak} <span style="font-size:15px; font-weight:600; color:var(--text-muted);">${t('daysUnit') || 'ngày'}</span></div>
+                    <div class="sm-streak-label">${t('currentStreakLabel') || 'Chuỗi hiện tại'} · ${t('maxStreakLabel') || 'Kỷ lục'}: ${maxStreak} ${t('daysUnit') || 'ngày'}</div>
                 </div>
             </div>
             <div>
@@ -5474,22 +5668,29 @@ function renderStreakProtectionUI() {
         <!-- FLASKS INVENTORY -->
         <div>
             <div class="sm-section-title">
-                <span>🎒 ${t('streakFreeze')}</span>
-                <span>${freezes}/2 ${t('streakAvailable')}</span>
+                <span>🎒 ${t('streakFreeze') || 'Bình Đóng Băng'}</span>
+                <span>${freezes}/3 ${t('streakAvailable') || 'khả dụng'}</span>
             </div>
-            <div class="sm-flasks-grid">
+            <div class="sm-flasks-grid" style="grid-template-columns: repeat(3, 1fr);">
                 <div class="sm-flask-card ${flask1Filled ? 'filled' : 'empty'}">
                     <div class="sm-flask-art">${flask1Filled ? '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>' : '<svg class="rune-icon" style="color:var(--text-muted)" viewBox="0 0 48 48"><use href="#i-close"></use></svg>'}</div>
                     <div class="sm-flask-meta">
-                        <div class="sm-flask-name">${t('freezeFlask1')}</div>
-                        <div class="sm-flask-status">${flask1Filled ? '<svg class="rune-inline rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> ' + t('freezeReady') : '⚪ ' + t('freezeEmpty')}</div>
+                        <div class="sm-flask-name">Bình 1</div>
+                        <div class="sm-flask-status">${flask1Filled ? 'Sẵn sàng' : 'Trống'}</div>
                     </div>
                 </div>
                 <div class="sm-flask-card ${flask2Filled ? 'filled' : 'empty'}">
                     <div class="sm-flask-art">${flask2Filled ? '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>' : '<svg class="rune-icon" style="color:var(--text-muted)" viewBox="0 0 48 48"><use href="#i-close"></use></svg>'}</div>
                     <div class="sm-flask-meta">
-                        <div class="sm-flask-name">${t('freezeFlask2')}</div>
-                        <div class="sm-flask-status">${flask2Filled ? '<svg class="rune-inline rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> ' + t('freezeReady') : '⚪ ' + t('freezeEmpty')}</div>
+                        <div class="sm-flask-name">Bình 2</div>
+                        <div class="sm-flask-status">${flask2Filled ? 'Sẵn sàng' : 'Trống'}</div>
+                    </div>
+                </div>
+                <div class="sm-flask-card ${flask3Filled ? 'filled' : 'empty'}">
+                    <div class="sm-flask-art">${flask3Filled ? '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>' : '<svg class="rune-icon" style="color:var(--text-muted)" viewBox="0 0 48 48"><use href="#i-close"></use></svg>'}</div>
+                    <div class="sm-flask-meta">
+                        <div class="sm-flask-name">Bình 3</div>
+                        <div class="sm-flask-status">${flask3Filled ? 'Sẵn sàng' : 'Trống'}</div>
                     </div>
                 </div>
             </div>
@@ -5507,12 +5708,12 @@ function renderStreakProtectionUI() {
                     <div class="sm-item-left">
                         <div class="sm-item-icon"><svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg></div>
                         <div>
-                            <div class="sm-item-title">${t('buyFreeze')}</div>
-                            <div class="sm-item-desc">${t('buyFreezeDesc')}</div>
+                            <div class="sm-item-title">${t('buyFreeze') || 'Mua Bình Đóng Băng'}</div>
+                            <div class="sm-item-desc">${t('buyFreezeDesc') || 'Tự động bảo toàn streak khi bạn quên điểm danh'}</div>
                         </div>
                     </div>
                     <button class="sm-item-btn btn-buy-freeze" onclick="window._buyStreakFreeze()" ${!canBuyFreeze ? 'disabled' : ''}>
-                        ${freezes >= 2 ? t('freezeReady') + ' (2/2)' : t('streakBuyBtn') + ' (200 DP)'}
+                        ${freezes >= 3 ? 'Đầy bình (3/3)' : (t('streakBuyBtn') || 'Mua') + ' (200 DP)'}
                     </button>
                 </div>
 
@@ -5521,12 +5722,12 @@ function renderStreakProtectionUI() {
                     <div class="sm-item-left">
                         <div class="sm-item-icon" style="color:#ef4444;"><svg class="rune-icon" style="color:#ef4444" viewBox="0 0 48 48"><use href="#i-dp"></use></svg></div>
                         <div>
-                            <div class="sm-item-title">${t('repairStreak')} (24h)</div>
-                            <div class="sm-item-desc">${t('repairStreakDesc')}</div>
+                            <div class="sm-item-title">${t('repairStreak') || 'Cứu Chuỗi Trong 48H'}</div>
+                            <div class="sm-item-desc">${t('repairStreakDesc') || 'Hồi sinh chuỗi ngày đã mất và tiếp tục duy trì kỷ lục'}</div>
                         </div>
                     </div>
                     <button class="sm-item-btn btn-repair-streak" onclick="window._repairStreakWithDP()" ${!canRepairStreak ? 'disabled' : ''}>
-                        ${hasBrokenStreak ? t('repairStreak') + ' (150 DP)' : t('streakNoNeed')}
+                        ${hasBrokenStreak ? (t('repairStreak') || 'Cứu chuỗi ngay') + ' (150 DP)' : (t('streakNoNeed') || 'Chuỗi đang an toàn')}
                     </button>
                 </div>
             </div>
@@ -5535,7 +5736,7 @@ function renderStreakProtectionUI() {
         <!-- HISTORY -->
         <div>
             <div class="sm-section-title">
-                <span><svg class="rune-inline rune-sys" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> ${t('historyTitle')}</span>
+                <span><svg class="rune-inline rune-sys" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> ${t('historyTitle') || 'Lịch Sử Hoạt Động'}</span>
             </div>
             <div class="sm-history-list">
                 ${historyHtml}
@@ -5545,8 +5746,8 @@ function renderStreakProtectionUI() {
 }
 
 async function buyStreakFreeze(cost = 200) {
-    if (S.freezes >= 2) {
-        alert('Bạn đã sở hữu tối đa 2 bình đóng băng!');
+    if (S.freezes >= 3) {
+        alert('Bạn đã sở hữu tối đa 3 bình đóng băng!');
         return;
     }
     const computed = calculateUserDPAndStreak(S);
@@ -5554,7 +5755,7 @@ async function buyStreakFreeze(cost = 200) {
     const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
 
     if (myDP < cost && !isAdmin) {
-        alert(`Bạn cần ít nhất ${cost} DP để mua bình đóng băng (Hiện có: ${myDP} DP)!`);
+        alert(`Bạn cần ít nhất ${cost} DP để mua bình đóng băng (Hiện có: ${myDP.toLocaleString()} DP)!`);
         return;
     }
 
@@ -5570,7 +5771,7 @@ async function buyStreakFreeze(cost = 200) {
         }
     }
 
-    S.freezes = (S.freezes || 0) + 1;
+    S.freezes = Math.min(3, (S.freezes || 0) + 1);
     sv();
 
     if (typeof playFreezeSound === 'function') playFreezeSound();
@@ -5585,27 +5786,31 @@ async function buyStreakFreeze(cost = 200) {
     setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
 
     updateUserDPState(true);
+    renderStreakShieldNavbar();
     renderStreakProtectionUI();
 }
 window._buyStreakFreeze = buyStreakFreeze;
 
 async function repairStreakWithDP(cost = 150) {
+    const now = new Date();
+    const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const yesterdayMidnight = todayMidnight - 24 * 60 * 60 * 1000;
+    const yObj = new Date(yesterdayMidnight);
+    const yesterdayKey = `${yObj.getFullYear()}-${String(yObj.getMonth() + 1).padStart(2, '0')}-${String(yObj.getDate()).padStart(2, '0')}`;
+
     const sBreak = S.lastStreakBreak;
-    if (!sBreak || sBreak.repaired) {
-        alert('Không có chuỗi nào cần cứu lúc này!');
-        return;
-    }
+    const targetDate = (sBreak && sBreak.date) ? sBreak.date : yesterdayKey;
 
     const computed = calculateUserDPAndStreak(S);
     const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
     const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
 
     if (myDP < cost && !isAdmin) {
-        alert(`Bạn cần ít nhất ${cost} DP để Hồi sinh chuỗi (Hiện có: ${myDP} DP)!`);
+        alert(`Bạn cần ít nhất ${cost} DP để Hồi sinh chuỗi (Hiện có: ${myDP.toLocaleString()} DP)!`);
         return;
     }
 
-    if (!confirm(`Xác nhận dùng ${cost} DP để Hồi sinh chuỗi ngày bị đứt hôm qua?`)) return;
+    if (!confirm(`Xác nhận dùng ${cost} DP để Hồi sinh chuỗi ngày ${targetDate}?`)) return;
 
     if (!isAdmin) {
         userBonusDP = (userBonusDP || 0) - cost;
@@ -5618,10 +5823,12 @@ async function repairStreakWithDP(cost = 150) {
     }
 
     if (!Array.isArray(S.repairedDays)) S.repairedDays = [];
-    if (sBreak.date && !S.repairedDays.includes(sBreak.date)) {
-        S.repairedDays.push(sBreak.date);
+    if (!S.repairedDays.includes(targetDate)) {
+        S.repairedDays.push(targetDate);
     }
-    S.lastStreakBreak.repaired = true;
+    if (S.lastStreakBreak) {
+        S.lastStreakBreak.repaired = true;
+    }
     sv();
 
     if (typeof playResurrectSound === 'function') playResurrectSound();
@@ -5636,8 +5843,8 @@ async function repairStreakWithDP(cost = 150) {
     setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
 
     updateUserDPState(true);
-    renderGrid();
-    renderHeatmap();
+    if (typeof renderGrid === 'function') renderGrid();
+    if (typeof renderHeatmap === 'function') renderHeatmap();
     renderStreakProtectionUI();
     renderStreakBanner();
 }
@@ -8169,163 +8376,563 @@ function initRecapAndShareModals() {
     if (copyBtn) copyBtn.onclick = copyShareCardImage;
 }
 
-// ==================== TRỤ CỘT 5: CÔNG CỤ HỖ TRỢ TRỰC TIẾP (POMODORO & DAILY STOIC QUOTES) ====================
+// ==================== TRỤ CỘT 5: CÔNG CỤ HỖ TRỢ TRỰC TIẾP (POMODORO & SOUND MIXER) ====================
 
-// --- 1. WEB AUDIO API AMBIENT SOUNDSCAPE SYNTHESIZER ---
+// --- 1. WEB AUDIO API MULTI-CHANNEL SOUND MIXER SYNTHESIZER ---
 
-let currentAmbientType = 'none';
-let ambientNodes = null;
-let ambientGainNode = null;
-let ambientMasterVolume = 0.5;
-
-function stopAmbientSound() {
-    if (ambientGainNode && audioCtx) {
-        try {
-            ambientGainNode.gain.setValueAtTime(ambientGainNode.gain.value, audioCtx.currentTime);
-            ambientGainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
-        } catch(e){}
-    }
-    setTimeout(() => {
-        if (ambientNodes) {
-            try {
-                if (ambientNodes.source) ambientNodes.source.stop();
-                if (ambientNodes.lfo) ambientNodes.lfo.stop();
-                if (ambientNodes.interval) clearInterval(ambientNodes.interval);
-            } catch(e){}
-            ambientNodes = null;
+let audioCtx = null;
+function getAudioContext() {
+    if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
         }
-        currentAmbientType = 'none';
-    }, 320);
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    return audioCtx;
 }
 
-function playAmbientSound(type, volume = 0.5) {
-    ambientMasterVolume = volume;
-    if (type === 'none') {
-        stopAmbientSound();
-        return;
+// Sound Mixer Configuration State
+let soundMixerState = {
+    masterVolume: 0.7,
+    isMuted: false,
+    currentPreset: 'cafe',
+    channels: {
+        rain: { active: true, volume: 0.65 },
+        ocean: { active: false, volume: 0 },
+        fire: { active: true, volume: 0.25 },
+        brown: { active: false, volume: 0 },
+        binaural: { active: false, volume: 0 },
+        lofi: { active: true, volume: 0.50 }
     }
-    stopAmbientSound();
+};
 
+const SOUND_PRESETS = {
+    cafe: {
+        name: 'Cà Phê Mưa',
+        channels: { rain: 0.65, ocean: 0, fire: 0.25, brown: 0, binaural: 0, lofi: 0.50 }
+    },
+    forest: {
+        name: 'Rừng Sâu',
+        channels: { rain: 0.70, ocean: 0.35, fire: 0, brown: 0.30, binaural: 0, lofi: 0 }
+    },
+    deepwork: {
+        name: 'Deep Work 40Hz',
+        channels: { rain: 0, ocean: 0, fire: 0, brown: 0.75, binaural: 0.55, lofi: 0 }
+    },
+    campfire: {
+        name: 'Đêm Lửa Trại',
+        channels: { rain: 0, ocean: 0, fire: 0.70, brown: 0.25, binaural: 0, lofi: 0.40 }
+    },
+    ocean: {
+        name: 'Thiền Biển Đêm',
+        channels: { rain: 0, ocean: 0.70, fire: 0, brown: 0, binaural: 0.40, lofi: 0.25 }
+    },
+    mute: {
+        name: 'Tắt Hết',
+        channels: { rain: 0, ocean: 0, fire: 0, brown: 0, binaural: 0, lofi: 0 }
+    }
+};
+
+let mixerMasterGain = null;
+let activeChannelNodes = {
+    rain: null,
+    ocean: null,
+    fire: null,
+    brown: null,
+    binaural: null,
+    lofi: null
+};
+
+function loadSoundMixerState() {
+    try {
+        const saved = localStorage.getItem('hg_sound_mixer_state');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            if (parsed && typeof parsed === 'object') {
+                if (typeof parsed.masterVolume === 'number') soundMixerState.masterVolume = parsed.masterVolume;
+                if (typeof parsed.isMuted === 'boolean') soundMixerState.isMuted = parsed.isMuted;
+                if (parsed.currentPreset) soundMixerState.currentPreset = parsed.currentPreset;
+                if (parsed.channels && typeof parsed.channels === 'object') {
+                    for (const k in soundMixerState.channels) {
+                        if (parsed.channels[k]) {
+                            soundMixerState.channels[k].active = !!parsed.channels[k].active;
+                            soundMixerState.channels[k].volume = typeof parsed.channels[k].volume === 'number' ? parsed.channels[k].volume : soundMixerState.channels[k].volume;
+                        }
+                    }
+                }
+            }
+        }
+    } catch(e){}
+}
+
+function saveSoundMixerState() {
+    try {
+        localStorage.setItem('hg_sound_mixer_state', JSON.stringify(soundMixerState));
+    } catch(e){}
+}
+
+function getEffectiveMasterVolume() {
+    if (soundMixerState.isMuted) return 0;
+    return Math.max(0, Math.min(1, soundMixerState.masterVolume));
+}
+
+function getEffectiveChannelVolume(channelKey) {
+    const ch = soundMixerState.channels[channelKey];
+    if (!ch || !ch.active || soundMixerState.isMuted) return 0;
+    return Math.max(0, Math.min(1, ch.volume));
+}
+
+function updateMasterGainVolume() {
+    if (!mixerMasterGain) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const eff = getEffectiveMasterVolume();
+    try {
+        mixerMasterGain.gain.setValueAtTime(mixerMasterGain.gain.value, ctx.currentTime);
+        mixerMasterGain.gain.linearRampToValueAtTime(eff, ctx.currentTime + 0.1);
+    } catch(e){}
+}
+
+function updateChannelGainVolume(channelKey) {
+    const node = activeChannelNodes[channelKey];
+    if (!node || !node.gainNode) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const eff = getEffectiveChannelVolume(channelKey);
+    try {
+        node.gainNode.gain.setValueAtTime(node.gainNode.gain.value, ctx.currentTime);
+        node.gainNode.linearRampToValueAtTime(eff, ctx.currentTime + 0.15);
+    } catch(e){}
+}
+
+function ensureMasterMixerNode(ctx) {
+    if (!mixerMasterGain) {
+        mixerMasterGain = ctx.createGain();
+        mixerMasterGain.gain.setValueAtTime(getEffectiveMasterVolume(), ctx.currentTime);
+        mixerMasterGain.connect(ctx.destination);
+    }
+    return mixerMasterGain;
+}
+
+// 1. Rain Generator
+function startRainChannel(ctx, masterGain) {
+    const bufferSize = ctx.sampleRate * 3;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+    for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        b0 = 0.99886 * b0 + white * 0.0555179;
+        b1 = 0.99332 * b1 + white * 0.0750759;
+        b2 = 0.96900 * b2 + white * 0.1538520;
+        b3 = 0.86650 * b3 + white * 0.3104856;
+        b4 = 0.55000 * b4 + white * 0.5329522;
+        b5 = -0.7616 * b5 - white * 0.0168980;
+        data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.12;
+        b6 = white * 0.115926;
+    }
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    source.loop = true;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(880, ctx.currentTime);
+
+    const gain = ctx.createGain();
+    const eff = getEffectiveChannelVolume('rain') * 0.35;
+    gain.gain.setValueAtTime(eff, ctx.currentTime);
+
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(masterGain);
+    source.start();
+
+    return { source, filter, gainNode: gain, stop: () => { try { source.stop(); }catch(e){} } };
+}
+
+// 2. Ocean Generator
+function startOceanChannel(ctx, masterGain) {
+    const bufferSize = ctx.sampleRate * 4;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.28;
+
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    source.loop = true;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(360, ctx.currentTime);
+    filter.Q.setValueAtTime(1.2, ctx.currentTime);
+
+    const lfo = ctx.createOscillator();
+    lfo.frequency.setValueAtTime(0.09, ctx.currentTime);
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.setValueAtTime(220, ctx.currentTime);
+    lfo.connect(filter.frequency);
+
+    const gain = ctx.createGain();
+    const eff = getEffectiveChannelVolume('ocean') * 0.40;
+    gain.gain.setValueAtTime(eff, ctx.currentTime);
+
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(masterGain);
+
+    source.start();
+    lfo.start();
+
+    return { source, lfo, gainNode: gain, stop: () => { try { source.stop(); lfo.stop(); }catch(e){} } };
+}
+
+// 3. Campfire Generator
+function startCampfireChannel(ctx, masterGain) {
+    const bufferSize = ctx.sampleRate * 2;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.08;
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    noise.loop = true;
+
+    const lowFilter = ctx.createBiquadFilter();
+    lowFilter.type = 'lowpass';
+    lowFilter.frequency.setValueAtTime(220, ctx.currentTime);
+
+    const gain = ctx.createGain();
+    const eff = getEffectiveChannelVolume('fire') * 0.45;
+    gain.gain.setValueAtTime(eff, ctx.currentTime);
+
+    noise.connect(lowFilter);
+    lowFilter.connect(gain);
+    gain.connect(masterGain);
+    noise.start();
+
+    // Crackle generator: random stochastic clicks/crackles
+    let isRunning = true;
+    const triggerCrackle = () => {
+        if (!isRunning || !audioCtx) return;
+        try {
+            const crackleLen = Math.floor(ctx.sampleRate * (0.01 + Math.random() * 0.03));
+            const crackleBuf = ctx.createBuffer(1, crackleLen, ctx.sampleRate);
+            const cdata = crackleBuf.getChannelData(0);
+            for (let i = 0; i < crackleLen; i++) {
+                cdata[i] = (Math.random() * 2 - 1) * (1 - i / crackleLen);
+            }
+            const csrc = ctx.createBufferSource();
+            csrc.buffer = crackleBuf;
+            const hpFilter = ctx.createBiquadFilter();
+            hpFilter.type = 'bandpass';
+            hpFilter.frequency.setValueAtTime(1500 + Math.random() * 2800, ctx.currentTime);
+            hpFilter.Q.setValueAtTime(3.0, ctx.currentTime);
+
+            const cgain = ctx.createGain();
+            cgain.gain.setValueAtTime(0.08 + Math.random() * 0.16, ctx.currentTime);
+
+            csrc.connect(hpFilter);
+            hpFilter.connect(cgain);
+            cgain.connect(gain);
+
+            csrc.start();
+        } catch(e){}
+
+        if (isRunning) {
+            const nextDelay = 80 + Math.random() * 320;
+            setTimeout(triggerCrackle, nextDelay);
+        }
+    };
+    triggerCrackle();
+
+    return {
+        noise,
+        gainNode: gain,
+        stop: () => {
+            isRunning = false;
+            try { noise.stop(); }catch(e){}
+        }
+    };
+}
+
+// 4. Brown Noise Generator
+function startBrownNoiseChannel(ctx, masterGain) {
+    const bufferSize = ctx.sampleRate * 3;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    let lastOut = 0.0;
+    for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        data[i] = (lastOut + (0.02 * white)) / 1.02;
+        lastOut = data[i];
+        data[i] *= 3.5; // Gain compensation
+    }
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    noise.loop = true;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(500, ctx.currentTime);
+
+    const gain = ctx.createGain();
+    const eff = getEffectiveChannelVolume('brown') * 0.35;
+    gain.gain.setValueAtTime(eff, ctx.currentTime);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(masterGain);
+    noise.start();
+
+    return { noise, filter, gainNode: gain, stop: () => { try { noise.stop(); }catch(e){} } };
+}
+
+// 5. Binaural Beats 40Hz (Gamma Flow State)
+function startBinauralChannel(ctx, masterGain) {
+    const oscLeft = ctx.createOscillator();
+    const oscRight = ctx.createOscillator();
+
+    // Left ear: 216Hz, Right ear: 256Hz (Beat = 40Hz Gamma frequency)
+    oscLeft.type = 'sine';
+    oscLeft.frequency.setValueAtTime(216, ctx.currentTime);
+
+    oscRight.type = 'sine';
+    oscRight.frequency.setValueAtTime(256, ctx.currentTime);
+
+    const panLeft = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+    const panRight = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+    if (panLeft) panLeft.pan.setValueAtTime(-1, ctx.currentTime);
+    if (panRight) panRight.pan.setValueAtTime(1, ctx.currentTime);
+
+    const gain = ctx.createGain();
+    const eff = getEffectiveChannelVolume('binaural') * 0.28;
+    gain.gain.setValueAtTime(eff, ctx.currentTime);
+
+    if (panLeft && panRight) {
+        oscLeft.connect(panLeft);
+        panLeft.connect(gain);
+        oscRight.connect(panRight);
+        panRight.connect(gain);
+    } else {
+        oscLeft.connect(gain);
+        oscRight.connect(gain);
+    }
+
+    gain.connect(masterGain);
+    oscLeft.start();
+    oscRight.start();
+
+    return {
+        oscLeft,
+        oscRight,
+        gainNode: gain,
+        stop: () => {
+            try { oscLeft.stop(); oscRight.stop(); }catch(e){}
+        }
+    };
+}
+
+// 6. Lo-fi Chords Generator
+function startLofiChannel(ctx, masterGain) {
+    const chords = [
+        [261.63, 329.63, 392.00, 493.88], // Cmaj7
+        [220.00, 261.63, 329.63, 392.00], // Am7
+        [174.61, 220.00, 261.63, 329.63], // Fmaj7
+        [196.00, 246.94, 293.66, 349.23], // G7
+        [146.83, 174.61, 220.00, 261.63], // Dm7
+        [164.81, 196.00, 246.94, 293.66]  // Em7
+    ];
+    let chordIdx = 0;
+    let isRunning = true;
+    let activeChordOscs = [];
+
+    const gain = ctx.createGain();
+    const eff = getEffectiveChannelVolume('lofi') * 0.40;
+    gain.gain.setValueAtTime(eff, ctx.currentTime);
+    gain.connect(masterGain);
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(1100, ctx.currentTime);
+    filter.connect(gain);
+
+    const playNextChord = () => {
+        if (!isRunning || !audioCtx) return;
+        const chord = chords[chordIdx % chords.length];
+        chordIdx++;
+
+        chord.forEach((freq) => {
+            const osc = ctx.createOscillator();
+            const g = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+            g.gain.setValueAtTime(0.0001, ctx.currentTime);
+            g.gain.linearRampToValueAtTime(0.035, ctx.currentTime + 0.35);
+            g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.4);
+
+            osc.connect(g);
+            g.connect(filter);
+            osc.start();
+            osc.stop(ctx.currentTime + 3.6);
+            activeChordOscs.push(osc);
+        });
+
+        if (isRunning) {
+            setTimeout(playNextChord, 3800);
+        }
+    };
+    playNextChord();
+
+    return {
+        gainNode: gain,
+        stop: () => {
+            isRunning = false;
+            activeChordOscs.forEach(o => { try { o.stop(); }catch(e){} });
+            activeChordOscs = [];
+        }
+    };
+}
+
+function startChannel(channelKey) {
+    if (activeChannelNodes[channelKey]) return; // already playing
     try {
         const ctx = getAudioContext();
         if (!ctx) return;
-        currentAmbientType = type;
+        const master = ensureMasterMixerNode(ctx);
 
-        const masterGain = ctx.createGain();
-        masterGain.gain.setValueAtTime(0.001, ctx.currentTime);
-        masterGain.gain.exponentialRampToValueAtTime(Math.max(0.01, volume * 0.35), ctx.currentTime + 0.5);
-        masterGain.connect(ctx.destination);
-        ambientGainNode = masterGain;
+        let node = null;
+        if (channelKey === 'rain') node = startRainChannel(ctx, master);
+        else if (channelKey === 'ocean') node = startOceanChannel(ctx, master);
+        else if (channelKey === 'fire') node = startCampfireChannel(ctx, master);
+        else if (channelKey === 'brown') node = startBrownNoiseChannel(ctx, master);
+        else if (channelKey === 'binaural') node = startBinauralChannel(ctx, master);
+        else if (channelKey === 'lofi') node = startLofiChannel(ctx, master);
 
-        if (type === 'rain') {
-            // Rain generator: Pink noise buffer with lowpass
-            const bufferSize = ctx.sampleRate * 3;
-            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            const data = buffer.getChannelData(0);
-            let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-            for (let i = 0; i < bufferSize; i++) {
-                const white = Math.random() * 2 - 1;
-                b0 = 0.99886 * b0 + white * 0.0555179;
-                b1 = 0.99332 * b1 + white * 0.0750759;
-                b2 = 0.96900 * b2 + white * 0.1538520;
-                b3 = 0.86650 * b3 + white * 0.3104856;
-                b4 = 0.55000 * b4 + white * 0.5329522;
-                b5 = -0.7616 * b5 - white * 0.0168980;
-                data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
-                b6 = white * 0.115926;
-            }
-            const noise = ctx.createBufferSource();
-            noise.buffer = buffer;
-            noise.loop = true;
-
-            const filter = ctx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(950, ctx.currentTime);
-
-            noise.connect(filter);
-            filter.connect(masterGain);
-            noise.start();
-            ambientNodes = { source: noise };
-        } else if (type === 'ocean') {
-            // Ocean generator: filtered noise with slow wave LFO
-            const bufferSize = ctx.sampleRate * 4;
-            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.28;
-
-            const noise = ctx.createBufferSource();
-            noise.buffer = buffer;
-            noise.loop = true;
-
-            const filter = ctx.createBiquadFilter();
-            filter.type = 'bandpass';
-            filter.frequency.setValueAtTime(360, ctx.currentTime);
-            filter.Q.setValueAtTime(1.2, ctx.currentTime);
-
-            const lfo = ctx.createOscillator();
-            lfo.frequency.setValueAtTime(0.12, ctx.currentTime);
-            const lfoGain = ctx.createGain();
-            lfoGain.gain.setValueAtTime(220, ctx.currentTime);
-            lfo.connect(filter.frequency);
-
-            noise.connect(filter);
-            filter.connect(masterGain);
-            noise.start();
-            lfo.start();
-            ambientNodes = { source: noise, lfo: lfo };
-        } else if (type === 'noise') {
-            // White Noise Focus
-            const bufferSize = ctx.sampleRate * 2;
-            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.15;
-
-            const noise = ctx.createBufferSource();
-            noise.buffer = buffer;
-            noise.loop = true;
-
-            const filter = ctx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.setValueAtTime(1800, ctx.currentTime);
-
-            noise.connect(filter);
-            filter.connect(masterGain);
-            noise.start();
-            ambientNodes = { source: noise };
-        } else if (type === 'lofi') {
-            // Lo-fi Rhodes Chords
-            const chords = [
-                [261.63, 329.63, 392.00, 493.88], // Cmaj7
-                [220.00, 261.63, 329.63, 392.00], // Am7
-                [174.61, 220.00, 261.63, 329.63], // Fmaj7
-                [196.00, 246.94, 293.66, 349.23]  // G7
-            ];
-            let chordIdx = 0;
-            const playNextChord = () => {
-                if (currentAmbientType !== 'lofi' || !audioCtx) return;
-                const chord = chords[chordIdx % chords.length];
-                chordIdx++;
-                chord.forEach((freq) => {
-                    const osc = ctx.createOscillator();
-                    const g = ctx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(freq, ctx.currentTime);
-                    g.gain.setValueAtTime(0.0001, ctx.currentTime);
-                    g.gain.linearRampToValueAtTime(0.025 * volume, ctx.currentTime + 0.3);
-                    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.0);
-                    osc.connect(g);
-                    g.connect(masterGain);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 3.2);
-                });
-            };
-            playNextChord();
-            const interval = setInterval(playNextChord, 3400);
-            ambientNodes = { interval: interval };
-        }
-    } catch(e) { console.warn('Ambient sound error:', e); }
+        if (node) activeChannelNodes[channelKey] = node;
+    } catch(e) {
+        console.warn('Start channel error:', channelKey, e);
+    }
 }
 
+function stopChannel(channelKey) {
+    const node = activeChannelNodes[channelKey];
+    if (node) {
+        try {
+            if (node.gainNode && audioCtx) {
+                node.gainNode.gain.setValueAtTime(node.gainNode.gain.value, audioCtx.currentTime);
+                node.gainNode.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.2);
+            }
+        } catch(e){}
+        setTimeout(() => {
+            try {
+                if (node.stop) node.stop();
+            } catch(e){}
+            activeChannelNodes[channelKey] = null;
+        }, 220);
+    }
+}
+
+function syncMixerAudioWithState() {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    ensureMasterMixerNode(ctx);
+    updateMasterGainVolume();
+
+    for (const key in soundMixerState.channels) {
+        const ch = soundMixerState.channels[key];
+        if (ch.active && ch.volume > 0 && !soundMixerState.isMuted) {
+            if (!activeChannelNodes[key]) {
+                startChannel(key);
+            } else {
+                updateChannelGainVolume(key);
+            }
+        } else {
+            if (activeChannelNodes[key]) {
+                stopChannel(key);
+            }
+        }
+    }
+}
+
+function stopAllMixerAudio() {
+    for (const key in activeChannelNodes) {
+        stopChannel(key);
+    }
+}
+
+function applySoundPreset(presetKey) {
+    const preset = SOUND_PRESETS[presetKey];
+    if (!preset) return;
+    soundMixerState.currentPreset = presetKey;
+
+    if (presetKey === 'mute') {
+        soundMixerState.isMuted = true;
+    } else {
+        soundMixerState.isMuted = false;
+        for (const chKey in preset.channels) {
+            const vol = preset.channels[chKey];
+            if (soundMixerState.channels[chKey]) {
+                soundMixerState.channels[chKey].volume = vol;
+                soundMixerState.channels[chKey].active = (vol > 0);
+            }
+        }
+    }
+
+    saveSoundMixerState();
+    updateMixerUIFromState();
+    syncMixerAudioWithState();
+}
+
+function updateMixerUIFromState() {
+    // Master Volume
+    const masterSlider = document.getElementById('pomoMasterVolSlider');
+    const masterPct = document.getElementById('pomoMasterVolPct');
+    const muteBtn = document.getElementById('pomoMuteAllBtn');
+
+    if (masterSlider) masterSlider.value = soundMixerState.masterVolume;
+    if (masterPct) masterPct.textContent = `${Math.round(soundMixerState.masterVolume * 100)}%`;
+    if (muteBtn) {
+        muteBtn.classList.toggle('muted', soundMixerState.isMuted);
+        muteBtn.innerHTML = soundMixerState.isMuted ?
+            `<svg class="rune-icon rune-xs" viewBox="0 0 48 48"><use href="#i-mute"></use></svg>` :
+            `<svg class="rune-icon rune-xs" viewBox="0 0 48 48"><use href="#i-audio"></use></svg>`;
+    }
+
+    // Presets chips
+    document.querySelectorAll('.pomo-preset-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.preset === soundMixerState.currentPreset);
+    });
+
+    // Channels
+    for (const key in soundMixerState.channels) {
+        const ch = soundMixerState.channels[key];
+        const card = document.querySelector(`.pomo-channel-card[data-channel="${key}"]`);
+        if (card) {
+            const isActive = ch.active && ch.volume > 0 && !soundMixerState.isMuted;
+            card.classList.toggle('active', isActive);
+
+            const toggleBtn = card.querySelector('.pomo-chan-toggle-btn');
+            if (toggleBtn) toggleBtn.classList.toggle('active', isActive);
+
+            const waveBars = card.querySelector('.pomo-chan-wave-bars');
+            if (waveBars) waveBars.classList.toggle('active', isActive);
+
+            const slider = card.querySelector('.pomo-chan-slider');
+            if (slider) slider.value = ch.volume;
+
+            const volVal = card.querySelector('.pomo-chan-vol-val');
+            if (volVal) volVal.textContent = `${Math.round(ch.volume * 100)}%`;
+        }
+    }
+}
+
+// End Chime Sound
 function playPomodoroEndChime() {
     try {
         const ctx = getAudioContext();
@@ -8355,9 +8962,7 @@ let pomoState = {
     secondsLeft: 25 * 60,
     isRunning: false,
     intervalId: null,
-    selectedHabitId: null,
-    ambientType: 'none',
-    volume: 0.5
+    selectedHabitId: null
 };
 
 const MAX_DAILY_POMO_REWARDS = 4; // Giới hạn tối đa 4 phiên nhận Coins / ngày
@@ -8406,6 +9011,7 @@ function openPomodoroModal(habitId = null) {
     }
 
     updatePomoDisplay();
+    updateMixerUIFromState();
 }
 window._openPomodoroModal = openPomodoroModal;
 
@@ -8446,10 +9052,8 @@ function startPomodoroTimer() {
     const statusEl = document.getElementById('pomoStatusLabel');
     if (statusEl) statusEl.innerHTML = pomoState.mode === 'pomodoro' ? t('pomoFocusing') : t('pomoResting');
 
-    // Start ambient sound if selected
-    if (pomoState.ambientType !== 'none') {
-        playAmbientSound(pomoState.ambientType, pomoState.volume);
-    }
+    // Start Sound Mixer if active channels exist
+    syncMixerAudioWithState();
 
     pomoState.intervalId = setInterval(() => {
         if (pomoState.secondsLeft > 0) {
@@ -8476,8 +9080,6 @@ function pausePomodoroTimer() {
 
     const statusEl = document.getElementById('pomoStatusLabel');
     if (statusEl) statusEl.innerHTML = t('pomoPaused');
-
-    stopAmbientSound();
 }
 
 function resetPomodoroTimer() {
@@ -8577,6 +9179,8 @@ async function onPomodoroFinished() {
 }
 
 function initPomodoroModal() {
+    loadSoundMixerState();
+
     const pomoBtn = document.getElementById('pomodoroBtn');
     if (pomoBtn) pomoBtn.onclick = () => openPomodoroModal();
 
@@ -8587,7 +9191,7 @@ function initPomodoroModal() {
     if (closeBtn) {
         closeBtn.onclick = () => {
             document.getElementById('pomodoroModalBg').classList.remove('show');
-            if (pomoState.ambientType !== 'none' && !pomoState.isRunning) stopAmbientSound();
+            if (!pomoState.isRunning) stopAllMixerAudio();
         };
     }
 
@@ -8596,7 +9200,7 @@ function initPomodoroModal() {
         bg.onclick = (e) => {
             if (e.target === bg) {
                 bg.classList.remove('show');
-                if (pomoState.ambientType !== 'none' && !pomoState.isRunning) stopAmbientSound();
+                if (!pomoState.isRunning) stopAllMixerAudio();
             }
         };
     }
@@ -8615,25 +9219,73 @@ function initPomodoroModal() {
     if (m5) m5.onclick = () => switchPomoMode('short');
     if (m15) m15.onclick = () => switchPomoMode('long');
 
-    // Ambient sound buttons
-    document.querySelectorAll('.pomo-sound-btn').forEach(btn => {
+    // Master volume controls
+    const masterSlider = document.getElementById('pomoMasterVolSlider');
+    if (masterSlider) {
+        masterSlider.oninput = (e) => {
+            soundMixerState.masterVolume = parseFloat(e.target.value);
+            if (soundMixerState.isMuted && soundMixerState.masterVolume > 0) {
+                soundMixerState.isMuted = false;
+            }
+            updateMasterGainVolume();
+            saveSoundMixerState();
+            updateMixerUIFromState();
+        };
+    }
+
+    const muteBtn = document.getElementById('pomoMuteAllBtn');
+    if (muteBtn) {
+        muteBtn.onclick = () => {
+            soundMixerState.isMuted = !soundMixerState.isMuted;
+            saveSoundMixerState();
+            updateMixerUIFromState();
+            syncMixerAudioWithState();
+        };
+    }
+
+    // Presets buttons
+    document.querySelectorAll('.pomo-preset-btn').forEach(btn => {
         btn.onclick = () => {
-            document.querySelectorAll('.pomo-sound-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            pomoState.ambientType = btn.dataset.sound;
-            playAmbientSound(pomoState.ambientType, pomoState.volume);
+            applySoundPreset(btn.dataset.preset);
         };
     });
 
-    const volSlider = document.getElementById('pomoVolumeSlider');
-    if (volSlider) {
-        volSlider.oninput = (e) => {
-            pomoState.volume = parseFloat(e.target.value);
-            if (ambientGainNode && audioCtx) {
-                ambientGainNode.gain.setValueAtTime(pomoState.volume * 0.35, audioCtx.currentTime);
-            }
-        };
+    // Channel toggle buttons & Sliders
+    for (const key in soundMixerState.channels) {
+        const card = document.querySelector(`.pomo-channel-card[data-channel="${key}"]`);
+        if (!card) continue;
+
+        const toggleBtn = card.querySelector('.pomo-chan-toggle-btn');
+        if (toggleBtn) {
+            toggleBtn.onclick = () => {
+                const ch = soundMixerState.channels[key];
+                ch.active = !ch.active;
+                if (ch.active && ch.volume <= 0) ch.volume = 0.50;
+                if (soundMixerState.isMuted && ch.active) soundMixerState.isMuted = false;
+                soundMixerState.currentPreset = 'custom';
+                saveSoundMixerState();
+                updateMixerUIFromState();
+                syncMixerAudioWithState();
+            };
+        }
+
+        const slider = card.querySelector('.pomo-chan-slider');
+        if (slider) {
+            slider.oninput = (e) => {
+                const vol = parseFloat(e.target.value);
+                const ch = soundMixerState.channels[key];
+                ch.volume = vol;
+                ch.active = (vol > 0);
+                if (soundMixerState.isMuted && vol > 0) soundMixerState.isMuted = false;
+                soundMixerState.currentPreset = 'custom';
+                saveSoundMixerState();
+                updateMixerUIFromState();
+                syncMixerAudioWithState();
+            };
+        }
     }
+
+    updateMixerUIFromState();
 }
 
 // --- 3. DAILY STOIC & MINDSET QUOTES ENGINE ---

@@ -92,16 +92,25 @@
   - ⏳ **Hạn sử dụng**: Hiển thị ngày hết hạn, đếm ngược số ngày còn lại (`Còn X ngày`) hoặc `Vĩnh viễn (Trọn đời)`. Khi hết hạn, hiển thị cảnh báo đỏ `⚠️ Đã hết hạn` kèm hướng dẫn gia hạn.
   - 📊 **Số thói quen**: Hiển thị trạng thái thói quen khả dụng (Không giới hạn hoặc `3/N thói quen - Đã khóa N-3`).
   - 🚀 **Nút Nâng Cấp / Gia Hạn Gói**: Mở trực tiếp Modal thanh toán & nâng cấp VIP.
-- Đổi tên hiển thị (2-30 ký tự), đổi avatar.
-- Hiển thị nổi bật: `Bước thứ [X] - [Tên tiểu cảnh giới]` kèm trích dẫn định nghĩa tâm thức.
-- Bộ chọn 10 Mẫu Khung viền avatar (`Khung 1` đến `Khung 10`).
-- Nút Đăng xuất tài khoản nằm gọn trong Modal Hồ sơ.
+- **Avatar Studio Toàn Năng (Đổi ảnh đại diện đa phương thức)**:
+  - 📤 **Tải ảnh từ máy**: Tự động nén kích thước Canvas & tối ưu hóa ảnh Base64 siêu nhẹ chống lỗi.
+  - 🔗 **Dán link URL ảnh**: Hỗ trợ dán đường dẫn ảnh bất kỳ (https://...) với Live Preview tức thì.
+  - 🎲 **Kho 12 Avatar Mẫu Đẹp**: Chọn nhanh các phong cách cực chất (Cyberpunk, Samurai, Zen, Dragon, Phoenix, Marcus...).
+  - 🖼️ **Bộ Chọn 10 Khung Viền Cảnh Giới**: Khung 1 đến Khung 10 theo cấp độ kỷ luật.
+  - 🗑️ **Về ảnh mặc định**: Đặt lại avatar chữ cái mặc định nhanh chóng.
+  - 📸 **Tương tác 1-chạm**: Bấm trực tiếp vào ảnh đại diện trung tâm (có badge camera phát sáng) hoặc nút bánh xe hành tinh để mở Studio.
+  - Đồng bộ tức thì lên Navbar, Leaderboard Top 50, Community và Firestore.
 
 ### 6. Trụ Cột 1: Cơ Chế Bảo Vệ & Cứu Chuỗi (Streak Protection & Recovery)
-- Bình Đóng Băng Chuỗi (*Streak Freeze* - tối đa 3 bình).
-- Vá Chuỗi Trong 24h (*Streak Repair* - 150 DP).
-- Trung Tâm Bảo Vệ Chuỗi (*Streak Protection Modal*).
-- Bùa Nghỉ Phép (Vacation Pass) & Khiên Bất Hoại (Invincible Shield).
+- **Bình Đóng Băng Chuỗi (*Streak Freeze* - sức chứa tối đa 3 bình)**: Tự động đóng băng bảo toàn streak nếu quên điểm danh 1 ngày mà không bị reset chuỗi về 0.
+- **Cứu Chuỗi Trong 48h (*Streak Repair* - 150 DP)**: Hồi sinh ngay chuỗi ngày bị đứt hôm qua hoặc gần nhất.
+- **Trung Tâm Bảo Vệ Chuỗi (*Streak Protection Modal*)**:
+  - Giao diện trực quan hiển thị số ngày chuỗi hiện tại và kỷ lục max streak.
+  - Hiển thị 3 bình đóng băng năng lượng phát sáng (`Bình 1`, `Bình 2`, `Bình 3`).
+  - Nút Mua bình đóng băng (200 DP) và Nút Cứu chuỗi khẩn cấp (150 DP).
+  - Lịch sử bảo vệ & cứu chuỗi chi tiết từng ngày.
+- **Banner Báo Động Khẩn Cấp (*Streak Emergency Banner*)**: Tự động xuất hiện cảnh báo khi chuỗi bị đứt trong vòng 48h kèm nút 1 chạm "Cứu chuỗi ngay".
+- **Bùa Nghỉ Phép (Vacation Pass)** & **Khiên Bất Hoại (Invincible Shield)**: Miễn nhiễm mất chuỗi liên tục 3 đến 7 ngày.
 
 ### 7. Trụ Cột 2: Cửa Hàng Kỷ Luật & Túi Đồ Cá Nhân (Shop & Backpack)
 - **Túi Đồ Cá Nhân (Backpack)**: Quản lý kho bùa lợi, theo dõi trạng thái Buffs đang hoạt động (Vé Boost, Khiên, Nghỉ Phép, Focus Elixir...) và **Tủ Sách Tri Thức**.
@@ -136,10 +145,18 @@
 - Báo Cáo Tổng Kết Tuần (*Weekly Recap* 5 slide kiểu Spotify Wrapped).
 - Bộ Xuất Ảnh Khoe Kỷ Luật Canvas High-DPI (Story 9:16 & Square 1:1).
 
-### 10. Trụ Cột 5: Pomodoro Focus Station & Daily Stoic Quotes
-- Đồng Hồ Pomodoro (25/5/15 phút) gắn liền với thói quen, thưởng +15 DP Deep Work Bonus (+30 DP khi có Thuốc Tiên Focus).
-- 4 Trạm Nhạc Sóng Não & Âm Thanh Trắng (Mưa rơi, Sóng biển, Tiếng ồn trắng, Lo-fi chords).
-- Widget Trích Dẫn Khắc Kỷ & Động Lực Mỗi Ngày trên Dashboard.
+### 10. Trụ Cột 5: Pomodoro Focus Station & Sound Mixer Đa Tầng
+- **Đồng Hồ Pomodoro (25/5/15 phút)** gắn liền với thói quen, thưởng +15 DP Deep Work Bonus (+30 DP khi có Thuốc Tiên Focus).
+- **Bộ Hòa Âm Tập Trung Đa Tầng (Sound Mixer - 100% Web Audio API Offline, 0 KB)**:
+  - 🌧️ **Mưa Rào (Forest Rain)**: Pink noise đa dải kết hợp giọt mưa lộp độp ngẫu nhiên.
+  - 🌊 **Sóng Biển (Ocean Tide)**: LFO tần số kép điều biến nhịp sóng vỗ êm dịu.
+  - 🪵 **Lửa Trại (Campfire Crackle)**: Tiếng củi nổ lách tách ngẫu nhiên ấm áp.
+  - ☕ **Tiếng Ồn Nâu (Brown Noise)**: Tần số trầm sâu chặn tạp âm xung quanh tốt nhất cho Deep Work.
+  - 🧠 **Sóng Não Gamma 40Hz (Binaural Beats)**: Tần số sóng não kích thích trạng thái *Dòng Chảy (Flow State)*.
+  - 🎹 **Giai Điệu Lo-fi Chords**: Vòng hợp âm Jazz/Chillout pads mượt mà tự động đổi gam.
+- **Bộ Phối Sẵn 1-Chạm (Quick Presets)**: *Cà Phê Mưa, Rừng Sâu, Deep Work 40Hz, Đêm Lửa Trại, Thiền Biển Đêm, Tắt Hết*.
+- **Thanh trượt âm lượng độc lập từng kênh (0-100%)**, hoạt họa cột sóng âm nhấp nhô (Animated Wave Bars) và tự động ghi nhớ cấu hình vào `localStorage`.
+- **Widget Trích Dẫn Khắc Kỷ & Động Lực Mỗi Ngày** trên Dashboard.
 
 ---
 
