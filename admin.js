@@ -29,6 +29,7 @@ function avatarHtml(photoURL, name){
 }
 
 function isPlanExpired(user){
+    if(!user) return false;
     const now = new Date();
     if(user.plan === 'trial'){
         if(!user.trialExpiresAt) return true;
@@ -45,7 +46,13 @@ function isPlanExpired(user){
     return false;
 }
 
+function isTrialExpired(user){
+    if(!user || user.plan !== 'trial') return false;
+    return isPlanExpired(user);
+}
+
 function getEffectivePlan(user){
+    if(!user) return 'free';
     if(user.plan === 'premium' && !isPlanExpired(user)) return 'premium';
     if(user.plan === 'pro' && !isPlanExpired(user)) return 'pro';
     if(user.plan === 'trial' && !isPlanExpired(user)) return 'trial';
@@ -53,7 +60,7 @@ function getEffectivePlan(user){
 }
 
 function isActive30d(user){
-    if(!user.lastLoginAt) return false;
+    if(!user || !user.lastLoginAt) return false;
     const d = user.lastLoginAt.toDate ? user.lastLoginAt.toDate() : new Date(user.lastLoginAt);
     const diff = Date.now() - d.getTime();
     return diff < 30*24*60*60*1000;
@@ -235,6 +242,7 @@ function renderUsers(filter, search){
 function escHtml(s){
     return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+const escapeHtml = escHtml;
 
 // ===== RENDER PENDING =====
 function renderPending(){
