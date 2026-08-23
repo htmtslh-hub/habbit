@@ -920,6 +920,10 @@ async function ensureUserProfile(user){
             const updates = {};
             let needsUpdate = false;
             
+            if (data.photoURL) {
+                currentUser.photoURL = data.photoURL;
+            }
+            
             if(!data.email && user.email) { updates.email = user.email; needsUpdate = true; }
             if(!data.displayName && user.displayName) { updates.displayName = user.displayName; needsUpdate = true; }
             if(!data.photoURL && user.photoURL) { updates.photoURL = user.photoURL; needsUpdate = true; }
@@ -2540,7 +2544,10 @@ async function startApp(user){
     userDocRef = db.collection('users').doc(user.uid);
     try { showUserProfile(user); } catch(e) { console.error('showUserProfile error:', e); }
     // Ensure profile exists and is populated
-    try { await ensureUserProfile(user); } catch(e) { console.error('ensureUserProfile error:', e); }
+    try { 
+        await ensureUserProfile(user); 
+        showUserProfile(currentUser);
+    } catch(e) { console.error('ensureUserProfile error:', e); }
     // Load user plan
     await loadUserPlan();
     // Check if disabled
@@ -5019,22 +5026,7 @@ function initProfileModal() {
         ]);
     };
 
-    // 📷 Avatar Studio (pos 5 & Central Avatar click)
-    const orbAvatar = document.getElementById('orbAvatarBtn');
-    if (orbAvatar) orbAvatar.onclick = (e) => {
-        e.stopPropagation();
-        showOrbitalPopup(orbAvatar, 'Ảnh đại diện', [
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: 'Studio Đổi Avatar', desc: 'Tải ảnh, URL & Mẫu đẹp', action: () => { openAvatarStudio(); } },
-            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: 'Tải ảnh từ máy', desc: 'Chọn tệp hình ảnh', action: () => { if (fileInput) fileInput.click(); } },
-            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: 'Chọn khung Rank', desc: 'Đổi khung cấp bậc', action: () => { openAvatarStudio(); } },
-            { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Xóa ảnh đại diện', desc: 'Về avatar mặc định', danger: true, action: async () => {
-                if (!confirm('Bạn có chắc muốn xóa ảnh đại diện?')) return;
-                await saveUserAvatar('');
-            }},
-        ]);
-    };
-
-    // Direct click on Central Avatar in Profile Modal
+    // Direct click on Central Avatar in Profile Modal opens Avatar Studio
     const profileCenter = document.getElementById('profileAvatarCenter');
     if (profileCenter) {
         profileCenter.onclick = (e) => {
@@ -5291,20 +5283,43 @@ async function saveUserAvatar(photoURL) {
     document.body.appendChild(savingToast);
 
     try {
-        await currentUser.updateProfile({ photoURL: photoURL });
-        if (userDocRef) {
-            await userDocRef.update({ photoURL: photoURL });
+        // 1. Firebase Auth updateProfile only accepts HTTP/HTTPS URLs (<2048 chars).
+        // If photoURL is Base64 data URL, updateProfile throws "Photo URL too long".
+        // We only call Auth updateProfile for valid short web URLs.
+        if (photoURL && !photoURL.startsWith('data:') && photoURL.length <= 2000) {
+            try {
+                await currentUser.updateProfile({ photoURL: photoURL });
+            } catch (authErr) {
+                console.warn('Firebase Auth updateProfile warning:', authErr);
+            }
+        } else if (!photoURL) {
+            try {
+                await currentUser.updateProfile({ photoURL: '' });
+            } catch (authErr) {
+                console.warn('Firebase Auth clear photoURL warning:', authErr);
+            }
         }
+
+        // 2. Always update in-memory currentUser
+        currentUser.photoURL = photoURL || '';
+
+        // 3. Save to Firestore users document
+        if (userDocRef) {
+            await userDocRef.set({ photoURL: photoURL || '' }, { merge: true });
+        }
+
+        // 4. Save to Firestore leaderboard document
         if (typeof db !== 'undefined' && db && currentUser) {
-            await db.collection('leaderboard').doc(currentUser.uid).set({ photoURL: photoURL }, { merge: true });
+            await db.collection('leaderboard').doc(currentUser.uid).set({ photoURL: photoURL || '' }, { merge: true });
         }
         
+        // 5. Update UI everywhere
         showUserProfile(currentUser);
         if (window._updateProfileModalUI) window._updateProfileModalUI();
         
         savingToast.remove();
         
-        // Show success toast
+        // 6. Show success toast
         const toast = document.createElement('div');
         toast.className = 'quest-toast';
         toast.innerHTML = '<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span> Đã cập nhật ảnh đại diện thành công!';
@@ -5345,7 +5360,7 @@ async function handleAvatarUpload(e) {
         });
 
         const canvas = document.createElement('canvas');
-        const MAX_SIZE = 280;
+        const MAX_SIZE = 240;
         let w = img.width, h = img.height;
         if (w > h) {
             if (w > MAX_SIZE) { h = Math.round(h * (MAX_SIZE / w)); w = MAX_SIZE; }
@@ -5358,7 +5373,7 @@ async function handleAvatarUpload(e) {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, w, h);
 
-        const base64Str = canvas.toDataURL('image/jpeg', 0.86);
+        const base64Str = canvas.toDataURL('image/jpeg', 0.82);
         procToast.remove();
 
         await saveUserAvatar(base64Str);
