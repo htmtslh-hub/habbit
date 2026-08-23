@@ -65,6 +65,21 @@
                         <span>Đa ngôn ngữ (VI/EN/中)</span>
                     </div>
                 </div>
+
+                <!-- Zalo Community Group QR Box -->
+                <div class="zalo-community-box" id="zaloCommunityBox">
+                    <div class="zalo-qr-card" onclick="window.openQrModal()" title="Bấm để phóng to mã QR">
+                        <img src="zalo-qr.png" alt="Mã QR Nhóm Zalo Habit Mastery" class="zalo-qr-image" id="zaloQrImage">
+                        <div class="zalo-qr-overlay">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                        </div>
+                    </div>
+                    <div class="zalo-text-block">
+                        <div class="zalo-badge">💬 CỘNG ĐỒNG ZALO</div>
+                        <div class="zalo-headline">Nhóm Kỷ Luật Habit Mastery</div>
+                        <p class="zalo-subtext">Quét mã QR để giao lưu, chia sẻ thói quen & nhận thông báo hỗ trợ từ Admin.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -293,11 +308,216 @@
                     </button>
                 </div>
 
-                <!-- Footer -->
+                <!-- Mobile Zalo Community Quick Banner (Shown on mobile screens) -->
+                <div class="mobile-zalo-banner" onclick="window.openQrModal()">
+                    <div class="mobile-zalo-icon">💬</div>
+                    <div class="mobile-zalo-info">
+                        <div class="mobile-zalo-title">Nhóm Zalo Cộng Đồng Habit Mastery</div>
+                        <div class="mobile-zalo-sub">Giao lưu & nhận hỗ trợ từ Admin</div>
+                    </div>
+                    <button type="button" class="mobile-zalo-btn">Xem QR</button>
+                </div>
+
+                <!-- Footer with Policy Links -->
                 <div class="auth-footer">
-                    <p>© 2026 Habit Mastery. All rights reserved.</p>
+                    <div class="auth-policy-bar">
+                        <button type="button" class="auth-policy-btn" onclick="window.openPolicyModal('privacy')">Quyền riêng tư</button>
+                        <span class="auth-policy-sep">•</span>
+                        <button type="button" class="auth-policy-btn" onclick="window.openPolicyModal('security')">Bảo mật</button>
+                        <span class="auth-policy-sep">•</span>
+                        <button type="button" class="auth-policy-btn" onclick="window.openPolicyModal('ip')">Sở hữu trí tuệ</button>
+                        <span class="auth-policy-sep">•</span>
+                        <button type="button" class="auth-policy-btn" onclick="window.openPolicyModal('disclaimer')">Miễn trừ trách nhiệm</button>
+                    </div>
+                    <p class="auth-copyright-text">© 2026 Habit Mastery. Nền tảng rèn luyện kỷ luật bản thân.</p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- POLICY MODAL (QUYỀN RIÊNG TƯ, BẢO MẬT, SỞ HỮU TRÍ TUỆ, MIỄN TRỪ TRÁCH NHIỆM) -->
+    <div class="policy-modal-bg" id="policyModalBg" style="display:none;" onclick="if(event.target===this)window.closePolicyModal()">
+        <div class="policy-modal-sheet">
+            <div class="policy-modal-header">
+                <div class="policy-modal-title">
+                    <span class="policy-title-icon">⚖️</span>
+                    <span>ĐIỀU KHOẢN & CHÍNH SÁCH DỊCH VỤ</span>
+                </div>
+                <button type="button" class="policy-modal-close" id="policyModalClose" onclick="window.closePolicyModal()" title="Đóng">✕</button>
+            </div>
+            
+            <!-- Policy Tabs Navigation -->
+            <div class="policy-tabs-nav">
+                <button type="button" class="policy-tab-btn active" data-tab="privacy" onclick="window.switchPolicyTab('privacy')">
+                    <span>🔒 Quyền Riêng Tư</span>
+                </button>
+                <button type="button" class="policy-tab-btn" data-tab="security" onclick="window.switchPolicyTab('security')">
+                    <span>🛡️ Bảo Mật Dữ Liệu</span>
+                </button>
+                <button type="button" class="policy-tab-btn" data-tab="ip" onclick="window.switchPolicyTab('ip')">
+                    <span>💎 Sở Hữu Trí Tuệ</span>
+                </button>
+                <button type="button" class="policy-tab-btn" data-tab="disclaimer" onclick="window.switchPolicyTab('disclaimer')">
+                    <span>📜 Miễn Trừ Trách Nhiệm</span>
+                </button>
+            </div>
+
+            <!-- Policy Content Panels -->
+            <div class="policy-modal-body" id="policyModalBody">
+                
+                <!-- 1. PRIVACY POLICY -->
+                <div class="policy-panel active" id="policyPanelPrivacy">
+                    <div class="policy-sec-header">
+                        <span>🔒 Chính Sách Quyền Riêng Tư (Privacy Policy)</span>
+                    </div>
+                    
+                    <div class="policy-card-item">
+                        <h4>📌 1. Thu Thập Dữ Liệu Cá Nhân</h4>
+                        <p>Habit Mastery chỉ thu thập các thông tin cần thiết tối thiểu nhằm phục vụ trải nghiệm rèn luyện của bạn:</p>
+                        <ul>
+                            <li><strong>Thông tin tài khoản:</strong> Địa chỉ Email, Tên hiển thị (DisplayName), Ảnh đại diện (Avatar).</li>
+                            <li><strong>Dữ liệu thói quen:</strong> Danh sách thói quen cá nhân, lịch sử check-in hàng ngày, điểm rèn luyện (DP), cấp bậc cảnh giới.</li>
+                            <li><strong>Dữ liệu kỹ thuật:</strong> Thời điểm đăng nhập gần nhất để duy trì phiên làm việc và bảo toàn chuỗi kỷ luật.</li>
+                        </ul>
+                    </div>
+
+                    <div class="policy-card-item">
+                        <h4>🎯 2. Mục Đích Sử Dụng Dữ Liệu</h4>
+                        <p>Dữ liệu của bạn được sử dụng độc quyền cho các mục đích:</p>
+                        <ul>
+                            <li>Đồng bộ hóa thói quen tức thì qua đám mây giữa Web, Desktop và Mobile.</li>
+                            <li>Tính toán chỉ số Streak, biểu đồ phân tích và bảng xếp hạng rèn luyện Top 50.</li>
+                            <li>Gửi thông báo nhắc nhở và mã xác thực bảo mật 2 bước (OTP).</li>
+                        </ul>
+                    </div>
+
+                    <div class="policy-card-item">
+                        <h4>🤝 3. Cam Kết Bảo Vệ & Không Chia Sẻ</h4>
+                        <p>Chúng tôi <strong>cam kết 100% không bán, không cho thuê và không chia sẻ</strong> bất kỳ dữ liệu cá nhân hay thói quen riêng tư nào của bạn cho bất kỳ bên thứ ba hay mạng quảng cáo nào.</p>
+                    </div>
+
+                    <div class="policy-card-item">
+                        <h4>🗑️ 4. Quyền Kiểm Soát Của Người Dùng</h4>
+                        <p>Bạn luôn có toàn quyền xuất bản sao dữ liệu (Backup JSON) hoặc yêu cầu xóa vĩnh viễn toàn bộ tài khoản và thói quen khỏi hệ thống bất kỳ lúc nào.</p>
+                    </div>
+
+                    <div class="policy-highlight">
+                        ✨ <em>"Kỷ luật của bạn là tài sản quý giá nhất. Chúng tôi cam kết bảo vệ không gian rèn luyện của bạn an toàn và riêng tư tuyệt đối."</em>
+                    </div>
+                </div>
+
+                <!-- 2. SECURITY POLICY -->
+                <div class="policy-panel" id="policyPanelSecurity">
+                    <div class="policy-sec-header">
+                        <span>🛡️ Chính Sách Bảo Mật Dữ Liệu (Security Policy)</span>
+                    </div>
+
+                    <div class="policy-card-item">
+                        <h4>🔐 1. Mã Hóa Đường Truyền & Dữ Liệu</h4>
+                        <p>Toàn bộ thông tin trao đổi giữa trình duyệt của bạn và máy chủ đều được mã hóa bằng giao thức <strong>SSL/TLS 256-bit cao cấp nhất</strong>.</p>
+                    </div>
+
+                    <div class="policy-card-item">
+                        <h4>🔑 2. Xác Thực 2 Lớp (Two-Factor OTP)</h4>
+                        <p>Hệ thống hỗ trợ xác minh mã OTP 6 số qua Email với thời hạn hiệu lực nghiêm ngặt 5 phút, ngăn chặn hoàn toàn nguy cơ bị chiếm quyền tài khoản.</p>
+                    </div>
+
+                    <div class="policy-card-item">
+                        <h4>☁️ 3. Hạ Tầng Đám Mây Chuẩn Quốc Tế</h4>
+                        <p>Dữ liệu được lưu trữ trên nền tảng đám mây phân tán của Google Cloud / Firebase Firestore với sao lưu liên tục, tường lửa Firewall và phân quyền Security Rules nghiêm ngặt.</p>
+                    </div>
+
+                    <div class="policy-card-item">
+                        <h4>🚫 4. Phòng Chống Tấn Công & Spam</h4>
+                        <p>Hệ thống tự động phát hiện và ngăn chặn các hành vi tấn công dò mật khẩu (Brute Force), giới hạn tần suất gửi yêu cầu và cô lập các phiên truy cập bất thường.</p>
+                    </div>
+
+                    <div class="policy-highlight">
+                        🛡️ <em>Hệ thống bảo mật hoạt động 24/7 để đảm bảo mọi bước tiến của bạn không bao giờ bị gián đoạn hay thất thoát.</em>
+                    </div>
+                </div>
+
+                <!-- 3. INTELLECTUAL PROPERTY -->
+                <div class="policy-panel" id="policyPanelIp">
+                    <div class="policy-sec-header">
+                        <span>💎 Quyền Sở Hữu Trí Tuệ (Intellectual Property)</span>
+                    </div>
+
+                    <div class="policy-card-item">
+                        <h4>🏛️ 1. Bản Quyền Nền Tảng & Thiết Kế</h4>
+                        <p>Mọi nội dung, giao diện đồ họa, bộ icon rune thần thoại, hệ thống 21 cảnh giới tâm thức, biểu tượng Prism Nexus Coin, Sound Mixer âm thanh đa tầng và toàn bộ mã nguồn đều thuộc quyền sở hữu trí tuệ độc quyền của <strong>Habit Mastery</strong>.</p>
+                    </div>
+
+                    <div class="policy-card-item">
+                        <h4>👤 2. Quyền Của Người Dùng</h4>
+                        <p>Người dùng được cấp quyền truy cập và sử dụng dịch vụ cho mục đích cá nhân phi thương mại. Bạn hoàn toàn sở hữu nội dung thói quen và ghi chú do chính mình tạo ra.</p>
+                    </div>
+
+                    <div class="policy-card-item">
+                        <h4>⛔ 3. Các Hành Vi Bị Nghiêm Cấm</h4>
+                        <ul>
+                            <li>Sao chép, nhân bản giao diện hoặc dịch ngược mã nguồn (Reverse Engineering).</li>
+                            <li>Sử dụng hình ảnh, âm thanh hoặc tài liệu của Habit Mastery cho mục đích thương mại khi chưa có sự đồng ý bằng văn bản.</li>
+                            <li>Tạo ra các sản phẩm phái sinh hoặc ứng dụng giả mạo thương hiệu Habit Mastery.</li>
+                        </ul>
+                    </div>
+
+                    <div class="policy-highlight">
+                        ⚖️ <em>Mọi hành vi xâm phạm quyền sở hữu trí tuệ sẽ được xử lý theo quy định của pháp luật hiện hành.</em>
+                    </div>
+                </div>
+
+                <!-- 4. DISCLAIMER -->
+                <div class="policy-panel" id="policyPanelDisclaimer">
+                    <div class="policy-sec-header">
+                        <span>📜 Tuyên Bố Miễn Trừ Trách Nhiệm (Disclaimer)</span>
+                    </div>
+
+                    <div class="policy-card-item">
+                        <h4>🎯 1. Bản Chất Của Ứng Dụng</h4>
+                        <p>Habit Mastery là công cụ hỗ trợ theo dõi thói quen, xây dựng kỷ luật và truyền cảm hứng sống tích cực. Kết quả thực tế hoàn toàn phụ thuộc vào sự kiên trì, nỗ lực và hành động của chính người dùng.</p>
+                    </div>
+
+                    <div class="policy-card-item">
+                        <h4>🩺 2. Không Thay Thế Lời Khuyên Chuyên Khoa</h4>
+                        <p>Các nội dung trích dẫn triết học Khắc Kỷ, kiến thức tâm lý hay thói quen thể chất trong ứng dụng chỉ mang tính chất tham khảo giáo dục và <strong>không thay thế cho lời khuyên y tế, chuẩn đoán tâm lý trị liệu, tư vấn tài chính hay pháp lý chuyên nghiệp</strong>.</p>
+                    </div>
+
+                    <div class="policy-card-item">
+                        <h4>🌐 3. Kết Nối Mạng & Thiết Bị</h4>
+                        <p>Chúng tôi luôn nỗ lực tối đa để hệ thống hoạt động liên tục 99.9%, tuy nhiên không chịu trách nhiệm đối với các sự cố bất khả kháng xuất phát từ đường truyền internet của nhà mạng hoặc lỗi phần cứng thiết bị của người dùng.</p>
+                    </div>
+
+                    <div class="policy-highlight">
+                        🌱 <em>"Chúng tôi trao cho bạn chiếc la bàn kỷ luật, người bước đi trên hành trình chinh phục chính là bạn."</em>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="policy-modal-footer">
+                <span class="policy-footer-note">Cập nhật lần cuối: 23/08/2026 • Habit Mastery Team</span>
+                <button type="button" class="policy-confirm-btn" onclick="window.closePolicyModal()">Đã Hiểu & Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR ZOOM MODAL (PHÓNG TO MÃ QR NHÓM ZALO) -->
+    <div class="qr-zoom-modal-bg" id="qrZoomModalBg" style="display:none;" onclick="if(event.target===this)window.closeQrModal()">
+        <div class="qr-zoom-card">
+            <button type="button" class="qr-zoom-close" onclick="window.closeQrModal()" title="Đóng">✕</button>
+            <div class="zalo-badge" style="margin-bottom:8px;">💬 NHÓM ZALO CHÍNH THỨC</div>
+            <h3 class="qr-zoom-title">Cộng Đồng Habit Mastery</h3>
+            <p class="qr-zoom-desc">Mở ứng dụng Zalo trên điện thoại và quét mã QR bên dưới để tham gia nhóm ngay:</p>
+            
+            <div class="qr-zoom-img-box">
+                <img src="zalo-qr.png" alt="Mã QR Nhóm Zalo Habit Mastery">
+            </div>
+
+            <p style="font-size:11.5px;color:var(--text-muted);margin-bottom:14px;">Tham gia để kết nối cùng những người bạn đồng hành kỷ luật, chia sẻ mục tiêu & nhận quà tặng độc quyền từ Admin.</p>
+            <button type="button" class="btn-primary" onclick="window.closeQrModal()" style="margin-top:0;">
+                Hoàn Tất
+            </button>
         </div>
     </div>
 

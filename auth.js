@@ -1028,6 +1028,68 @@ async function checkAuth(){
     });
 }
 
+// ===== POLICY & QR MODALS =====
+window.openPolicyModal = function(tabName = 'privacy') {
+    const modal = document.getElementById('policyModalBg');
+    if (modal) {
+        modal.style.display = 'flex';
+        window.switchPolicyTab(tabName);
+    }
+};
+
+window.closePolicyModal = function() {
+    const modal = document.getElementById('policyModalBg');
+    if (modal) modal.style.display = 'none';
+};
+
+window.switchPolicyTab = function(tabName) {
+    // Update Tab Buttons
+    const tabBtns = document.querySelectorAll('.policy-tab-btn');
+    tabBtns.forEach(btn => {
+        if (btn.getAttribute('data-tab') === tabName) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    // Update Panels
+    const panels = {
+        privacy: document.getElementById('policyPanelPrivacy'),
+        security: document.getElementById('policyPanelSecurity'),
+        ip: document.getElementById('policyPanelIp'),
+        disclaimer: document.getElementById('policyPanelDisclaimer'),
+    };
+
+    Object.keys(panels).forEach(key => {
+        if (panels[key]) {
+            if (key === tabName) {
+                panels[key].classList.add('active');
+            } else {
+                panels[key].classList.remove('active');
+            }
+        }
+    });
+};
+
+window.openQrModal = function() {
+    const modal = document.getElementById('qrZoomModalBg');
+    if (modal) modal.style.display = 'flex';
+};
+
+window.closeQrModal = function() {
+    const modal = document.getElementById('qrZoomModalBg');
+    if (modal) modal.style.display = 'none';
+};
+
+// Keyboard ESC to close modals
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        window.closePolicyModal();
+        window.closeQrModal();
+    }
+});
+
 // ===== INIT =====
 function init(){
     initParticles();
