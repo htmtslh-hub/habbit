@@ -3339,13 +3339,37 @@ function updateUserDPState(forceSync = false) {
 let leaderboardCache = [];
 let kudosSet = new Set(JSON.parse(localStorage.getItem('hg_kudos') || '[]'));
 
+// Helper: Safely save non-admin data to leaderboard
+async function saveToLeaderboard(data) {
+    if (!db || !currentUser) return;
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
+    if (isAdmin) return; // Never save admin to leaderboard
+    try {
+        await db.collection('leaderboard').doc(currentUser.uid).set(data, { merge: true });
+    } catch (e) {
+        console.warn('Leaderboard save warning:', e);
+    }
+}
+window.saveToLeaderboard = saveToLeaderboard;
+
 async function syncUserLeaderboard() {
     if (!currentUser || !db) return;
     try {
         const stats = calculateUserDPAndStreak();
         const userDoc = await db.collection('users').doc(currentUser.uid).get();
         const userData = userDoc.exists ? userDoc.data() : {};
-        const isAdmin = userData.role === 'admin';
+        const isAdmin = (userData.role === 'admin') || (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (currentUser.email === 'admin@gmail.com');
+
+        // If admin account, delete from leaderboard collection so admin never appears in rankings
+        if (isAdmin) {
+            try {
+                await db.collection('leaderboard').doc(currentUser.uid).delete();
+            } catch (delErr) {
+                console.warn('Admin leaderboard cleanup:', delErr);
+            }
+            showUserProfile(currentUser);
+            return;
+        }
 
         // Check for existing bonus DP in users collection and leaderboard
         const lbDoc = await db.collection('leaderboard').doc(currentUser.uid).get();
@@ -3354,15 +3378,15 @@ async function syncUserLeaderboard() {
         userBonusDP = userData.bonusDP || lbData.bonusDP || 0;
 
         const baseTotalDP = stats.totalDP + userBonusDP;
-        const finalDP = isAdmin ? 999999 : baseTotalDP;
-        const finalWeekly = isAdmin ? 99999 : stats.weeklyDP;
+        const finalDP = baseTotalDP;
+        const finalWeekly = stats.weeklyDP;
 
         S.dp = finalDP;
         S.streak = stats.currentStreak;
         S.maxStreak = stats.maxStreak;
 
         const displayName = userData.displayName || currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
-        const photoURL = userData.photoURL || currentUser.photoURL || '';
+        const photoURL = userData.photoURL || getUserAvatar(currentUser) || '';
 
         await db.collection('leaderboard').doc(currentUser.uid).set({
             uid: currentUser.uid,
@@ -3376,7 +3400,7 @@ async function syncUserLeaderboard() {
             maxStreak: stats.maxStreak,
             totalChecks: stats.totalChecks,
             perfectDays: stats.perfectDays,
-            isAdmin: isAdmin || false,
+            isAdmin: false,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         }, { merge: true });
 
@@ -3395,9 +3419,19 @@ async function loadLeaderboard() {
             await syncUserLeaderboard();
         }
 
-        const snap = await db.collection('leaderboard').orderBy('totalDP', 'desc').limit(50).get();
+        const snap = await db.collection('leaderboard').orderBy('totalDP', 'desc').limit(60).get();
         leaderboardCache = [];
-        snap.forEach(doc => leaderboardCache.push({ uid: doc.id, ...doc.data() }));
+        snap.forEach(doc => {
+            const data = doc.data();
+            // Filter out any admin accounts from leaderboard rankings
+            if (data.isAdmin || data.role === 'admin' || data.email === 'admin@gmail.com' || doc.id === 'admin') {
+                return;
+            }
+            leaderboardCache.push({ uid: doc.id, ...data });
+        });
+        if (leaderboardCache.length > 50) {
+            leaderboardCache = leaderboardCache.slice(0, 50);
+        }
         return leaderboardCache;
     } catch (e) {
         console.warn('Load leaderboard error:', e);
@@ -3410,22 +3444,25 @@ function renderLeaderboard() {
     if (!container) return;
     
     const computed = calculateUserDPAndStreak();
-    const isAdmin = userPlan && userPlan.role === 'admin';
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (typeof currentUser !== 'undefined' && currentUser && currentUser.email === 'admin@gmail.com');
     const totalDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
     const myStats = { ...computed, totalDP };
     const progInfo = getRankProgressInfo(myStats.totalDP);
 
-    // Make sure local current user stats reflect in leaderboardCache
+    // Make sure local current user stats reflect in leaderboardCache (ONLY if not admin)
     if (currentUser && leaderboardCache.length > 0) {
-        const meIndex = leaderboardCache.findIndex(e => e.uid === currentUser.uid);
-        if (meIndex !== -1) {
-            if (!isAdmin) {
+        if (!isAdmin) {
+            const meIndex = leaderboardCache.findIndex(e => e.uid === currentUser.uid);
+            if (meIndex !== -1) {
                 leaderboardCache[meIndex].totalDP = myStats.totalDP;
                 leaderboardCache[meIndex].weeklyDP = myStats.weeklyDP;
                 leaderboardCache[meIndex].streak = myStats.currentStreak;
+                if (currentUser.displayName) leaderboardCache[meIndex].displayName = currentUser.displayName;
+                if (getUserAvatar(currentUser)) leaderboardCache[meIndex].photoURL = getUserAvatar(currentUser);
             }
-            if (currentUser.displayName) leaderboardCache[meIndex].displayName = currentUser.displayName;
-            if (currentUser.photoURL) leaderboardCache[meIndex].photoURL = currentUser.photoURL;
+        } else {
+            // Remove admin from leaderboardCache just in case
+            leaderboardCache = leaderboardCache.filter(e => e.uid !== currentUser.uid && !e.isAdmin);
         }
         leaderboardCache.sort((a, b) => (b.totalDP || 0) - (a.totalDP || 0));
     }
@@ -5094,7 +5131,7 @@ function initProfileModal() {
                         try {
                             if (currentUser) await currentUser.updateProfile({ displayName: val });
                             if (userDocRef) await userDocRef.update({ displayName: val });
-                            if (db && currentUser) await db.collection('leaderboard').doc(currentUser.uid).set({ displayName: val }, { merge: true });
+                            await saveToLeaderboard({ displayName: val });
                             showUserProfile(currentUser);
                             if (window._updateProfileModalUI) window._updateProfileModalUI();
                             closeOrbitalContentPopup();
@@ -5224,7 +5261,7 @@ function initProfileModal() {
             try {
                 if (currentUser) await currentUser.updateProfile({ displayName: val });
                 if (userDocRef) await userDocRef.update({ displayName: val });
-                if (db && currentUser) await db.collection('leaderboard').doc(currentUser.uid).set({ displayName: val }, { merge: true });
+                await saveToLeaderboard({ displayName: val });
                 showUserProfile(currentUser);
                 if (window._updateProfileModalUI) window._updateProfileModalUI();
                 saveNameBtn.textContent = 'Đã lưu ✓';
@@ -5339,10 +5376,8 @@ async function saveUserAvatar(photoURL) {
             await userDocRef.set({ photoURL: photoURL || '' }, { merge: true });
         }
 
-        // 4. Save to Firestore leaderboard document
-        if (typeof db !== 'undefined' && db && currentUser) {
-            await db.collection('leaderboard').doc(currentUser.uid).set({ photoURL: photoURL || '' }, { merge: true });
-        }
+        // 4. Save to Firestore leaderboard document (safely ignores admin)
+        await saveToLeaderboard({ photoURL: photoURL || '' });
         
         // 5. Update UI everywhere
         showUserProfile(currentUser);
