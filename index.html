@@ -17,7 +17,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=5.0.5">
+    <link rel="stylesheet" href="style.css?v=5.0.6">
 
     <!-- Firebase SDK (CDN) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -97,6 +97,7 @@
                 <button class="nav-action-btn" id="communityBtn" title="Cộng đồng"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-echo"></use></svg></button>
                 <button class="nav-action-btn" id="leaderboardBtn" title="Bảng Xếp Hạng"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg></button>
                 <button class="nav-action-btn" id="questBtn" title="Nhiệm vụ rèn luyện"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-duel"></use></svg></button>
+                <button class="nav-action-btn" id="guideBtn" title="Cẩm nang Hướng Dẫn Sử Dụng"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></button>
             </div>
         </header>
 
@@ -1138,6 +1139,10 @@
                     <div class="more-item-icon vip-icon" style="background:rgba(234,179,8,0.18);color:#facc15;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></div>
                     <span class="more-item-name" data-i18n="tabVip">Nâng Cấp VIP</span>
                 </button>
+                <button class="more-grid-item" id="moreBtnGuide" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openGuideModal)window._openGuideModal();">
+                    <div class="more-item-icon guide-icon" style="background:rgba(16,185,129,0.18);color:#10b981;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></div>
+                    <span class="more-item-name">Hướng Dẫn</span>
+                </button>
                 <button class="more-grid-item" id="moreBtnBackup" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._exportData)window._exportData();">
                     <div class="more-item-icon backup-icon" style="background:rgba(6,182,212,0.18);color:#22d3ee;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></div>
                     <span class="more-item-name">Xuất Sao Lưu</span>
@@ -1154,10 +1159,32 @@
         </div>
     </div>
 
+    <!-- USER GUIDE MODAL (CẨM NANG HƯỚNG DẪN SỬ DỤNG TOÀN DIỆN) -->
+    <div class="modal-bg guide-modal-bg" id="guideModalBg">
+        <div class="lb-modal guide-modal">
+            <div class="lb-modal-header">
+                <h2><svg class="rune-inline rune-md" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> CẨM NANG HƯỚNG DẪN SỬ DỤNG</h2>
+                <button class="lb-close-btn" id="guideCloseBtn" title="Đóng hướng dẫn"><svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-close"></use></svg></button>
+            </div>
+            <div class="lb-tabs guide-tabs" id="guideTabsNav">
+                <button class="lb-tab-btn guide-tab-btn active" data-guide-tab="quickstart"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Bắt Đầu</button>
+                <button class="lb-tab-btn guide-tab-btn" data-guide-tab="streak-rank"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Chuỗi & Rank</button>
+                <button class="lb-tab-btn guide-tab-btn" data-guide-tab="pomodoro"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-focus"></use></svg> Deep Work</button>
+                <button class="lb-tab-btn guide-tab-btn" data-guide-tab="squad-duel"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Tổ Đội & Solo</button>
+                <button class="lb-tab-btn guide-tab-btn" data-guide-tab="shop-coins"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-market"></use></svg> Shop & Coin</button>
+                <button class="lb-tab-btn guide-tab-btn" data-guide-tab="social-share"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-archive"></use></svg> Cộng Đồng & Khoe</button>
+                <button class="lb-tab-btn guide-tab-btn" data-guide-tab="pwa-sync"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-core"></use></svg> Cài App & Sync</button>
+            </div>
+            <div class="guide-feed-container" id="guideFeedContainer">
+                <!-- Injected dynamically via app.js -->
+            </div>
+        </div>
+    </div>
+
     <!-- SCRIPTS -->
     <script src="gotiengviet.js"></script>
-    <script src="nameplate_templates.js?v=5.0.5"></script>
-    <script src="avatar_frames.js?v=5.0.5"></script>
-    <script src="app.js?v=5.0.5"></script>
+    <script src="nameplate_templates.js?v=5.0.6"></script>
+    <script src="avatar_frames.js?v=5.0.6"></script>
+    <script src="app.js?v=5.0.6"></script>
 </body>
 </html>

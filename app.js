@@ -2602,6 +2602,7 @@ async function startApp(user){
         initLeaderboard();
         initCommunity();
         initQuestSystem();
+        initGuideModal();
         renderAll();
         if(typeof updateUserDPState==='function') updateUserDPState(true);
         else syncUserLeaderboard();
@@ -5215,6 +5216,11 @@ function initProfileModal() {
                         };
                     });
                 });
+            }},
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', label: 'Hướng dẫn sử dụng', desc: 'Cẩm nang full tính năng', action: () => {
+                closeOrbitalPopup();
+                if (typeof closeProfile === 'function') closeProfile();
+                if (typeof openGuideModal === 'function') openGuideModal('quickstart');
             }},
             { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', label: 'Gói tài khoản', desc: 'Gói Free, Pro, Premium & hạn dùng', action: () => {
                 closeOrbitalPopup();
@@ -9436,6 +9442,473 @@ function renderDailyQuoteWidget() {
     }
 }
 window.renderDailyQuoteWidget = renderDailyQuoteWidget;
+
+// ==================== USER GUIDE MODAL SYSTEM ====================
+let curGuideTab = 'quickstart';
+
+const GUIDE_SECTIONS = {
+    quickstart: {
+        title: 'Bắt Đầu Nhanh & Lưới Kỷ Luật',
+        desc: 'Hướng dẫn thiết lập thói quen, check-in hàng ngày và tích lũy điểm kỷ luật đầu tiên.',
+        icon: '🚀',
+        badge: 'Cơ Bản',
+        heroTitle: 'Chào Mừng Đến Với Habit Mastery',
+        heroDesc: 'Biến việc rèn luyện kỷ luật thành hành trình Game RPG nhập vai: Check-in thói quen, tích lũy Coin, duy trì chuỗi Streak và nâng cấp Cảnh giới rank!',
+        cards: [
+            {
+                icon: '➕',
+                title: 'Tạo thói quen mới (+ Add Habit)',
+                badge: 'Bước 1',
+                steps: [
+                    'Bấm nút <strong>+ Add Habit</strong> trên thanh công cụ hoặc bấm phím tắt.',
+                    'Nhập tên thói quen (VD: <em>Dậy sớm 5h30, Đọc sách 30p, Tập Gym, Không lướt MXH...</em>).',
+                    'Chọn biểu tượng <strong>Emoji</strong> sinh động đại diện cho thói quen.',
+                    'Thiết lập <strong>Mục tiêu số ngày/tháng</strong> (Mặc định 30 ngày) rồi nhấn <strong>Save</strong>.'
+                ],
+                action: { label: '+ Tạo thói quen ngay', onClick: 'if(typeof openAddModal==="function"){closeGuideModal();openAddModal();}' }
+            },
+            {
+                icon: '✅',
+                title: 'Check-in Hàng Ngày & Tích Điểm DP',
+                badge: 'Bước 2',
+                steps: [
+                    'Nhấp vào ô ngày tương ứng trong tháng trên bảng lưới ma trận để đánh dấu hoàn thành.',
+                    'Mỗi thói quen hoàn thành thưởng ngay <strong>+10 DP</strong> (Điểm Kỷ Luật / Prism Coin).',
+                    'Hoàn thành <strong>100% tất cả thói quen</strong> trong ngày sẽ mở khóa trạng thái <strong>Ngày Hoàn Hảo (Perfect Day)</strong>!',
+                    'Có thể đổi tháng/năm ở góc trên bên trái để xem lại lịch sử rèn luyện các tháng trước.'
+                ]
+            },
+            {
+                icon: '😊',
+                title: 'Theo Dõi Tâm Trạng & Giấc Ngủ',
+                badge: 'Sức Khỏe',
+                steps: [
+                    '<strong>Mood Tracker</strong>: Chọn biểu tượng cảm xúc mỗi ngày từ 😁 (Tuyệt vời) đến 😢 (Áp lực).',
+                    '<strong>Sleep Hours</strong>: Nhập số giờ ngủ đêm qua để hệ thống tính toán năng lượng.',
+                    '<strong>Daily Notes</strong>: Ghi lại bài học, cảm xúc hoặc nhật ký ngắn trong ngày.'
+                ]
+            },
+            {
+                icon: '📊',
+                title: 'Biểu Đồ Phân Tích & Bản Đồ Nhiệt (Heatmap)',
+                badge: 'Thống Kê',
+                steps: [
+                    '<strong>Bar & Line Chart</strong>: Theo dõi tỷ lệ hoàn thành theo từng ngày và từng tháng.',
+                    '<strong>Top 10 Habits</strong>: Xếp hạng những thói quen bạn kiên trì duy trì nhất.',
+                    '<strong>Annual Heatmap</strong>: Bản đồ nhiệt cả năm thể hiện mật độ rèn luyện giống GitHub commit.'
+                ]
+            }
+        ],
+        tip: '💡 <strong>Mẹo chuyên gia:</strong> Trong 7 ngày đầu, hãy bắt đầu với 3-5 thói quen cốt lõi nhỏ để tạo đà quán tính thành công trước khi thêm nhiều thói quen mới!'
+    },
+    'streak-rank': {
+        title: 'Chuỗi Kỷ Luật (Streak) & 10 Cấp Cảnh Giới Rank',
+        desc: 'Hiểu rõ cơ chế duy trì ngọn lửa Streak, bảo vệ chuỗi và hành trình thăng cấp 10 cảnh giới.',
+        icon: '🔥',
+        badge: 'Cốt Lõi',
+        heroTitle: 'Ngọn Lửa Kỷ Luật & Hệ Thống Cảnh Giới',
+        heroDesc: 'Mỗi ngày liên tiếp bạn duy trì ít nhất 1 thói quen, ngọn lửa Streak sẽ bùng cháy mạnh mẽ hơn. Tích lũy DP để thăng cấp cảnh giới từ Phàm Nhân đến Niết Bàn Vô Cực!',
+        cards: [
+            {
+                icon: '🔥',
+                title: 'Cơ Chế Chuỗi Streak Liên Tục',
+                badge: 'Quy Tắc',
+                steps: [
+                    'Mỗi ngày bạn hoàn thành ít nhất 1 thói quen, chuỗi <strong>Streak +1 ngày</strong>.',
+                    'Streak càng cao, bạn càng nhận được nhiều <strong>Huy hiệu & Điểm thưởng hàng tuần</strong>.',
+                    'Nếu cả ngày không check-in thói quen nào, chuỗi Streak sẽ bị đứt và trở về 0.'
+                ]
+            },
+            {
+                icon: '🧊',
+                title: 'Bảo Vệ Chuỗi (Streak Freeze & Repair)',
+                badge: 'Bảo Hộ',
+                steps: [
+                    '🧊 <strong>Bình Đóng Băng (Freeze)</strong>: Kích hoạt khi bận, ốm hoặc đi du lịch. Giữ nguyên chuỗi ngày mà không bị đứt. Tối đa tích trữ 3 bình trong túi.',
+                    '💊 <strong>Hồi Sinh Chuỗi (Repair)</strong>: Nếu lỡ quên check-in hôm qua, hệ thống sẽ mở thông báo khẩn cấp trong <strong>24h</strong>. Dùng 150 DP để hồi sinh chuỗi!',
+                    'Mở tab <strong>Bảo Vệ Chuỗi</strong> để mua thêm bình đóng băng hoặc kiểm tra số bình sẵn có.'
+                ],
+                action: { label: '🛡️ Mở Bảo Vệ Chuỗi', onClick: 'closeGuideModal(); if(window._openStreakModal)window._openStreakModal();' }
+            },
+            {
+                icon: '👑',
+                title: '10 Cấp Cảnh Giới Kỷ Luật',
+                badge: '10 Rank',
+                steps: [
+                    '<strong>1. Phàm Nhân Khởi Tâm</strong>: 0 - 199 DP',
+                    '<strong>2. Luyện Khí Sơ Tâm</strong>: 200 - 499 DP',
+                    '<strong>3. Trúc Cơ Kiên Định</strong>: 500 - 999 DP',
+                    '<strong>4. Kim Đan Bất Hoại</strong>: 1.000 - 1.999 DP',
+                    '<strong>5. Nguyên Anh Xuất Khiếu</strong>: 2.000 - 3.499 DP',
+                    '<strong>6. Hóa Thần Xuất Thế</strong>: 3.500 - 5.499 DP',
+                    '<strong>7. Luyện Hư Nhập Đạo</strong>: 5.500 - 7.999 DP',
+                    '<strong>8. Hợp Thể Cực Hạn</strong>: 8.000 - 11.999 DP',
+                    '<strong>9. Đại Thừa Viên Mãn</strong>: 12.000 - 19.999 DP',
+                    '<strong>10. Niết Bàn Vô Cực</strong>: 20.000+ DP'
+                ]
+            },
+            {
+                icon: '🖼️',
+                title: 'Khung Avatar Phát Sáng Độc Quyền',
+                badge: 'Thẩm Mỹ',
+                steps: [
+                    'Mỗi khi bạn vượt ngưỡng thăng cấp cảnh giới mới, hệ thống sẽ tự động mở khóa <strong>Khung Avatar tương ứng</strong>.',
+                    'Khung avatar được thiết kế theo phong cách Lăng kính Ma pháp Neon cao cấp.',
+                    'Bấm vào Avatar ở góc trên để mở Studio và tự do chuyển đổi giữa các khung đã mở khóa!'
+                ],
+                action: { label: '👤 Mở Hồ Sơ & Khung', onClick: 'closeGuideModal(); if(window._openProfile)window._openProfile();' }
+            }
+        ],
+        tip: '⚡ <strong>Vé 2X Boost:</strong> Mua vé 2X Boost trong Cửa hàng để nhân đôi toàn bộ điểm DP nhận được trong vòng 24 giờ, giúp bứt phá cảnh giới thần tốc!'
+    },
+    pomodoro: {
+        title: 'Trạm Tập Trung Sâu (Deep Work & Sound Mixer)',
+        desc: 'Đồng hồ Pomodoro kết hợp bộ hòa âm đa tầng 6 kênh âm thanh thiên nhiên & sóng não.',
+        icon: '⏱️',
+        badge: 'Hiệu Suất',
+        heroTitle: 'Trạm Làm Việc Sâu Không Xao Nhãng',
+        heroDesc: 'Áp dụng phương pháp Pomodoro chuẩn kết hợp bộ hòa âm Sound Mixer để đạt trạng thái Dòng Chảy (Flow State), làm việc hiệu quả gấp 3 lần.',
+        cards: [
+            {
+                icon: '⏲️',
+                title: 'Chu Kỳ Hẹn Giờ Tiêu Chuẩn',
+                badge: '3 Chế Độ',
+                steps: [
+                    '🚀 <strong>Focus (25 phút)</strong>: Tập trung cao độ 100% vào 1 nhiệm vụ duy nhất.',
+                    '☕ <strong>Short Rest (5 phút)</strong>: Thư giãn ngắn, uống nước, giãn cơ.',
+                    '🔋 <strong>Long Recharge (15 phút)</strong>: Nghỉ ngơi sâu sau khi hoàn thành 4 phiên tập trung.',
+                    'Có thể gắn phiên tập trung với một thói quen cụ thể (VD: Đọc sách, Học tiếng Anh, Viết code...).'
+                ]
+            },
+            {
+                icon: '🎁',
+                title: 'Phần Thưởng Điểm Kỷ Luật DP',
+                badge: '+15 DP / Phiên',
+                steps: [
+                    'Mỗi khi hoàn thành trọn vẹn 1 phiên 25 phút, hệ thống tặng ngay <strong>+15 DP</strong>.',
+                    'Mỗi ngày bạn có thể nhận thưởng tối đa <strong>4 phiên (+60 DP)</strong>.',
+                    'Sau 4 phiên, bạn vẫn có thể sử dụng đồng hồ và âm thanh không giới hạn để làm việc.'
+                ]
+            },
+            {
+                icon: '🎛️',
+                title: 'Bộ Hòa Âm Đa Tầng 6 Kênh (Sound Mixer)',
+                badge: 'Âm Thanh',
+                steps: [
+                    '🌧️ <strong>Mưa Rào (Rain)</strong>: Tiếng mưa rơi êm dịu gạt bỏ tiếng ồn.',
+                    '🌊 <strong>Sóng Biển (Ocean)</strong>: Âm thanh đại dương nhịp nhàng thư thái.',
+                    '🪵 <strong>Lửa Trại (Fire)</strong>: Tiếng gỗ nổ ấm áp tăng cảm giác an yên.',
+                    '🌲 <strong>Rừng Sâu (Forest)</strong>: Tiếng chim hót và gió rừng sinh động.',
+                    '🧠 <strong>Binaural 40Hz (Brainwave)</strong>: Tần số Gamma kích hoạt trí nhớ và xử lý logic.',
+                    '🎵 <strong>Lo-fi Chords</strong>: Hợp âm giai điệu trầm ấm, truyền cảm hứng sáng tạo.'
+                ]
+            },
+            {
+                icon: '⚡',
+                title: 'Gợi Ý Hòa Âm 1 Chạm (Presets)',
+                badge: 'Tiện Ích',
+                steps: [
+                    '☕ <strong>Cà Phê Mưa</strong>: Kết hợp Mưa Rào + Lo-fi Chords.',
+                    '🌲 <strong>Rừng Sâu</strong>: Kết hợp Gió Rừng + Lửa Trại.',
+                    '🚀 <strong>Deep Work 40Hz</strong>: Kết hợp Sóng Não 40Hz + Tiếng Mưa Rào.',
+                    '🌊 <strong>Thiền Biển Đêm</strong>: Kết hợp Sóng Biển + Lo-fi nhẹ nhàng.'
+                ],
+                action: { label: '🎧 Mở Trạm Pomodoro', onClick: 'closeGuideModal(); if(window._openPomodoro)window._openPomodoro();' }
+            }
+        ],
+        tip: '🎧 <strong>Khuyên dùng:</strong> Hãy đeo tai nghe và bật Sóng não 40Hz ở mức 30-50% âm lượng kết hợp Mưa rào để loại bỏ 100% tiếng ồn xung quanh!'
+    },
+    'squad-duel': {
+        title: 'Tổ Đội Rèn Luyện & Đấu Trường Solo 1v1',
+        desc: 'Cam kết kỷ luật xã hội (Social Accountability): Cùng tiến bộ với bạn bè và thách đấu leo rank.',
+        icon: '⚔️',
+        badge: 'Đồng Đội',
+        heroTitle: 'Đấu Trường Kỷ Luật & Bang Hội Rèn Luyện',
+        heroDesc: 'Đi một mình bạn có thể đi nhanh, nhưng đi cùng đồng đội bạn sẽ đi xa. Tận dụng sức mạnh của cộng đồng và sự thi đua lành mạnh!',
+        cards: [
+            {
+                icon: '🛡️',
+                title: 'Tổ Đội Rèn Luyện (Squad Guild)',
+                badge: 'Bang Hội',
+                steps: [
+                    'Tạo tổ đội mới hoặc nhập Mã Tổ Đội để tham gia cùng bạn bè (tối đa 5-10 thành viên).',
+                    '<strong>Phòng Chat Mật</strong>: Kênh nhắn tin nội bộ để động viên, nhắc nhở và chia sẻ tiến độ.',
+                    '<strong>Quỹ Thưởng Chung</strong>: Khi tất cả thành viên cùng hoàn thành thói quen trong ngày, cả đội nhận thưởng lớn!'
+                ]
+            },
+            {
+                icon: '⚔️',
+                title: 'Đấu Trường Solo 1v1 (Duel Arena)',
+                badge: 'Thách Đấu',
+                steps: [
+                    'Gửi lời mời thách đấu trực tiếp đến bạn bè qua Email/UID hoặc ghép đấu ngẫu nhiên.',
+                    'Cả 2 bên cùng thống nhất đặt cược số DP (VD: 100 DP, 200 DP) trong thời hạn 3 ngày hoặc 7 ngày.',
+                    'Hệ thống theo dõi tỷ lệ hoàn thành thói quen thực tế của cả 2 bên theo thời gian thực.',
+                    'Hết thời hạn, người có tỷ lệ kỷ luật cao hơn sẽ ẵm trọn quỹ thưởng cược!'
+                ],
+                action: { label: '⚔️ Mở Tổ Đội & Thách Đấu', onClick: 'closeGuideModal(); if(window._openSquadHub)window._openSquadHub();' }
+            }
+        ],
+        tip: '🤝 <strong>Trách nhiệm kỷ luật:</strong> Nghiên cứu tâm lý học chứng minh rằng việc có một người bạn đồng hành theo dõi mục tiêu giúp tăng 95% tỷ lệ hoàn thành mục tiêu!'
+    },
+    'shop-coins': {
+        title: 'Cửa Hàng DP, Rương Thần Bí & Đọc Sách',
+        desc: 'Hệ sinh thái Prism Nexus Coin: Mua sắm vật phẩm, mở khóa danh hiệu và đọc tài liệu tinh hoa.',
+        icon: '💎',
+        badge: 'Kinh Tế',
+        heroTitle: 'Cửa Hàng Kỷ Luật & Kho Tàng Tri Thức',
+        heroDesc: 'Điểm Kỷ Luật DP (Prism Nexus Coin) bạn kiếm được mỗi ngày có giá trị quy đổi thành vật phẩm bảo hộ, rương báu và tài liệu phát triển bản thân.',
+        cards: [
+            {
+                icon: '🪙',
+                title: 'Cách Kiếm Prism Nexus Coin (DP)',
+                badge: 'Tích Lũy',
+                steps: [
+                    'Check-in thói quen mỗi ngày: <strong>+10 DP</strong> / thói quen.',
+                    'Hoàn thành Ngày Hoàn Hảo (Perfect Day): <strong>Thưởng thêm DP</strong>.',
+                    'Hoàn thành phiên Deep Work 25p: <strong>+15 DP</strong>.',
+                    'Làm nhiệm vụ hàng ngày, hàng tuần & thành tích: <strong>+50 đến +500 DP</strong>.',
+                    'Đọc tài liệu tinh hoa: <strong>+20 DP</strong> / bài viết.'
+                ]
+            },
+            {
+                icon: '🎁',
+                title: 'Rương Thần Bí (Mystery Chest)',
+                badge: 'Vật Phẩm',
+                steps: [
+                    'Mở rương may mắn với hiệu ứng 3D mở khóa thẻ bài công nghệ cực đẹp.',
+                    'Cơ hội nhận ngẫu nhiên: Bình đóng băng chuỗi, Vé 2X Boost, Tiền vàng DP khủng, Danh hiệu phát sáng giới hạn.'
+                ]
+            },
+            {
+                icon: '📖',
+                title: 'Kho Sách & Tài Liệu Tinh Hoa Tích Hợp',
+                badge: '+20 Coin',
+                steps: [
+                    'Tích hợp sẵn bộ tài liệu tinh tuyển: <em>Tuyệt mật nhân tính, Tâm lý học hành vi, Thói quen nguyên tử, Nghệ thuật tập trung...</em>',
+                    'Trình đọc sách hiện đại: Tùy chỉnh cỡ chữ (A+/A-), chế độ đọc ban đêm, toàn màn hình.',
+                    'Đọc xong nhấn <strong>✨ Xác Nhận Đã Đọc</strong> để nhận ngay <strong>+20 Coins</strong> thưởng!'
+                ]
+            },
+            {
+                icon: '🎨',
+                title: 'Danh Hiệu Phát Sáng & Giao Diện Themes',
+                badge: 'Cá Nhân Hóa',
+                steps: [
+                    'Trang bị các danh hiệu danh giá hiển thị cạnh tên (VD: <em>Kẻ Hủy Diệt Trì Hoãn, Chiến Thần Kỷ Luật, Bất Khả Chiến Bại...</em>).',
+                    'Đổi màu sắc giao diện theo sở thích: Dark Obsidian, Cyberpunk Neon, Sakura Hồng, Light Theme trang nhã.'
+                ],
+                action: { label: '🛒 Mở Cửa Hàng DP', onClick: 'closeGuideModal(); if(window._openShopModal)window._openShopModal();' }
+            }
+        ],
+        tip: '📚 <strong>Thói quen đọc sách:</strong> Hãy tạo một thói quen "Đọc 1 bài tài liệu" mỗi ngày để vừa nâng cao hiểu biết vừa tích lũy coin mua vật phẩm bảo vệ chuỗi!'
+    },
+    'social-share': {
+        title: 'Bảng Xếp Hạng, Khoe Thẻ Rank & Cộng Đồng',
+        desc: 'Vinh danh Top 50 toàn server, tạo ảnh thẻ Rank độ nét cao chia sẻ lên mạng xã hội.',
+        icon: '🏆',
+        badge: 'Lan Tỏa',
+        heroTitle: 'Bảng Vinh Danh & Lan Tỏa Động Lực',
+        heroDesc: 'Kỷ luật là nguồn cảm hứng mạnh mẽ nhất. Khoe thành tích của bạn và tiếp thêm năng lượng tích cực cho những người xung quanh!',
+        cards: [
+            {
+                icon: '🏆',
+                title: 'Bảng Xếp Hạng Top 50 Toàn Server',
+                badge: 'Thi Đua',
+                steps: [
+                    'Xếp hạng tự động dựa trên tổng Điểm Kỷ Luật DP và chuỗi Streak của người dùng thật.',
+                    'Bục vinh quang dành cho Top 1 (Vương miện vàng), Top 2 (Bạc), Top 3 (Đồng).',
+                    'Bấm nút <strong>❤️ / 👏 Kudos</strong> để gửi lời khen ngợi cổ vũ tinh thần cho các chiến binh khác.'
+                ],
+                action: { label: '🥇 Xem Bảng Xếp Hạng', onClick: 'closeGuideModal(); if(typeof openLeaderboardModal==="function")openLeaderboardModal();' }
+            },
+            {
+                icon: '📸',
+                title: 'Studio Khoe Thẻ Rank (Share Card Canvas)',
+                badge: 'Story 9:16',
+                steps: [
+                    'Hệ thống tự động vẽ thẻ thành tích cá nhân độ phân giải cao chuẩn Story 9:16 hoặc Vuông 1:1.',
+                    'Hiển thị Avatar, Khung cảnh giới, Tên nhân vật, Cấp rank, Chuỗi Streak và Tổng DP.',
+                    'Tùy chọn 3 phong cách nền nghệ thuật: <em>Cyberpunk, Gold Luxury, Sakura</em>.',
+                    'Bấm <strong>📥 Tải Ảnh HD</strong> hoặc <strong>📋 Sao Chép Ảnh</strong> để đăng Story Facebook, Instagram, TikTok, Zalo!'
+                ],
+                action: { label: '🎨 Thử Tạo Thẻ Rank', onClick: 'closeGuideModal(); if(typeof openShareCardModal==="function")openShareCardModal();' }
+            },
+            {
+                icon: '💬',
+                title: 'Bảng Tin Cộng Đồng (Community Feed)',
+                badge: 'Tương Tác',
+                steps: [
+                    'Đăng bài viết chia sẻ suy nghĩ, kinh nghiệm rèn luyện hoặc mục tiêu mới.',
+                    'Hỗ trợ đính kèm hình ảnh check-in và video thực tế.',
+                    'Thả tim, bình luận và học hỏi bí quyết từ các thành viên xuất sắc.'
+                ],
+                action: { label: '🌐 Vào Bảng Tin Cộng Đồng', onClick: 'closeGuideModal(); if(typeof openCommunityModal==="function")openCommunityModal();' }
+            }
+        ],
+        tip: '📸 <strong>Khoe thẻ Rank:</strong> Đăng Story kỷ luật mỗi tuần không chỉ giúp bạn tự hào về hành trình của mình mà còn tạo áp lực tích cực để giữ vững kỷ luật!'
+    },
+    'pwa-sync': {
+        title: 'Cài App Màn Hình Chính & Sao Lưu Đám Mây',
+        desc: 'Hướng dẫn cài đặt Habit Mastery như ứng dụng Native trên iOS/Android/PC và an toàn dữ liệu.',
+        icon: '📲',
+        badge: 'Cài Đặt',
+        heroTitle: 'Trải Nghiệm Mượt Mà & An Toàn Dữ Liệu',
+        heroDesc: 'Habit Mastery là ứng dụng PWA (Progressive Web App) thế hệ mới — cài đặt trực tiếp không tốn bộ nhớ máy, hoạt động mượt mà 120Hz và tự động đồng bộ đám mây.',
+        cards: [
+            {
+                icon: '🍏',
+                title: 'Cài Đặt Trên iPhone & iPad (iOS Safari)',
+                badge: 'iPhone',
+                steps: [
+                    '1. Mở trang web <strong>https://habit-mastery.com</strong> bằng trình duyệt <strong>Safari</strong>.',
+                    '2. Bấm vào nút <strong>Chia Sẻ (Biểu tượng ô vuông có mũi tên hướng lên)</strong> ở thanh dưới cùng của Safari.',
+                    '3. Cuộn xuống và chọn mục <strong>"Thêm vào Màn hình chính" (Add to Home Screen)</strong>.',
+                    '4. Bấm <strong>"Thêm" (Add)</strong> ở góc trên bên phải. Biểu tượng Habit Mastery sẽ xuất hiện trên màn hình như app gốc!'
+                ]
+            },
+            {
+                icon: '🤖',
+                title: 'Cài Đặt Trên Điện Thoại Android (Google Chrome)',
+                badge: 'Android',
+                steps: [
+                    '1. Mở trang web <strong>https://habit-mastery.com</strong> bằng <strong>Chrome</strong>.',
+                    '2. Bấm vào biểu tượng <strong>3 chấm dọc (⋮)</strong> ở góc trên bên phải.',
+                    '3. Chọn <strong>"Cài đặt ứng dụng"</strong> hoặc <strong>"Thêm vào Màn hình chính"</strong>.',
+                    '4. Bấm <strong>"Cài đặt"</strong> để hoàn tất.'
+                ]
+            },
+            {
+                icon: '💻',
+                title: 'Cài Đặt Trên Máy Tính (Windows / Mac)',
+                badge: 'PC / Mac',
+                steps: [
+                    'Mở Chrome hoặc Microsoft Edge trên máy tính.',
+                    'Nhìn vào góc phải thanh nhập địa chỉ URL, bấm vào biểu tượng <strong>Cài đặt (Install Habit Mastery)</strong>.',
+                    'Ứng dụng sẽ mở trong cửa sổ độc lập cực kỳ tiện lợi.'
+                ]
+            },
+            {
+                icon: '☁️',
+                title: 'Đồng Bộ Đám Mây & Xuất Sao Lưu Dự Phòng',
+                badge: 'Sao Lưu',
+                steps: [
+                    '<strong>Đồng bộ Realtime</strong>: Mọi thói quen và điểm số được lưu tức thì vào tài khoản Google / Email của bạn trên Cloud Firestore.',
+                    '<strong>Đổi thiết bị</strong>: Chỉ cần đăng nhập trên máy mới là dữ liệu hiển thị đầy đủ ngay lập tức.',
+                    '<strong>Xuất Sao Lưu (Export)</strong>: Vào Menu Khám phá ➔ Bấm <strong>Xuất Sao Lưu</strong> để tải file dữ liệu JSON về máy cất giữ.'
+                ]
+            }
+        ],
+        tip: '✨ <strong>Trải nghiệm tốt nhất:</strong> Khi cài lên Màn hình chính, ứng dụng sẽ chạy ở chế độ Toàn màn hình (Full Screen), ẩn thanh địa chỉ trình duyệt giúp thao tác nhanh và mượt mà hơn rất nhiều!'
+    }
+};
+
+function renderGuideContent(tabKey) {
+    const container = document.getElementById('guideFeedContainer');
+    if (!container) return;
+    
+    curGuideTab = tabKey || 'quickstart';
+    const data = GUIDE_SECTIONS[curGuideTab] || GUIDE_SECTIONS.quickstart;
+
+    let cardsHtml = '';
+    if (data.cards && data.cards.length > 0) {
+        cardsHtml = `
+            <div class="guide-cards-grid">
+                ${data.cards.map(card => `
+                    <div class="guide-card">
+                        <div class="guide-card-header">
+                            <span class="guide-card-icon">${card.icon}</span>
+                            <span class="guide-card-title">${card.title}</span>
+                            ${card.badge ? `<span class="guide-card-badge">${card.badge}</span>` : ''}
+                        </div>
+                        <div class="guide-steps">
+                            ${card.steps.map((st, idx) => `
+                                <div class="guide-step-item">
+                                    <span class="guide-step-num">${idx + 1}</span>
+                                    <div>${st}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${card.action ? `
+                            <div class="guide-action-row">
+                                <button type="button" class="guide-action-btn" onclick="${card.action.onClick}">
+                                    ${card.action.label} →
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    container.innerHTML = `
+        <div class="guide-hero">
+            <div class="guide-hero-icon">${data.icon}</div>
+            <div class="guide-hero-info">
+                <h3>${data.heroTitle}</h3>
+                <p>${data.heroDesc}</p>
+            </div>
+        </div>
+        ${cardsHtml}
+        ${data.tip ? `<div class="guide-tip">${data.tip}</div>` : ''}
+    `;
+}
+
+function openGuideModal(defaultTab = 'quickstart') {
+    const modal = document.getElementById('guideModalBg');
+    if (!modal) return;
+    modal.classList.add('show');
+    
+    // Set active tab button
+    const tabs = document.querySelectorAll('#guideTabsNav .guide-tab-btn');
+    tabs.forEach(btn => {
+        if (btn.dataset.guideTab === defaultTab) {
+            btn.classList.add('active');
+            btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    renderGuideContent(defaultTab);
+}
+window._openGuideModal = openGuideModal;
+
+function closeGuideModal() {
+    const modal = document.getElementById('guideModalBg');
+    if (modal) modal.classList.remove('show');
+}
+window._closeGuideModal = closeGuideModal;
+
+function initGuideModal() {
+    const closeBtn = document.getElementById('guideCloseBtn');
+    if (closeBtn) closeBtn.onclick = closeGuideModal;
+
+    const bg = document.getElementById('guideModalBg');
+    if (bg) bg.onclick = (e) => { if (e.target === bg) closeGuideModal(); };
+
+    const guideBtn = document.getElementById('guideBtn');
+    if (guideBtn) guideBtn.onclick = () => openGuideModal('quickstart');
+
+    const moreGuideBtn = document.getElementById('moreBtnGuide');
+    if (moreGuideBtn) moreGuideBtn.onclick = () => {
+        if (window._closeMoreMenu) window._closeMoreMenu();
+        openGuideModal('quickstart');
+    };
+
+    // Tab switching
+    const tabBtns = document.querySelectorAll('#guideTabsNav .guide-tab-btn');
+    tabBtns.forEach(btn => {
+        btn.onclick = () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const tabKey = btn.dataset.guideTab || 'quickstart';
+            renderGuideContent(tabKey);
+        };
+    });
+}
+window.initGuideModal = initGuideModal;
 
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',initAuthGuard):initAuthGuard();
 })();
