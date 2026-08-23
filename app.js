@@ -5026,7 +5026,22 @@ function initProfileModal() {
         ]);
     };
 
-    // Direct click on Central Avatar in Profile Modal opens Avatar Studio
+    // 📷 Avatar Studio (pos 5)
+    const orbAvatar = document.getElementById('orbAvatarBtn');
+    if (orbAvatar) orbAvatar.onclick = (e) => {
+        e.stopPropagation();
+        showOrbitalPopup(orbAvatar, 'Ảnh đại diện', [
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: 'Studio Đổi Avatar', desc: 'Tải ảnh, URL & Mẫu đẹp', action: () => { openAvatarStudio(); } },
+            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: 'Tải ảnh từ máy', desc: 'Chọn tệp hình ảnh', action: () => { const fileInput = document.getElementById('avatarFileInput'); if (fileInput) fileInput.click(); } },
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: 'Chọn khung Rank', desc: 'Đổi khung cấp bậc', action: () => { openAvatarStudio(); } },
+            { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Xóa ảnh đại diện', desc: 'Về avatar mặc định', danger: true, action: async () => {
+                if (!confirm('Bạn có chắc muốn xóa ảnh đại diện?')) return;
+                await saveUserAvatar('');
+            }},
+        ]);
+    };
+
+    // Direct click on Central Avatar in Profile Modal
     const profileCenter = document.getElementById('profileAvatarCenter');
     if (profileCenter) {
         profileCenter.onclick = (e) => {

@@ -4913,28 +4913,9 @@ body {
     filter: drop-shadow(0 0 12px var(--accent-light));
 }
 
-/* Floating Camera Edit Badge */
+/* Floating Camera Edit Badge (Disabled as requested) */
 .orbital-avatar-edit-badge {
-    position: absolute;
-    bottom: 2px;
-    right: 2px;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #FF6F91, #B58CFF);
-    border: 2px solid #0A1018;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #FFF;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.5), 0 0 10px rgba(255,111,145,0.5);
-    z-index: 10;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    pointer-events: none;
-}
-.orbital-center:hover .orbital-avatar-edit-badge {
-    transform: scale(1.18);
-    box-shadow: 0 0 16px rgba(255,111,145,0.9);
+    display: none !important;
 }
 
 /* --- ORBITAL BUTTONS --- */
