@@ -17,6 +17,7 @@ const ASSETS_TO_CACHE = [
   '/gotiengviet.js',
   '/nameplate_templates.js',
   '/avatar_frames.js',
+  '/doc_nhan_tinh_data.js',
   '/icon-192.png',
   '/icon-512.png',
   '/manifest.json'

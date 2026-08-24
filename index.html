@@ -706,31 +706,75 @@
     <!-- DOCUMENT READER MODAL -->
     <div class="modal-bg doc-reader-modal-bg" id="docReaderModalBg">
         <div class="doc-reader-modal" id="docReaderModal">
+            <!-- Reading Progress Bar -->
+            <div class="dr-progress-bar-wrap">
+                <div class="dr-progress-bar" id="drProgressBar" style="width: 0%;"></div>
+            </div>
+
             <header class="doc-reader-header">
                 <div class="dr-header-left">
-                    <div class="dr-book-badge" id="drBadge">TÀI LIỆU</div>
+                    <div class="dr-book-badge" id="drBadge">BẢN ĐỦ 218 TRANG</div>
                     <div class="dr-title-wrap">
                         <h3 class="dr-book-title" id="drBookTitle">Tuyệt Mật Nhân Tính</h3>
-                        <span class="dr-book-category" id="drBookCategory">Tâm Lý Học Hành Vi</span>
+                        <span class="dr-book-category" id="drBookCategory">Tâm Lý Học Hành Vi & Đối Nhân Xử Thế</span>
                     </div>
                 </div>
                 <div class="dr-header-actions">
+                    <button class="dr-ctrl-btn dr-toc-btn" id="drTocBtn" title="Mục Lục Chi Tiết">
+                        <svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>
+                        <span class="dr-btn-text">Mục Lục</span>
+                    </button>
+                    <button class="dr-ctrl-btn dr-search-btn" id="drSearchBtn" title="Tìm kiếm trong sách">
+                        <svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>
+                        <span class="dr-btn-text">Tìm</span>
+                    </button>
                     <div class="dr-font-controls">
                         <button class="dr-ctrl-btn" id="drFontDec" title="Thu nhỏ chữ">A-</button>
                         <span class="dr-font-size-label" id="drFontSizeLabel">100%</span>
                         <button class="dr-ctrl-btn" id="drFontInc" title="Phóng to chữ">A+</button>
                     </div>
-                    <button class="dr-ctrl-btn dr-theme-btn" id="drThemeToggle" title="Đổi chủ đề đọc">🎨</button>
+                    <button class="dr-ctrl-btn dr-theme-btn" id="drThemeToggle" title="Đổi chủ đề đọc (Dark / Sepia / Light / OLED)">🎨</button>
                     <button class="dr-ctrl-btn dr-fullscreen-btn" id="drFullscreenBtn" title="Toàn màn hình">⛶</button>
                     <button class="lb-close-btn dr-close-btn" id="drCloseBtn" title="Đóng đọc sách"><svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-close"></use></svg></button>
                 </div>
             </header>
+
+            <!-- Chapter Navigation Tabs Bar -->
+            <div class="dr-chapter-tabs-bar" id="drChapterTabsBar"></div>
+
+            <!-- In-Reader Search Bar & Dropdown Results -->
+            <div class="dr-search-bar" id="drSearchBar" style="display:none;">
+                <svg class="rune-inline rune-xs dr-search-icon" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>
+                <input type="text" id="drSearchInput" placeholder="Tìm kiếm từ khóa trong 218 trang..." />
+                <span class="dr-search-stats" id="drSearchStats"></span>
+                <button class="dr-search-close-btn" id="drSearchCloseBtn" title="Đóng tìm kiếm">✕</button>
+            </div>
+            <div class="dr-search-results" id="drSearchResults" style="display:none;"></div>
+
+            <!-- Reader Body (Chapters & Sections) -->
             <div class="doc-reader-body" id="docReaderBody">
                 <!-- Dynamic Content injected via app.js -->
             </div>
+
+            <!-- Slide-in Table of Contents (TOC) Drawer -->
+            <div class="dr-toc-backdrop" id="drTocBackdrop"></div>
+            <div class="dr-toc-drawer" id="drTocDrawer">
+                <div class="dr-toc-header">
+                    <div class="dr-toc-header-title">
+                        <svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>
+                        <span>MỤC LỤC CHI TIẾT (218 TRANG)</span>
+                    </div>
+                    <button class="dr-toc-close" id="drTocClose" title="Đóng mục lục">✕</button>
+                </div>
+                <div class="dr-toc-search-wrap">
+                    <input type="text" id="drTocFilterInput" placeholder="Lọc chương & phần..." />
+                </div>
+                <div class="dr-toc-list" id="drTocList"></div>
+            </div>
+
             <footer class="doc-reader-footer">
                 <div class="dr-footer-left">
-                    <span class="dr-progress-text" id="drProgressText">📖 Bản đọc trực tiếp trên ứng dụng</span>
+                    <span class="dr-progress-text" id="drProgressText">📖 Đang đọc: Lời Nói Đầu</span>
                 </div>
                 <div class="dr-footer-right">
                     <button class="dr-mark-read-btn" id="drMarkReadBtn" onclick="window._markDocCompleted()">
@@ -1185,6 +1229,7 @@
     <script src="gotiengviet.js?v=5.1.2"></script>
     <script src="nameplate_templates.js?v=5.1.2"></script>
     <script src="avatar_frames.js?v=5.1.2"></script>
+    <script src="doc_nhan_tinh_data.js?v=5.1.2"></script>
     <script src="app.js?v=5.1.2"></script>
 </body>
 </html>

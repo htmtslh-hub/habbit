@@ -6784,6 +6784,30 @@ function initShopModal() {
     const fsBtn = document.getElementById('drFullscreenBtn');
     if (fsBtn) fsBtn.onclick = toggleDocFullscreen;
 
+    const tocBtn = document.getElementById('drTocBtn');
+    if (tocBtn) tocBtn.onclick = () => toggleDocToc();
+
+    const tocClose = document.getElementById('drTocClose');
+    if (tocClose) tocClose.onclick = () => toggleDocToc(false);
+
+    const tocBackdrop = document.getElementById('drTocBackdrop');
+    if (tocBackdrop) tocBackdrop.onclick = () => toggleDocToc(false);
+
+    const tocFilter = document.getElementById('drTocFilterInput');
+    if (tocFilter) tocFilter.oninput = (e) => filterDocToc(e.target.value);
+
+    const searchBtn = document.getElementById('drSearchBtn');
+    if (searchBtn) searchBtn.onclick = () => toggleDocSearch();
+
+    const searchClose = document.getElementById('drSearchCloseBtn');
+    if (searchClose) searchClose.onclick = () => toggleDocSearch(false);
+
+    const searchInput = document.getElementById('drSearchInput');
+    if (searchInput) searchInput.oninput = (e) => searchInDoc(e.target.value);
+
+    const drBody = document.getElementById('docReaderBody');
+    if (drBody) drBody.onscroll = onDocBodyScroll;
+
     // Tab buttons
     document.querySelectorAll('.shop-tab-btn').forEach(btn => {
         btn.onclick = () => {
@@ -6795,38 +6819,18 @@ function initShopModal() {
 // ==================== HỆ THỐNG ĐỌC TÀI LIỆU TRỰC TIẾP (DOCUMENT READER) ====================
 
 const DOC_CONTENT_MAP = {
-    doc_nhan_tinh: {
+    doc_nhan_tinh: (typeof window !== 'undefined' && window.BOOK_TUYET_MAT_NHAN_TINH) ? window.BOOK_TUYET_MAT_NHAN_TINH : {
+        id: 'doc_nhan_tinh',
         title: 'Tuyệt Mật Nhân Tính',
+        fullTitle: 'Thiên Thư Tuyệt Mật Nhân Tính',
         category: 'Tâm Lý Học Hành Vi & Đối Nhân Xử Thế',
-        badge: 'MIỄN PHÍ',
+        badge: 'BẢN ĐỦ 218 TRANG',
         gradient: 'linear-gradient(135deg, #059669, #10b981)',
+        accent: '#10b981',
+        icon: '📜',
+        totalPages: 218,
         quote: '“Người nhìn thấu nhân tính sẽ không oán trách thế gian. Kẻ làm chủ nhân tính sẽ xoay chuyển cờ tàn.”',
-        chapters: [
-            {
-                title: 'Chương 1: Quy Luật Lợi Ích & Bản Năng Sơ Khai',
-                content: `
-                    <p class="dr-lead">Tất cả các mối quan hệ bền vững trong xã hội loài người đều được xây dựng trên một nền tảng ngầm: <strong>Cân bằng giá trị trao đổi</strong>. Khi bạn hiểu rằng con người hành động trước hết vì sự an toàn, danh dự và lợi ích của chính họ, bạn sẽ không còn cảm giác thất vọng hay hụt hẫng.</p>
-                    <div class="dr-callout gold">
-                        <div class="dr-callout-title">💡 NGUYÊN TẮC CỐT LÕI</div>
-                        <p>Đừng bao giờ thử thách nhân tính bằng sự cả tin hoặc dựa dẫm vô điều kiện. Hãy tạo cho mình giá trị mà người khác cần, đó là cách đối nhân xử thế an toàn và thông thái nhất.</p>
-                    </div>
-                    <h4>3 Bí Mật Trong Tâm Lý Học Giao Tiếp:</h4>
-                    <ul>
-                        <li><strong>Bí mật 1 - Lời khen ngợi chân thành:</strong> Con người thèm khát sự công nhận hơn bất kỳ điều gì. Một lời khen đúng lúc mở ra nhiều cánh cửa hơn ngàn lời tranh luận.</li>
-                        <li><strong>Bí mật 2 - Giữ kín con bài tẩy:</strong> Không bao giờ phơi bày 100% năng lực hay kế hoạch trước khi kết quả thành hình.</li>
-                        <li><strong>Bí mật 3 - Lắng nghe chủ động:</strong> Người làm chủ cuộc đối thoại không phải là người nói nhiều nhất, mà là người biết đặt câu hỏi sắc bén và lắng nghe thấu suốt.</li>
-                    </ul>
-                `
-            },
-            {
-                title: 'Chương 2: Nghệ Thuật Thu Phục Nhân Tâm',
-                content: `
-                    <p>Muốn người khác ủng hộ lý tưởng của bạn, đừng bắt đầu bằng việc thuyết phục bằng logic khô khan. Hãy chạm vào cảm xúc, sự tôn nghiêm và lợi ích tương lai của họ.</p>
-                    <blockquote>“Kẻ tầm thường dùng quyền lực ép buộc. Bậc cao thủ dùng nhân tâm dẫn lối.”</blockquote>
-                    <p><em>(Hệ thống đang tích hợp file thiết kế chi tiết hoàn chỉnh từ bạn...).</em></p>
-                `
-            }
-        ]
+        chapters: []
     },
     doc_thuc_tinh: {
         title: 'Thức Tỉnh Nhận Thức',
@@ -6837,16 +6841,23 @@ const DOC_CONTENT_MAP = {
         chapters: [
             {
                 title: 'Chương 1: Phá Vỡ Vòng Lặp Vô Thức',
-                content: `
-                    <p class="dr-lead">Hơn 95% hành vi và phản ứng hàng ngày của con người diễn ra hoàn toàn tự động dựa trên các định kiến, thói quen cũ và tổn thương trong quá khứ. Thức tỉnh nhận thức là khoảnh khắc bạn bước lùi lại một bước, quan sát chính suy nghĩ của mình như một người thứ ba.</p>
-                    <div class="dr-callout cyan">
-                        <div class="dr-callout-title">🌀 3 TẦNG THỰC TẠI CỦA TÂM TRÍ</div>
-                        <p><strong>1. Tầng Nạn Nhân (Vô minh):</strong> Luôn đổ lỗi cho hoàn cảnh, người khác và số phận.<br>
-                        <strong>2. Tầng Người Làm Chủ (Kỷ luật):</strong> Chịu trách nhiệm 100% về mọi kết quả trong cuộc sống.<br>
-                        <strong>3. Tầng Siêu Nhận Thức (Tự tại):</strong> Nhìn thấy bản chất vận hành của vạn vật mà không bị dính mắc hay lung lay.</p>
-                    </div>
-                    <p><em>(Hệ thống đang tích hợp file thiết kế chi tiết hoàn chỉnh từ bạn...).</em></p>
-                `
+                sections: [
+                    {
+                        id: 'sec_tt_1',
+                        title: 'Phần 1: Nhận thức các tầng thực tại',
+                        startPage: 1,
+                        endPage: 12,
+                        content: `
+                            <p class="dr-lead">Hơn 95% hành vi và phản ứng hàng ngày của con người diễn ra hoàn toàn tự động dựa trên các định kiến, thói quen cũ và tổn thương trong quá khứ. Thức tỉnh nhận thức là khoảnh khắc bạn bước lùi lại một bước, quan sát chính suy nghĩ của mình như một người thứ ba.</p>
+                            <div class="dr-callout cyan">
+                                <div class="dr-callout-title">🌀 3 TẦNG THỰC TẠI CỦA TÂM TRÍ</div>
+                                <p><strong>1. Tầng Nạn Nhân (Vô minh):</strong> Luôn đổ lỗi cho hoàn cảnh, người khác và số phận.<br>
+                                <strong>2. Tầng Người Làm Chủ (Kỷ luật):</strong> Chịu trách nhiệm 100% về mọi kết quả trong cuộc sống.<br>
+                                <strong>3. Tầng Siêu Nhận Thức (Tự tại):</strong> Nhìn thấy bản chất vận hành của vạn vật mà không bị dính mắc hay lung lay.</p>
+                            </div>
+                        `
+                    }
+                ]
             }
         ]
     },
@@ -6859,20 +6870,27 @@ const DOC_CONTENT_MAP = {
         chapters: [
             {
                 title: 'Chương 1: Định Luật Của Kẻ Mạnh',
-                content: `
-                    <p class="dr-lead">Tư duy cường giả không phải là sự tàn nhẫn hay chèn ép người khác, mà là khả năng tự gánh vác trách nhiệm tuyệt đối, biến mọi áp lực nghịch cảnh thành bàn đạp để tôi luyện ý chí.</p>
-                    <div class="dr-callout amber">
-                        <div class="dr-callout-title">🦁 5 NGUYÊN TẮC CỦA CƯỜNG GIẢ</div>
-                        <ol>
-                            <li><strong>Không than thở:</strong> Năng lượng dùng để phàn nàn là năng lượng bị lãng phí.</li>
-                            <li><strong>Chấp nhận sự khắc nghiệt:</strong> Thế giới không nợ bạn bất cứ điều gì.</li>
-                            <li><strong>Hành động bất chấp cảm xúc:</strong> Kỷ luật là làm điều cần làm ngay cả khi không có hứng.</li>
-                            <li><strong>Tập trung vào biến số kiểm soát được:</strong> Bỏ qua những thứ ngoài tầm tay.</li>
-                            <li><strong>Liên tục nâng cấp giá trị bản thân:</strong> Sức mạnh nội tại là tấm khiên vững chắc nhất.</li>
-                        </ol>
-                    </div>
-                    <p><em>(Hệ thống đang tích hợp file thiết kế chi tiết hoàn chỉnh từ bạn...).</em></p>
-                `
+                sections: [
+                    {
+                        id: 'sec_cg_1',
+                        title: 'Phần 1: 5 Nguyên tắc vàng của cường giả',
+                        startPage: 1,
+                        endPage: 15,
+                        content: `
+                            <p class="dr-lead">Tư duy cường giả không phải là sự tàn nhẫn hay chèn ép người khác, mà là khả năng tự gánh vác trách nhiệm tuyệt đối, biến mọi áp lực nghịch cảnh thành bàn đạp để tôi luyện ý chí.</p>
+                            <div class="dr-callout amber">
+                                <div class="dr-callout-title">🦁 5 NGUYÊN TẮC CỦA CƯỜNG GIẢ</div>
+                                <ol>
+                                    <li><strong>Không than thở:</strong> Năng lượng dùng để phàn nàn là năng lượng bị lãng phí.</li>
+                                    <li><strong>Chấp nhận sự khắc nghiệt:</strong> Thế giới không nợ bạn bất cứ điều gì.</li>
+                                    <li><strong>Hành động bất chấp cảm xúc:</strong> Kỷ luật là làm điều cần làm ngay cả khi không có hứng.</li>
+                                    <li><strong>Tập trung vào biến số kiểm soát được:</strong> Bỏ qua những thứ ngoài tầm tay.</li>
+                                    <li><strong>Liên tục nâng cấp giá trị bản thân:</strong> Sức mạnh nội tại là tấm khiên vững chắc nhất.</li>
+                                </ol>
+                            </div>
+                        `
+                    }
+                ]
             }
         ]
     },
@@ -6885,14 +6903,21 @@ const DOC_CONTENT_MAP = {
         chapters: [
             {
                 title: 'Chương 1: Mưu Lược Cạnh Tranh & Đòn Bẩy',
-                content: `
-                    <p class="dr-lead">Trong kinh doanh hiện đại, thắng bại không chỉ nằm ở sản phẩm mà nằm ở chiến lược tiếp cận, tốc độ thực thi và cấu trúc dòng tiền vững chắc.</p>
-                    <div class="dr-callout red">
-                        <div class="dr-callout-title">⚔️ NGHỆ THUẬT THƯƠNG CHIẾN</div>
-                        <p>Tránh đối đầu trực diện ở đại dương đỏ. Luôn tìm kiếm ngách thị trường chưa được khai phá và tạo ra lợi thế cạnh tranh độc quyền (Moat) không thể sao chép.</p>
-                    </div>
-                    <p><em>(Hệ thống đang tích hợp file thiết kế chi tiết hoàn chỉnh từ bạn...).</em></p>
-                `
+                sections: [
+                    {
+                        id: 'sec_tc_1',
+                        title: 'Phần 1: Khởi lập lợi thế cạnh tranh',
+                        startPage: 1,
+                        endPage: 16,
+                        content: `
+                            <p class="dr-lead">Trong kinh doanh hiện đại, thắng bại không chỉ nằm ở sản phẩm mà nằm ở chiến lược tiếp cận, tốc độ thực thi và cấu trúc dòng tiền vững chắc.</p>
+                            <div class="dr-callout red">
+                                <div class="dr-callout-title">⚔️ NGHỆ THUẬT THƯƠNG CHIẾN</div>
+                                <p>Tránh đối đầu trực diện ở đại dương đỏ. Luôn tìm kiếm ngách thị trường chưa được khai phá và tạo ra lợi thế cạnh tranh độc quyền (Moat) không thể sao chép.</p>
+                            </div>
+                        `
+                    }
+                ]
             }
         ]
     },
@@ -6905,14 +6930,21 @@ const DOC_CONTENT_MAP = {
         chapters: [
             {
                 title: 'Chương 1: Đọc Vị Biến Số Ngầm',
-                content: `
-                    <p class="dr-lead">Bề nổi của mọi sự kiện chỉ là kết quả của những đợt sóng ngầm đã tích tụ từ rất lâu trước đó. Nhìn thấu huyền cơ là khả năng dự báo xu hướng trước khi đám đông nhận ra.</p>
-                    <div class="dr-callout purple">
-                        <div class="dr-callout-title">🔮 QUY LUẬT ÂM DƯƠNG TƯƠNG HỖ</div>
-                        <p>Thịnh cực tất suy, bĩ cực thái lai. Khi ở đỉnh cao hãy chuẩn bị cho giông bão; khi ở đáy sâu hãy tích lũy nội lực chờ ngày bứt phá.</p>
-                    </div>
-                    <p><em>(Hệ thống đang tích hợp file thiết kế chi tiết hoàn chỉnh từ bạn...).</em></p>
-                `
+                sections: [
+                    {
+                        id: 'sec_hc_1',
+                        title: 'Phần 1: Nhìn xuyên bề nổi thời cuộc',
+                        startPage: 1,
+                        endPage: 14,
+                        content: `
+                            <p class="dr-lead">Bề nổi của mọi sự kiện chỉ là kết quả của những đợt sóng ngầm đã tích tụ từ rất lâu trước đó. Nhìn thấu huyền cơ là khả năng dự báo xu hướng trước khi đám đông nhận ra.</p>
+                            <div class="dr-callout purple">
+                                <div class="dr-callout-title">🔮 QUY LUẬT ÂM DƯƠNG TƯƠNG HỖ</div>
+                                <p>Thịnh cực tất suy, bĩ cực thái lai. Khi ở đỉnh cao hãy chuẩn bị cho giông bão; khi ở đáy sâu hãy tích lũy nội lực chờ ngày bứt phá.</p>
+                            </div>
+                        `
+                    }
+                ]
             }
         ]
     },
@@ -6925,29 +6957,45 @@ const DOC_CONTENT_MAP = {
         chapters: [
             {
                 title: 'Chương 1: First Principles Thinking (Nguyên Lý Đệ Nhất)',
-                content: `
-                    <p class="dr-lead">Bóc tách mọi vấn đề phức tạp về những chân lý nền tảng không thể phủ nhận, từ đó xây dựng giải pháp hoàn toàn mới thay vì suy luận theo lối mòn bắt chước.</p>
-                    <div class="dr-callout indigo">
-                        <div class="dr-callout-title">🌌 4 BƯỚC RÈN LUYỆN TƯ DUY SÂU</div>
-                        <ol>
-                            <li>Hoài nghi các giả định sẵn có.</li>
-                            <li>Tách biệt sự thật (Fact) khỏi cảm xúc (Emotion) và ý kiến (Opinion).</li>
-                            <li>Đặt câu hỏi "Tại sao" ít nhất 5 lần để tìm nguyên nhân gốc rễ.</li>
-                            <li>Tổng hợp các mô hình tư duy đa ngành (Mental Models).</li>
-                        </ol>
-                    </div>
-                    <p><em>(Hệ thống đang tích hợp file thiết kế chi tiết hoàn chỉnh từ bạn...).</em></p>
-                `
+                sections: [
+                    {
+                        id: 'sec_ss_1',
+                        title: 'Phần 1: 4 Bước rèn luyện tư duy sâu',
+                        startPage: 1,
+                        endPage: 18,
+                        content: `
+                            <p class="dr-lead">Bóc tách mọi vấn đề phức tạp về những chân lý nền tảng không thể phủ nhận, từ đó xây dựng giải pháp hoàn toàn mới thay vì suy luận theo lối mòn bắt chước.</p>
+                            <div class="dr-callout indigo">
+                                <div class="dr-callout-title">🌌 4 BƯỚC RÈN LUYỆN TƯ DUY SÂU</div>
+                                <ol>
+                                    <li>Hoài nghi các giả định sẵn có.</li>
+                                    <li>Tách biệt sự thật (Fact) khỏi cảm xúc (Emotion) và ý kiến (Opinion).</li>
+                                    <li>Đặt câu hỏi "Tại sao" ít nhất 5 lần để tìm nguyên nhân gốc rễ.</li>
+                                    <li>Tổng hợp các mô hình tư duy đa ngành (Mental Models).</li>
+                                </ol>
+                            </div>
+                        `
+                    }
+                ]
             }
         ]
     }
 };
 
 let currentReadingDocId = null;
-let docReaderFontSize = 100;
-let docReaderTheme = 'dark'; // 'dark' | 'sepia' | 'light'
+let currentReadingChapterIdx = 0;
+let currentReadingSecId = null;
+let docReaderFontSize = parseInt(localStorage.getItem('hg_doc_font_size') || '100', 10);
+let docReaderTheme = localStorage.getItem('hg_doc_theme') || 'dark'; // 'dark' | 'sepia' | 'light' | 'oled'
 
-function openDocReader(docId) {
+function getDocData(docId) {
+    if (docId === 'doc_nhan_tinh' && typeof window !== 'undefined' && window.BOOK_TUYET_MAT_NHAN_TINH) {
+        return window.BOOK_TUYET_MAT_NHAN_TINH;
+    }
+    return DOC_CONTENT_MAP[docId] || null;
+}
+
+function openDocReader(docId, targetChapterIdx = null, targetSecId = null) {
     currentReadingDocId = docId;
     const docObj = (SHOP_CATALOG.docs || []).find(d => d.id === docId);
     if (!docObj) return;
@@ -6957,82 +7005,458 @@ function openDocReader(docId) {
     const titleEl = document.getElementById('drBookTitle');
     const catEl = document.getElementById('drBookCategory');
     const badgeEl = document.getElementById('drBadge');
-    const bodyEl = document.getElementById('docReaderBody');
 
-    if (!modal || !bodyEl) return;
+    if (!modal || !modalEl) return;
 
     if (titleEl) titleEl.textContent = docObj.name;
     if (catEl) catEl.textContent = docObj.category || 'Tài Liệu Đặc Biệt';
-    if (badgeEl) badgeEl.textContent = docObj.badge || 'TÀI LIỆU';
+    if (badgeEl) badgeEl.textContent = docObj.badge || 'BẢN ĐỦ';
 
     // Apply reader theme & font size
-    if (modalEl) {
-        modalEl.dataset.theme = docReaderTheme;
-        modalEl.style.fontSize = `${docReaderFontSize}%`;
-    }
+    modalEl.dataset.theme = docReaderTheme;
+    modalEl.style.fontSize = `${docReaderFontSize}%`;
+    const labelEl = document.getElementById('drFontSizeLabel');
+    if (labelEl) labelEl.textContent = `${docReaderFontSize}%`;
 
-    const docData = DOC_CONTENT_MAP[docId];
+    const docData = getDocData(docId);
 
-    if (docData) {
-        let chaptersHtml = '';
-        if (Array.isArray(docData.chapters)) {
-            docData.chapters.forEach((chap, idx) => {
-                chaptersHtml += `
-                    <div class="dr-chapter">
-                        <div class="dr-chapter-header">
-                            <span class="dr-chapter-pill">PHẦN ${idx + 1}</span>
-                            <h2 class="dr-chapter-title">${chap.title}</h2>
-                        </div>
-                        <div class="dr-chapter-content">
-                            ${chap.content}
-                        </div>
-                    </div>
-                `;
-            });
+    if (docData && Array.isArray(docData.chapters) && docData.chapters.length > 0) {
+        // Determine initial chapter
+        let initChapIdx = 0;
+        let initSecId = null;
+
+        if (targetChapterIdx !== null && typeof targetChapterIdx === 'number') {
+            initChapIdx = Math.max(0, Math.min(docData.chapters.length - 1, targetChapterIdx));
+            initSecId = targetSecId;
+        } else {
+            // Restore from saved progress
+            try {
+                const saved = JSON.parse(localStorage.getItem('hg_read_pos_' + docId) || 'null');
+                if (saved && typeof saved.chapterIdx === 'number') {
+                    initChapIdx = Math.max(0, Math.min(docData.chapters.length - 1, saved.chapterIdx));
+                    initSecId = saved.secId || null;
+                }
+            } catch(e) {}
         }
 
-        bodyEl.innerHTML = `
-            <div class="dr-book-cover-banner" style="background:${docObj.gradient};">
-                <div class="dr-banner-icon">${docObj.icon}</div>
-                <div class="dr-banner-meta">
-                    <span class="dr-banner-badge">${docObj.badge}</span>
-                    <h1 class="dr-banner-title">${docObj.name}</h1>
-                    <p class="dr-banner-desc">${docObj.desc}</p>
-                </div>
-            </div>
-            ${docData.quote ? `
-                <div class="dr-quote-box">
-                    <div class="dr-quote-symbol">❝</div>
-                    <div class="dr-quote-body">${docData.quote}</div>
-                </div>
-            ` : ''}
-            <div class="dr-content-container">
-                ${chaptersHtml}
-            </div>
-        `;
+        // Render Chapter Tabs Bar
+        renderDocChapterTabs(docData, initChapIdx);
+
+        // Render TOC Drawer List
+        renderDocTocDrawer(docData);
+
+        // Render Active Chapter
+        renderDocChapter(initChapIdx, initSecId);
     } else {
-        bodyEl.innerHTML = `
-            <div class="dr-placeholder-wrap">
-                <div class="dr-placeholder-icon">${docObj.icon}</div>
-                <h2>${docObj.name}</h2>
-                <p>${docObj.desc}</p>
-                <div class="dr-callout gold" style="margin-top:20px;">
-                    <div class="dr-callout-title">📌 ĐANG KẾT NỐI TÀI LIỆU</div>
-                    <p>Hệ thống đang sẵn sàng nạp file thiết kế HTML hoàn chỉnh cho quyển sách này. Hãy cập nhật file thiết kế khi bạn sẵn sàng!</p>
+        const bodyEl = document.getElementById('docReaderBody');
+        if (bodyEl) {
+            bodyEl.innerHTML = `
+                <div class="dr-placeholder-wrap" style="text-align:center; padding: 40px 20px;">
+                    <div class="dr-placeholder-icon" style="font-size:52px; margin-bottom:12px;">${docObj.icon}</div>
+                    <h2>${docObj.name}</h2>
+                    <p style="color:var(--text-muted); margin-top:6px;">${docObj.desc}</p>
+                    <div class="dr-callout gold" style="margin-top:24px; text-align:left;">
+                        <div class="dr-callout-title">📌 ĐANG KẾT NỐI TÀI LIỆU</div>
+                        <p>Hệ thống đang sẵn sàng nạp file thiết kế HTML hoàn chỉnh cho quyển sách này.</p>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
     }
 
-    // Scroll to top
-    bodyEl.scrollTop = 0;
     modal.classList.add('show');
 }
 window._openDocReader = openDocReader;
 
+function renderDocChapterTabs(docData, activeIdx) {
+    const bar = document.getElementById('drChapterTabsBar');
+    if (!bar) return;
+
+    if (!docData.chapters || docData.chapters.length <= 1) {
+        bar.style.display = 'none';
+        return;
+    }
+
+    bar.style.display = 'flex';
+    let html = '';
+    docData.chapters.forEach((chap, idx) => {
+        const isActive = idx === activeIdx;
+        const title = chap.shortTitle || chap.title || `Chương ${idx + 1}`;
+        html += `
+            <button class="dr-chap-tab ${isActive ? 'active' : ''}" onclick="window._switchDocChapter(${idx})">
+                ${chap.badge ? `<span style="opacity:0.75; font-size:10px;">[${chap.badge}]</span>` : ''}
+                ${title}
+            </button>
+        `;
+    });
+    bar.innerHTML = html;
+}
+
+function renderDocTocDrawer(docData) {
+    const listEl = document.getElementById('drTocList');
+    if (!listEl) return;
+
+    let html = '';
+    (docData.chapters || []).forEach((chap, cIdx) => {
+        const chapTitle = chap.title || `Chương ${cIdx + 1}`;
+        const sections = Array.isArray(chap.sections) ? chap.sections : [];
+        
+        let secItemsHtml = '';
+        sections.forEach((sec, sIdx) => {
+            const isActive = cIdx === currentReadingChapterIdx && (sec.id === currentReadingSecId || (!currentReadingSecId && sIdx === 0));
+            const pRange = (sec.startPage && sec.endPage) ? `P.${sec.startPage}-${sec.endPage}` : '';
+            secItemsHtml += `
+                <div class="dr-toc-sec-item ${isActive ? 'active' : ''}" onclick="window._jumpToDocSection(${cIdx}, '${sec.id}')">
+                    <span>${sec.title}</span>
+                    ${pRange ? `<span class="dr-toc-sec-page">${pRange}</span>` : ''}
+                </div>
+            `;
+        });
+
+        html += `
+            <div class="dr-toc-chap-group" data-chap-idx="${cIdx}">
+                <div class="dr-toc-chap-title" onclick="window._switchDocChapter(${cIdx})">
+                    <span>${chap.shortTitle || chapTitle}</span>
+                    <span style="font-size:11px; opacity:0.75;">${sections.length} phần ▾</span>
+                </div>
+                <div class="dr-toc-sec-wrap">
+                    ${secItemsHtml}
+                </div>
+            </div>
+        `;
+    });
+
+    listEl.innerHTML = html;
+}
+
+function renderDocChapter(chapterIdx, targetSecId = null) {
+    const docData = getDocData(currentReadingDocId);
+    if (!docData || !Array.isArray(docData.chapters)) return;
+
+    const chap = docData.chapters[chapterIdx];
+    if (!chap) return;
+
+    currentReadingChapterIdx = chapterIdx;
+    currentReadingSecId = targetSecId;
+
+    const bodyEl = document.getElementById('docReaderBody');
+    if (!bodyEl) return;
+
+    // Update active state in tabs bar
+    document.querySelectorAll('.dr-chap-tab').forEach((tab, idx) => {
+        tab.classList.toggle('active', idx === chapterIdx);
+        if (idx === chapterIdx) {
+            tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+    });
+
+    // Update active state in TOC drawer
+    document.querySelectorAll('.dr-toc-sec-item').forEach(item => {
+        item.classList.remove('active');
+    });
+
+    const docObj = (SHOP_CATALOG.docs || []).find(d => d.id === currentReadingDocId) || docData;
+
+    let sectionsHtml = '';
+    const sections = Array.isArray(chap.sections) ? chap.sections : [];
+
+    sections.forEach((sec, sIdx) => {
+        const pRange = (sec.startPage && sec.endPage) ? `Trang ${sec.startPage} - ${sec.endPage} (Tài liệu gốc)` : '';
+        sectionsHtml += `
+            <article class="dr-chapter" id="${sec.id || `sec_${chapterIdx}_${sIdx}`}">
+                <div class="dr-chapter-header">
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:4px;">
+                        <span class="dr-chapter-pill">${chap.shortTitle || `CHƯƠNG ${chapterIdx}`}</span>
+                        ${pRange ? `<span style="font-size:11px; color:var(--text-muted); font-family:var(--font-heading);">${pRange}</span>` : ''}
+                    </div>
+                    <h2 class="dr-chapter-title">${sec.title}</h2>
+                </div>
+                <div class="dr-chapter-content">
+                    ${sec.content}
+                </div>
+            </article>
+        `;
+    });
+
+    // Navigation footer (Prev chapter / Next chapter)
+    const hasPrev = chapterIdx > 0;
+    const hasNext = chapterIdx < docData.chapters.length - 1;
+    const prevChap = hasPrev ? docData.chapters[chapterIdx - 1] : null;
+    const nextChap = hasNext ? docData.chapters[chapterIdx + 1] : null;
+
+    const navFooterHtml = `
+        <div class="dr-section-nav-footer">
+            ${hasPrev ? `
+                <button class="dr-nav-btn prev-btn" onclick="window._switchDocChapter(${chapterIdx - 1})">
+                    ← ${prevChap.shortTitle || 'Chương trước'}
+                </button>
+            ` : '<div></div>'}
+            
+            <button class="dr-nav-btn toc-center-btn" onclick="window._toggleDocToc(true)">
+                📑 Mục Lục Chi Tiết (218 Trang)
+            </button>
+
+            ${hasNext ? `
+                <button class="dr-nav-btn next-btn" onclick="window._switchDocChapter(${chapterIdx + 1})">
+                    ${nextChap.shortTitle || 'Chương sau'} →
+                </button>
+            ` : `
+                <button class="dr-nav-btn next-btn" onclick="window._markDocCompleted()">
+                    ✨ Hoàn Thành Sách (+20 Coins)
+                </button>
+            `}
+        </div>
+    `;
+
+    bodyEl.innerHTML = `
+        ${chapterIdx === 0 ? `
+            <div class="dr-book-cover-banner" style="background:${docObj.gradient || 'linear-gradient(135deg, #059669, #10b981)'};">
+                <div class="dr-banner-icon">${docObj.icon || '📜'}</div>
+                <div class="dr-banner-meta">
+                    <span class="dr-banner-badge">${docObj.badge || 'BẢN ĐỦ 218 TRANG'}</span>
+                    <h1 class="dr-banner-title">${docObj.name || docData.title}</h1>
+                    <p class="dr-banner-desc">${docObj.desc || docData.category || ''}</p>
+                </div>
+            </div>
+        ` : ''}
+
+        ${chap.quote ? `
+            <div class="dr-quote-box">
+                <div class="dr-quote-symbol">❝</div>
+                <div class="dr-quote-body">${chap.quote}</div>
+            </div>
+        ` : ''}
+
+        <div class="dr-content-container">
+            ${sectionsHtml}
+            ${navFooterHtml}
+        </div>
+    `;
+
+    // Scroll to target section or top
+    if (targetSecId) {
+        setTimeout(() => {
+            const secEl = document.getElementById(targetSecId);
+            if (secEl) {
+                secEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                bodyEl.scrollTop = 0;
+            }
+        }, 80);
+    } else {
+        bodyEl.scrollTop = 0;
+    }
+
+    // Update footer progress text
+    const progressEl = document.getElementById('drProgressText');
+    if (progressEl) {
+        const firstSec = sections[0];
+        const pRange = (firstSec && firstSec.startPage) ? `P.${firstSec.startPage}-${sections[sections.length-1]?.endPage || ''}` : '';
+        progressEl.textContent = `📖 Đang đọc: ${chap.shortTitle || chap.title} ${pRange ? `(${pRange})` : ''}`;
+    }
+
+    // Save reading progress
+    try {
+        localStorage.setItem('hg_read_pos_' + currentReadingDocId, JSON.stringify({
+            chapterIdx,
+            secId: targetSecId || sections[0]?.id,
+            timestamp: Date.now()
+        }));
+    } catch(e) {}
+
+    onDocBodyScroll();
+}
+
+function switchDocChapter(idx, targetSecId = null) {
+    toggleDocToc(false);
+    renderDocChapter(idx, targetSecId);
+}
+window._switchDocChapter = switchDocChapter;
+
+function jumpToDocSection(chapIdx, secId) {
+    toggleDocToc(false);
+    if (chapIdx === currentReadingChapterIdx) {
+        const secEl = document.getElementById(secId);
+        if (secEl) {
+            secEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            currentReadingSecId = secId;
+            return;
+        }
+    }
+    renderDocChapter(chapIdx, secId);
+}
+window._jumpToDocSection = jumpToDocSection;
+
+function toggleDocToc(forceState = null) {
+    const drawer = document.getElementById('drTocDrawer');
+    const backdrop = document.getElementById('drTocBackdrop');
+    if (!drawer || !backdrop) return;
+
+    const isOpen = drawer.classList.contains('show');
+    const nextState = forceState !== null ? forceState : !isOpen;
+
+    if (nextState) {
+        drawer.classList.add('show');
+        backdrop.classList.add('show');
+        const filterInput = document.getElementById('drTocFilterInput');
+        if (filterInput) {
+            filterInput.value = '';
+            filterDocToc('');
+            setTimeout(() => filterInput.focus(), 150);
+        }
+    } else {
+        drawer.classList.remove('show');
+        backdrop.classList.remove('show');
+    }
+}
+window._toggleDocToc = toggleDocToc;
+
+function filterDocToc(query) {
+    const q = (query || '').toLowerCase().trim();
+    const groups = document.querySelectorAll('.dr-toc-chap-group');
+    groups.forEach(grp => {
+        let hasMatch = false;
+        const chapTitle = grp.querySelector('.dr-toc-chap-title')?.textContent?.toLowerCase() || '';
+        if (chapTitle.includes(q)) hasMatch = true;
+
+        const secItems = grp.querySelectorAll('.dr-toc-sec-item');
+        secItems.forEach(item => {
+            const secText = item.textContent.toLowerCase();
+            if (!q || secText.includes(q)) {
+                item.style.display = 'flex';
+                hasMatch = true;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        grp.style.display = (!q || hasMatch) ? 'block' : 'none';
+    });
+}
+
+function toggleDocSearch(forceState = null) {
+    const bar = document.getElementById('drSearchBar');
+    const results = document.getElementById('drSearchResults');
+    const input = document.getElementById('drSearchInput');
+    if (!bar) return;
+
+    const isOpen = bar.style.display !== 'none';
+    const nextState = forceState !== null ? forceState : !isOpen;
+
+    if (nextState) {
+        bar.style.display = 'flex';
+        if (input) {
+            input.value = '';
+            input.focus();
+        }
+    } else {
+        bar.style.display = 'none';
+        if (results) results.style.display = 'none';
+    }
+}
+window._toggleDocSearch = toggleDocSearch;
+
+function searchInDoc(keyword) {
+    const resultsEl = document.getElementById('drSearchResults');
+    const statsEl = document.getElementById('drSearchStats');
+    if (!resultsEl) return;
+
+    const q = (keyword || '').trim();
+    if (!q || q.length < 2) {
+        resultsEl.style.display = 'none';
+        if (statsEl) statsEl.textContent = '';
+        return;
+    }
+
+    const docData = getDocData(currentReadingDocId);
+    if (!docData || !Array.isArray(docData.chapters)) return;
+
+    const regex = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    const matches = [];
+
+    docData.chapters.forEach((chap, cIdx) => {
+        (chap.sections || []).forEach(sec => {
+            const plainText = sec.content.replace(/<[^>]+>/g, ' ');
+            let m;
+            let countInSec = 0;
+            while ((m = regex.exec(plainText)) !== null && countInSec < 3) {
+                countInSec++;
+                const startIdx = Math.max(0, m.index - 50);
+                const endIdx = Math.min(plainText.length, m.index + q.length + 60);
+                let snippet = plainText.slice(startIdx, endIdx);
+                if (startIdx > 0) snippet = '...' + snippet;
+                if (endIdx < plainText.length) snippet = snippet + '...';
+
+                const highlighted = snippet.replace(regex, '<mark>$1</mark>');
+                matches.push({
+                    chapIdx: cIdx,
+                    chapTitle: chap.shortTitle || chap.title,
+                    secId: sec.id,
+                    secTitle: sec.title,
+                    snippet: highlighted
+                });
+            }
+        });
+    });
+
+    if (statsEl) {
+        statsEl.textContent = `${matches.length} kết quả`;
+    }
+
+    if (matches.length === 0) {
+        resultsEl.innerHTML = `<div style="padding:16px; text-align:center; color:var(--text-muted); font-size:13px;">Không tìm thấy kết quả phù hợp cho "<strong>${q}</strong>".</div>`;
+        resultsEl.style.display = 'block';
+        return;
+    }
+
+    let html = '';
+    matches.slice(0, 30).forEach(m => {
+        html += `
+            <div class="dr-search-item" onclick="window._onSearchResultClick(${m.chapIdx}, '${m.secId}')">
+                <div class="dr-search-item-header">
+                    <span>${m.chapTitle}</span>
+                    <span>${m.secTitle}</span>
+                </div>
+                <div class="dr-search-item-snippet">${m.snippet}</div>
+            </div>
+        `;
+    });
+
+    resultsEl.innerHTML = html;
+    resultsEl.style.display = 'block';
+}
+
+function onSearchResultClick(chapIdx, secId) {
+    toggleDocSearch(false);
+    jumpToDocSection(chapIdx, secId);
+}
+window._onSearchResultClick = onSearchResultClick;
+
+function onDocBodyScroll() {
+    const bodyEl = document.getElementById('docReaderBody');
+    const barEl = document.getElementById('drProgressBar');
+    if (!bodyEl || !barEl) return;
+
+    const scrollTop = bodyEl.scrollTop;
+    const maxScroll = bodyEl.scrollHeight - bodyEl.clientHeight;
+    const scrollPct = maxScroll > 0 ? Math.min(100, Math.max(0, (scrollTop / maxScroll) * 100)) : 0;
+
+    // Calculate total book progress across all chapters
+    const docData = getDocData(currentReadingDocId);
+    let totalPct = scrollPct;
+    if (docData && Array.isArray(docData.chapters) && docData.chapters.length > 1) {
+        const chapWeight = 100 / docData.chapters.length;
+        totalPct = Math.round((currentReadingChapterIdx * chapWeight) + (scrollPct * chapWeight / 100));
+    }
+
+    barEl.style.width = `${totalPct}%`;
+}
+
 function closeDocReader() {
     const modal = document.getElementById('docReaderModalBg');
     if (modal) modal.classList.remove('show');
+    toggleDocToc(false);
+    toggleDocSearch(false);
     if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
     }
@@ -7041,6 +7465,7 @@ window._closeDocReader = closeDocReader;
 
 function adjustDocFontSize(delta) {
     docReaderFontSize = Math.min(150, Math.max(80, docReaderFontSize + delta));
+    localStorage.setItem('hg_doc_font_size', docReaderFontSize);
     const modalEl = document.getElementById('docReaderModal');
     const labelEl = document.getElementById('drFontSizeLabel');
     if (modalEl) modalEl.style.fontSize = `${docReaderFontSize}%`;
@@ -7048,9 +7473,10 @@ function adjustDocFontSize(delta) {
 }
 
 function toggleDocReaderTheme() {
-    const themes = ['dark', 'sepia', 'light'];
+    const themes = ['dark', 'sepia', 'light', 'oled'];
     const nextIdx = (themes.indexOf(docReaderTheme) + 1) % themes.length;
     docReaderTheme = themes[nextIdx];
+    localStorage.setItem('hg_doc_theme', docReaderTheme);
     const modalEl = document.getElementById('docReaderModal');
     if (modalEl) modalEl.dataset.theme = docReaderTheme;
 }

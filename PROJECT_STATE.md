@@ -117,15 +117,20 @@
 - **Túi Đồ Cá Nhân (Backpack)**: Quản lý kho bùa lợi, theo dõi trạng thái Buffs đang hoạt động (Vé Boost, Khiên, Nghỉ Phép, Focus Elixir...) và **Tủ Sách Tri Thức**.
 - **Rương Kỷ Luật Bí Ẩn (Mystery Chest)**: Mở quà may mắn với animation lắc rương, hiệu ứng hào quang và tỷ lệ trúng Jackpot thần thoại.
 - **Kho Tài Liệu & Sách Tinh Hoa (Documents Hub)**:
-  1. 📜 **Tuyệt Mật Nhân Tính** *(Miễn phí)*: Tâm lý học hành vi & đối nhân xử thế.
-  2. 👁️ **Thức Tỉnh Nhận Thức** *(350 Coins)*: Phá vỡ bẫy tư duy vô thức, làm chủ tâm trí.
-  3. 🦁 **Tư Duy Cường Giả** *(500 Coins)*: Ý chí sắt đá & nguyên tắc kẻ mạnh.
-  4. ⚔️ **Thương Chiến** *(750 Coins)*: Mưu lược kinh doanh, đòn bẩy dòng tiền.
-  5. 🔮 **Ẩn Chứa Huyền Cơ** *(1.000 Coins)*: Đọc vị thế cục ngầm & quy luật âm dương.
-  6. 🌌 **Tư Duy Sâu Sắc** *(1.200 Coins)*: First Principles & giải mã bài toán phức tạp.
-- **Bộ Đọc Sách Trực Tuyến (Document Reader Modal)**:
-  - 3 Chế độ đọc: Dark Slate, Warm Sepia (Giấy cổ điển), Paper Light (Sáng).
-  - Tùy chỉnh kích thước chữ linh hoạt (A- / A+), chế độ toàn màn hình.
+  1. 📜 **Tuyệt Mật Nhân Tính** *(Bản Đủ 218 Trang - 7 Chương, 28 Phần Mục)*: Tâm lý học hành vi, đối nhân xử thế, nghệ thuật quyền mưu và thấu hiểu bản chất con người 100% nguyên văn từ tài liệu PDF.
+  2. 👁️ **Thức Tỉnh Nhận Thức** *(8.000 Coins)*: Phá vỡ bẫy tư duy vô thức, làm chủ tâm trí.
+  3. 🦁 **Tư Duy Cường Giả** *(8.500 Coins)*: Ý chí sắt đá & nguyên tắc kẻ mạnh.
+  4. ⚔️ **Thương Chiến** *(9.000 Coins)*: Mưu lược kinh doanh, đòn bẩy dòng tiền.
+  5. 🔮 **Ẩn Chứa Huyền Cơ** *(9.500 Coins)*: Đọc vị thế cục ngầm & quy luật âm dương.
+  6. 🌌 **Tư Duy Sâu Sắc** *(10.000 Coins)*: First Principles & giải mã bài toán phức tạp.
+- **Bộ Đọc Sách Trực Tuyến Thế Hệ Mới (Document Reader Modal v2)**:
+  - 📑 **Ngăn kéo Mục Lục Chi Tiết (TOC Drawer)**: Hiển thị trọn bộ 7 chương & 28 phần kèm số trang tài liệu gốc, lọc mục lục tức thì.
+  - 🏷️ **Thanh Điều Hướng Chương (Chapter Tabs)**: Chuyển đổi nhanh 7 chương lớn ở đầu trang với hiệu ứng phát sáng Neon.
+  - 🔍 **Tìm Kiếm Toàn Sách Thời Gian Thực**: Tra cứu từ khóa trong 218 trang với trích đoạn highlight và nhảy trực tiếp đến vị trí.
+  - ⏭️ **Nút Chuyển Phần & Chương**: Điều hướng mượt mà ở cuối mỗi phần bài đọc.
+  - 💾 **Tự Động Lưu Vị Trí & Bookmark (Auto-resume)**: Tự động ghi nhớ chương, phần và tiến độ cuộn trang để tiếp tục đọc bất cứ lúc nào.
+  - 🎨 **4 Chế độ đọc**: Dark Slate, Warm Sepia (Giấy cổ điển), Paper Light (Sáng), OLED Midnight (Tiết kiệm pin).
+  - Tùy chỉnh kích thước chữ linh hoạt (A- / A+ từ 80% đến 150%), chế độ toàn màn hình.
   - Nút nhận thưởng +20 Coins khi hoàn thành bài đọc.
 - **Vật phẩm tiêu thụ cao cấp**:
   - 🏖️ **Bùa Nghỉ Phép (3 Ngày)**: Tự động bảo toàn streak khi có việc bận/đi du lịch.
