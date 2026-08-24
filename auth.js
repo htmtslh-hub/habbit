@@ -19,14 +19,15 @@ async function createUserProfile(user, isNewUser){
     const doc = await userRef.get();
     if(!doc.exists || isNewUser){
         const now = new Date();
+        const trialEnd = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days
         const profileData = {
             email: user.email || '',
             displayName: user.displayName || '',
             photoURL: user.photoURL || '',
-            plan: 'free',
+            plan: 'trial',
             role: 'customer',
-            trialStartedAt: null,
-            trialExpiresAt: null,
+            trialStartedAt: firebase.firestore.Timestamp.fromDate(now),
+            trialExpiresAt: firebase.firestore.Timestamp.fromDate(trialEnd),
             planUpdatedAt: firebase.firestore.Timestamp.fromDate(now),
             planExpiresAt: null,
             createdAt: firebase.firestore.Timestamp.fromDate(now),

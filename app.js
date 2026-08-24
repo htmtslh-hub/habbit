@@ -915,16 +915,17 @@ async function ensureUserProfile(user){
     try {
         const doc = await userDocRef.get();
         const now = new Date();
+        const trialEnd = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days
         
         if(!doc.exists){
             const profileData = {
                 email: user.email || '',
                 displayName: user.displayName || '',
                 photoURL: user.photoURL || '',
-                plan: 'free',
+                plan: 'trial',
                 role: 'customer',
-                trialStartedAt: null,
-                trialExpiresAt: null,
+                trialStartedAt: firebase.firestore.Timestamp.fromDate(now),
+                trialExpiresAt: firebase.firestore.Timestamp.fromDate(trialEnd),
                 planUpdatedAt: firebase.firestore.Timestamp.fromDate(now),
                 planExpiresAt: null,
                 createdAt: firebase.firestore.Timestamp.fromDate(now),
@@ -946,7 +947,12 @@ async function ensureUserProfile(user){
             if(!data.displayName && user.displayName) { updates.displayName = user.displayName; needsUpdate = true; }
             if(!data.photoURL && user.photoURL) { updates.photoURL = user.photoURL; needsUpdate = true; }
             
-            if(data.plan === undefined) { updates.plan = 'free'; needsUpdate = true; }
+            if(data.plan === undefined) { 
+                updates.plan = 'trial'; 
+                updates.trialStartedAt = firebase.firestore.Timestamp.fromDate(now);
+                updates.trialExpiresAt = firebase.firestore.Timestamp.fromDate(trialEnd);
+                needsUpdate = true; 
+            }
             if(data.role === undefined) { updates.role = 'customer'; needsUpdate = true; }
             if(data.disabled === undefined) { updates.disabled = false; needsUpdate = true; }
             
@@ -998,6 +1004,14 @@ function getEffectivePlan(){
         return userPlan.plan;
     }
 
+    // Trial plan (14 days)
+    if(userPlan.plan === 'trial'){
+        if(!userPlan.trialExpiresAt) return 'free';
+        const exp = userPlan.trialExpiresAt.toDate ? userPlan.trialExpiresAt.toDate() : new Date(userPlan.trialExpiresAt);
+        if(exp < now) return 'free'; // Trial has expired! Fallback to free
+        return 'trial';
+    }
+
     return 'free';
 }
 
@@ -1015,7 +1029,7 @@ function getUserPlanDetails(){
     let statusClass = 'free';
 
     // Start date
-    const startTs = userPlan?.planStartedAt || userPlan?.createdAt;
+    const startTs = userPlan?.planStartedAt || userPlan?.trialStartedAt || userPlan?.createdAt;
     if(startTs){
         const sd = startTs.toDate ? startTs.toDate() : new Date(startTs);
         startDateStr = sd.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -1043,6 +1057,23 @@ function getUserPlanDetails(){
             statusTag = '👑 Trọn đời';
             statusClass = 'active';
         }
+    } else if(rawPlan === 'trial'){
+        if(userPlan?.trialExpiresAt){
+            const exp = userPlan.trialExpiresAt.toDate ? userPlan.trialExpiresAt.toDate() : new Date(userPlan.trialExpiresAt);
+            const expFormatted = exp.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const diff = exp.getTime() - now.getTime();
+            daysLeft = Math.ceil(diff / (24 * 60 * 60 * 1000));
+            if(diff <= 0){
+                isExpired = true;
+                expDateStr = `Đã hết hạn (${expFormatted})`;
+                statusTag = '⚠️ Đã hết hạn';
+                statusClass = 'expired';
+            } else {
+                expDateStr = `${expFormatted} (Còn ${daysLeft} ngày)`;
+                statusTag = `Dùng thử (${daysLeft} ngày)`;
+                statusClass = 'trial';
+            }
+        }
     } else {
         expDateStr = 'Không giới hạn thời gian';
         statusTag = 'Miễn phí';
@@ -1055,6 +1086,9 @@ function getUserPlanDetails(){
     } else if(effectivePlan === 'pro'){
         badgeClass = 'pro';
         badgeName = '⚡ Gói Pro';
+    } else if(effectivePlan === 'trial'){
+        badgeClass = 'trial';
+        badgeName = '⏳ Dùng thử (Trial)';
     } else {
         badgeClass = isExpired ? 'expired' : 'free';
         badgeName = isExpired ? `⚠️ Hết hạn (${rawPlan.toUpperCase()})` : '🌱 Gói Free';
@@ -1075,14 +1109,21 @@ function getUserPlanDetails(){
     };
 }
 
+function getTrialDaysLeft(){
+    if(!userPlan?.trialExpiresAt) return 0;
+    const exp = userPlan.trialExpiresAt.toDate ? userPlan.trialExpiresAt.toDate() : new Date(userPlan.trialExpiresAt);
+    const diff = exp.getTime() - Date.now();
+    return Math.max(0, Math.ceil(diff / (24*60*60*1000)));
+}
+
 function isPremiumFeature(feature){
     const plan = getEffectivePlan();
-    return (plan === 'premium' || plan === 'pro');
+    return (plan === 'premium' || plan === 'pro' || plan === 'trial');
 }
 
 function canAddHabit(){
     const plan = getEffectivePlan();
-    if(plan === 'premium' || plan === 'pro') return true;
+    if(plan === 'premium' || plan === 'pro' || plan === 'trial') return true;
     return S.h.length < MAX_FREE_HABITS;
 }
 
@@ -1105,6 +1146,15 @@ function renderPremiumBanner(){
             <span class="pb-icon">⚠️</span>
             <span class="pb-text">Gói <strong>${planDetails.rawPlan.toUpperCase()}</strong> đã hết hạn. Hệ thống tạm khóa thói quen từ thứ 4 trở đi (không mất dữ liệu).</span>
             <button class="pb-btn" onclick="window._openUpgrade()">Gia hạn ngay</button>
+            <button class="pb-close" onclick="this.parentElement.remove()">✕</button>
+        `;
+    } else if(plan === 'trial'){
+        const days = getTrialDaysLeft();
+        banner.classList.add('trial');
+        banner.innerHTML = `
+            <span class="pb-icon">⏳</span>
+            <span class="pb-text">Dùng thử Premium — Còn <strong>${days} ngày</strong></span>
+            <button class="pb-btn" onclick="window._openUpgrade()">Nâng cấp ngay</button>
             <button class="pb-close" onclick="this.parentElement.remove()">✕</button>
         `;
     } else {
