@@ -358,6 +358,10 @@ function initActions(){
 
     document.getElementById('adminLogout').onclick = (e) => {
         e.preventDefault();
+        try {
+            localStorage.removeItem('habitgame_v3');
+            localStorage.removeItem('hg_bonus_dp');
+        } catch(e) {}
         auth.signOut().then(() => { window.location.href = 'auth.html'; });
     };
 }

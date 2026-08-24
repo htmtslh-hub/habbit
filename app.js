@@ -12,7 +12,10 @@
     observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'] });
 })();
 
-const SK='habitgame_v3';
+function getStorageKey() {
+    return (currentUser && currentUser.uid) ? `habitgame_v3_${currentUser.uid}` : 'habitgame_v3';
+}
+const SK = 'habitgame_v3';
 const auth = firebase.auth();
 const db = firebase.firestore();
 let currentUser = null;
@@ -326,13 +329,11 @@ function applyI18n(){
 }
 
 const DEF=[
-    {id:1,name:'Wake up at 05:00',emoji:'⏰'},{id:2,name:'Gym',emoji:'💪'},
-    {id:3,name:'Reading / Learning',emoji:'📖'},{id:4,name:'Day Planning',emoji:'🗓️'},
-    {id:5,name:'No Gooning',emoji:'💦'},{id:6,name:'Project Work',emoji:'🎯'},
-    {id:7,name:'No Alcohol',emoji:'🍾'},{id:8,name:'Social Media Detox',emoji:'🌿'},
-    {id:9,name:'Goal Journaling',emoji:'📔'},{id:10,name:'Cold Shower',emoji:'🚿'},
-    {id:11,name:'Learn a skill',emoji:'📈'},{id:12,name:'Meditate',emoji:'🧘'},
-    {id:13,name:'Stretching',emoji:'🤸'},
+    {id:1,name:'Dậy sớm trước 06:00',emoji:'⏰'},
+    {id:2,name:'Tập thể dục / Gym',emoji:'💪'},
+    {id:3,name:'Đọc sách 20 phút',emoji:'📖'},
+    {id:4,name:'Lên kế hoạch ngày',emoji:'🗓️'},
+    {id:5,name:'Uống đủ 2L nước',emoji:'💧'}
 ];
 // ==================== WEB AUDIO API SYNTHESIZER ====================
 let _audioCtx = null;
@@ -614,31 +615,25 @@ function playDuelGongSound() {
     } catch(e) {}
 }
 
-let S={
-    h:[...DEF],
-    c:{},
-    mo:{},
-    sl:{},
-    ni:14,
-    notes:{},
-    freezes:1,
-    frozenDays:[],
-    repairedDays:[],
-    lastStreakBreak:null,
-    squadId:'',
-    activeDuelId:'',
-    inventory:{
-        titles:[],
-        equippedTitle:'',
-        soundFx:'default',
-        soundFxOwned:['default'],
-        visualFx:'default',
-        visualFxOwned:['default'],
-        themes:['dark','light'],
-        equippedTheme:localStorage.getItem('hg_theme')||'dark',
-        boost2xExpiresAt:0
-    }
-};
+function getDefaultState() {
+    return {
+        h: DEF.map(item => ({ ...item })),
+        c: {},
+        mo: {},
+        sl: {},
+        ni: 6,
+        notes: {},
+        freezes: 1,
+        frozenDays: [],
+        repairedDays: [],
+        lastStreakBreak: null,
+        squadId: '',
+        activeDuelId: '',
+        inventory: sanitizeInventory(null)
+    };
+}
+
+let S = getDefaultState();
 let cM=new Date().getMonth(),cY=new Date().getFullYear(),sE='💪',selectedDay=new Date().getDate();
 let isColumnFrozen = localStorage.getItem('hg_col_frozen') !== 'false';
 let isColumnCollapsed = localStorage.getItem('hg_col_collapsed') === 'true';
@@ -702,9 +697,11 @@ function sanitizeInventory(inv) {
 
 function ld(){
     try{
-        const r=localStorage.getItem(SK);
+        const key = getStorageKey();
+        const r = localStorage.getItem(key);
         if(r){
             const res=JSON.parse(r);
+            res.c = res.c || {};
             res.notes=res.notes||{};
             if(res.freezes === undefined) res.freezes = 1;
             if(!Array.isArray(res.frozenDays)) res.frozenDays = [];
@@ -715,15 +712,12 @@ function ld(){
             return res;
         }
     }catch(e){}
-    return{
-        h:[...DEF],c:{},mo:{},sl:{},ni:14,notes:{},freezes:1,frozenDays:[],repairedDays:[],lastStreakBreak:null,
-        squadId:'',activeDuelId:'',
-        inventory: sanitizeInventory(null)
-    };
+    return getDefaultState();
 }
 
 function sv(){
-    localStorage.setItem(SK,JSON.stringify(S));
+    const key = getStorageKey();
+    localStorage.setItem(key,JSON.stringify(S));
     // Debounced Firestore save
     if(userDocRef){
         clearTimeout(saveTimer);
@@ -739,7 +733,8 @@ async function loadFromFirestore(){
         const doc = await userDocRef.get();
         if(doc.exists && doc.data().habitData){
             const d = JSON.parse(doc.data().habitData);
-            if(d && d.h && d.c){ 
+            if(d && Array.isArray(d.h)){ 
+                d.c = d.c || {};
                 d.notes = d.notes||{}; 
                 if(d.freezes === undefined) d.freezes = 1;
                 if(!Array.isArray(d.frozenDays)) d.frozenDays = [];
@@ -748,7 +743,8 @@ async function loadFromFirestore(){
                 d.activeDuelId = typeof d.activeDuelId === 'string' ? d.activeDuelId : '';
                 d.inventory = sanitizeInventory(d.inventory);
                 S = d; 
-                localStorage.setItem(SK,JSON.stringify(S)); 
+                const key = getStorageKey();
+                localStorage.setItem(key,JSON.stringify(S)); 
                 if (S.inventory.equippedTheme && S.inventory.equippedTheme !== curTheme) {
                     curTheme = S.inventory.equippedTheme;
                     localStorage.setItem('hg_theme', curTheme);
@@ -2568,16 +2564,15 @@ async function startApp(user){
     // Check if disabled
     if(userPlan.disabled){
         document.getElementById('authLoading').style.display = 'none';
-        document.getElementById('mainApp').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;color:#94a3b8;font-family:Outfit,sans-serif;"><span style="font-size:64px">🚫</span><h2 style="color:#ef4444">Tài khoản bị vô hiệu hóa</h2><p>Liên hệ admin để được hỗ trợ.</p><button onclick="firebase.auth().signOut().then(()=>location.href=\'auth.html\')" style="padding:8px 20px;border-radius:8px;border:1px solid #64748b;background:transparent;color:#f1f5f9;cursor:pointer;font-size:14px">Đăng xuất</button></div>';
+        document.getElementById('mainApp').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;color:#94a3b8;font-family:Outfit,sans-serif;"><span style="font-size:64px">🚫</span><h2 style="color:#ef4444">Tài khoản bị vô hiệu hóa</h2><p>Liên hệ admin để được hỗ trợ.</p><button onclick="window._performSignOut()" style="padding:8px 20px;border-radius:8px;border:1px solid #64748b;background:transparent;color:#f1f5f9;cursor:pointer;font-size:14px">Đăng xuất</button></div>';
         return;
     }
-    // Try load from Firestore first, fallback to localStorage
+    // Try load from Firestore first, fallback to user-scoped localStorage or clean default state
     const loaded = await loadFromFirestore();
     if(!loaded){
         S = ld();
-        // Migrate localStorage data to Firestore on first login
         if(S.h && S.h.length > 0){
-            userDocRef.set({habitData:JSON.stringify(S)},{merge:true}).catch(e=>console.warn('Migration error:',e));
+            userDocRef.set({habitData:JSON.stringify(S)},{merge:true}).catch(e=>console.warn('Initial habit sync error:',e));
         }
     }
     try {
@@ -4602,11 +4597,48 @@ function initUniversalSpotlight() {
     });
 }
 
+function performSignOut() {
+    try {
+        localStorage.removeItem('habitgame_v3');
+        localStorage.removeItem('hg_bonus_dp');
+        if (currentUser && currentUser.uid) {
+            localStorage.removeItem(`habitgame_v3_${currentUser.uid}`);
+        }
+    } catch(e) {}
+    auth.signOut().then(() => {
+        window.location.href = 'auth.html';
+    }).catch(() => {
+        window.location.href = 'auth.html';
+    });
+}
+window._performSignOut = performSignOut;
+
+window._resetHabitData = async function() {
+    if (!currentUser) return;
+    if (!confirm('Bạn có chắc chắn muốn ĐẶT LẠI bảng thói quen về trạng thái mặc định ban đầu không?\n\nToàn bộ thói quen và các ô tích cũ sẽ được làm sạch về 0 để bạn bắt đầu rèn luyện từ đầu.')) return;
+    S = getDefaultState();
+    userBonusDP = 0;
+    sv();
+    if (userDocRef) {
+        try {
+            await userDocRef.set({ habitData: JSON.stringify(S), bonusDP: 0 }, { merge: true });
+            if (db) {
+                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: 0, totalDP: 0, currentStreak: 0, weeklyDP: 0, streak: 0, totalChecks: 0, perfectDays: 0 }, { merge: true }).catch(() => {});
+            }
+        } catch(e) { console.warn('Reset error:', e); }
+    }
+    renderAll();
+    if (typeof updateUserDPState === 'function') updateUserDPState(true);
+    if (typeof window._updateProfileModalUI === 'function') window._updateProfileModalUI();
+    showUserProfile(currentUser);
+    alert('Đã đặt lại bảng thói quen sạch hoàn toàn thành công!');
+};
+
 function initAuthGuard(){
     const loading = document.getElementById('authLoading');
     const app = document.getElementById('mainApp');
     const logoutBtn = document.getElementById('logoutBtn');
-    if(logoutBtn) logoutBtn.onclick = () => { auth.signOut().then(()=>{ window.location.href='auth.html'; }); };
+    if(logoutBtn) logoutBtn.onclick = performSignOut;
     if (typeof initMobileTabs === 'function') initMobileTabs();
     auth.onAuthStateChanged(user => {
         if(user){
@@ -5226,11 +5258,13 @@ function initProfileModal() {
                 closeOrbitalPopup();
                 if (window._openUpgrade) window._openUpgrade();
             }},
+            { icon: '<svg class="rune-icon" style="color:#fbbf24" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg>', label: 'Đặt lại thói quen', desc: 'Làm sạch toàn bộ ô tích & điểm về 0', danger: true, action: () => {
+                closeOrbitalPopup();
+                if (window._resetHabitData) window._resetHabitData();
+            }},
             { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Đăng xuất', danger: true, action: () => {
                 if (confirm('Bạn có chắc chắn muốn đăng xuất tài khoản không?')) {
-                    auth.signOut().then(() => {
-                        window.location.href = 'auth.html';
-                    });
+                    performSignOut();
                 }
             }},
         ]);
@@ -5241,9 +5275,7 @@ function initProfileModal() {
     if (profileLogoutBtn) {
         profileLogoutBtn.onclick = () => {
             if (confirm('Bạn có chắc chắn muốn đăng xuất tài khoản không?')) {
-                auth.signOut().then(() => {
-                    window.location.href = 'auth.html';
-                });
+                performSignOut();
             }
         };
     }
