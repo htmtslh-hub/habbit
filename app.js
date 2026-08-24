@@ -645,7 +645,7 @@ function sanitizeInventory(inv) {
         visualFx: 'default',
         visualFxOwned: ['default'],
         themes: ['dark', 'light'],
-        equippedTheme: localStorage.getItem('hg_theme') || 'dark',
+        equippedTheme: 'light',
         boost2xExpiresAt: 0,
         boost3xExpiresAt: 0,
         vacationUntil: 0,
@@ -666,6 +666,16 @@ function sanitizeInventory(inv) {
     const bp = (inv.backpack && typeof inv.backpack === 'object') ? inv.backpack : {};
     const docs = Array.isArray(inv.unlockedDocs) ? [...inv.unlockedDocs] : ['doc_nhan_tinh'];
     if (!docs.includes('doc_nhan_tinh')) docs.unshift('doc_nhan_tinh');
+    
+    const userThemes = Array.isArray(inv.themes) ? [...inv.themes] : ['dark', 'light'];
+    if (!userThemes.includes('dark')) userThemes.push('dark');
+    if (!userThemes.includes('light')) userThemes.push('light');
+    
+    let eqTheme = typeof inv.equippedTheme === 'string' ? inv.equippedTheme : 'light';
+    if (!userThemes.includes(eqTheme)) {
+        eqTheme = 'light';
+    }
+
     return {
         titles: Array.isArray(inv.titles) ? inv.titles : [],
         equippedTitle: typeof inv.equippedTitle === 'string' ? inv.equippedTitle : '',
@@ -673,8 +683,8 @@ function sanitizeInventory(inv) {
         soundFxOwned: Array.isArray(inv.soundFxOwned) ? inv.soundFxOwned : ['default'],
         visualFx: typeof inv.visualFx === 'string' ? inv.visualFx : 'default',
         visualFxOwned: Array.isArray(inv.visualFxOwned) ? inv.visualFxOwned : ['default'],
-        themes: Array.isArray(inv.themes) ? inv.themes : ['dark', 'light'],
-        equippedTheme: typeof inv.equippedTheme === 'string' ? inv.equippedTheme : (localStorage.getItem('hg_theme') || 'dark'),
+        themes: userThemes,
+        equippedTheme: eqTheme,
         boost2xExpiresAt: typeof inv.boost2xExpiresAt === 'number' ? inv.boost2xExpiresAt : 0,
         boost3xExpiresAt: typeof inv.boost3xExpiresAt === 'number' ? inv.boost3xExpiresAt : 0,
         vacationUntil: typeof inv.vacationUntil === 'number' ? inv.vacationUntil : 0,
@@ -988,14 +998,6 @@ function getEffectivePlan(){
         return userPlan.plan;
     }
 
-    // Trial plan
-    if(userPlan.plan === 'trial'){
-        if(!userPlan.trialExpiresAt) return 'free';
-        const exp = userPlan.trialExpiresAt.toDate ? userPlan.trialExpiresAt.toDate() : new Date(userPlan.trialExpiresAt);
-        if(exp < now) return 'free'; // Trial has expired! Fallback to free
-        return 'trial';
-    }
-
     return 'free';
 }
 
@@ -1009,11 +1011,11 @@ function getUserPlanDetails(){
     let daysLeft = null;
     let badgeClass = 'free';
     let badgeName = '🌱 Free (Miễn phí)';
-    let statusTag = 'Đang hoạt động';
-    let statusClass = 'active';
+    let statusTag = 'Miễn phí';
+    let statusClass = 'free';
 
     // Start date
-    const startTs = userPlan?.planStartedAt || userPlan?.trialStartedAt || userPlan?.createdAt;
+    const startTs = userPlan?.planStartedAt || userPlan?.createdAt;
     if(startTs){
         const sd = startTs.toDate ? startTs.toDate() : new Date(startTs);
         startDateStr = sd.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -1041,23 +1043,6 @@ function getUserPlanDetails(){
             statusTag = '👑 Trọn đời';
             statusClass = 'active';
         }
-    } else if(rawPlan === 'trial'){
-        if(userPlan?.trialExpiresAt){
-            const exp = userPlan.trialExpiresAt.toDate ? userPlan.trialExpiresAt.toDate() : new Date(userPlan.trialExpiresAt);
-            const expFormatted = exp.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            const diff = exp.getTime() - now.getTime();
-            daysLeft = Math.ceil(diff / (24 * 60 * 60 * 1000));
-            if(diff <= 0){
-                isExpired = true;
-                expDateStr = `Đã hết hạn (${expFormatted})`;
-                statusTag = '⚠️ Đã hết hạn';
-                statusClass = 'expired';
-            } else {
-                expDateStr = `${expFormatted} (Còn ${daysLeft} ngày)`;
-                statusTag = `Dùng thử (${daysLeft} ngày)`;
-                statusClass = 'trial';
-            }
-        }
     } else {
         expDateStr = 'Không giới hạn thời gian';
         statusTag = 'Miễn phí';
@@ -1070,9 +1055,6 @@ function getUserPlanDetails(){
     } else if(effectivePlan === 'pro'){
         badgeClass = 'pro';
         badgeName = '⚡ Gói Pro';
-    } else if(effectivePlan === 'trial'){
-        badgeClass = 'trial';
-        badgeName = '⏳ Dùng thử (Trial)';
     } else {
         badgeClass = isExpired ? 'expired' : 'free';
         badgeName = isExpired ? `⚠️ Hết hạn (${rawPlan.toUpperCase()})` : '🌱 Gói Free';
@@ -1093,21 +1075,14 @@ function getUserPlanDetails(){
     };
 }
 
-function getTrialDaysLeft(){
-    if(!userPlan?.trialExpiresAt) return 0;
-    const exp = userPlan.trialExpiresAt.toDate ? userPlan.trialExpiresAt.toDate() : new Date(userPlan.trialExpiresAt);
-    const diff = exp.getTime() - Date.now();
-    return Math.max(0, Math.ceil(diff / (24*60*60*1000)));
-}
-
 function isPremiumFeature(feature){
     const plan = getEffectivePlan();
-    return (plan === 'premium' || plan === 'pro' || plan === 'trial');
+    return (plan === 'premium' || plan === 'pro');
 }
 
 function canAddHabit(){
     const plan = getEffectivePlan();
-    if(plan === 'premium' || plan === 'pro' || plan === 'trial') return true;
+    if(plan === 'premium' || plan === 'pro') return true;
     return S.h.length < MAX_FREE_HABITS;
 }
 
@@ -1130,15 +1105,6 @@ function renderPremiumBanner(){
             <span class="pb-icon">⚠️</span>
             <span class="pb-text">Gói <strong>${planDetails.rawPlan.toUpperCase()}</strong> đã hết hạn. Hệ thống tạm khóa thói quen từ thứ 4 trở đi (không mất dữ liệu).</span>
             <button class="pb-btn" onclick="window._openUpgrade()">Gia hạn ngay</button>
-            <button class="pb-close" onclick="this.parentElement.remove()">✕</button>
-        `;
-    } else if(plan === 'trial'){
-        const days = getTrialDaysLeft();
-        banner.classList.add('trial');
-        banner.innerHTML = `
-            <span class="pb-icon">⏳</span>
-            <span class="pb-text">Dùng thử Premium — Còn <strong>${days} ngày</strong></span>
-            <button class="pb-btn" onclick="window._openUpgrade()">Nâng cấp ngay</button>
             <button class="pb-close" onclick="this.parentElement.remove()">✕</button>
         `;
     } else {
@@ -1576,7 +1542,7 @@ function dim(m,y){return new Date(y,m+1,0).getDate()}
 function ck(id,d){return`${cY}-${cM}-${id}-${d}`}
 
 /* THEME */
-let curTheme=localStorage.getItem('hg_theme')||'light';
+let curTheme='light';
 function updateThemeAvatars() {
     if (typeof currentUser !== 'undefined' && currentUser) {
         showUserProfile(currentUser);
@@ -1587,12 +1553,20 @@ function updateThemeAvatars() {
     }
 }
 function applyTheme(){document.documentElement.setAttribute('data-theme',curTheme);updateThemeAvatars();}
-function toggleTheme(){curTheme=curTheme==='dark'?'light':'dark';localStorage.setItem('hg_theme',curTheme);applyTheme();renderBar();renderLine()}
+function toggleTheme(){
+    const next = (curTheme === 'dark') ? 'light' : 'dark';
+    switchToTheme(next);
+}
 
 function switchToTheme(themeId) {
+    if (!S.inventory) S.inventory = sanitizeInventory ? sanitizeInventory(null) : {};
+    const owned = Array.isArray(S.inventory.themes) ? S.inventory.themes : ['dark', 'light'];
+    if (!owned.includes(themeId) && themeId !== 'dark' && themeId !== 'light') {
+        alert('Giao diện này chưa được mở khóa! Vui lòng mua trong Cửa hàng.');
+        return;
+    }
     curTheme = themeId;
     localStorage.setItem('hg_theme', curTheme);
-    if (!S.inventory) S.inventory = sanitizeInventory ? sanitizeInventory(null) : {};
     S.inventory.equippedTheme = themeId;
     sv();
     applyTheme();
@@ -2567,6 +2541,8 @@ async function startApp(user){
             userDocRef.set({habitData:JSON.stringify(S)},{merge:true}).catch(e=>console.warn('Initial habit sync error:',e));
         }
     }
+    curTheme = (S && S.inventory && S.inventory.equippedTheme) ? S.inventory.equippedTheme : 'light';
+    applyTheme();
     try {
         const hc=S.h.length;
         if(hc){
@@ -4593,6 +4569,7 @@ function performSignOut() {
     try {
         localStorage.removeItem('habitgame_v3');
         localStorage.removeItem('hg_bonus_dp');
+        localStorage.removeItem('hg_theme');
         if (currentUser && currentUser.uid) {
             localStorage.removeItem(`habitgame_v3_${currentUser.uid}`);
         }
