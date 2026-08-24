@@ -112,8 +112,6 @@ function initTabs(){
         loginForm.style.display = '';
         registerForm.style.display = 'none';
         hideMessages();
-        resetLoginOtp();
-        resetRegOtp();
     };
     tabRegister.onclick = () => {
         tabRegister.classList.add('active');
@@ -121,8 +119,6 @@ function initTabs(){
         registerForm.style.display = '';
         loginForm.style.display = 'none';
         hideMessages();
-        resetLoginOtp();
-        resetRegOtp();
     };
 }
 
@@ -415,31 +411,19 @@ let _loginExpiry = createExpiryTimer('loginOtpCountdown', 'loginOtpTimer');
 let _loginResend = createResendCooldown('btnResendLoginOtp', 'loginResendCountdown');
 let _pendingLogin = null; // {email, password}
 
-function resetLoginOtp(){
-    const step1 = document.getElementById('loginStep1');
-    const step2 = document.getElementById('loginStep2');
-    if(step1) step1.style.display = '';
-    if(step2) step2.style.display = 'none';
-    _loginExpiry.stop();
-    _loginResend.stop();
-    clearOtpBoxes('.login-otp-box');
-    _pendingLogin = null;
-}
-
 function initLogin(){
     const btnLogin = document.getElementById('btnLogin');
-    const btnVerify = document.getElementById('btnVerifyLoginOtp');
-    const btnResend = document.getElementById('btnResendLoginOtp');
-    const btnBack = document.getElementById('btnBackToLogin');
+    const form = document.getElementById('loginForm');
+    const emailInput = document.getElementById('loginEmail');
+    const passInput = document.getElementById('loginPassword');
 
-    // Step 1: Verify email+password THEN send OTP
-    btnLogin.onclick = async () => {
+    const handleLogin = async () => {
         hideMessages();
-        const email = document.getElementById('loginEmail').value.trim();
-        const pass = document.getElementById('loginPassword').value;
+        const email = emailInput ? emailInput.value.trim() : '';
+        const pass = passInput ? passInput.value : '';
 
         if(!email || !pass){
-            showError('Vui lòng nhập email và mật khẩu');
+            showError('Vui lòng nhập đầy đủ email và mật khẩu');
             return;
         }
 
@@ -452,255 +436,79 @@ function initLogin(){
                 : firebase.auth.Auth.Persistence.SESSION;
             await auth.setPersistence(persistence);
 
-            // First verify credentials are correct by signing in
-            _otpInProgress = true;
             const cred = await auth.signInWithEmailAndPassword(email, pass);
-            // Credentials valid! Sign out immediately (we need OTP first)
-            await auth.signOut();
-            _otpInProgress = false;
+            await createUserProfile(cred.user, false);
 
-            // Store credentials for after OTP
-            _pendingLogin = { email, password: pass };
-
-            // Send OTP
-            const otpResult = await sendOtpApi(email);
-            if(!otpResult.success){
-                showError(otpResult.message || 'Không thể gửi mã OTP');
-                setLoading(btnLogin, false);
-                return;
-            }
-
-            // Go to OTP step
-            showSuccess('✅ Mã xác thực đã gửi đến ' + email);
-            document.getElementById('loginStep1').style.display = 'none';
-            document.getElementById('loginStep2').style.display = 'block';
-            document.getElementById('loginOtpEmailDisplay').textContent = email;
-            clearOtpBoxes('.login-otp-box');
-            setTimeout(() => {
-                const first = document.querySelector('.login-otp-box[data-index="0"]');
-                if(first) first.focus();
-            }, 300);
-            _loginExpiry.start();
-            _loginResend.start();
-            setLoading(btnLogin, false);
-
+            showSuccess('✅ Đăng nhập thành công! Đang chuyển hướng...');
+            setTimeout(() => { window.location.href = 'index.html'; }, 800);
         } catch(err) {
-            _otpInProgress = false;
             showError(translateFirebaseError(err.code));
             setLoading(btnLogin, false);
         }
     };
 
-    // Step 2: Verify OTP → complete login
-    btnVerify.onclick = async () => {
-        hideMessages();
-        if(!_pendingLogin) return;
+    if(btnLogin) btnLogin.onclick = handleLogin;
+    if(form) form.onsubmit = (e) => { e.preventDefault(); handleLogin(); };
 
-        const otp = getOtpValue('.login-otp-box');
-        if(otp.length !== 6){
-            showError('Vui lòng nhập đủ 6 số');
-            shakeOtpBoxes('.login-otp-box');
-            return;
+    [emailInput, passInput].forEach(inp => {
+        if(inp) {
+            inp.addEventListener('keydown', (e) => {
+                if(e.key === 'Enter') {
+                    e.preventDefault();
+                    handleLogin();
+                }
+            });
         }
-
-        setLoading(btnVerify, true);
-        try {
-            const result = await verifyOtpApi(_pendingLogin.email, otp);
-            if(!result._ok || !result.success){
-                showError(result.message || 'Mã OTP không đúng');
-                shakeOtpBoxes('.login-otp-box');
-                setLoading(btnVerify, false);
-                return;
-            }
-
-            // OTP verified! Now actually sign in
-            successOtpBoxes('.login-otp-box');
-            showSuccess('✅ Xác thực thành công! Đang đăng nhập...');
-
-            const cred = await auth.signInWithEmailAndPassword(_pendingLogin.email, _pendingLogin.password);
-            await createUserProfile(cred.user, false);
-
-            _loginExpiry.stop();
-            _loginResend.stop();
-            setTimeout(() => { window.location.href = 'index.html'; }, 1000);
-
-        } catch(err) {
-            showError(err.code ? translateFirebaseError(err.code) : (err.message || 'Lỗi xác thực'));
-            setLoading(btnVerify, false);
-        }
-    };
-
-    // Resend OTP
-    btnResend.onclick = async () => {
-        if(!_pendingLogin) return;
-        hideMessages();
-        btnResend.disabled = true;
-        try {
-            const result = await sendOtpApi(_pendingLogin.email);
-            if(result.success){
-                showSuccess('✅ Mã mới đã gửi đến ' + _pendingLogin.email);
-                clearOtpBoxes('.login-otp-box');
-                _loginExpiry.start();
-            } else {
-                showError(result.message || 'Không thể gửi lại mã');
-            }
-        } catch(err){
-            showError('Lỗi kết nối. Vui lòng thử lại.');
-        }
-        _loginResend.start();
-    };
-
-    // Back button
-    btnBack.onclick = () => {
-        hideMessages();
-        resetLoginOtp();
-    };
-
-    // Setup OTP input boxes for login
-    setupOtpBoxes('.login-otp-box', 'btnVerifyLoginOtp');
-}
-
-// =======================================================================
-// ===== REGISTER FLOW (Info + OTP) =====
-// Step 1: Enter info → send OTP
-// Step 2: Enter OTP → verify → create account
-// =======================================================================
-
-let _regExpiry = createExpiryTimer('otpCountdown', 'otpTimer');
-let _regResend = createResendCooldown('btnResendOtp', 'resendCountdown');
-let _pendingReg = null; // {name, email, password}
-
-function resetRegOtp(){
-    const step1 = document.getElementById('regStep1');
-    const step2 = document.getElementById('regStep2');
-    if(step1) step1.style.display = '';
-    if(step2) step2.style.display = 'none';
-    _regExpiry.stop();
-    _regResend.stop();
-    clearOtpBoxes('#registerForm .otp-box');
-    _pendingReg = null;
+    });
 }
 
 function initRegister(){
-    const btnSendOtp = document.getElementById('btnSendOtp');
-    const btnVerifyOtp = document.getElementById('btnVerifyOtp');
-    const btnResendOtp = document.getElementById('btnResendOtp');
-    const btnBack = document.getElementById('btnBackToReg');
+    const btnRegister = document.getElementById('btnSendOtp');
+    const form = document.getElementById('registerForm');
+    const nameInput = document.getElementById('regName');
+    const emailInput = document.getElementById('regEmail');
+    const passInput = document.getElementById('regPassword');
+    const confirmInput = document.getElementById('regConfirm');
 
-    // Step 1: Validate info → send OTP
-    btnSendOtp.onclick = async () => {
+    const handleRegister = async () => {
         hideMessages();
-        const name = document.getElementById('regName').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const pass = document.getElementById('regPassword').value;
-        const confirm = document.getElementById('regConfirm').value;
+        const name = nameInput ? nameInput.value.trim() : '';
+        const email = emailInput ? emailInput.value.trim() : '';
+        const pass = passInput ? passInput.value : '';
+        const confirm = confirmInput ? confirmInput.value : '';
 
         if(!name){ showError('Vui lòng nhập họ và tên'); return; }
         if(!email){ showError('Vui lòng nhập email'); return; }
         if(pass.length < 6){ showError('Mật khẩu phải có ít nhất 6 ký tự'); return; }
         if(pass !== confirm){ showError('Mật khẩu xác nhận không khớp'); return; }
 
-        _pendingReg = { name, email, password: pass };
-
-        setLoading(btnSendOtp, true);
+        setLoading(btnRegister, true);
         try {
-            const result = await sendOtpApi(email);
-            if(!result.success){
-                showError(result.message || 'Không thể gửi mã OTP');
-                setLoading(btnSendOtp, false);
-                return;
-            }
-
-            showSuccess('✅ Mã OTP đã gửi đến ' + email);
-            document.getElementById('regStep1').style.display = 'none';
-            document.getElementById('regStep2').style.display = 'block';
-            document.getElementById('otpEmailDisplay').textContent = email;
-            clearOtpBoxes('#registerForm .otp-box');
-            setTimeout(() => {
-                const first = document.querySelector('#registerForm .otp-box[data-index="0"]');
-                if(first) first.focus();
-            }, 300);
-            _regExpiry.start();
-            _regResend.start();
-            setLoading(btnSendOtp, false);
-
-        } catch(err){
-            showError('Lỗi kết nối. Vui lòng thử lại.');
-            setLoading(btnSendOtp, false);
-        }
-    };
-
-    // Step 2: Verify OTP → create account
-    btnVerifyOtp.onclick = async () => {
-        hideMessages();
-        if(!_pendingReg) return;
-
-        const otp = getOtpValue('#registerForm .otp-box');
-        if(otp.length !== 6){
-            showError('Vui lòng nhập đủ 6 số');
-            shakeOtpBoxes('#registerForm .otp-box');
-            return;
-        }
-
-        setLoading(btnVerifyOtp, true);
-        try {
-            const result = await verifyOtpApi(_pendingReg.email, otp);
-            if(!result._ok || !result.success){
-                showError(result.message || 'Mã OTP không đúng');
-                shakeOtpBoxes('#registerForm .otp-box');
-                setLoading(btnVerifyOtp, false);
-                return;
-            }
-
-            successOtpBoxes('#registerForm .otp-box');
-            showSuccess('✅ Xác minh thành công! Đang tạo tài khoản...');
-
-            const cred = await auth.createUserWithEmailAndPassword(_pendingReg.email, _pendingReg.password);
-            await cred.user.updateProfile({ displayName: _pendingReg.name });
+            const cred = await auth.createUserWithEmailAndPassword(email, pass);
+            await cred.user.updateProfile({ displayName: name });
             await createUserProfile(cred.user, true);
 
-            _regExpiry.stop();
-            _regResend.stop();
-            setTimeout(() => { window.location.href = 'index.html'; }, 1200);
-
+            showSuccess('✅ Đăng ký thành công! Đang chuyển hướng...');
+            setTimeout(() => { window.location.href = 'index.html'; }, 1000);
         } catch(err){
-            if(err.code){
-                showError(translateFirebaseError(err.code));
-            } else {
-                showError(err.message || 'Đã xảy ra lỗi. Vui lòng thử lại.');
-            }
-            setLoading(btnVerifyOtp, false);
+            showError(err.code ? translateFirebaseError(err.code) : (err.message || 'Đã xảy ra lỗi. Vui lòng thử lại.'));
+            setLoading(btnRegister, false);
         }
     };
 
-    // Resend OTP
-    btnResendOtp.onclick = async () => {
-        if(!_pendingReg) return;
-        hideMessages();
-        btnResendOtp.disabled = true;
-        try {
-            const result = await sendOtpApi(_pendingReg.email);
-            if(result.success){
-                showSuccess('✅ Mã mới đã gửi đến ' + _pendingReg.email);
-                clearOtpBoxes('#registerForm .otp-box');
-                _regExpiry.start();
-            } else {
-                showError(result.message || 'Không thể gửi lại mã');
-            }
-        } catch(err){
-            showError('Lỗi kết nối. Vui lòng thử lại.');
+    if(btnRegister) btnRegister.onclick = handleRegister;
+    if(form) form.onsubmit = (e) => { e.preventDefault(); handleRegister(); };
+
+    [nameInput, emailInput, passInput, confirmInput].forEach(inp => {
+        if(inp) {
+            inp.addEventListener('keydown', (e) => {
+                if(e.key === 'Enter') {
+                    e.preventDefault();
+                    handleRegister();
+                }
+            });
         }
-        _regResend.start();
-    };
-
-    // Back button
-    btnBack.onclick = () => {
-        hideMessages();
-        resetRegOtp();
-    };
-
-    // Setup OTP input boxes for register
-    setupOtpBoxes('#registerForm .otp-box', 'btnVerifyOtp');
+    });
 }
 
 // ===== GOOGLE SIGN-IN =====

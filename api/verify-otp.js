@@ -6,22 +6,28 @@
 
 const admin = require("firebase-admin");
 
-// Initialize Firebase Admin SDK (singleton)
-if (!admin.apps.length) {
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY
-    ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n")
-    : undefined;
+function getDb() {
+  if (!admin.apps.length) {
+    const projectId = process.env.FIREBASE_PROJECT_ID;
+    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+    const rawKey = process.env.FIREBASE_PRIVATE_KEY;
+    const privateKey = rawKey ? rawKey.replace(/\\n/g, "\n") : undefined;
 
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: privateKey,
-    }),
-  });
+    if (!projectId || !clientEmail || !privateKey) {
+      console.warn("Firebase Admin credentials not fully configured in environment variables.");
+      return null;
+    }
+
+    admin.initializeApp({
+      credential: admin.credential.cert({
+        projectId,
+        clientEmail,
+        privateKey,
+      }),
+    });
+  }
+  return admin.firestore();
 }
-
-const db = admin.firestore();
 
 module.exports = async function handler(req, res) {
   // CORS
@@ -34,7 +40,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
-  const { email, otp } = req.body;
+  const { email, otp } = req.body || {};
 
   if (!email || !otp) {
     return res.status(400).json({
@@ -55,6 +61,14 @@ module.exports = async function handler(req, res) {
   }
 
   try {
+    const db = getDb();
+    if (!db) {
+      return res.status(503).json({
+        success: false,
+        message: "Hệ thống máy chủ chưa cấu hình xác thực OTP.",
+      });
+    }
+
     // ===== BRUTE FORCE PROTECTION =====
     // Max 5 failed attempts per email in 15 minutes
     const failedAttemptsQuery = await db
@@ -155,7 +169,7 @@ module.exports = async function handler(req, res) {
     console.error("Verify OTP error:", err);
     return res.status(500).json({
       success: false,
-      message: "Lỗi xác minh. Vui lòng thử lại.",
+      message: "Lỗi xác minh: " + (err.message || "Vui lòng thử lại."),
     });
   }
 };

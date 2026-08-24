@@ -7,39 +7,42 @@
 const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
 
-// Initialize Firebase Admin SDK (singleton)
-if (!admin.apps.length) {
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY
-    ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n")
-    : undefined;
+function getDb() {
+  if (!admin.apps.length) {
+    const projectId = process.env.FIREBASE_PROJECT_ID;
+    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+    const rawKey = process.env.FIREBASE_PRIVATE_KEY;
+    const privateKey = rawKey ? rawKey.replace(/\\n/g, "\n") : undefined;
 
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: privateKey,
-    }),
+    if (!projectId || !clientEmail || !privateKey) {
+      console.warn("Firebase Admin credentials not fully configured in environment variables.");
+      return null;
+    }
+
+    admin.initializeApp({
+      credential: admin.credential.cert({
+        projectId,
+        clientEmail,
+        privateKey,
+      }),
+    });
+  }
+  return admin.firestore();
+}
+
+function getTransporter() {
+  const user = process.env.GMAIL_USER;
+  const pass = process.env.GMAIL_APP_PASSWORD;
+  if (!user || !pass) {
+    console.warn("Gmail SMTP credentials not configured (GMAIL_USER / GMAIL_APP_PASSWORD).");
+    return null;
+  }
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: { user, pass },
   });
 }
 
-const db = admin.firestore();
-
-// Gmail SMTP transporter (singleton)
-let transporter = null;
-function getTransporter() {
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
-      },
-    });
-  }
-  return transporter;
-}
-
-// Generate 6-digit OTP
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
@@ -55,16 +58,29 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
-  const { email } = req.body;
+  const { email } = req.body || {};
 
   if (!email || !email.includes("@")) {
     return res.status(400).json({ success: false, message: "Email không hợp lệ" });
   }
 
-  // Normalize email
   const normalizedEmail = email.trim().toLowerCase();
 
   try {
+    const db = getDb();
+    const mailTransporter = getTransporter();
+
+    if (!db || !mailTransporter) {
+      return res.status(503).json({
+        success: false,
+        message: "Hệ thống máy chủ chưa cấu hình gửi email OTP qua Gmail.",
+        configured: {
+          firebase: !!db,
+          smtp: !!mailTransporter,
+        }
+      });
+    }
+
     const recentOtpsQuery = await db
       .collection("otp_codes")
       .where("email", "==", normalizedEmail)
@@ -98,8 +114,6 @@ module.exports = async function handler(req, res) {
     });
 
     // ===== SEND EMAIL =====
-    const mailTransporter = getTransporter();
-
     const mailOptions = {
       from: `"Habit Mastery" <${process.env.GMAIL_USER}>`,
       to: normalizedEmail,
@@ -148,7 +162,7 @@ module.exports = async function handler(req, res) {
     console.error("Send OTP error:", err);
     return res.status(500).json({
       success: false,
-      message: "Không thể gửi mã OTP. Vui lòng thử lại.",
+      message: "Không thể gửi mã OTP: " + (err.message || "Vui lòng thử lại."),
     });
   }
 };
