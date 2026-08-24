@@ -87,20 +87,19 @@
 - Danh mục Cảnh giới (Showcase) hiển thị chi tiết tiến độ cảnh giới hiện tại và 21 cảnh giới.
 
 ### 5. Hồ Sơ Nhân Vật, Thẻ Gói Tài Khoản & Hạn Sử Dụng
+- **Hồ Sơ Nhân Vật Hành Tinh (Orbital Profile Modal)**:
+  - 🎒 **Nút Túi Đồ Cá Nhân (Vị trí 1)**: Mở trực tiếp Kho Túi Đồ tổng hợp chứa toàn bộ vật phẩm, bùa lợi, sách đã mở khóa, danh hiệu và giao diện đã sở hữu.
+  - 🧊 **Nút Bảo Vệ Chuỗi (Vị trí 2)**: Theo dõi & kích hoạt Bình Freeze, cứu chuỗi.
+  - 📊 **Nút Tổng Kết Tuần (Vị trí 3)**: Xem infographic Weekly Recap và sao chép thống kê.
+  - 📸 **Nút Khoe Thẻ Rank (Vị trí 4)**: Xuất ảnh Story 9:16 Canvas High-DPI.
+  - 📷 **Nút Avatar Studio (Vị trí 5)**: Đổi ảnh đại diện, tải ảnh, chọn 12 mẫu đẹp, 10 khung viền cảnh giới.
+  - ⚙️ **Nút Cài Đặt (Vị trí 6)**: Đổi tên hiển thị, đổi giao diện, chọn ngôn ngữ (VI/ZH/EN), cẩm nang sử dụng.
 - **Thẻ Gói Tài Khoản & Hạn Sử Dụng (Profile Subscription Card)**:
   - 🏷️ **Gói hiện tại**: `👑 Premium VIP`, `⚡ Gói Pro`, `⏳ Dùng thử (Trial)`, `🌱 Gói Free`.
   - 📅 **Ngày đăng ký**: Hiển thị chính xác ngày kích hoạt / tạo tài khoản.
   - ⏳ **Hạn sử dụng**: Hiển thị ngày hết hạn, đếm ngược số ngày còn lại (`Còn X ngày`) hoặc `Vĩnh viễn (Trọn đời)`. Khi hết hạn, hiển thị cảnh báo đỏ `⚠️ Đã hết hạn` kèm hướng dẫn gia hạn.
   - 📊 **Số thói quen**: Hiển thị trạng thái thói quen khả dụng (Không giới hạn hoặc `3/N thói quen - Đã khóa N-3`).
   - 🚀 **Nút Nâng Cấp / Gia Hạn Gói**: Mở trực tiếp Modal thanh toán & nâng cấp VIP.
-- **Avatar Studio Toàn Năng (Đổi ảnh đại diện đa phương thức)**:
-  - 📤 **Tải ảnh từ máy**: Tự động nén kích thước Canvas & tối ưu hóa ảnh Base64 siêu nhẹ chống lỗi.
-  - 🔗 **Dán link URL ảnh**: Hỗ trợ dán đường dẫn ảnh bất kỳ (https://...) với Live Preview tức thì.
-  - 🎲 **Kho 12 Avatar Mẫu Đẹp**: Chọn nhanh các phong cách cực chất (Cyberpunk, Samurai, Zen, Dragon, Phoenix, Marcus...).
-  - 🖼️ **Bộ Chọn 10 Khung Viền Cảnh Giới**: Khung 1 đến Khung 10 theo cấp độ kỷ luật.
-  - 🗑️ **Về ảnh mặc định**: Đặt lại avatar chữ cái mặc định nhanh chóng.
-  - 📸 **Tương tác 1-chạm**: Bấm trực tiếp vào ảnh đại diện trung tâm (có badge camera phát sáng) hoặc nút bánh xe hành tinh để mở Studio.
-  - Đồng bộ tức thì lên Navbar, Leaderboard Top 50, Community và Firestore.
 
 ### 6. Trụ Cột 1: Cơ Chế Bảo Vệ & Cứu Chuỗi (Streak Protection & Recovery)
 - **Bình Đóng Băng Chuỗi (*Streak Freeze* - sức chứa tối đa 3 bình)**: Tự động đóng băng bảo toàn streak nếu quên điểm danh 1 ngày mà không bị reset chuỗi về 0.
@@ -114,7 +113,12 @@
 - **Bùa Nghỉ Phép (Vacation Pass)** & **Khiên Bất Hoại (Invincible Shield)**: Miễn nhiễm mất chuỗi liên tục 3 đến 7 ngày.
 
 ### 7. Trụ Cột 2: Cửa Hàng Kỷ Luật & Túi Đồ Cá Nhân (Shop & Backpack)
-- **Túi Đồ Cá Nhân (Backpack)**: Quản lý kho bùa lợi, theo dõi trạng thái Buffs đang hoạt động (Vé Boost, Khiên, Nghỉ Phép, Focus Elixir...) và **Tủ Sách Tri Thức**.
+- **Túi Đồ Cá Nhân Toàn Năng (Backpack)**: Quản lý và trang bị toàn bộ tài sản đang sở hữu:
+  - ⚡ **Bùa Lợi Đang Kích Hoạt (Active Buffs)**: Vé Boost x3/x2, Khiên 7 Ngày, Bùa nghỉ phép, Focus Elixir.
+  - 🎒 **Kho Vật Phẩm Tiêu Thụ**: Rương Kỷ Luật Bí Ẩn, Vé Boost, Bình Freeze, Bùa nghỉ phép, Thuốc Focus, Nước tăng lực đồng đội.
+  - 📚 **Tủ Sách Tri Thức**: Toàn bộ sách đã sở hữu với nút "📖 Đọc" ngay lập tức.
+  - 🏷️ **Danh Hiệu Đã Sở Hữu**: Trang bị hoặc tháo danh hiệu tùy thích.
+  - 🎨 **Giao Diện Đã Sở Hữu**: Xem và áp dụng theme màu sắc trực tiếp.
 - **Rương Kỷ Luật Bí Ẩn (Mystery Chest)**: Mở quà may mắn với animation lắc rương, hiệu ứng hào quang và tỷ lệ trúng Jackpot thần thoại.
 - **Kho Tài Liệu & Sách Tinh Hoa (Documents Hub)**:
   1. 📜 **Tuyệt Mật Nhân Tính** *(Bản Đủ 218 Trang - 7 Chương, 28 Phần Mục)*: Tâm lý học hành vi, đối nhân xử thế, nghệ thuật quyền mưu và thấu hiểu bản chất con người 100% nguyên văn từ tài liệu PDF.

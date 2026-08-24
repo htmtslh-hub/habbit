@@ -7729,6 +7729,25 @@ td.td-chk.frozen-day {
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
+.backpack-card.equipped-card {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.08);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+}
+
+.backpack-use-btn.equipped-btn {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    box-shadow: none;
+}
+.backpack-use-btn.equipped-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.5);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
 .backpack-empty-box {
     grid-column: 1 / -1;
     padding: 36px 20px;

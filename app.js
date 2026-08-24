@@ -5033,15 +5033,17 @@ function initProfileModal() {
 
     // --- Orbital Popup Definitions ---
 
-    // 🛒 Cửa hàng (pos 1)
+    // 🎒 Túi đồ cá nhân (pos 1)
     const orbShop = document.getElementById('orbShopBtn');
     if (orbShop) orbShop.onclick = (e) => {
         e.stopPropagation();
-        showOrbitalPopup(orbShop, 'Cửa hàng', [
-            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: 'Danh hiệu', desc: 'Mua danh hiệu độc quyền', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('titles'); } },
-            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', label: 'Giao diện', desc: 'Chủ đề màu sắc', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('themes'); } },
-            { icon: '<svg class="rune-icon rune-sound" viewBox="0 0 48 48"><use href="#i-disc"></use></svg>', label: 'Hiệu ứng', desc: 'Âm thanh & hình ảnh', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('fx'); } },
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', label: 'Vật phẩm', desc: 'Freeze, Boost 2X...', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('items'); } },
+        showOrbitalPopup(orbShop, 'Túi đồ cá nhân', [
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', label: 'Mở túi đồ', desc: 'Xem tất cả vật phẩm & bùa lợi', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('backpack'); } },
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', label: 'Tủ sách tri thức', desc: 'Sách & tài liệu đã mở khóa', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('backpack'); } },
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: 'Danh hiệu sở hữu', desc: 'Trang bị danh hiệu của bạn', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('titles'); } },
+            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', label: 'Giao diện sở hữu', desc: 'Đổi theme & màu sắc', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('themes'); } },
+            { icon: '<svg class="rune-icon rune-sound" viewBox="0 0 48 48"><use href="#i-disc"></use></svg>', label: 'Hiệu ứng sở hữu', desc: 'Âm thanh & visual fx', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('fx'); } },
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-market"></use></svg>', label: 'Cửa hàng kỷ luật', desc: 'Mua sắm thêm vật phẩm mới', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('items'); } },
         ]);
     };
 
@@ -6338,7 +6340,7 @@ function renderShopUI(targetTab = null) {
         const myUnlockedBooks = (SHOP_CATALOG.docs || []).filter(d => d.free || unlockedDocs.includes(d.id));
 
         html += `
-            <div class="backpack-header-row" style="margin-top: 20px;">
+            <div class="backpack-header-row" style="margin-top: 24px;">
                 <div class="backpack-sec-title">📚 TỦ SÁCH TRI THỨC ĐÃ MỞ KHÓA (${myUnlockedBooks.length}/6 Quyển)</div>
                 <button class="doc-browse-shop-btn" onclick="window._openShopModal('docs')">
                     + Thêm Sách Mới
@@ -6363,6 +6365,71 @@ function renderShopUI(targetTab = null) {
         });
 
         html += `</div>`;
+
+        // ==================== DANH HIỆU ĐÃ SỞ HỮU TRONG TÚI ĐỒ ====================
+        const myOwnedTitles = (S.inventory?.titles || []);
+        const myEquippedTitle = S.inventory?.equippedTitle || '';
+        const titleItems = (SHOP_CATALOG.titles || []).filter(t => myOwnedTitles.includes(t.id));
+        if (titleItems.length > 0) {
+            html += `
+                <div class="backpack-header-row" style="margin-top: 24px;">
+                    <div class="backpack-sec-title">🏷️ DANH HIỆU ĐÃ SỞ HỮU (${titleItems.length} Danh hiệu)</div>
+                    <button class="doc-browse-shop-btn" onclick="window._openShopModal('titles')">
+                        + Xem Tất Cả
+                    </button>
+                </div>
+                <div class="backpack-grid">
+            `;
+            titleItems.forEach(item => {
+                const isEquipped = myEquippedTitle === item.id;
+                const tName = curLang === 'en' ? item.nameEn : (curLang === 'zh' ? item.nameZh : item.name);
+                html += `
+                    <div class="backpack-card ${isEquipped ? 'equipped-card' : ''}">
+                        <div class="backpack-card-art">${item.icon}</div>
+                        <div class="backpack-card-info">
+                            <div class="backpack-card-name">${tName}</div>
+                            <div class="backpack-card-qty">${isEquipped ? '<span style="color:#34d399;font-weight:700;">★ Đang trang bị</span>' : 'Đã mở khóa'}</div>
+                        </div>
+                        <button class="backpack-use-btn ${isEquipped ? 'equipped-btn' : ''}" onclick="${isEquipped ? `window._unequipShopItem('titles', '${item.id}')` : `window._equipShopItem('titles', '${item.id}')`}">
+                            ${isEquipped ? 'Tháo ra' : 'Trang bị'}
+                        </button>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+        }
+
+        // ==================== GIAO DIỆN ĐÃ SỞ HỮU TRONG TÚI ĐỒ ====================
+        const myOwnedThemes = (S.inventory?.themes || ['dark', 'light']);
+        const currentTheme = S.inventory?.equippedTheme || curTheme || 'dark';
+        const themeItems = (SHOP_CATALOG.themes || []).filter(th => th.free || myOwnedThemes.includes(th.id));
+        if (themeItems.length > 0) {
+            html += `
+                <div class="backpack-header-row" style="margin-top: 24px;">
+                    <div class="backpack-sec-title">🎨 GIAO DIỆN ĐÃ SỞ HỮU (${themeItems.length} Themes)</div>
+                    <button class="doc-browse-shop-btn" onclick="window._openShopModal('themes')">
+                        + Thêm Theme
+                    </button>
+                </div>
+                <div class="backpack-grid">
+            `;
+            themeItems.forEach(th => {
+                const isActive = (currentTheme === th.id || curTheme === th.id);
+                html += `
+                    <div class="backpack-card ${isActive ? 'equipped-card' : ''}">
+                        <div class="backpack-card-art" style="background:${th.bg}; border:1px solid ${th.accent}; color:${th.accent};">🎨</div>
+                        <div class="backpack-card-info">
+                            <div class="backpack-card-name">${th.name}</div>
+                            <div class="backpack-card-qty">${isActive ? '<span style="color:#34d399;font-weight:700;">★ Đang dùng</span>' : 'Sẵn sàng'}</div>
+                        </div>
+                        <button class="backpack-use-btn ${isActive ? 'equipped-btn' : ''}" onclick="window._equipShopItem('themes', '${th.id}')" ${isActive ? 'disabled' : ''}>
+                            ${isActive ? 'Đang dùng' : 'Áp dụng'}
+                        </button>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+        }
 
     } else if (shopActiveTab === 'docs') {
         const unlockedDocs = (S.inventory && Array.isArray(S.inventory.unlockedDocs)) ? S.inventory.unlockedDocs : ['doc_nhan_tinh'];
