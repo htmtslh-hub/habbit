@@ -331,9 +331,7 @@ function applyI18n(){
 const DEF=[
     {id:1,name:'Dậy sớm trước 06:00',emoji:'⏰'},
     {id:2,name:'Tập thể dục / Gym',emoji:'💪'},
-    {id:3,name:'Đọc sách 20 phút',emoji:'📖'},
-    {id:4,name:'Lên kế hoạch ngày',emoji:'🗓️'},
-    {id:5,name:'Uống đủ 2L nước',emoji:'💧'}
+    {id:3,name:'Đọc sách 20 phút',emoji:'📖'}
 ];
 // ==================== WEB AUDIO API SYNTHESIZER ====================
 let _audioCtx = null;
@@ -621,7 +619,7 @@ function getDefaultState() {
         c: {},
         mo: {},
         sl: {},
-        ni: 6,
+        ni: 4,
         notes: {},
         freezes: 1,
         frozenDays: [],
@@ -907,17 +905,16 @@ async function ensureUserProfile(user){
     try {
         const doc = await userDocRef.get();
         const now = new Date();
-        const trialEnd = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days
         
         if(!doc.exists){
             const profileData = {
                 email: user.email || '',
                 displayName: user.displayName || '',
                 photoURL: user.photoURL || '',
-                plan: 'trial',
+                plan: 'free',
                 role: 'customer',
-                trialStartedAt: firebase.firestore.Timestamp.fromDate(now),
-                trialExpiresAt: firebase.firestore.Timestamp.fromDate(trialEnd),
+                trialStartedAt: null,
+                trialExpiresAt: null,
                 planUpdatedAt: firebase.firestore.Timestamp.fromDate(now),
                 planExpiresAt: null,
                 createdAt: firebase.firestore.Timestamp.fromDate(now),
@@ -939,13 +936,8 @@ async function ensureUserProfile(user){
             if(!data.displayName && user.displayName) { updates.displayName = user.displayName; needsUpdate = true; }
             if(!data.photoURL && user.photoURL) { updates.photoURL = user.photoURL; needsUpdate = true; }
             
-            if(data.plan === undefined) { updates.plan = 'trial'; needsUpdate = true; }
+            if(data.plan === undefined) { updates.plan = 'free'; needsUpdate = true; }
             if(data.role === undefined) { updates.role = 'customer'; needsUpdate = true; }
-            if(data.trialExpiresAt === undefined) { 
-                updates.trialExpiresAt = firebase.firestore.Timestamp.fromDate(trialEnd); 
-                updates.trialStartedAt = firebase.firestore.Timestamp.fromDate(now); 
-                needsUpdate = true; 
-            }
             if(data.disabled === undefined) { updates.disabled = false; needsUpdate = true; }
             
             updates.lastLoginAt = firebase.firestore.Timestamp.fromDate(now);
@@ -4613,27 +4605,6 @@ function performSignOut() {
 }
 window._performSignOut = performSignOut;
 
-window._resetHabitData = async function() {
-    if (!currentUser) return;
-    if (!confirm('Bạn có chắc chắn muốn ĐẶT LẠI bảng thói quen về trạng thái mặc định ban đầu không?\n\nToàn bộ thói quen và các ô tích cũ sẽ được làm sạch về 0 để bạn bắt đầu rèn luyện từ đầu.')) return;
-    S = getDefaultState();
-    userBonusDP = 0;
-    sv();
-    if (userDocRef) {
-        try {
-            await userDocRef.set({ habitData: JSON.stringify(S), bonusDP: 0 }, { merge: true });
-            if (db) {
-                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: 0, totalDP: 0, currentStreak: 0, weeklyDP: 0, streak: 0, totalChecks: 0, perfectDays: 0 }, { merge: true }).catch(() => {});
-            }
-        } catch(e) { console.warn('Reset error:', e); }
-    }
-    renderAll();
-    if (typeof updateUserDPState === 'function') updateUserDPState(true);
-    if (typeof window._updateProfileModalUI === 'function') window._updateProfileModalUI();
-    showUserProfile(currentUser);
-    alert('Đã đặt lại bảng thói quen sạch hoàn toàn thành công!');
-};
-
 function initAuthGuard(){
     const loading = document.getElementById('authLoading');
     const app = document.getElementById('mainApp');
@@ -5257,10 +5228,6 @@ function initProfileModal() {
             { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', label: 'Gói tài khoản', desc: 'Gói Free, Pro, Premium & hạn dùng', action: () => {
                 closeOrbitalPopup();
                 if (window._openUpgrade) window._openUpgrade();
-            }},
-            { icon: '<svg class="rune-icon" style="color:#fbbf24" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg>', label: 'Đặt lại thói quen', desc: 'Làm sạch toàn bộ ô tích & điểm về 0', danger: true, action: () => {
-                closeOrbitalPopup();
-                if (window._resetHabitData) window._resetHabitData();
             }},
             { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Đăng xuất', danger: true, action: () => {
                 if (confirm('Bạn có chắc chắn muốn đăng xuất tài khoản không?')) {
