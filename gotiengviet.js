@@ -180,14 +180,30 @@
         return false;
     }
     function isInputLikeElement(element) {
-        return (element instanceof HTMLInputElement ||
-            element instanceof HTMLTextAreaElement ||
+        if (element instanceof HTMLInputElement) {
+            const type = (element.type || '').toLowerCase();
+            if (type === 'password' ||
+                element.dataset.noIme === 'true' ||
+                element.dataset.noVietnamese === 'true' ||
+                element.classList.contains('no-ime') ||
+                element.id === 'loginPassword' ||
+                element.id === 'regPassword' ||
+                element.id === 'regConfirm' ||
+                (element.getAttribute('autocomplete') || '').toLowerCase().includes('password')) {
+                return false;
+            }
+            return true;
+        }
+        return (element instanceof HTMLTextAreaElement ||
             ('value' in element &&
                 typeof element.value === 'string' &&
                 ('selectionStart' in element || 'setRangeText' in element)));
     }
     function isContentEditableElement(element) {
         if (!(element instanceof HTMLElement)) {
+            return false;
+        }
+        if (element.dataset.noIme === 'true' || element.classList.contains('no-ime')) {
             return false;
         }
         const attr = element.getAttribute('contenteditable');

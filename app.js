@@ -8926,6 +8926,10 @@ function stopChannel(channelKey) {
 }
 
 function syncMixerAudioWithState() {
+    if (!pomoState.isRunning) {
+        stopAllMixerAudio();
+        return;
+    }
     const ctx = getAudioContext();
     if (!ctx) return;
     ensureMasterMixerNode(ctx);
@@ -9159,6 +9163,9 @@ function pausePomodoroTimer() {
         pomoState.intervalId = null;
     }
 
+    // Stop all ambient audio when timer is paused
+    stopAllMixerAudio();
+
     const startBtn = document.getElementById('pomoStartBtn');
     if (startBtn) {
         startBtn.innerHTML = t('pomoContinue');
@@ -9171,6 +9178,7 @@ function pausePomodoroTimer() {
 
 function resetPomodoroTimer() {
     pausePomodoroTimer();
+    stopAllMixerAudio();
     pomoState.secondsLeft = pomoState.totalSeconds;
     const startBtn = document.getElementById('pomoStartBtn');
     if (startBtn) startBtn.innerHTML = t('pomoStart');

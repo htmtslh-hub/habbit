@@ -17,7 +17,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="auth.css?v=2.0.4">
+    <link rel="stylesheet" href="auth.css?v=2.0.5">
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -112,7 +112,7 @@
                             <label for="loginPassword">Mật khẩu</label>
                             <div class="input-wrapper">
                                 <span class="input-icon">🔒</span>
-                                <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-form-type="other">
+                                <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-no-ime="true" data-form-type="other">
                                 <button type="button" class="toggle-pass" id="toggleLoginPass">👁️</button>
                             </div>
                             <span class="input-hint">⚠️ Tắt bộ gõ tiếng Việt (Telex/VNI) khi nhập mật khẩu</span>
@@ -195,7 +195,7 @@
                             <label for="regPassword">Mật khẩu</label>
                             <div class="input-wrapper">
                                 <span class="input-icon">🔒</span>
-                                <input type="password" id="regPassword" placeholder="Tối thiểu 6 ký tự" required minlength="6" autocomplete="new-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-form-type="other">
+                                <input type="password" id="regPassword" placeholder="Tối thiểu 6 ký tự" required minlength="6" autocomplete="new-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-no-ime="true" data-form-type="other">
                                 <button type="button" class="toggle-pass" id="toggleRegPass">👁️</button>
                             </div>
                         </div>
@@ -203,7 +203,7 @@
                             <label for="regConfirm">Xác nhận mật khẩu</label>
                             <div class="input-wrapper">
                                 <span class="input-icon">🔒</span>
-                                <input type="password" id="regConfirm" placeholder="Nhập lại mật khẩu" required minlength="6" autocomplete="new-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-form-type="other">
+                                <input type="password" id="regConfirm" placeholder="Nhập lại mật khẩu" required minlength="6" autocomplete="new-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-no-ime="true" data-form-type="other">
                             </div>
                         </div>
                         <button type="button" class="btn-primary" id="btnSendOtp">
@@ -522,7 +522,7 @@
     </div>
 
     <script src="gotiengviet.js"></script>
-    <script src="auth.js?v=2.0.4"></script>
+    <script src="auth.js?v=2.0.5"></script>
     <script>
     (function(){
       if (!('serviceWorker' in navigator)) return;

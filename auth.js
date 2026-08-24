@@ -145,83 +145,47 @@ function initPassToggle(){
     disableVietnameseIME('regConfirm');
 }
 
-// ===== DISABLE VIETNAMESE IME FOR PASSWORD =====
-// Unikey/GoTiengViet works at OS level — sends Backspace + composed char
-// BEFORE the browser processes input. Only way to fully block:
-// Intercept at keydown using e.code (physical key, IME-independent),
-// preventDefault, and manually insert the raw ASCII character.
+// ===== VIETNAMESE PASSWORD SANITIZER =====
+function sanitizeVietnamesePassword(str) {
+    if (!str) return '';
+    return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // remove combining diacritical marks
+        .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+        .replace(/[ưƯ]/g, m => m === 'ư' ? 'u' : 'U')
+        .replace(/[ơƠ]/g, m => m === 'ơ' ? 'o' : 'O')
+        .replace(/[ăĂâÂ]/g, m => (m === 'ă' || m === 'â') ? 'a' : 'A')
+        .replace(/[êÊ]/g, m => m === 'ê' ? 'e' : 'E')
+        .replace(/[ôÔ]/g, m => m === 'ô' ? 'o' : 'O');
+}
+
 function disableVietnameseIME(inputId) {
     const inp = document.getElementById(inputId);
     if (!inp) return;
 
-    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (!isTouchDevice) {
-        // Map physical key codes to ASCII characters for desktop physical keyboards
-        const codeMap = {};
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(c => {
-            codeMap['Key' + c] = { normal: c.toLowerCase(), shift: c };
-        });
-        '0123456789'.split('').forEach((c, i) => {
-            codeMap['Digit' + c] = { normal: c, shift: ')!@#$%^&*('.charAt(i) };
-        });
-        // Special character keys
-        Object.assign(codeMap, {
-            'Backquote':    { normal: '`', shift: '~' },
-            'Minus':        { normal: '-', shift: '_' },
-            'Equal':        { normal: '=', shift: '+' },
-            'BracketLeft':  { normal: '[', shift: '{' },
-            'BracketRight': { normal: ']', shift: '}' },
-            'Backslash':    { normal: '\\', shift: '|' },
-            'Semicolon':    { normal: ';', shift: ':' },
-            'Quote':        { normal: "'", shift: '"' },
-            'Comma':        { normal: ',', shift: '<' },
-            'Period':       { normal: '.', shift: '>' },
-            'Slash':        { normal: '/', shift: '?' },
-            'Space':        { normal: ' ', shift: ' ' },
-        });
-
-        // Desktop physical keycode interception to block Unikey/GoTiengViet injected characters
-        inp.addEventListener('keydown', (e) => {
-            if (['Tab', 'Enter', 'Escape'].includes(e.key)) return;
-            if (e.ctrlKey || e.metaKey || e.altKey) return;
-            if (e.key === 'Backspace' || e.key === 'Delete') return;
-            if (e.key.startsWith('Arrow') || e.key === 'Home' || e.key === 'End') return;
-
-            if (e.code && codeMap[e.code]) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                const mapping = codeMap[e.code];
-                const char = e.shiftKey ? mapping.shift : mapping.normal;
-                const start = inp.selectionStart;
-                const end = inp.selectionEnd;
-                inp.value = inp.value.slice(0, start) + char + inp.value.slice(end);
-                inp.setSelectionRange(start + 1, start + 1);
-            }
-        });
-    }
-
-    // Universal safety: strip any Vietnamese accented chars from input (e.g. mobile IME or autofill)
-    inp.addEventListener('input', (e) => {
-        const cleaned = inp.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                        .replace(/đ/g, 'd').replace(/Đ/g, 'D');
-        if (cleaned !== inp.value) {
-            const pos = Math.max(0, (inp.selectionStart || 0) - (inp.value.length - cleaned.length));
+    // Sanitize Vietnamese accented characters on input cleanly
+    inp.addEventListener('input', () => {
+        const val = inp.value;
+        const cleaned = sanitizeVietnamesePassword(val);
+        if (cleaned !== val) {
+            const start = inp.selectionStart || 0;
+            const diff = val.length - cleaned.length;
             inp.value = cleaned;
-            try { inp.setSelectionRange(pos, pos); } catch(ex) {}
+            const newPos = Math.max(0, start - diff);
+            try { inp.setSelectionRange(newPos, newPos); } catch(ex) {}
         }
     });
 
     // Handle paste — strip Vietnamese from pasted text
     inp.addEventListener('paste', (e) => {
         e.preventDefault();
-        const text = (e.clipboardData || window.clipboardData).getData('text');
-        const cleaned = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                        .replace(/đ/g, 'd').replace(/Đ/g, 'D');
-        const start = inp.selectionStart;
-        const end = inp.selectionEnd;
+        const text = (e.clipboardData || window.clipboardData).getData('text') || '';
+        const cleaned = sanitizeVietnamesePassword(text);
+        const start = inp.selectionStart || 0;
+        const end = inp.selectionEnd || 0;
         inp.value = inp.value.slice(0, start) + cleaned + inp.value.slice(end);
-        inp.setSelectionRange(start + cleaned.length, start + cleaned.length);
+        const newPos = start + cleaned.length;
+        try { inp.setSelectionRange(newPos, newPos); } catch(ex) {}
     });
 }
 

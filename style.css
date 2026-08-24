@@ -9043,9 +9043,21 @@ td.td-chk.frozen-day {
 
 /* --- POMODORO & DEEP WORK MODAL --- */
 /* ==================== POMODORO — FUTURISTIC REDESIGN ==================== */
+.modal-bg.pomo-modal-bg {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px 8px;
+    align-items: center;
+    justify-content: center;
+}
+
 .pomo-modal-futuristic {
     max-width: 480px;
     width: 92%;
+    max-height: 92vh;
+    max-height: 92dvh;
+    display: flex;
+    flex-direction: column;
     background: linear-gradient(165deg, rgba(8, 10, 18, 0.97), rgba(4, 6, 14, 0.99)) !important;
     color-scheme: dark;
     color: #e2e8f0;
@@ -9054,6 +9066,7 @@ td.td-chk.frozen-day {
     box-shadow: 0 0 40px rgba(0,0,0,0.7), 0 0 80px rgba(16,185,129,0.08), inset 0 1px 0 rgba(255,255,255,0.06);
     overflow: hidden;
     position: relative;
+    margin: auto;
     animation: pomoSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @keyframes pomoSlideIn {
@@ -9080,6 +9093,7 @@ td.td-chk.frozen-day {
     background: linear-gradient(90deg, rgba(16,185,129,0.06), transparent);
     position: relative;
     z-index: 2;
+    flex-shrink: 0;
 }
 .pomo-hud-header::after {
     content: '';
@@ -9124,16 +9138,36 @@ td.td-chk.frozen-day {
 }
 
 .pomo-modal-body {
-    padding: 20px 22px 28px;
+    padding: 18px 20px 28px;
     display: flex;
     flex-direction: column;
     gap: 18px;
     align-items: center;
     position: relative;
     z-index: 2;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
 }
 
-.pomo-habit-picker-row { width: 100%; display: flex; flex-direction: column; gap: 6px; }
+.pomo-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+.pomo-modal-body::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+}
+.pomo-modal-body::-webkit-scrollbar-thumb {
+    background: rgba(16, 185, 129, 0.3);
+    border-radius: 4px;
+}
+.pomo-modal-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(16, 185, 129, 0.6);
+}
+
+.pomo-habit-picker-row { width: 100%; display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
 .pomo-label {
     font-family: var(--font-heading);
     font-size: 10.5px; font-weight: 800;
@@ -9623,11 +9657,22 @@ td.td-chk.frozen-day {
 }
 
 @media (max-width: 600px) {
-    .pomo-modal-futuristic { width: 96%; }
-    .pomo-timer-wrap { width: 270px; height: 270px; }
-    .pomo-ring-glow { width: 230px; height: 230px; }
-    .pomo-orbit-ring { width: 250px; height: 250px; }
-    .pomo-time-display { font-size: 44px; letter-spacing: 4px; }
+    .modal-bg.pomo-modal-bg {
+        padding: 10px 6px calc(24px + env(safe-area-inset-bottom, 0px));
+        align-items: flex-start;
+    }
+    .pomo-modal-futuristic {
+        width: 96%;
+        max-height: 94vh;
+        max-height: 94dvh;
+        border-radius: 16px;
+    }
+    .pomo-hud-header { padding: 12px 16px; }
+    .pomo-modal-body { padding: 14px 14px 20px; gap: 14px; }
+    .pomo-timer-wrap { width: 260px; height: 260px; }
+    .pomo-ring-glow { width: 220px; height: 220px; }
+    .pomo-orbit-ring { width: 240px; height: 240px; }
+    .pomo-time-display { font-size: 40px; letter-spacing: 3px; }
     .pomo-mode-btn { font-size: 10px; padding: 8px 4px; }
     .pomo-channels-grid { grid-template-columns: 1fr; gap: 8px; }
     .pomo-soundscape-panel.pomo-mixer-station { padding: 12px; }
