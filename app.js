@@ -7221,13 +7221,13 @@ function getVerticalTOCInPageHTML(docData, pages) {
 
     docData.chapters.forEach((chap, cIdx) => {
         const sections = Array.isArray(chap.sections) ? chap.sections : [];
-        const chapRange = (chap.startPage && chap.endPage) ? `Trang ${chap.startPage} - ${chap.endPage}` : '';
+        const chapRange = (chap.startPage && chap.endPage) ? `Trang ${chap.startPage} - ${chap.endPage}` : (chap.startPage ? `Trang ${chap.startPage}` : '');
         
         let secHtml = '';
         sections.forEach((sec) => {
             const pageObj = (pages || []).find(p => p.type === 'section' && p.secId === sec.id) || {};
             const targetPageIdx = pageObj.pageIndex || 1;
-            const pRange = sec.startPage ? `Trang ${sec.startPage}` : '';
+            const pRange = (sec.startPage && sec.endPage) ? `Trang ${sec.startPage} - ${sec.endPage}` : (sec.startPage ? `Trang ${sec.startPage}` : '');
             secHtml += `
                 <div class="dr-vtoc-item" onclick="window._navigateDocPage(${targetPageIdx})">
                     <div class="dr-vtoc-item-left">
@@ -7291,14 +7291,14 @@ function renderDocTocDrawer(docData, pages) {
     (docData.chapters || []).forEach((chap, cIdx) => {
         const chapTitle = chap.title || `Chương ${cIdx + 1}`;
         const sections = Array.isArray(chap.sections) ? chap.sections : [];
-        const chapRange = (chap.startPage && chap.endPage) ? `Trang ${chap.startPage} - ${chap.endPage}` : '';
+        const chapRange = (chap.startPage && chap.endPage) ? `Trang ${chap.startPage} - ${chap.endPage}` : (chap.startPage ? `Trang ${chap.startPage}` : '');
 
         let secItemsHtml = '';
         sections.forEach((sec) => {
             const pageObj = (pages || []).find(p => p.type === 'section' && p.secId === sec.id);
             const targetPageIdx = pageObj ? pageObj.pageIndex : 1;
             const isActive = targetPageIdx === currentReadingPageIdx;
-            const pRange = sec.startPage ? `Trang ${sec.startPage}` : '';
+            const pRange = (sec.startPage && sec.endPage) ? `Trang ${sec.startPage} - ${sec.endPage}` : (sec.startPage ? `Trang ${sec.startPage}` : '');
             secItemsHtml += `
                 <div class="dr-toc-sec-item ${isActive ? 'active' : ''}" onclick="window._navigateDocPage(${targetPageIdx})">
                     <div class="dr-toc-sec-title-wrap">
