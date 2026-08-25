@@ -11907,184 +11907,206 @@ td.td-chk.frozen-day {
     }
 }
 
-/* ==================== HABIT MASTERY - BOOK COVER DESIGN SYSTEM ==================== */
-.hm-book-cover-mini {
-    width: 52px;
-    height: 60px;
+/* ==================== HABIT MASTERY - COMPLETE FULL BOOK COVER DESIGN SYSTEM ==================== */
+/* Exact 1:1 Implementation from user design: Bìa sách v2.dc.html */
+
+.hm-full-book-cover {
     position: relative;
     overflow: hidden;
-    border-radius: 4px 9px 9px 4px;
     background: #05050A;
-    box-shadow: inset 0 0 0 1px rgba(233,197,107,.45), 0 6px 16px rgba(0,0,0,.6);
+    box-shadow: inset 0 0 0 1px rgba(233,197,107,.45), 0 12px 30px rgba(0,0,0,.66);
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    box-sizing: border-box;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-.doc-card:hover .hm-book-cover-mini {
-    transform: scale(1.05);
-    box-shadow: inset 0 0 0 1px rgba(233,197,107,.75), 0 8px 22px rgba(233,197,107,.25);
+.doc-card:hover .hm-full-book-cover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: inset 0 0 0 1px rgba(233,197,107,.8), 0 16px 36px rgba(233,197,107,.2);
 }
 
-.hm-bcm-spine {
+/* Spine stripe on left */
+.hm-fbc-spine {
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    width: 5px;
+    width: 3.5px;
     background: repeating-linear-gradient(180deg, rgba(233,197,107,.9) 0 4px, rgba(233,197,107,.14) 4px 8px);
-    border-right: 1px solid rgba(233,197,107,.35);
     z-index: 2;
 }
 
-.hm-bcm-glow {
+.hm-fbc-spine-line {
+    position: absolute;
+    left: 3.5px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(233,197,107,.34);
+    z-index: 2;
+}
+
+/* Radial Golden Glow in center */
+.hm-fbc-radial-glow {
     position: absolute;
     left: calc(50% + 2px);
-    top: 50%;
-    width: 48px;
-    height: 48px;
+    top: 48%;
+    width: 80%;
+    height: 70%;
     transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(233,197,107,.22), transparent 70%);
+    background: radial-gradient(circle, rgba(233,197,107,.18), transparent 66%);
     pointer-events: none;
+    z-index: 1;
 }
 
-.hm-bcm-dial {
+/* Inner golden frame */
+.hm-fbc-frame {
     position: absolute;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    opacity: 0.55;
-    background: repeating-conic-gradient(from 0deg, #E9C56B 0deg 0.5deg, transparent 0.5deg 15deg);
-    -webkit-mask: radial-gradient(circle, transparent 0 15px, #000 15px 19px, transparent 19px);
-    mask: radial-gradient(circle, transparent 0 15px, #000 15px 19px, transparent 19px);
+    inset: 3.5% 4% 3.5% 6%;
+    border: 1px solid rgba(233,197,107,.15);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Corner brackets */
+.hm-fbc-corner.tl {
+    position: absolute;
+    left: 6%;
+    top: 3.5%;
+    width: 7px;
+    height: 7px;
+    border-left: 1px solid rgba(233,197,107,.85);
+    border-top: 1px solid rgba(233,197,107,.85);
+    z-index: 3;
     pointer-events: none;
 }
 
-.hm-bcm-emblem {
-    position: relative;
+.hm-fbc-corner.br {
+    position: absolute;
+    right: 4%;
+    bottom: 3.5%;
+    width: 7px;
+    height: 7px;
+    border-right: 1px solid rgba(233,197,107,.85);
+    border-bottom: 1px solid rgba(233,197,107,.85);
     z-index: 3;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 2px;
+    pointer-events: none;
 }
 
-.hm-bcm-emblem svg {
-    width: 100%;
-    height: 100%;
-    max-width: 30px;
-    max-height: 30px;
-    display: block;
-    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.6));
-}
-
-/* Medium Book Cover (Reader Banner / Showcase) */
-.hm-book-cover-medium {
-    width: 110px;
-    height: 126px;
+/* Content Flex Layout */
+.hm-fbc-content {
     position: relative;
-    overflow: hidden;
-    border-radius: 4px 11px 11px 4px;
-    background: #05050A;
-    box-shadow: inset 0 0 0 1px rgba(233,197,107,.45), 0 14px 32px rgba(0,0,0,.7);
-    flex-shrink: 0;
+    z-index: 4;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 8px 6px 8px 12px;
+    justify-content: space-between;
     box-sizing: border-box;
+    padding: 8% 7% 7% 10%;
 }
 
-.hm-book-cover-medium .hm-bcm-spine {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 8px;
-    background: repeating-linear-gradient(180deg, rgba(233,197,107,.9) 0 6px, rgba(233,197,107,.14) 6px 12px);
-    border-right: 1px solid rgba(233,197,107,.35);
-    z-index: 2;
+/* Top Kicker */
+.hm-fbc-kicker-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
 }
 
-.hm-book-cover-medium .hm-bcm-glow {
-    position: absolute;
-    left: calc(50% + 4px);
-    top: 50%;
-    width: 90px;
-    height: 90px;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(233,197,107,.16), transparent 66%);
-    pointer-events: none;
+.hm-fbc-kicker-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(233,197,107,.45));
 }
 
-.hm-book-cover-medium .hm-bcm-border {
-    position: absolute;
-    inset: 4px 4px 4px 10px;
-    border: 1px solid rgba(233,197,107,.18);
-    pointer-events: none;
+.hm-fbc-kicker-line.r {
+    background: linear-gradient(270deg, transparent, rgba(233,197,107,.45));
 }
 
-.hm-book-cover-medium .hm-bcm-kicker {
-    font-family: 'Exo 2', sans-serif;
-    font-size: 7.5px;
-    font-weight: 600;
-    letter-spacing: 0.25em;
+.hm-fbc-kicker {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 6.5px;
+    font-weight: 500;
+    letter-spacing: .25em;
     text-transform: uppercase;
     color: rgba(233,197,107,.75);
-    margin-bottom: 2px;
-    position: relative;
-    z-index: 3;
+    white-space: nowrap;
 }
 
-.hm-book-cover-medium .hm-bcm-dial-wrap {
+/* Central Emblem & Dial */
+.hm-fbc-emblem-wrap {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
     width: 100%;
+    min-height: 0;
 }
 
-.hm-book-cover-medium .hm-bcm-dial {
-    position: absolute;
-    width: 58px;
-    height: 58px;
-    border-radius: 50%;
-    opacity: 0.55;
-    background: repeating-conic-gradient(from 0deg, #E9C56B 0deg 0.5deg, transparent 0.5deg 15deg);
-    -webkit-mask: radial-gradient(circle, transparent 0 22px, #000 22px 26px, transparent 26px);
-    mask: radial-gradient(circle, transparent 0 22px, #000 22px 26px, transparent 26px);
-    pointer-events: none;
-}
-
-.hm-book-cover-medium .hm-bcm-emblem {
+.hm-fbc-dial-container {
     position: relative;
-    z-index: 3;
-    width: 42px;
-    height: 42px;
+    width: 54%;
+    aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.hm-book-cover-medium .hm-bcm-emblem svg {
-    max-width: 42px;
-    max-height: 42px;
-    display: block;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+.hm-fbc-dial-ticks {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    opacity: .55;
+    background: repeating-conic-gradient(from 0deg, #E9C56B 0deg .5deg, transparent .5deg 15deg);
+    -webkit-mask: radial-gradient(circle, transparent 0 42%, #000 42% 46%, transparent 46%);
+    mask: radial-gradient(circle, transparent 0 42%, #000 42% 46%, transparent 46%);
 }
 
-.hm-book-cover-medium .hm-bcm-title {
-    font-family: 'Exo 2', sans-serif;
-    font-weight: 700;
-    font-size: 8.5px;
-    line-height: 1.1;
-    letter-spacing: 0.04em;
+.hm-fbc-dial-inner-ring {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 78%;
+    height: 78%;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(233,197,107,.26);
+    border-radius: 50%;
+}
+
+.hm-fbc-svg-box {
+    position: relative;
+    z-index: 5;
+    width: 52%;
+    height: 52%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hm-fbc-svg-box svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.6));
+}
+
+/* Bottom Title Section */
+.hm-fbc-title-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+}
+
+.hm-fbc-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-weight: 600;
+    font-size: 7.5px;
+    line-height: 1.15;
+    letter-spacing: .03em;
     text-transform: uppercase;
     text-align: center;
     color: #E9C56B;
@@ -12092,21 +12114,88 @@ td.td-chk.frozen-day {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    position: relative;
-    z-index: 3;
+}
+
+.hm-fbc-subtitle {
+    font-size: 5px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: rgba(233,197,107,.5);
+    text-align: center;
+    line-height: 1.2;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hm-fbc-numeral-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
     margin-top: 1px;
 }
 
-.hm-book-cover-medium .hm-bcm-numeral {
-    font-family: 'Exo 2', sans-serif;
-    font-size: 6.5px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    color: rgba(233,197,107,.6);
-    position: relative;
-    z-index: 3;
-    margin-top: 1px;
+.hm-fbc-numeral-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(233,197,107,.22);
 }
+
+.hm-fbc-numeral {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 5.5px;
+    font-weight: 500;
+    letter-spacing: .15em;
+    color: rgba(233,197,107,.6);
+}
+
+/* ==================== SIZES ==================== */
+/* 1. Shop Card Size (Bìa Sách Đầy Đủ trong Shop) */
+.hm-full-book-cover.cover-shop {
+    width: 90px;
+    height: 104px;
+    border-radius: 4px 10px 10px 4px;
+}
+
+/* 2. Backpack Size */
+.hm-full-book-cover.cover-backpack {
+    width: 82px;
+    height: 94px;
+    border-radius: 3px 8px 8px 3px;
+}
+
+/* 3. Large Reader Banner Size */
+.hm-full-book-cover.cover-reader {
+    width: 180px;
+    height: 207px;
+    border-radius: 5px 14px 14px 5px;
+    box-shadow: inset 0 0 0 1px rgba(233,197,107,.45), 0 22px 54px rgba(0,0,0,.66);
+}
+
+.hm-full-book-cover.cover-reader .hm-fbc-spine {
+    width: 6px;
+}
+
+.hm-full-book-cover.cover-reader .hm-fbc-kicker {
+    font-size: 8.5px;
+}
+
+.hm-full-book-cover.cover-reader .hm-fbc-title {
+    font-size: 14px;
+    white-space: normal;
+}
+
+.hm-full-book-cover.cover-reader .hm-fbc-subtitle {
+    font-size: 7px;
+    white-space: normal;
+}
+
+.hm-full-book-cover.cover-reader .hm-fbc-numeral {
+    font-size: 7px;
+}
+
 
 
 
