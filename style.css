@@ -11090,14 +11090,17 @@ td.td-chk.frozen-day {
 .doc-reader-body {
     flex: 1;
     overflow-y: auto;
-    padding: 28px 36px;
-    line-height: 1.85;
-    font-size: 1em;
+    padding: 36px 28px 90px 28px;
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.95;
+    color: #e2e8f0;
     scroll-behavior: smooth;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    background: #070a0f;
 }
 
 .dr-book-cover-banner {
@@ -11150,8 +11153,8 @@ td.td-chk.frozen-day {
 }
 
 .dr-quote-box {
-    background: rgba(255, 255, 255, 0.03);
-    border-left: 4px solid #f59e0b;
+    background: rgba(233, 197, 107, 0.06);
+    border-left: 3.5px solid #E9C56B;
     border-radius: 0 12px 12px 0;
     padding: 16px 20px;
     margin-bottom: 30px;
@@ -11163,18 +11166,19 @@ td.td-chk.frozen-day {
 .dr-quote-symbol {
     font-size: 32px;
     line-height: 1;
-    color: #f59e0b;
-    opacity: 0.6;
+    color: #E9C56B;
+    opacity: 0.8;
 }
 
 .dr-quote-body {
     font-style: italic;
-    font-size: 14.5px;
-    line-height: 1.6;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #F7E7B4;
 }
 
 .dr-content-container {
-    max-width: 760px;
+    max-width: 740px;
     margin: 0 auto;
 }
 
@@ -11183,66 +11187,78 @@ td.td-chk.frozen-day {
 }
 
 .dr-chapter-header {
-    margin-bottom: 18px;
+    margin-bottom: 20px;
     padding-bottom: 12px;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
 }
 
-.dr-chapter-pill {
-    display: inline-block;
-    font-family: var(--font-heading);
-    font-size: 10.5px;
-    font-weight: 800;
-    color: var(--accent);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-bottom: 4px;
+/* Book Paragraphs */
+.dr-p {
+    margin: 0 0 22px 0;
+    font-size: 1.06rem;
+    line-height: 1.95;
+    color: #cbd5e1;
+    text-align: justify;
+    letter-spacing: 0.012em;
 }
 
-.dr-chapter-title {
-    font-family: var(--font-heading);
-    font-size: 20px;
-    font-weight: 800;
-    margin: 0;
-    color: #f8fafc;
-}
-
-.dr-chapter-content p {
-    margin: 0 0 16px;
-    font-size: 15px;
-}
-
-.dr-chapter-content p.dr-lead {
-    font-size: 16.5px;
-    font-weight: 500;
-    line-height: 1.75;
-}
-
-.dr-chapter-content h4, .dr-chapter-content h4.dr-subheading {
-    font-family: var(--font-heading);
-    font-size: 16px;
-    font-weight: 800;
-    margin: 24px 0 10px;
-    color: #fbbf24;
-}
-
-.dr-chapter-content ul, .dr-chapter-content ol {
-    margin: 0 0 20px;
-    padding-left: 24px;
-}
-
-.dr-chapter-content li {
-    margin-bottom: 8px;
-    font-size: 14.5px;
-}
-
-.dr-chapter-content blockquote {
-    margin: 20px 0;
-    padding: 12px 20px;
-    background: rgba(255, 255, 255, 0.04);
-    border-left: 3px solid var(--accent);
+.dr-p-quote {
+    margin: 28px 0;
+    padding: 16px 22px;
+    background: rgba(233, 197, 107, 0.08);
+    border-left: 3.5px solid #E9C56B;
+    border-radius: 0 12px 12px 0;
+    color: #F7E7B4;
     font-style: italic;
-    border-radius: 0 8px 8px 0;
+    font-size: 1.04rem;
+    line-height: 1.85;
+}
+
+.dr-section-subtitle {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #E9C56B;
+    margin: 36px 0 18px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(233, 197, 107, 0.25);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* Sepia Theme */
+[data-theme="sepia"] .doc-reader-body {
+    background: #F6EED9 !important;
+    color: #2B2114 !important;
+}
+[data-theme="sepia"] .dr-p {
+    color: #2D2418 !important;
+}
+[data-theme="sepia"] .dr-p-quote {
+    background: rgba(180, 130, 60, 0.12) !important;
+    border-left-color: #A06B20 !important;
+    color: #5C3A0A !important;
+}
+[data-theme="sepia"] .dr-section-subtitle {
+    color: #8C5915 !important;
+    border-bottom-color: rgba(140, 89, 21, 0.25) !important;
+}
+
+/* Light Theme */
+[data-theme="light"] .doc-reader-body {
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+}
+[data-theme="light"] .dr-p {
+    color: #1E293B !important;
+}
+[data-theme="light"] .dr-p-quote {
+    background: #F1F5F9 !important;
+    border-left-color: #0284C7 !important;
+    color: #0F172A !important;
+}
+[data-theme="light"] .dr-section-subtitle {
+    color: #0369A1 !important;
+    border-bottom-color: rgba(3, 105, 161, 0.25) !important;
 }
 
 .dr-callout {

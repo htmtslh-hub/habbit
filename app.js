@@ -7273,16 +7273,14 @@ function renderDocChapter(chapterIdx, targetSecId = null) {
     const sections = Array.isArray(chap.sections) ? chap.sections : [];
 
     sections.forEach((sec, sIdx) => {
-        const pRange = (sec.startPage && sec.endPage) ? `Trang ${sec.startPage} - ${sec.endPage} (Tài liệu gốc)` : '';
+        const isGenericTitle = !sec.title || sec.title.startsWith('Mục ') || sec.title.startsWith('Phần ') || sec.title.includes('Từ trang');
         sectionsHtml += `
             <article class="dr-chapter" id="${sec.id || `sec_${chapterIdx}_${sIdx}`}">
-                <div class="dr-chapter-header">
-                    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:4px;">
-                        <span class="dr-chapter-pill">${chap.shortTitle || `CHƯƠNG ${chapterIdx}`}</span>
-                        ${pRange ? `<span style="font-size:11px; color:var(--text-muted); font-family:var(--font-heading);">${pRange}</span>` : ''}
+                ${(!isGenericTitle && sIdx > 0) ? `
+                    <div class="dr-chapter-header">
+                        <h3 class="dr-section-subtitle">${sec.title}</h3>
                     </div>
-                    <h2 class="dr-chapter-title">${sec.title}</h2>
-                </div>
+                ` : ''}
                 <div class="dr-chapter-content">
                     ${sec.content}
                 </div>
@@ -7305,7 +7303,7 @@ function renderDocChapter(chapterIdx, targetSecId = null) {
             ` : '<div></div>'}
             
             <button class="dr-nav-btn toc-center-btn" onclick="window._toggleDocToc(true)">
-                📑 Mục Lục Chi Tiết (218 Trang)
+                📑 Mục Lục Cuốn Sách
             </button>
 
             ${hasNext ? `
