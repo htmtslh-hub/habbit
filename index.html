@@ -17,7 +17,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Saira:wght@300;400;500&family=Exo+2:wght@300;500;600;700&family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=5.2.7">
+    <link rel="stylesheet" href="style.css?v=5.2.8">
 
     <!-- Firebase SDK (CDN) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -712,29 +712,35 @@
 
     <!-- DOCUMENT READER MODAL -->
     <div class="modal-bg doc-reader-modal-bg" id="docReaderModalBg">
-        <div class="doc-reader-modal" id="docReaderModal">
+        <div class="doc-reader-modal foxit-reader-modal" id="docReaderModal">
             <!-- Reading Progress Bar -->
             <div class="dr-progress-bar-wrap">
                 <div class="dr-progress-bar" id="drProgressBar" style="width: 0%;"></div>
             </div>
 
-            <header class="doc-reader-header">
+            <header class="doc-reader-header foxit-header">
                 <div class="dr-header-left">
-                    <div class="dr-book-badge" id="drBadge">BẢN ĐỦ 218 TRANG</div>
-                    <div class="dr-title-wrap">
-                        <h3 class="dr-book-title" id="drBookTitle">Tuyệt Mật Nhân Tính</h3>
-                        <span class="dr-book-category" id="drBookCategory">Tâm Lý Học Hành Vi & Đối Nhân Xử Thế</span>
-                    </div>
-                </div>
-                <div class="dr-header-actions">
-                    <button class="dr-ctrl-btn dr-toc-btn" id="drTocBtn" title="Mục Lục Chi Tiết">
+                    <button class="dr-ctrl-btn dr-toc-btn" id="drTocBtn" title="Đóng/Mở Mục Lục" onclick="window._toggleFoxitSidebar()">
                         <svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>
                         <span class="dr-btn-text">Mục Lục</span>
                     </button>
-                    <button class="dr-ctrl-btn dr-search-btn" id="drSearchBtn" title="Tìm kiếm trong sách">
-                        <svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>
-                        <span class="dr-btn-text">Tìm</span>
-                    </button>
+                    <div class="dr-title-wrap">
+                        <h3 class="dr-book-title" id="drBookTitle">Tuyệt Mật Nhân Tính</h3>
+                        <span class="dr-book-category" id="drBookCategory">Tâm Lý Học Hành Vi</span>
+                    </div>
+                </div>
+
+                <!-- Foxit Quick Page Switcher in Toolbar -->
+                <div class="foxit-toolbar-nav">
+                    <button class="dr-ctrl-btn foxit-nav-arrow" id="foxitPrevBtn" title="Trang trước (←)" onclick="window._foxitPrevPage()">◀</button>
+                    <div class="foxit-page-box">
+                        <input type="number" id="foxitPageInput" min="1" max="218" value="1" onchange="window._foxitGoToPage(this.value)" onkeydown="if(event.key==='Enter') window._foxitGoToPage(this.value)" />
+                        <span class="foxit-page-total">/ <span id="foxitTotalPages">218</span></span>
+                    </div>
+                    <button class="dr-ctrl-btn foxit-nav-arrow" id="foxitNextBtn" title="Trang sau (→)" onclick="window._foxitNextPage()">▶</button>
+                </div>
+
+                <div class="dr-header-actions">
                     <div class="dr-font-controls">
                         <button class="dr-ctrl-btn" id="drFontDec" title="Thu nhỏ chữ">A-</button>
                         <span class="dr-font-size-label" id="drFontSizeLabel">100%</span>
@@ -746,38 +752,33 @@
                 </div>
             </header>
 
-            <!-- Chapter Navigation Tabs Bar -->
-            <div class="dr-chapter-tabs-bar" id="drChapterTabsBar"></div>
-
-            <!-- In-Reader Search Bar & Dropdown Results -->
-            <div class="dr-search-bar" id="drSearchBar" style="display:none;">
-                <svg class="rune-inline rune-xs dr-search-icon" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>
-                <input type="text" id="drSearchInput" placeholder="Tìm kiếm từ khóa trong 218 trang..." />
-                <span class="dr-search-stats" id="drSearchStats"></span>
-                <button class="dr-search-close-btn" id="drSearchCloseBtn" title="Đóng tìm kiếm">✕</button>
-            </div>
-            <div class="dr-search-results" id="drSearchResults" style="display:none;"></div>
-
-            <!-- Reader Body (Chapters & Sections) -->
-            <div class="doc-reader-body" id="docReaderBody">
-                <!-- Dynamic Content injected via app.js -->
-            </div>
-
-            <!-- Slide-in Table of Contents (TOC) Drawer -->
-            <div class="dr-toc-backdrop" id="drTocBackdrop"></div>
-            <div class="dr-toc-drawer" id="drTocDrawer">
-                <div class="dr-toc-header">
-                    <div class="dr-toc-header-title">
-                        <svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>
-                        <span>MỤC LỤC CHI TIẾT (218 TRANG)</span>
+            <!-- Foxit Split Workspace (Sidebar + Canvas) -->
+            <div class="foxit-workspace" id="foxitWorkspace">
+                <!-- Sidebar TOC (Collapsible) -->
+                <aside class="foxit-sidebar" id="foxitSidebar">
+                    <div class="foxit-sidebar-header">
+                        <div class="foxit-sidebar-title">
+                            <svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>
+                            <span>MỤC LỤC SÁCH</span>
+                        </div>
+                        <button class="foxit-sidebar-close-btn" onclick="window._toggleFoxitSidebar(false)" title="Thu gọn sidebar">✕</button>
                     </div>
-                    <button class="dr-toc-close" id="drTocClose" title="Đóng mục lục">✕</button>
-                </div>
-                <div class="dr-toc-search-wrap">
-                    <input type="text" id="drTocFilterInput" placeholder="Lọc chương & phần..." />
-                </div>
-                <div class="dr-toc-list" id="drTocList"></div>
+                    <div class="foxit-sidebar-search">
+                        <input type="text" id="foxitTocFilter" placeholder="🔍 Tìm đề mục & trang..." oninput="window._filterFoxitToc(this.value)" />
+                    </div>
+                    <div class="foxit-bookmarks-tree" id="foxitBookmarksTree"></div>
+                </aside>
+
+                <!-- Main Sheet Canvas -->
+                <main class="foxit-main-canvas" id="foxitMainCanvas">
+                    <div class="foxit-page-sheet" id="foxitPageSheet">
+                        <!-- Dynamic page content rendered here -->
+                    </div>
+                </main>
             </div>
+
+            <!-- Legacy container fallback -->
+            <div class="doc-reader-body" id="docReaderBody" style="display:none;"></div>
 
             <footer class="doc-reader-footer">
                 <div class="dr-footer-left">
@@ -1233,12 +1234,12 @@
     </div>
 
     <!-- SCRIPTS -->
-    <script src="gotiengviet.js?v=5.2.7"></script>
-    <script src="nameplate_templates.js?v=5.2.7"></script>
-    <script src="avatar_frames.js?v=5.2.7"></script>
-    <script src="book_covers.js?v=5.2.7"></script>
-    <script src="doc_nhan_tinh_data.js?v=5.2.7"></script>
-    <script src="all_books_data.js?v=5.2.7"></script>
-    <script src="app.js?v=5.2.7"></script>
+    <script src="gotiengviet.js?v=5.2.8"></script>
+    <script src="nameplate_templates.js?v=5.2.8"></script>
+    <script src="avatar_frames.js?v=5.2.8"></script>
+    <script src="book_covers.js?v=5.2.8"></script>
+    <script src="doc_nhan_tinh_data.js?v=5.2.8"></script>
+    <script src="all_books_data.js?v=5.2.8"></script>
+    <script src="app.js?v=5.2.8"></script>
 </body>
 </html>

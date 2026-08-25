@@ -7,8 +7,12 @@
 ## 📌 1. THÔNG TIN DỰ ÁN & TRIỂN KHAI
 - **Tên ứng dụng**: **Habit Mastery** (Ứng dụng Rèn luyện Thói quen & Game hóa Kỷ luật)
 - **Công nghệ cốt lõi**: HTML5, Vanilla CSS3 (Design System chuẩn Dark/Light Mode), Vanilla JavaScript (ES6+), Firebase (Authentication, Firestore, Hosting), PWA (Service Worker), Vercel Production.
-- **Phiên bản Cache / Scripts**: `v=5.2.7` (trong `index.html`) & Service Worker `5.2.7` (trong `sw.js`)
-- **Trải Nghiệm Đọc Sách Từng Trang Gọn Gàng (Paginated Reader v5.2.7)**: Mỗi tiểu mục/chương được tách thành một trang đọc riêng biệt, vừa vặn màn hình, có thanh lật trang `[← Trang trước]` `[Trang sau →]` và phím tắt `ArrowLeft` / `ArrowRight`. Bảng Mục Lục Tổng Quan chỉ xuất hiện ở Trang Đầu tiên (Trang 0) và trong Drawer bên hông khi cần tra cứu.
+- **Phiên bản Cache / Scripts**: `v=5.2.8` (trong `index.html`) & Service Worker `5.2.8` (trong `sw.js`)
+- **Giao Diện Đọc Sách Chuẩn Foxit Reader Cao Cấp (v5.2.8)**: 
+  * Thanh Toolbar trên cùng: Nút Toggle Mục Lục, Hộp nhảy trang tức thì `[◀] Trang [ 1 ] / 218 [▶]`, chỉnh cỡ chữ A-/A+, đổi theme giấy đọc (Sepia/Dark/Light/OLED), toàn màn hình.
+  * Sidebar Mục Lục Dạng Cây Trái (Foxit Bookmarks Tree): Sắp xếp phân cấp khoa học theo từng chương và tiểu mục kèm số trang chính xác, có ô tìm kiếm lọc nhanh đề mục.
+  * Khung Đọc Giấy Sách (Page Sheet Canvas): Hiển thị nội dung từng trang một (hoặc từng bài đọc) mô phỏng trang giấy thật, làm sạch 100% rác header/footer PDF, căn lề chuẩn mực.
+  * Điều hướng lật trang bằng chuột và phím tắt `ArrowLeft` / `ArrowRight`.
 - **Kho mã nguồn (GitHub)**: `https://github.com/htmtslh-hub/habbit.git` (Nhánh `main`)
 - **Biểu tượng tiền tệ**: **Prism Nexus Coin** (Phương án 1) — Đồng xu tròn viền vàng hoàng kim công nghệ, lõi Lăng Kính Kim Cương Ngọc Bích (Emerald & Cyan Neon) tỏa sáng, thay thế hoàn toàn chữ text "DP" trên toàn hệ thống.
 - **Địa chỉ Production đang hoạt động**:
