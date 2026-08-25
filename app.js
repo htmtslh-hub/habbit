@@ -3738,7 +3738,8 @@ window._openCommunity = async function() {
         if (nameEl) nameEl.textContent = displayName;
         if (badgeEl) badgeEl.textContent = rank.realmName ? `Bước thứ ${rank.step} - ${rank.realmName}` : getRankTierName(rank);
         if (avatarMini && window.getAvatarHTML) {
-            const imgUrl = currentUser.photoURL || `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>`;
+            const customAva = getUserAvatar(currentUser);
+            const imgUrl = customAva || `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>`;
             avatarMini.innerHTML = window.getAvatarHTML(rank.level, imgUrl, 36);
         }
     }
@@ -3789,7 +3790,7 @@ window._submitComment = async function(postId) {
         id: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
         uid: currentUser.uid,
         displayName: currentUser.displayName || currentUser.email?.split('@')[0] || 'User',
-        photoURL: currentUser.photoURL || '',
+        photoURL: getUserAvatar(currentUser) || '',
         equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
         rankLevel: rank.level,
         realmName: rank.realmName || '',
@@ -4003,7 +4004,7 @@ window._submitCmPost = async () => {
         await db.collection('community_posts').add({
             uid: currentUser.uid,
             displayName: currentUser.displayName || currentUser.email?.split('@')[0] || 'User',
-            photoURL: currentUser.photoURL || '',
+            photoURL: getUserAvatar(currentUser) || '',
             equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
             userDP: dp,
             rankLevel: rank.level,
@@ -4149,7 +4150,9 @@ function renderRankTiersShowcase() {
     const isAdmin = userPlan && userPlan.role === 'admin';
     const myDP = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
     const myRank = getRankLevel(myDP);
-    const imgUrl = currentUser?.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser?.displayName||currentUser?.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
+    const customAva = getUserAvatar(currentUser);
+    const imgUrl = customAva || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser?.displayName||currentUser?.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
+    const myDisplayName = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User';
 
     let html = `
         <div style="width:100%; max-width:540px; margin:0 auto 20px auto; text-align:center; padding:0 12px;">
@@ -4194,7 +4197,7 @@ function renderRankTiersShowcase() {
     RANK_TIERS.forEach((tier, idx) => {
         const level = idx + 1;
         const achieved = myDP >= tier.minDp;
-        const cardHtml = window.getFullRankCardHTML ? window.getFullRankCardHTML(level, imgUrl, 0.65, currentUser?.displayName || 'User', getRankTierName(tier)) : '';
+        const cardHtml = window.getFullRankCardHTML ? window.getFullRankCardHTML(level, imgUrl, 0.65, myDisplayName, getRankTierName(tier)) : '';
         const coinIcon = window.getCoinIconHTML ? window.getCoinIconHTML('xs') : '';
         const dpText = `${tier.minDp.toLocaleString()} ${coinIcon}${tier.maxDp !== Infinity ? ` – ${tier.maxDp.toLocaleString()} ${coinIcon}` : '+'}`;
         
@@ -5321,6 +5324,8 @@ function initProfileModal() {
 function renderFramesGrid(currentLevel, imgUrl = '') {
     const grid = document.getElementById('framesGrid');
     if (!grid) return;
+    const finalImgUrl = imgUrl || getUserAvatar(currentUser) || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser?.displayName||currentUser?.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
+    const myDisplayName = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User';
     let html = '';
     for (let i = 1; i <= 10; i++) {
         const isUnlocked = currentLevel >= i;
@@ -5331,9 +5336,9 @@ function renderFramesGrid(currentLevel, imgUrl = '') {
         
         let frameHTML = '';
         if (window.getFullRankCardHTML) {
-            frameHTML = window.getFullRankCardHTML(i, imgUrl, 0.5, currentUser?.displayName || 'User', 'Mẫu ' + i);
+            frameHTML = window.getFullRankCardHTML(i, finalImgUrl, 0.5, myDisplayName, 'Mẫu ' + i);
         } else if (window.getAvatarHTML) {
-            frameHTML = window.getAvatarHTML(i, imgUrl, 56);
+            frameHTML = window.getAvatarHTML(i, finalImgUrl, 56);
         }
         
         html += `<div class="${classes}" onclick="if(${isUnlocked}) window._setProfileFrame(${i})">
@@ -5416,6 +5421,9 @@ async function saveUserAvatar(photoURL) {
         // 5. Update UI everywhere
         showUserProfile(currentUser);
         if (window._updateProfileModalUI) window._updateProfileModalUI();
+        if (typeof renderRankTiersShowcase === 'function' && document.getElementById('rankTiersContainer')) {
+            renderRankTiersShowcase();
+        }
         
         savingToast.remove();
         
@@ -5620,7 +5628,8 @@ function openAvatarStudio() {
             const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (currentUser && currentUser.email === 'admin@gmail.com');
             const dp = isAdmin ? 999999 : ((computed.totalDP || 0) + (userBonusDP || 0));
             const rank = typeof getRankLevel === 'function' ? getRankLevel(dp) : { level: 1 };
-            const imgUrl = currentUser.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser.displayName||currentUser.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
+            const customAva = getUserAvatar(currentUser);
+            const imgUrl = customAva || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser?.displayName||currentUser?.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
             let fHtml = '';
             for (let i = 1; i <= 10; i++) {
                 const isUnlocked = rank.level >= i;
@@ -7625,7 +7634,7 @@ async function renderSquadHubUI(targetTab = null) {
     const todayKey = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
     const myUid = currentUser ? currentUser.uid : 'local_user';
     const myName = currentUser ? (currentUser.displayName || currentUser.email?.split('@')[0] || 'User') : 'User';
-    const myAvatar = currentUser ? (currentUser.photoURL || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%236366f1'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(myName||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`) : '';
+    const myAvatar = currentUser ? (getUserAvatar(currentUser) || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%236366f1'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(myName||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`) : '';
 
     if (squadHubActiveTab === 'squads') {
         container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">⏳ Đang tải dữ liệu Tổ Đội...</div>';
@@ -7980,7 +7989,7 @@ async function createSquad() {
         members: [{
             uid: currentUser.uid,
             displayName: myName,
-            photoURL: currentUser.photoURL || '',
+            photoURL: getUserAvatar(currentUser) || '',
             equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
             todayChecked: false,
             lastCheckedDate: '',
@@ -8035,7 +8044,7 @@ async function joinSquadByCode() {
         const newMember = {
             uid: currentUser.uid,
             displayName: myName,
-            photoURL: currentUser.photoURL || '',
+            photoURL: getUserAvatar(currentUser) || '',
             equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
             todayChecked: false,
             lastCheckedDate: '',
@@ -8156,7 +8165,7 @@ async function createDuel() {
         challenger: {
             uid: currentUser.uid,
             displayName: myName,
-            photoURL: currentUser.photoURL || '',
+            photoURL: getUserAvatar(currentUser) || '',
             rankLevel: S.rankLevel || 1,
             equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
             daysChecked: 0,
@@ -8211,7 +8220,7 @@ async function acceptDuel(duelId, cost) {
     const opponentData = {
         uid: currentUser.uid,
         displayName: myName,
-        photoURL: currentUser.photoURL || '',
+        photoURL: getUserAvatar(currentUser) || '',
         rankLevel: S.rankLevel || 1,
         equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
         daysChecked: 0,
