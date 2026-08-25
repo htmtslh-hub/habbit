@@ -7084,8 +7084,7 @@ const DOC_CONTENT_MAP = {
 };
 
 let currentReadingDocId = null;
-let currentReadingChapterIdx = 0;
-let currentReadingSecId = null;
+let currentReadingPageIdx = 0;
 let docReaderFontSize = parseInt(localStorage.getItem('hg_doc_font_size') || '100', 10);
 let docReaderTheme = localStorage.getItem('hg_doc_theme') || 'dark'; // 'dark' | 'sepia' | 'light' | 'oled'
 
@@ -7099,6 +7098,44 @@ function getDocData(docId) {
     return DOC_CONTENT_MAP[docId] || null;
 }
 
+function getDocReadingPages(docData) {
+    if (!docData || !Array.isArray(docData.chapters)) return [];
+    const pages = [];
+    
+    // Page 0: Cover & Full Table of Contents
+    pages.push({
+        type: 'cover_toc',
+        pageIndex: 0,
+        title: 'Bìa Sách & Mục Lục Tổng Quan',
+        shortTitle: 'Mục Lục',
+        chapBadge: 'MỤC LỤC'
+    });
+
+    let pIdx = 1;
+    docData.chapters.forEach((chap, cIdx) => {
+        const sections = Array.isArray(chap.sections) ? chap.sections : [];
+        sections.forEach((sec, sIdx) => {
+            pages.push({
+                type: 'section',
+                pageIndex: pIdx++,
+                chapIdx: cIdx,
+                chapNum: chap.num || cIdx,
+                chapTitle: chap.title,
+                chapShortTitle: chap.shortTitle || chap.title,
+                chapBadge: chap.badge || `PHẦN ${cIdx}`,
+                secId: sec.id || `sec_${cIdx}_${sIdx}`,
+                title: sec.title,
+                startPage: sec.startPage,
+                endPage: sec.endPage,
+                quote: (sIdx === 0 ? (chap.quote || '') : ''),
+                content: sec.content
+            });
+        });
+    });
+
+    return pages;
+}
+
 function openDocReader(docId, targetChapterIdx = null, targetSecId = null) {
     currentReadingDocId = docId;
     const docObj = (SHOP_CATALOG.docs || []).find(d => d.id === docId);
@@ -7109,8 +7146,12 @@ function openDocReader(docId, targetChapterIdx = null, targetSecId = null) {
     const titleEl = document.getElementById('drBookTitle');
     const catEl = document.getElementById('drBookCategory');
     const badgeEl = document.getElementById('drBadge');
+    const tabsBar = document.getElementById('drChapterTabsBar');
 
     if (!modal || !modalEl) return;
+
+    // Hide horizontal tabs bar for a clean, distraction-free reading experience
+    if (tabsBar) tabsBar.style.display = 'none';
 
     // Anti-copy & Anti-scraping event guards
     const drBody = document.getElementById('docReaderBody');
@@ -7133,32 +7174,26 @@ function openDocReader(docId, targetChapterIdx = null, targetSecId = null) {
     const docData = getDocData(docId);
 
     if (docData && Array.isArray(docData.chapters) && docData.chapters.length > 0) {
-        // Determine initial chapter
-        let initChapIdx = 0;
-        let initSecId = null;
+        const pages = getDocReadingPages(docData);
+        let initPageIdx = 0;
 
-        if (targetChapterIdx !== null && typeof targetChapterIdx === 'number') {
-            initChapIdx = Math.max(0, Math.min(docData.chapters.length - 1, targetChapterIdx));
-            initSecId = targetSecId;
+        if (targetSecId) {
+            const foundPage = pages.find(p => p.type === 'section' && p.secId === targetSecId);
+            if (foundPage) initPageIdx = foundPage.pageIndex;
+        } else if (targetChapterIdx !== null && typeof targetChapterIdx === 'number') {
+            const foundPage = pages.find(p => p.type === 'section' && p.chapIdx === targetChapterIdx);
+            if (foundPage) initPageIdx = foundPage.pageIndex;
         } else {
             // Restore from saved progress
             try {
-                const saved = JSON.parse(localStorage.getItem('hg_read_pos_' + docId) || 'null');
-                if (saved && typeof saved.chapterIdx === 'number') {
-                    initChapIdx = Math.max(0, Math.min(docData.chapters.length - 1, saved.chapterIdx));
-                    initSecId = saved.secId || null;
+                const saved = parseInt(localStorage.getItem('hg_read_page_' + docId), 10);
+                if (!isNaN(saved) && saved >= 0 && saved < pages.length) {
+                    initPageIdx = saved;
                 }
             } catch(e) {}
         }
 
-        // Render Chapter Tabs Bar
-        renderDocChapterTabs(docData, initChapIdx);
-
-        // Render TOC Drawer List
-        renderDocTocDrawer(docData);
-
-        // Render Active Chapter
-        renderDocChapter(initChapIdx, initSecId);
+        renderDocPage(initPageIdx);
     } else {
         const bodyEl = document.getElementById('docReaderBody');
         if (bodyEl) {
@@ -7180,42 +7215,21 @@ function openDocReader(docId, targetChapterIdx = null, targetSecId = null) {
 }
 window._openDocReader = openDocReader;
 
-function renderDocChapterTabs(docData, activeIdx) {
-    const bar = document.getElementById('drChapterTabsBar');
-    if (!bar) return;
-
-    if (!docData.chapters || docData.chapters.length <= 1) {
-        bar.style.display = 'none';
-        return;
-    }
-
-    bar.style.display = 'flex';
-    let html = '';
-    docData.chapters.forEach((chap, idx) => {
-        const isActive = idx === activeIdx;
-        const title = chap.shortTitle || chap.title || `Chương ${idx + 1}`;
-        html += `
-            <button class="dr-chap-tab ${isActive ? 'active' : ''}" onclick="window._switchDocChapter(${idx})">
-                ${chap.badge ? `<span style="opacity:0.75; font-size:10px;">[${chap.badge}]</span>` : ''}
-                ${title}
-            </button>
-        `;
-    });
-    bar.innerHTML = html;
-}
-
-function getVerticalTOCInPageHTML(docData) {
+function getVerticalTOCInPageHTML(docData, pages) {
     if (!docData || !Array.isArray(docData.chapters)) return '';
     let itemsHtml = '';
+
     docData.chapters.forEach((chap, cIdx) => {
         const sections = Array.isArray(chap.sections) ? chap.sections : [];
         const chapRange = (chap.startPage && chap.endPage) ? `Trang ${chap.startPage} - ${chap.endPage}` : '';
         
         let secHtml = '';
-        sections.forEach((sec, sIdx) => {
+        sections.forEach((sec) => {
+            const pageObj = (pages || []).find(p => p.type === 'section' && p.secId === sec.id) || {};
+            const targetPageIdx = pageObj.pageIndex || 1;
             const pRange = sec.startPage ? `Trang ${sec.startPage}` : '';
             secHtml += `
-                <div class="dr-vtoc-item" onclick="window._jumpToDocSection(${cIdx}, '${sec.id}')">
+                <div class="dr-vtoc-item" onclick="window._navigateDocPage(${targetPageIdx})">
                     <div class="dr-vtoc-item-left">
                         <span class="dr-vtoc-dot">▪</span>
                         <span class="dr-vtoc-sec-title">${sec.title}</span>
@@ -7226,9 +7240,12 @@ function getVerticalTOCInPageHTML(docData) {
             `;
         });
 
+        const firstSecPage = (pages || []).find(p => p.type === 'section' && p.chapIdx === cIdx);
+        const chapTargetIdx = firstSecPage ? firstSecPage.pageIndex : 1;
+
         itemsHtml += `
             <div class="dr-vtoc-chap-block">
-                <div class="dr-vtoc-chap-head" onclick="window._switchDocChapter(${cIdx})">
+                <div class="dr-vtoc-chap-head" onclick="window._navigateDocPage(${chapTargetIdx})">
                     <div class="dr-vtoc-chap-title">
                         <span class="dr-vtoc-chap-badge">${chap.badge || `PHẦN ${cIdx}`}</span>
                         <strong>${chap.title}</strong>
@@ -7248,7 +7265,7 @@ function getVerticalTOCInPageHTML(docData) {
             <div class="dr-vtoc-top-banner">
                 <div class="dr-vtoc-kicker">✦ MỤC LỤC TỔNG QUAN CHI TIẾT ✦</div>
                 <h3 class="dr-vtoc-heading">CẤU TRÚC NỘI DUNG TOÀN THƯ</h3>
-                <p class="dr-vtoc-sub">Bấm vào bất kỳ mục nào bên dưới để nhảy ngay tới trang nội dung tương ứng</p>
+                <p class="dr-vtoc-sub">Bấm vào bất kỳ mục nào bên dưới để chuyển ngay tới trang nội dung tương ứng</p>
             </div>
             <div class="dr-vtoc-chap-list">
                 ${itemsHtml}
@@ -7257,23 +7274,33 @@ function getVerticalTOCInPageHTML(docData) {
     `;
 }
 
-function renderDocTocDrawer(docData) {
+function renderDocTocDrawer(docData, pages) {
     const listEl = document.getElementById('drTocList');
     if (!listEl) return;
 
-    let html = '';
+    let html = `
+        <div class="dr-toc-sec-item ${currentReadingPageIdx === 0 ? 'active' : ''}" style="margin-bottom:8px; border-radius:8px; font-weight:700; background:rgba(233,197,107,0.12);" onclick="window._navigateDocPage(0)">
+            <div class="dr-toc-sec-title-wrap">
+                <span class="dr-toc-bullet">👑</span>
+                <span class="dr-toc-sec-name">Bìa Sách & Mục Lục Tổng Quan</span>
+            </div>
+            <span class="dr-toc-page-badge">Trang Đầu</span>
+        </div>
+    `;
+
     (docData.chapters || []).forEach((chap, cIdx) => {
         const chapTitle = chap.title || `Chương ${cIdx + 1}`;
         const sections = Array.isArray(chap.sections) ? chap.sections : [];
-        const isChapActive = cIdx === currentReadingChapterIdx;
         const chapRange = (chap.startPage && chap.endPage) ? `Trang ${chap.startPage} - ${chap.endPage}` : '';
 
         let secItemsHtml = '';
-        sections.forEach((sec, sIdx) => {
-            const isActive = isChapActive && (sec.id === currentReadingSecId || (!currentReadingSecId && sIdx === 0));
+        sections.forEach((sec) => {
+            const pageObj = (pages || []).find(p => p.type === 'section' && p.secId === sec.id);
+            const targetPageIdx = pageObj ? pageObj.pageIndex : 1;
+            const isActive = targetPageIdx === currentReadingPageIdx;
             const pRange = sec.startPage ? `Trang ${sec.startPage}` : '';
             secItemsHtml += `
-                <div class="dr-toc-sec-item ${isActive ? 'active' : ''}" onclick="window._jumpToDocSection(${cIdx}, '${sec.id}')">
+                <div class="dr-toc-sec-item ${isActive ? 'active' : ''}" onclick="window._navigateDocPage(${targetPageIdx})">
                     <div class="dr-toc-sec-title-wrap">
                         <span class="dr-toc-bullet">✦</span>
                         <span class="dr-toc-sec-name">${sec.title}</span>
@@ -7283,9 +7310,13 @@ function renderDocTocDrawer(docData) {
             `;
         });
 
+        const firstSecPage = (pages || []).find(p => p.type === 'section' && p.chapIdx === cIdx);
+        const chapTargetIdx = firstSecPage ? firstSecPage.pageIndex : 1;
+        const isChapActive = (pages[currentReadingPageIdx]?.chapIdx === cIdx);
+
         html += `
             <div class="dr-toc-chap-group ${isChapActive ? 'active-chap' : ''}" data-chap-idx="${cIdx}">
-                <div class="dr-toc-chap-title" onclick="window._switchDocChapter(${cIdx})">
+                <div class="dr-toc-chap-title" onclick="window._navigateDocPage(${chapTargetIdx})">
                     <div class="dr-toc-chap-left">
                         <span class="dr-toc-chap-badge">${chap.badge || `CHƯƠNG ${cIdx}`}</span>
                         <span class="dr-toc-chap-name">${chap.shortTitle || chapTitle}</span>
@@ -7302,87 +7333,28 @@ function renderDocTocDrawer(docData) {
     listEl.innerHTML = html;
 }
 
-function renderDocChapter(chapterIdx, targetSecId = null) {
+function renderDocPage(pageIndex) {
     const docData = getDocData(currentReadingDocId);
-    if (!docData || !Array.isArray(docData.chapters)) return;
+    if (!docData) return;
 
-    const chap = docData.chapters[chapterIdx];
-    if (!chap) return;
+    const pages = getDocReadingPages(docData);
+    if (pages.length === 0) return;
 
-    currentReadingChapterIdx = chapterIdx;
-    currentReadingSecId = targetSecId;
+    const validPageIdx = Math.max(0, Math.min(pages.length - 1, pageIndex));
+    currentReadingPageIdx = validPageIdx;
 
     const bodyEl = document.getElementById('docReaderBody');
     if (!bodyEl) return;
 
-    // Update active state in tabs bar
-    document.querySelectorAll('.dr-chap-tab').forEach((tab, idx) => {
-        tab.classList.toggle('active', idx === chapterIdx);
-        if (idx === chapterIdx) {
-            tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
-    });
-
-    // Update active state in TOC drawer
-    document.querySelectorAll('.dr-toc-sec-item').forEach(item => {
-        item.classList.remove('active');
-    });
-
     const docObj = (SHOP_CATALOG.docs || []).find(d => d.id === currentReadingDocId) || docData;
+    const totalContentPages = pages.length - 1;
 
-    let sectionsHtml = '';
-    const sections = Array.isArray(chap.sections) ? chap.sections : [];
+    // Render TOC Drawer with updated active state
+    renderDocTocDrawer(docData, pages);
 
-    sections.forEach((sec, sIdx) => {
-        const isGenericTitle = !sec.title || sec.title.startsWith('Mục ') || sec.title.startsWith('Phần ') || sec.title.includes('Từ trang');
-        const pRange = (sec.startPage && sec.endPage) ? `Trang ${sec.startPage} - ${sec.endPage}` : (sec.startPage ? `Trang ${sec.startPage}` : '');
-        sectionsHtml += `
-            <article class="dr-chapter" id="${sec.id || `sec_${chapterIdx}_${sIdx}`}">
-                <div class="dr-sec-page-header">
-                    <div class="dr-sec-page-badge">
-                        ${pRange ? `<span class="dr-page-pill">📖 ${pRange}</span>` : ''}
-                        <span class="dr-sec-title-text">${sec.title}</span>
-                    </div>
-                </div>
-                <div class="dr-chapter-content">
-                    ${sec.content}
-                </div>
-            </article>
-        `;
-    });
-
-    // Navigation footer (Prev chapter / Next chapter)
-    const hasPrev = chapterIdx > 0;
-    const hasNext = chapterIdx < docData.chapters.length - 1;
-    const prevChap = hasPrev ? docData.chapters[chapterIdx - 1] : null;
-    const nextChap = hasNext ? docData.chapters[chapterIdx + 1] : null;
-
-    const navFooterHtml = `
-        <div class="dr-section-nav-footer">
-            ${hasPrev ? `
-                <button class="dr-nav-btn prev-btn" onclick="window._switchDocChapter(${chapterIdx - 1})">
-                    ← ${prevChap.shortTitle || 'Chương trước'}
-                </button>
-            ` : '<div></div>'}
-            
-            <button class="dr-nav-btn toc-center-btn" onclick="window._toggleDocToc(true)">
-                📑 Mục Lục Cuốn Sách (${docData.totalPages || 218} Trang)
-            </button>
-
-            ${hasNext ? `
-                <button class="dr-nav-btn next-btn" onclick="window._switchDocChapter(${chapterIdx + 1})">
-                    ${nextChap.shortTitle || 'Chương sau'} →
-                </button>
-            ` : `
-                <button class="dr-nav-btn next-btn" onclick="window._markDocCompleted()">
-                    ✨ Hoàn Thành Sách (+20 Coins)
-                </button>
-            `}
-        </div>
-    `;
-
-    bodyEl.innerHTML = `
-        ${chapterIdx === 0 ? `
+    if (validPageIdx === 0) {
+        // Page 0: Cover & Full TOC
+        bodyEl.innerHTML = `
             <div class="dr-book-cover-banner" style="background:radial-gradient(circle at 50% 30%, rgba(233,197,107,0.12), rgba(5,5,10,0.98)), #05050A; border: 1px solid rgba(233,197,107,0.35); box-shadow: 0 16px 36px rgba(0,0,0,0.6);">
                 <div class="dr-banner-cover-wrap" style="display:flex; align-items:center; justify-content:center;">
                     ${window.getBookCoverHTML ? window.getBookCoverHTML(currentReadingDocId, 'md') : `<div class="dr-banner-icon">${docObj.icon || '📜'}</div>`}
@@ -7394,85 +7366,140 @@ function renderDocChapter(chapterIdx, targetSecId = null) {
                 </div>
             </div>
 
-            ${getVerticalTOCInPageHTML(docData)}
-        ` : `
-            <div class="dr-chapter-hero-banner">
-                <div class="dr-chap-badge-pill">
-                    <span class="dr-chap-badge-icon">⚡</span>
-                    <span>${chap.badge || `PHẦN ${chapterIdx + 1}`}</span>
-                    <span style="opacity:0.6; margin-left:4px;">• Chương ${chapterIdx + 1}/${docData.chapters.length}</span>
-                    ${(chap.startPage && chap.endPage) ? `<span style="opacity:0.75; margin-left:6px; color:#E9C56B;">(Trang ${chap.startPage} - ${chap.endPage})</span>` : ''}
-                </div>
-                <h2 class="dr-chap-main-title">${chap.title}</h2>
+            ${getVerticalTOCInPageHTML(docData, pages)}
+
+            <div style="text-align:center; margin: 30px 0 50px 0;">
+                <button class="dr-nav-btn next-btn" style="padding:14px 32px; font-size:16px; border-radius:12px;" onclick="window._navigateDocPage(1)">
+                    🚀 Bắt Đầu Đọc: ${pages[1]?.title || 'Lời Nói Đầu'} →
+                </button>
             </div>
-        `}
-
-        ${chap.quote ? `
-            <div class="dr-quote-box">
-                <div class="dr-quote-symbol">❝</div>
-                <div class="dr-quote-body">${chap.quote}</div>
-            </div>
-        ` : ''}
-
-        <div class="dr-content-container">
-            ${sectionsHtml}
-            ${navFooterHtml}
-        </div>
-    `;
-
-    // Scroll to target section or top
-    if (targetSecId) {
-        setTimeout(() => {
-            const secEl = document.getElementById(targetSecId);
-            if (secEl) {
-                secEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } else {
-                bodyEl.scrollTop = 0;
-            }
-        }, 80);
+        `;
     } else {
-        bodyEl.scrollTop = 0;
+        // Page 1..N: Clean, paginated reading unit
+        const p = pages[validPageIdx];
+        const pRange = (p.startPage && p.endPage) ? `Trang ${p.startPage} - ${p.endPage}` : (p.startPage ? `Trang ${p.startPage}` : '');
+        const hasNext = validPageIdx < pages.length - 1;
+
+        bodyEl.innerHTML = `
+            <div class="dr-content-container">
+                <div class="dr-page-top-header">
+                    <div class="dr-page-top-left">
+                        <span class="dr-chap-badge-pill">⚡ ${p.chapBadge}</span>
+                        <span class="dr-page-chap-name">${p.chapShortTitle}</span>
+                    </div>
+                    <div class="dr-page-counter-pill">
+                        📖 Mục ${validPageIdx}/${totalContentPages} ${pRange ? `• (${pRange})` : ''}
+                    </div>
+                </div>
+
+                <div class="dr-page-title-banner">
+                    <h2 class="dr-page-main-heading">${p.title}</h2>
+                </div>
+
+                ${p.quote ? `
+                    <div class="dr-quote-box">
+                        <div class="dr-quote-symbol">❝</div>
+                        <div class="dr-quote-body">${p.quote}</div>
+                    </div>
+                ` : ''}
+
+                <article class="dr-chapter-content">
+                    ${p.content}
+                </article>
+
+                <div class="dr-page-nav-footer">
+                    <button class="dr-nav-btn prev-btn" onclick="window._navigateDocPage(${validPageIdx - 1})">
+                        ← ${validPageIdx === 1 ? '📑 Bìa & Mục Lục' : 'Trang trước'}
+                    </button>
+                    
+                    <button class="dr-nav-btn toc-center-btn" onclick="window._toggleDocToc(true)">
+                        📑 Mục Lục (${validPageIdx}/${totalContentPages})
+                    </button>
+
+                    ${hasNext ? `
+                        <button class="dr-nav-btn next-btn" onclick="window._navigateDocPage(${validPageIdx + 1})">
+                            Trang sau →
+                        </button>
+                    ` : `
+                        <button class="dr-nav-btn next-btn finish-btn" onclick="window._markDocCompleted()">
+                            ✨ Hoàn Thành Sách (+20 Coins)
+                        </button>
+                    `}
+                </div>
+            </div>
+        `;
+    }
+
+    // Scroll to top
+    bodyEl.scrollTop = 0;
+
+    // Update progress bar
+    const barEl = document.getElementById('drProgressBar');
+    if (barEl) {
+        const pct = totalContentPages > 0 ? (validPageIdx / totalContentPages) * 100 : 0;
+        barEl.style.width = `${pct}%`;
     }
 
     // Update footer progress text
     const progressEl = document.getElementById('drProgressText');
     if (progressEl) {
-        const firstSec = sections[0];
-        const pRange = (firstSec && firstSec.startPage) ? `P.${firstSec.startPage}-${sections[sections.length-1]?.endPage || ''}` : '';
-        progressEl.textContent = `📖 Đang đọc: ${chap.shortTitle || chap.title} ${pRange ? `(${pRange})` : ''}`;
+        const curPage = pages[validPageIdx];
+        if (validPageIdx === 0) {
+            progressEl.textContent = `📖 Bìa Sách & Mục Lục (${totalContentPages} Mục)`;
+        } else {
+            progressEl.textContent = `📖 Đang đọc: ${curPage.title} (Mục ${validPageIdx}/${totalContentPages})`;
+        }
     }
 
     // Save reading progress
     try {
-        localStorage.setItem('hg_read_pos_' + currentReadingDocId, JSON.stringify({
-            chapterIdx,
-            secId: targetSecId || sections[0]?.id,
-            timestamp: Date.now()
-        }));
+        localStorage.setItem('hg_read_page_' + currentReadingDocId, validPageIdx);
     } catch(e) {}
-
-    onDocBodyScroll();
 }
 
-function switchDocChapter(idx, targetSecId = null) {
+function navigateDocPage(pageIndex) {
     toggleDocToc(false);
-    renderDocChapter(idx, targetSecId);
+    renderDocPage(pageIndex);
+}
+window._navigateDocPage = navigateDocPage;
+
+function switchDocChapter(idx, targetSecId = null) {
+    const docData = getDocData(currentReadingDocId);
+    if (!docData) return;
+    const pages = getDocReadingPages(docData);
+    let targetPage = 1;
+    if (targetSecId) {
+        const found = pages.find(p => p.type === 'section' && p.secId === targetSecId);
+        if (found) targetPage = found.pageIndex;
+    } else {
+        const found = pages.find(p => p.type === 'section' && p.chapIdx === idx);
+        if (found) targetPage = found.pageIndex;
+    }
+    navigateDocPage(targetPage);
 }
 window._switchDocChapter = switchDocChapter;
 
 function jumpToDocSection(chapIdx, secId) {
-    toggleDocToc(false);
-    if (chapIdx === currentReadingChapterIdx) {
-        const secEl = document.getElementById(secId);
-        if (secEl) {
-            secEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            currentReadingSecId = secId;
-            return;
-        }
-    }
-    renderDocChapter(chapIdx, secId);
+    switchDocChapter(chapIdx, secId);
 }
 window._jumpToDocSection = jumpToDocSection;
+
+// Keyboard navigation (ArrowLeft / ArrowRight / PageUp / PageDown)
+document.addEventListener('keydown', (e) => {
+    const modal = document.getElementById('docReaderModalBg');
+    if (!modal || !modal.classList.contains('show')) return;
+    
+    // Ignore if typing in an input
+    if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+        e.preventDefault();
+        window._navigateDocPage(currentReadingPageIdx + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        window._navigateDocPage(currentReadingPageIdx - 1);
+    }
+});
 
 function toggleDocToc(forceState = null) {
     const drawer = document.getElementById('drTocDrawer');
