@@ -11094,6 +11094,10 @@ td.td-chk.frozen-day {
     line-height: 1.85;
     font-size: 1em;
     scroll-behavior: smooth;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .dr-book-cover-banner {

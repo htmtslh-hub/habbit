@@ -873,13 +873,18 @@ function init(){
     initDesktopGateway();
     checkAuth();
     
-    // Initialize Vietnamese Input Method Editor (default to Telex, active by default on login/register fields)
-    if(typeof GoTiengViet !== 'undefined' && GoTiengViet.VietnameseInput){
-        GoTiengViet.VietnameseInput.getInstance({
-            inputMethod: 'telex',
-            enabled: true
-        });
-    }
+    // Capture Viral Deep Links (?joinSquad=SQxxx / ?ref=UID)
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const joinSquadCode = urlParams.get('joinSquad') || urlParams.get('squad');
+        const refUid = urlParams.get('ref');
+        if (joinSquadCode) {
+            localStorage.setItem('hm_pending_squad', joinSquadCode.trim().toUpperCase());
+        }
+        if (refUid) {
+            localStorage.setItem('hm_referrer_uid', refUid.trim());
+        }
+    } catch(e) {}
 }
 
 document.readyState === 'loading' 

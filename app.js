@@ -820,11 +820,19 @@ const SHOP_CATALOG = {
     ],
     docs: [
         { id: 'doc_nhan_tinh', name: 'Tuyệt Mật Nhân Tính', desc: 'Thấu hiểu bản chất con người, quy luật tâm lý ẩn sâu, nghệ thuật đối nhân xử thế và thu phục nhân tâm.', icon: '📜', badge: 'MIỄN PHÍ', price: 0, free: true, gradient: 'linear-gradient(135deg, #059669, #10b981)', accent: '#10b981', category: 'Tâm Lý Học Hành Vi' },
-        { id: 'doc_thuc_tinh', name: 'Thức Tỉnh Nhận Thức', desc: 'Phá vỡ giới hạn tư duy vô thức, thoát khỏi bẫy định kiến, nhìn thấu các tầng thực tại và làm chủ tâm trí.', icon: '👁️', badge: 'TÂM THỨC', price: 8000, gradient: 'linear-gradient(135deg, #0284c7, #38bdf8)', accent: '#38bdf8', category: 'Phát Triển Tâm Thức' },
-        { id: 'doc_cuong_gia', name: 'Tư Duy Cường Giả', desc: 'Ý chí sắt đá, định luật kẻ mạnh, nghệ thuật tôi rèn kỷ luật thép và nguyên tắc không khuất phục trước nghịch cảnh.', icon: '🦁', badge: 'BẢN LĨNH', price: 8500, gradient: 'linear-gradient(135deg, #d97706, #fbbf24)', accent: '#fbbf24', category: 'Kỷ Luật & Ý Chí' },
-        { id: 'doc_thuong_chien', name: 'Thương Chiến', desc: 'Mưu lược kinh doanh đỉnh cao, nghệ thuật đàm phán, đòn bẩy dòng tiền và chiến lược thống lĩnh thị trường.', icon: '⚔️', badge: 'CHIẾN LƯỢC', price: 9000, gradient: 'linear-gradient(135deg, #dc2626, #f87171)', accent: '#f87171', category: 'Kinh Doanh & Mưu Lược' },
-        { id: 'doc_huyen_co', name: 'Ẩn Chứa Huyền Cơ', desc: 'Đọc vị thế cục ngầm, quy luật âm dương tương hỗ, giải mã những biến số vô hình đằng sau mọi sự kiện lớn.', icon: '🔮', badge: 'HUYỀN CƠ', price: 9500, gradient: 'linear-gradient(135deg, #7c3aed, #a78bfa)', accent: '#a78bfa', category: 'Quy Luật Thế Cục' },
-        { id: 'doc_sau_sac', name: 'Tư Duy Sâu Sắc', desc: 'Tư duy đa chiều, giải mã bản chất bằng Nguyên lý đệ nhất (First Principles) và giải quyết các bài toán phức tạp.', icon: '🌌', badge: 'TINH HOA', price: 10000, gradient: 'linear-gradient(135deg, #4f46e5, #818cf8)', accent: '#818cf8', category: 'Tư Duy Đỉnh Cao' }
+        { id: 'doc_thuc_tinh', name: 'Thức Tỉnh Nhận Thức', desc: 'Phá vỡ giới hạn tư duy vô thức, thoát khỏi bẫy định kiến, nhìn thấu các tầng thực tại và làm chủ tâm trí.', icon: '👁️', badge: 'TÂM THỨC', price: 8200, free: false, gradient: 'linear-gradient(135deg, #0284c7, #38bdf8)', accent: '#38bdf8', category: 'Phát Triển Tâm Thức' },
+        { id: 'doc_tinh_cam', name: 'Tình Cảm Bí Tịch', desc: 'Đọc vị cảm xúc, giải mã tâm lý đối phương, nghệ thuật thu hút tự nhiên và xây dựng mối quan hệ sâu sắc.', icon: '🌹', badge: 'TÌNH CẢM', price: 8300, free: false, gradient: 'linear-gradient(135deg, #be185d, #f472b6)', accent: '#f472b6', category: 'Tâm Lý & Mối Quan Hệ' },
+        { id: 'doc_logic_ngheo', name: 'Logic Người Nghèo', desc: 'Chỉ ra những lối mòn tư duy kìm hãm sự phát triển, bẫy chi phí chìm, tâm lý sợ rủi ro và tái cấu trúc tư duy.', icon: '⛓️', badge: 'PHÁ BẪY', price: 8400, free: false, gradient: 'linear-gradient(135deg, #475569, #94a3b8)', accent: '#94a3b8', category: 'Tư Duy Tài Chính' },
+        { id: 'doc_he_thong', name: 'Hệ Thống Mạnh Mẽ', desc: 'Xây dựng hệ thống kỷ luật tự vận hành, loại bỏ điểm nghẽn hành vi, quản trị năng lượng và nâng cao hiệu suất.', icon: '⚙️', badge: 'HỆ THỐNG', price: 8500, free: false, gradient: 'linear-gradient(135deg, #059669, #34d399)', accent: '#34d399', category: 'Kỷ Luật & Hiệu Suất' },
+        { id: 'doc_cuong_gia', name: 'Tư Duy Cường Giả', desc: 'Ý chí sắt đá, định luật kẻ mạnh, nghệ thuật tôi rèn kỷ luật thép và nguyên tắc không khuất phục trước nghịch cảnh.', icon: '🦁', badge: 'BẢN LĨNH', price: 8600, free: false, gradient: 'linear-gradient(135deg, #d97706, #fbbf24)', accent: '#fbbf24', category: 'Kỷ Luật & Ý Chí' },
+        { id: 'doc_xuyen_thau', name: 'Xuyên Thấu Nhân Tính', desc: 'Bóc tách từng lớp mặt nạ xã hội, nhận diện ngôn ngữ cơ thể, động cơ lợi ích và các đòn bẩy tâm lý vi tế.', icon: '🔍', badge: 'THẤU SUỐT', price: 8700, free: false, gradient: 'linear-gradient(135deg, #0d9488, #2dd4bf)', accent: '#2dd4bf', category: 'Tâm Lý Học Hành Vi' },
+        { id: 'doc_den_trang', name: 'Nhân Tính Đen Trắng', desc: 'Khám phá bóng tối tâm lý (Shadow Self), cân bằng bản ngã, nhận diện điểm yếu của nhân tính để tự vệ và phát triển.', icon: '☯️', badge: 'ĐEN TRẮNG', price: 8800, free: false, gradient: 'linear-gradient(135deg, #334155, #64748b)', accent: '#64748b', category: 'Tâm Lý Học Hành Vi' },
+        { id: 'doc_sau_sac', name: 'Tư Duy Sâu Sắc', desc: 'Tư duy đa chiều, giải mã bản chất bằng Nguyên lý đệ nhất (First Principles) và giải quyết các bài toán phức tạp.', icon: '🌌', badge: 'TINH HOA', price: 8900, free: false, gradient: 'linear-gradient(135deg, #4f46e5, #818cf8)', accent: '#818cf8', category: 'Tư Duy Đỉnh Cao' },
+        { id: 'doc_thuong_chien', name: 'Thương Chiến', desc: 'Mưu lược kinh doanh đỉnh cao, nghệ thuật đàm phán, đòn bẩy dòng tiền và chiến lược thống lĩnh thị trường.', icon: '⚔️', badge: 'CHIẾN LƯỢC', price: 9200, free: false, gradient: 'linear-gradient(135deg, #dc2626, #f87171)', accent: '#f87171', category: 'Kinh Doanh & Mưu Lược' },
+        { id: 'doc_muu_luoc_tt', name: 'Mưu Lược Tuổi Trẻ', desc: 'Cẩm nang sinh tồn và bứt phá cho người trẻ: Lựa chọn hướng đi, tích lũy nguồn lực, đàm phán sự nghiệp và làm chủ.', icon: '⚡', badge: 'BẢN LĨNH', price: 9400, free: false, gradient: 'linear-gradient(135deg, #ea580c, #fb923c)', accent: '#fb923c', category: 'Định Hướng & Bản Lĩnh' },
+        { id: 'doc_huyen_co', name: 'Ẩn Chứa Huyền Cơ', desc: 'Đọc vị thế cục ngầm, quy luật âm dương tương hỗ, giải mã những biến số vô hình đằng sau mọi sự kiện lớn.', icon: '🔮', badge: 'HUYỀN CƠ', price: 9800, free: false, gradient: 'linear-gradient(135deg, #7c3aed, #a78bfa)', accent: '#a78bfa', category: 'Quy Luật Thế Cục' },
+        { id: 'doc_luat_ngam_tc', name: 'Luật Ngầm Tài Chính', desc: 'Giải mã các quy luật ngầm của hệ thống tài chính, bản chất lạm phát, chu kỳ nợ và cách đứng về phía người thắng.', icon: '🏦', badge: 'LUẬT NGẦM', price: 9600, free: false, gradient: 'linear-gradient(135deg, #1e3a8a, #3b82f6)', accent: '#3b82f6', category: 'Tài Chính & Đầu Tư' },
+        { id: 'doc_muu_luoc_tc', name: 'Mưu Lược Tài Chính', desc: 'Chiến lược tích lũy tài sản, cơ chế dòng tiền ngầm, đòn bẩy tài chính và bảo vệ tài sản trước chu kỳ kinh tế.', icon: '💰', badge: 'SIÊU PHẨM', price: 10000, free: false, gradient: 'linear-gradient(135deg, #b45309, #f59e0b)', accent: '#f59e0b', category: 'Tài Chính & Dòng Tiền' }
     ]
 };
 window.SHOP_CATALOG = SHOP_CATALOG;
@@ -2624,6 +2632,23 @@ async function startApp(user){
         applyPremiumGate();
         initUniversalSpotlight();
         window.onresize=()=>{renderBar();renderLine()};
+
+        // Check incoming Deep Links / Viral Squad Invites (?joinSquad=SQxxx)
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const joinSquadCode = urlParams.get('joinSquad') || urlParams.get('squad') || localStorage.getItem('hm_pending_squad');
+            if (joinSquadCode) {
+                const cleanCode = joinSquadCode.trim().toUpperCase();
+                localStorage.removeItem('hm_pending_squad');
+                const cleanUrl = window.location.origin + window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
+                setTimeout(async () => {
+                    if (typeof joinSquadByCode === 'function') {
+                        await joinSquadByCode(cleanCode);
+                    }
+                }, 1000);
+            }
+        } catch(e) {}
     } catch(err) {
         console.error('Init error:', err);
     }
@@ -7065,6 +7090,9 @@ let docReaderFontSize = parseInt(localStorage.getItem('hg_doc_font_size') || '10
 let docReaderTheme = localStorage.getItem('hg_doc_theme') || 'dark'; // 'dark' | 'sepia' | 'light' | 'oled'
 
 function getDocData(docId) {
+    if (typeof window !== 'undefined' && window.ALL_BOOKS_DATA && window.ALL_BOOKS_DATA[docId]) {
+        return window.ALL_BOOKS_DATA[docId];
+    }
     if (docId === 'doc_nhan_tinh' && typeof window !== 'undefined' && window.BOOK_TUYET_MAT_NHAN_TINH) {
         return window.BOOK_TUYET_MAT_NHAN_TINH;
     }
@@ -7083,6 +7111,14 @@ function openDocReader(docId, targetChapterIdx = null, targetSecId = null) {
     const badgeEl = document.getElementById('drBadge');
 
     if (!modal || !modalEl) return;
+
+    // Anti-copy & Anti-scraping event guards
+    const drBody = document.getElementById('docReaderBody');
+    if (drBody) {
+        drBody.oncontextmenu = (e) => { e.preventDefault(); return false; };
+        drBody.oncopy = (e) => { e.preventDefault(); return false; };
+        drBody.oncut = (e) => { e.preventDefault(); return false; };
+    }
 
     if (titleEl) titleEl.textContent = docObj.name;
     if (catEl) catEl.textContent = docObj.category || 'Tài Liệu Đặc Biệt';
@@ -7715,9 +7751,12 @@ async function renderSquadHubUI(targetTab = null) {
                                 <div class="squad-hero-desc">${escHtml(squadData.description || 'Cùng nhau rèn luyện thói quen mỗi ngày!')}</div>
                             </div>
                         </div>
-                        <div>
-                            <div class="squad-code-pill" onclick="window._copySquadCode('${squadData.code}')" title="Bấm để sao chép mã mời">
-                                <span>🔑 MÃ MỜI: ${squadData.code}</span>
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                            <button class="squad-btn-primary" style="padding:6px 14px;font-size:12px;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#6366f1,#4f46e5);" onclick="window._shareSquadInvite('${squadData.code}', '${escHtml(squadData.name || 'Tổ Đội')}')" title="Chia sẻ link mời vào đội">
+                                <span>🔗</span> Mời Bạn Bè
+                            </button>
+                            <div class="squad-code-pill" onclick="window._shareSquadInvite('${squadData.code}', '${escHtml(squadData.name || 'Tổ Đội')}')" title="Bấm để sao chép link mời">
+                                <span>🔑 MÃ: ${squadData.code}</span>
                                 <span>📋</span>
                             </div>
                         </div>
@@ -8022,23 +8061,40 @@ async function createSquad() {
 }
 window._createSquad = createSquad;
 
-async function joinSquadByCode() {
-    if (!currentUser) { alert('Vui lòng đăng nhập để gia nhập tổ đội!'); return; }
+async function joinSquadByCode(directCode = null) {
+    if (!currentUser) { 
+        if (directCode) {
+            try { localStorage.setItem('hm_pending_squad', directCode.trim().toUpperCase()); } catch(e) {}
+        }
+        alert('Vui lòng đăng nhập để gia nhập tổ đội!'); 
+        return false; 
+    }
     const codeInput = document.getElementById('squadJoinCode');
-    const code = codeInput ? codeInput.value.trim().toUpperCase() : '';
+    const code = directCode ? directCode.trim().toUpperCase() : (codeInput ? codeInput.value.trim().toUpperCase() : '');
 
-    if (!code) { alert('Vui lòng nhập mã mời tổ đội!'); return; }
+    if (!code) { alert('Vui lòng nhập mã mời tổ đội!'); return false; }
 
     try {
         const snap = await db.collection('squads').where('code', '==', code).limit(1).get();
-        if (snap.empty) { alert('Không tìm thấy tổ đội với mã mời này!'); return; }
+        if (snap.empty) { 
+            if (!directCode) alert('Không tìm thấy tổ đội với mã mời này!'); 
+            return false; 
+        }
 
         const doc = snap.docs[0];
         const data = doc.data();
         const members = Array.isArray(data.members) ? data.members : [];
 
-        if (members.length >= 5) { alert('Tổ đội này đã đầy (tối đa 5 thành viên)!'); return; }
-        if (members.some(m => m.uid === currentUser.uid)) { alert('Bạn đã là thành viên của tổ đội này!'); S.squadId = doc.id; sv(); renderSquadHubUI('squads'); return; }
+        if (members.length >= 5) { 
+            alert('Tổ đội này đã đầy (tối đa 5 thành viên)!'); 
+            return false; 
+        }
+        if (members.some(m => m.uid === currentUser.uid)) { 
+            S.squadId = doc.id; 
+            sv(); 
+            if (document.getElementById('squadHubContent')) renderSquadHubUI('squads'); 
+            return true; 
+        }
 
         const myName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
         const newMember = {
@@ -8062,14 +8118,17 @@ async function joinSquadByCode() {
 
         const toast = document.createElement('div');
         toast.className = 'quest-toast';
-        toast.innerHTML = `<span>🛡️</span> ${t('squadJoinedToast') || 'Đã gia nhập tổ đội thành công!'}`;
+        toast.innerHTML = `<span>🛡️</span> Bạn đã gia nhập tổ đội <strong>${escHtml(data.name || 'Tổ Đội')}</strong> thành công!`;
         document.body.appendChild(toast);
         setTimeout(() => toast.classList.add('show'), 10);
-        setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2800);
+        setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3500);
 
-        renderSquadHubUI('squads');
+        if (document.getElementById('squadHubContent')) renderSquadHubUI('squads');
+        return true;
     } catch(e) {
-        alert('Lỗi gia nhập tổ đội: ' + e.message);
+        console.error('Join squad error:', e);
+        if (!directCode) alert('Lỗi gia nhập tổ đội: ' + e.message);
+        return false;
     }
 }
 window._joinSquadByCode = joinSquadByCode;
@@ -8124,16 +8183,40 @@ async function nudgeMember(toUid, toName) {
 }
 window._nudgeMember = nudgeMember;
 
-function copySquadCode(code) {
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(code).then(() => {
-            alert(`Đã sao chép mã mời: ${code}! Hãy gửi cho bạn bè của bạn.`);
+function shareSquadInvite(code, squadName = 'Tổ Đội Kỷ Luật') {
+    const inviteUrl = `${window.location.origin}${window.location.pathname}?joinSquad=${encodeURIComponent(code)}`;
+    const shareText = `🛡️ Tham gia "${squadName}" cùng mình trên Habit Mastery để cùng rèn luyện thói quen mỗi ngày nhé!\n👉 Vào đội ngay: ${inviteUrl}`;
+
+    if (navigator.share) {
+        navigator.share({
+            title: `Lời mời tham gia ${squadName} - Habit Mastery`,
+            text: shareText,
+            url: inviteUrl
+        }).catch(() => {
+            copySquadInviteToClipboard(inviteUrl, code);
         });
     } else {
-        prompt('Sao chép mã mời này:', code);
+        copySquadInviteToClipboard(inviteUrl, code);
     }
 }
-window._copySquadCode = copySquadCode;
+window._shareSquadInvite = shareSquadInvite;
+window._copySquadCode = (code) => shareSquadInvite(code);
+
+function copySquadInviteToClipboard(inviteUrl, code) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(inviteUrl).then(() => {
+            const toast = document.createElement('div');
+            toast.className = 'quest-toast show';
+            toast.innerHTML = `<span>🔗</span> Đã sao chép link mời tổ đội (Mã: <strong>${code}</strong>)! Hãy gửi cho bạn bè qua Zalo/Messenger.`;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3500);
+        }).catch(() => {
+            prompt('Sao chép đường link mời này gửi cho bạn bè:', inviteUrl);
+        });
+    } else {
+        prompt('Sao chép đường link mời này gửi cho bạn bè:', inviteUrl);
+    }
+}
 
 async function createDuel() {
     if (!currentUser) { alert('Vui lòng đăng nhập để tạo phòng thách đấu!'); return; }
