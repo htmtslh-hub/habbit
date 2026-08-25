@@ -7,8 +7,8 @@
 ## 📌 1. THÔNG TIN DỰ ÁN & TRIỂN KHAI
 - **Tên ứng dụng**: **Habit Mastery** (Ứng dụng Rèn luyện Thói quen & Game hóa Kỷ luật)
 - **Công nghệ cốt lõi**: HTML5, Vanilla CSS3 (Design System chuẩn Dark/Light Mode), Vanilla JavaScript (ES6+), Firebase (Authentication, Firestore, Hosting), PWA (Service Worker), Vercel Production.
-- **Phiên bản Cache / Scripts**: `v=5.3.1` (trong `index.html`) & Service Worker `5.3.1` (trong `sw.js`)
-- **Chuẩn Hóa Mục Lục Chi Tiết & Phân Trang Toàn Diện (v5.3.1)**: Toàn bộ 14 cuốn sách đều được phân chia thành các tiểu mục rõ ràng (10 - 27 phần/cuốn), có Mục lục tổng quan phân cấp dạng dọc với đường chấm nối (leader lines) và khoảng trang chính xác `Trang X - Y`. Bấm vào bất kỳ mục nào để nhảy ngay đến bài đọc tương ứng.
+- **Phiên bản Cache / Scripts**: `v=5.3.2` (trong `index.html`) & Service Worker `5.3.2` (trong `sw.js`)
+- **Chuẩn Hóa Hộp Trích Dẫn Tâm Pháp Súc Tích (v5.3.2)**: Toàn bộ 565 câu trích dẫn tâm pháp (`dr-p-quote` và `dr-quote-box`) trên tất cả 14 cuốn sách đã được tinh chỉnh súc tích, đúc kết 1 - 2 câu cốt lõi (~15-25 từ), các đoạn diễn giải dài được đưa về đoạn văn thông thường giúp trang đọc sang trọng, thoáng đãng và có sức nặng tri thức.
 - **Kho mã nguồn (GitHub)**: `https://github.com/htmtslh-hub/habbit.git` (Nhánh `main`)
 - **Biểu tượng tiền tệ**: **Prism Nexus Coin** (Phương án 1) — Đồng xu tròn viền vàng hoàng kim công nghệ, lõi Lăng Kính Kim Cương Ngọc Bích (Emerald & Cyan Neon) tỏa sáng, thay thế hoàn toàn chữ text "DP" trên toàn hệ thống.
 - **Địa chỉ Production đang hoạt động**:
