@@ -7354,15 +7354,21 @@ function renderDocPage(pageIndex) {
 
     if (validPageIdx === 0) {
         // Page 0: Cover & Full TOC
+        const accentColor = docObj.accent || docData.accent || '#E9C56B';
         bodyEl.innerHTML = `
-            <div class="dr-book-cover-banner" style="background:radial-gradient(circle at 50% 30%, rgba(233,197,107,0.12), rgba(5,5,10,0.98)), #05050A; border: 1px solid rgba(233,197,107,0.35); box-shadow: 0 16px 36px rgba(0,0,0,0.6);">
+            <div class="dr-book-cover-banner" style="background:radial-gradient(circle at 50% 30%, ${accentColor}22, rgba(5,5,10,0.98)), #05050A; border: 1px solid ${accentColor}55; box-shadow: 0 16px 36px rgba(0,0,0,0.6);">
                 <div class="dr-banner-cover-wrap" style="display:flex; align-items:center; justify-content:center;">
                     ${window.getBookCoverHTML ? window.getBookCoverHTML(currentReadingDocId, 'md') : `<div class="dr-banner-icon">${docObj.icon || '📜'}</div>`}
                 </div>
                 <div class="dr-banner-meta">
-                    <span class="dr-banner-badge" style="background:rgba(233,197,107,0.18); color:#E9C56B; border:1px solid rgba(233,197,107,0.4);">${docObj.badge || 'BẢN ĐỦ'}</span>
-                    <h1 class="dr-banner-title" style="color:#E9C56B; font-family:'Chakra Petch',sans-serif; text-transform:uppercase; letter-spacing:0.04em;">${docObj.name || docData.title}</h1>
-                    <p class="dr-banner-desc" style="color:rgba(233,197,107,0.75);">${docObj.desc || docData.category || ''}</p>
+                    <span class="dr-banner-badge" style="background:${accentColor}22; color:${accentColor}; border:1px solid ${accentColor}55;">${docObj.badge || docData.badge || 'BẢN ĐỦ'}</span>
+                    <h1 class="dr-banner-title" style="color:${accentColor}; font-family:'Chakra Petch',sans-serif; text-transform:uppercase; letter-spacing:0.04em;">${docObj.name || docData.title}</h1>
+                    <p class="dr-banner-desc" style="color:rgba(255,255,255,0.75);">${docObj.desc || docData.category || ''}</p>
+                    ${docData.quote ? `
+                        <div class="dr-banner-quote" style="margin-top:12px; font-style:italic; font-size:13.5px; color:${accentColor}; opacity:0.9;">
+                            ${docData.quote}
+                        </div>
+                    ` : ''}
                 </div>
             </div>
 
