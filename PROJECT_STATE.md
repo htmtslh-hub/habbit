@@ -7,8 +7,8 @@
 ## 📌 1. THÔNG TIN DỰ ÁN & TRIỂN KHAI
 - **Tên ứng dụng**: **Habit Mastery** (Ứng dụng Rèn luyện Thói quen & Game hóa Kỷ luật)
 - **Công nghệ cốt lõi**: HTML5, Vanilla CSS3 (Design System chuẩn Dark/Light Mode), Vanilla JavaScript (ES6+), Firebase (Authentication, Firestore, Hosting), PWA (Service Worker), Vercel Production.
-- **Phiên bản Cache / Scripts**: `v=5.2.9` (trong `index.html`) & Service Worker `5.2.9` (trong `sw.js`)
-- **Trải Nghiệm Đọc Sách Hoàng Kim Từng Trang Gọn Gàng (v5.2.9)**: Giao diện đọc sách hoàng kim sang trọng, phân trang độc lập từng bài đọc, lật trang nhanh, bảng Mục Lục Tổng Quan dọc ở trang đầu và drawer mục lục bên hông, đã làm sạch 100% rác mục lục bị lọt ở đầu Chương 1.
+- **Phiên bản Cache / Scripts**: `v=5.2.10` (trong `index.html`) & Service Worker `5.2.10` (trong `sw.js`)
+- **Tối Ưu Giao Diện Đọc Sách Sạch Sẽ (v5.2.10)**: Đã loại bỏ hoàn toàn các thẻ badge số trang bị lặp lại ở đầu mỗi đoạn văn (`📖 TRANG X - Y [Tên bài]`), giúp văn bản thoáng đãng, tập trung 100% vào nội dung đọc tinh hoa.
 - **Kho mã nguồn (GitHub)**: `https://github.com/htmtslh-hub/habbit.git` (Nhánh `main`)
 - **Biểu tượng tiền tệ**: **Prism Nexus Coin** (Phương án 1) — Đồng xu tròn viền vàng hoàng kim công nghệ, lõi Lăng Kính Kim Cương Ngọc Bích (Emerald & Cyan Neon) tỏa sáng, thay thế hoàn toàn chữ text "DP" trên toàn hệ thống.
 - **Địa chỉ Production đang hoạt động**:

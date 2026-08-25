@@ -1,6 +1,6 @@
 // ===== HABIT MASTERY - SERVICE WORKER =====
 // Change CACHE_VERSION when deploying updates
-const CACHE_VERSION = '5.2.9';
+const CACHE_VERSION = '5.2.10';
 const CACHE_NAME = `habit-game-v${CACHE_VERSION}`;
 
 const ASSETS_TO_CACHE = [

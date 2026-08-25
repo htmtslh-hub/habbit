@@ -11270,6 +11270,10 @@ td.td-chk.frozen-day {
     border-radius: 6px;
 }
 
+.dr-sec-page-badge, .dr-sec-page-header {
+    display: none !important;
+}
+
 /* PAGINATED READER TOP BAR & CONTROLS */
 .dr-page-top-header {
     display: flex;
