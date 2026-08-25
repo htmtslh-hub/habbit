@@ -11152,6 +11152,43 @@ td.td-chk.frozen-day {
     line-height: 1.5;
 }
 
+.dr-chapter-hero-banner {
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+    background: radial-gradient(circle at 10% 20%, rgba(233,197,107,0.1), rgba(5,5,10,0.95)), #05050A;
+    border: 1px solid rgba(233,197,107,0.3);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+}
+
+.dr-chap-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #E9C56B;
+    background: rgba(233, 197, 107, 0.12);
+    border: 1px solid rgba(233, 197, 107, 0.3);
+    padding: 4px 12px;
+    border-radius: 99px;
+    margin-bottom: 12px;
+}
+
+.dr-chap-main-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #F7E7B4;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
 .dr-quote-box {
     background: rgba(233, 197, 107, 0.06);
     border-left: 3.5px solid #E9C56B;

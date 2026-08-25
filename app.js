@@ -7322,15 +7322,24 @@ function renderDocChapter(chapterIdx, targetSecId = null) {
         ${chapterIdx === 0 ? `
             <div class="dr-book-cover-banner" style="background:radial-gradient(circle at 50% 30%, rgba(233,197,107,0.12), rgba(5,5,10,0.98)), #05050A; border: 1px solid rgba(233,197,107,0.35); box-shadow: 0 16px 36px rgba(0,0,0,0.6);">
                 <div class="dr-banner-cover-wrap" style="display:flex; align-items:center; justify-content:center;">
-                    ${window.getBookCoverHTML ? window.getBookCoverHTML(docId, 'md') : `<div class="dr-banner-icon">${docObj.icon || '📜'}</div>`}
+                    ${window.getBookCoverHTML ? window.getBookCoverHTML(currentReadingDocId, 'md') : `<div class="dr-banner-icon">${docObj.icon || '📜'}</div>`}
                 </div>
                 <div class="dr-banner-meta">
                     <span class="dr-banner-badge" style="background:rgba(233,197,107,0.18); color:#E9C56B; border:1px solid rgba(233,197,107,0.4);">${docObj.badge || 'BẢN ĐỦ'}</span>
-                    <h1 class="dr-banner-title" style="color:#E9C56B; font-family:'Exo 2',sans-serif; text-transform:uppercase; letter-spacing:0.04em;">${docObj.name || docData.title}</h1>
+                    <h1 class="dr-banner-title" style="color:#E9C56B; font-family:'Chakra Petch',sans-serif; text-transform:uppercase; letter-spacing:0.04em;">${docObj.name || docData.title}</h1>
                     <p class="dr-banner-desc" style="color:rgba(233,197,107,0.75);">${docObj.desc || docData.category || ''}</p>
                 </div>
             </div>
-        ` : ''}
+        ` : `
+            <div class="dr-chapter-hero-banner">
+                <div class="dr-chap-badge-pill">
+                    <span class="dr-chap-badge-icon">⚡</span>
+                    <span>${chap.badge || `PHẦN ${chapterIdx + 1}`}</span>
+                    <span style="opacity:0.6; margin-left:4px;">• Chương ${chapterIdx + 1}/${docData.chapters.length}</span>
+                </div>
+                <h2 class="dr-chap-main-title">${chap.title}</h2>
+            </div>
+        `}
 
         ${chap.quote ? `
             <div class="dr-quote-box">
