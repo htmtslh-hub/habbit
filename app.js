@@ -7084,10 +7084,9 @@ const DOC_CONTENT_MAP = {
 };
 
 let currentReadingDocId = null;
-let currentFoxitPage = 1;
+let currentReadingPageIdx = 0;
 let docReaderFontSize = parseInt(localStorage.getItem('hg_doc_font_size') || '100', 10);
 let docReaderTheme = localStorage.getItem('hg_doc_theme') || 'dark'; // 'dark' | 'sepia' | 'light' | 'oled'
-let isFoxitSidebarOpen = window.innerWidth > 900;
 
 function getDocData(docId) {
     if (typeof window !== 'undefined' && window.ALL_BOOKS_DATA && window.ALL_BOOKS_DATA[docId]) {
@@ -7099,7 +7098,45 @@ function getDocData(docId) {
     return DOC_CONTENT_MAP[docId] || null;
 }
 
-function openDocReader(docId, targetPage = null) {
+function getDocReadingPages(docData) {
+    if (!docData || !Array.isArray(docData.chapters)) return [];
+    const pages = [];
+    
+    // Page 0: Cover & Full Table of Contents
+    pages.push({
+        type: 'cover_toc',
+        pageIndex: 0,
+        title: 'Bìa Sách & Mục Lục Tổng Quan',
+        shortTitle: 'Mục Lục',
+        chapBadge: 'MỤC LỤC'
+    });
+
+    let pIdx = 1;
+    docData.chapters.forEach((chap, cIdx) => {
+        const sections = Array.isArray(chap.sections) ? chap.sections : [];
+        sections.forEach((sec, sIdx) => {
+            pages.push({
+                type: 'section',
+                pageIndex: pIdx++,
+                chapIdx: cIdx,
+                chapNum: chap.num || cIdx,
+                chapTitle: chap.title,
+                chapShortTitle: chap.shortTitle || chap.title,
+                chapBadge: chap.badge || `PHẦN ${cIdx}`,
+                secId: sec.id || `sec_${cIdx}_${sIdx}`,
+                title: sec.title,
+                startPage: sec.startPage,
+                endPage: sec.endPage,
+                quote: (sIdx === 0 ? (chap.quote || '') : ''),
+                content: sec.content
+            });
+        });
+    });
+
+    return pages;
+}
+
+function openDocReader(docId, targetChapterIdx = null, targetSecId = null) {
     currentReadingDocId = docId;
     const docObj = (SHOP_CATALOG.docs || []).find(d => d.id === docId);
     if (!docObj) return;
@@ -7108,21 +7145,25 @@ function openDocReader(docId, targetPage = null) {
     const modalEl = document.getElementById('docReaderModal');
     const titleEl = document.getElementById('drBookTitle');
     const catEl = document.getElementById('drBookCategory');
-    const totalPagesEl = document.getElementById('foxitTotalPages');
-    const sidebarEl = document.getElementById('foxitSidebar');
+    const badgeEl = document.getElementById('drBadge');
+    const tabsBar = document.getElementById('drChapterTabsBar');
 
     if (!modal || !modalEl) return;
 
+    // Hide horizontal tabs bar for a clean, distraction-free reading experience
+    if (tabsBar) tabsBar.style.display = 'none';
+
     // Anti-copy & Anti-scraping event guards
-    const canvasEl = document.getElementById('foxitMainCanvas');
-    if (canvasEl) {
-        canvasEl.oncontextmenu = (e) => { e.preventDefault(); return false; };
-        canvasEl.oncopy = (e) => { e.preventDefault(); return false; };
-        canvasEl.oncut = (e) => { e.preventDefault(); return false; };
+    const drBody = document.getElementById('docReaderBody');
+    if (drBody) {
+        drBody.oncontextmenu = (e) => { e.preventDefault(); return false; };
+        drBody.oncopy = (e) => { e.preventDefault(); return false; };
+        drBody.oncut = (e) => { e.preventDefault(); return false; };
     }
 
     if (titleEl) titleEl.textContent = docObj.name;
     if (catEl) catEl.textContent = docObj.category || 'Tài Liệu Đặc Biệt';
+    if (badgeEl) badgeEl.textContent = docObj.badge || 'BẢN ĐỦ';
 
     // Apply reader theme & font size
     modalEl.dataset.theme = docReaderTheme;
@@ -7131,228 +7172,317 @@ function openDocReader(docId, targetPage = null) {
     if (labelEl) labelEl.textContent = `${docReaderFontSize}%`;
 
     const docData = getDocData(docId);
-    if (!docData || !Array.isArray(docData.pages) || docData.pages.length === 0) {
-        modal.classList.add('show');
-        return;
-    }
 
-    const totalPages = docData.totalPages || docData.pages.length;
-    if (totalPagesEl) totalPagesEl.textContent = totalPages;
+    if (docData && Array.isArray(docData.chapters) && docData.chapters.length > 0) {
+        const pages = getDocReadingPages(docData);
+        let initPageIdx = 0;
 
-    // Sidebar state
-    if (sidebarEl) {
-        sidebarEl.classList.toggle('collapsed', !isFoxitSidebarOpen);
-    }
+        if (targetSecId) {
+            const foundPage = pages.find(p => p.type === 'section' && p.secId === targetSecId);
+            if (foundPage) initPageIdx = foundPage.pageIndex;
+        } else if (targetChapterIdx !== null && typeof targetChapterIdx === 'number') {
+            const foundPage = pages.find(p => p.type === 'section' && p.chapIdx === targetChapterIdx);
+            if (foundPage) initPageIdx = foundPage.pageIndex;
+        } else {
+            // Restore from saved progress
+            try {
+                const saved = parseInt(localStorage.getItem('hg_read_page_' + docId), 10);
+                if (!isNaN(saved) && saved >= 0 && saved < pages.length) {
+                    initPageIdx = saved;
+                }
+            } catch(e) {}
+        }
 
-    // Determine initial page
-    let initPage = 1;
-    if (targetPage !== null && typeof targetPage === 'number') {
-        initPage = Math.max(1, Math.min(totalPages, targetPage));
+        renderDocPage(initPageIdx);
     } else {
-        try {
-            const saved = parseInt(localStorage.getItem('hg_read_foxit_' + docId), 10);
-            if (!isNaN(saved) && saved >= 1 && saved <= totalPages) {
-                initPage = saved;
-            }
-        } catch(e) {}
+        const bodyEl = document.getElementById('docReaderBody');
+        if (bodyEl) {
+            bodyEl.innerHTML = `
+                <div class="dr-placeholder-wrap" style="text-align:center; padding: 40px 20px;">
+                    <div class="dr-placeholder-icon" style="font-size:52px; margin-bottom:12px;">${docObj.icon}</div>
+                    <h2>${docObj.name}</h2>
+                    <p style="color:var(--text-muted); margin-top:6px;">${docObj.desc}</p>
+                    <div class="dr-callout gold" style="margin-top:24px; text-align:left;">
+                        <div class="dr-callout-title">📌 ĐANG KẾT NỐI TÀI LIỆU</div>
+                        <p>Hệ thống đang sẵn sàng nạp file thiết kế HTML hoàn chỉnh cho quyển sách này.</p>
+                    </div>
+                </div>
+            `;
+        }
     }
-
-    // Render Bookmarks Tree in Sidebar
-    renderFoxitBookmarksTree(docData, initPage);
-
-    // Render Page
-    renderFoxitPage(initPage);
 
     modal.classList.add('show');
 }
 window._openDocReader = openDocReader;
 
-function toggleFoxitSidebar(forceState = null) {
-    const sidebarEl = document.getElementById('foxitSidebar');
-    if (!sidebarEl) return;
-    const isCollapsed = sidebarEl.classList.contains('collapsed');
-    const nextCollapsed = forceState !== null ? !forceState : !isCollapsed;
-    sidebarEl.classList.toggle('collapsed', nextCollapsed);
-    isFoxitSidebarOpen = !nextCollapsed;
-}
-window._toggleFoxitSidebar = toggleFoxitSidebar;
+function getVerticalTOCInPageHTML(docData, pages) {
+    if (!docData || !Array.isArray(docData.chapters)) return '';
+    let itemsHtml = '';
 
-function renderFoxitBookmarksTree(docData, activePage = 1) {
-    const treeEl = document.getElementById('foxitBookmarksTree');
-    if (!treeEl) return;
-
-    const bookmarks = docData.bookmarks || [];
-    let html = '';
-
-    bookmarks.forEach((bm) => {
-        const isParentActive = (bm.page === activePage);
-        const children = bm.children || [];
-        const hasChildren = children.length > 0;
-
-        let childHtml = '';
-        children.forEach(child => {
-            const isChildActive = (child.page === activePage);
-            childHtml += `
-                <div class="foxit-child-item ${isChildActive ? 'active' : ''}" data-page="${child.page}" onclick="window._foxitGoToPage(${child.page})">
-                    <span class="foxit-child-title">✦ ${child.title}</span>
-                    <span class="foxit-node-page">Trang ${child.page}</span>
+    docData.chapters.forEach((chap, cIdx) => {
+        const sections = Array.isArray(chap.sections) ? chap.sections : [];
+        const chapRange = (chap.startPage && chap.endPage) ? `Trang ${chap.startPage} - ${chap.endPage}` : '';
+        
+        let secHtml = '';
+        sections.forEach((sec) => {
+            const pageObj = (pages || []).find(p => p.type === 'section' && p.secId === sec.id) || {};
+            const targetPageIdx = pageObj.pageIndex || 1;
+            const pRange = sec.startPage ? `Trang ${sec.startPage}` : '';
+            secHtml += `
+                <div class="dr-vtoc-item" onclick="window._navigateDocPage(${targetPageIdx})">
+                    <div class="dr-vtoc-item-left">
+                        <span class="dr-vtoc-dot">▪</span>
+                        <span class="dr-vtoc-sec-title">${sec.title}</span>
+                    </div>
+                    <div class="dr-vtoc-leader"></div>
+                    <span class="dr-vtoc-page-pill">${pRange}</span>
                 </div>
             `;
         });
 
-        html += `
-            <div class="foxit-tree-node ${isParentActive ? 'active-node' : ''}" data-page="${bm.page}">
-                <div class="foxit-node-head" onclick="window._foxitGoToPage(${bm.page})">
-                    <span class="foxit-node-title">${bm.title}</span>
-                    <span class="foxit-node-page">Trang ${bm.page}</span>
+        const firstSecPage = (pages || []).find(p => p.type === 'section' && p.chapIdx === cIdx);
+        const chapTargetIdx = firstSecPage ? firstSecPage.pageIndex : 1;
+
+        itemsHtml += `
+            <div class="dr-vtoc-chap-block">
+                <div class="dr-vtoc-chap-head" onclick="window._navigateDocPage(${chapTargetIdx})">
+                    <div class="dr-vtoc-chap-title">
+                        <span class="dr-vtoc-chap-badge">${chap.badge || `PHẦN ${cIdx}`}</span>
+                        <strong>${chap.title}</strong>
+                    </div>
+                    <div class="dr-vtoc-leader"></div>
+                    <span class="dr-vtoc-chap-page">${chapRange}</span>
                 </div>
-                ${hasChildren ? `<div class="foxit-child-list">${childHtml}</div>` : ''}
+                <div class="dr-vtoc-sec-list">
+                    ${secHtml}
+                </div>
             </div>
         `;
     });
 
-    treeEl.innerHTML = html;
+    return `
+        <div class="dr-vtoc-container">
+            <div class="dr-vtoc-top-banner">
+                <div class="dr-vtoc-kicker">✦ MỤC LỤC TỔNG QUAN CHI TIẾT ✦</div>
+                <h3 class="dr-vtoc-heading">CẤU TRÚC NỘI DUNG TOÀN THƯ</h3>
+                <p class="dr-vtoc-sub">Bấm vào bất kỳ mục nào bên dưới để chuyển ngay tới trang nội dung tương ứng</p>
+            </div>
+            <div class="dr-vtoc-chap-list">
+                ${itemsHtml}
+            </div>
+        </div>
+    `;
 }
 
-function filterFoxitToc(keyword) {
-    const q = (keyword || '').toLowerCase().trim();
-    const nodes = document.querySelectorAll('.foxit-tree-node');
-    nodes.forEach(node => {
-        let match = false;
-        const headText = node.querySelector('.foxit-node-head')?.textContent?.toLowerCase() || '';
-        if (headText.includes(q)) match = true;
+function renderDocTocDrawer(docData, pages) {
+    const listEl = document.getElementById('drTocList');
+    if (!listEl) return;
 
-        const children = node.querySelectorAll('.foxit-child-item');
-        children.forEach(child => {
-            const childText = child.textContent.toLowerCase();
-            if (!q || childText.includes(q)) {
-                child.style.display = 'flex';
-                match = true;
-            } else {
-                child.style.display = 'none';
-            }
+    let html = `
+        <div class="dr-toc-sec-item ${currentReadingPageIdx === 0 ? 'active' : ''}" style="margin-bottom:8px; border-radius:8px; font-weight:700; background:rgba(233,197,107,0.12);" onclick="window._navigateDocPage(0)">
+            <div class="dr-toc-sec-title-wrap">
+                <span class="dr-toc-bullet">👑</span>
+                <span class="dr-toc-sec-name">Bìa Sách & Mục Lục Tổng Quan</span>
+            </div>
+            <span class="dr-toc-page-badge">Trang Đầu</span>
+        </div>
+    `;
+
+    (docData.chapters || []).forEach((chap, cIdx) => {
+        const chapTitle = chap.title || `Chương ${cIdx + 1}`;
+        const sections = Array.isArray(chap.sections) ? chap.sections : [];
+        const chapRange = (chap.startPage && chap.endPage) ? `Trang ${chap.startPage} - ${chap.endPage}` : '';
+
+        let secItemsHtml = '';
+        sections.forEach((sec) => {
+            const pageObj = (pages || []).find(p => p.type === 'section' && p.secId === sec.id);
+            const targetPageIdx = pageObj ? pageObj.pageIndex : 1;
+            const isActive = targetPageIdx === currentReadingPageIdx;
+            const pRange = sec.startPage ? `Trang ${sec.startPage}` : '';
+            secItemsHtml += `
+                <div class="dr-toc-sec-item ${isActive ? 'active' : ''}" onclick="window._navigateDocPage(${targetPageIdx})">
+                    <div class="dr-toc-sec-title-wrap">
+                        <span class="dr-toc-bullet">✦</span>
+                        <span class="dr-toc-sec-name">${sec.title}</span>
+                    </div>
+                    ${pRange ? `<span class="dr-toc-page-badge">${pRange}</span>` : ''}
+                </div>
+            `;
         });
 
-        node.style.display = (!q || match) ? 'block' : 'none';
+        const firstSecPage = (pages || []).find(p => p.type === 'section' && p.chapIdx === cIdx);
+        const chapTargetIdx = firstSecPage ? firstSecPage.pageIndex : 1;
+        const isChapActive = (pages[currentReadingPageIdx]?.chapIdx === cIdx);
+
+        html += `
+            <div class="dr-toc-chap-group ${isChapActive ? 'active-chap' : ''}" data-chap-idx="${cIdx}">
+                <div class="dr-toc-chap-title" onclick="window._navigateDocPage(${chapTargetIdx})">
+                    <div class="dr-toc-chap-left">
+                        <span class="dr-toc-chap-badge">${chap.badge || `CHƯƠNG ${cIdx}`}</span>
+                        <span class="dr-toc-chap-name">${chap.shortTitle || chapTitle}</span>
+                    </div>
+                    ${chapRange ? `<span class="dr-toc-chap-range">${chapRange}</span>` : `<span style="font-size:11px; opacity:0.75;">${sections.length} phần ▾</span>`}
+                </div>
+                <div class="dr-toc-sec-wrap">
+                    ${secItemsHtml}
+                </div>
+            </div>
+        `;
     });
+
+    listEl.innerHTML = html;
 }
-window._filterFoxitToc = filterFoxitToc;
 
-function renderFoxitPage(pageNum) {
+function renderDocPage(pageIndex) {
     const docData = getDocData(currentReadingDocId);
-    if (!docData || !Array.isArray(docData.pages)) return;
+    if (!docData) return;
 
-    const totalPages = docData.totalPages || docData.pages.length;
-    const validPage = Math.max(1, Math.min(totalPages, pageNum));
-    currentFoxitPage = validPage;
+    const pages = getDocReadingPages(docData);
+    if (pages.length === 0) return;
 
-    const pageInput = document.getElementById('foxitPageInput');
-    if (pageInput) pageInput.value = validPage;
+    const validPageIdx = Math.max(0, Math.min(pages.length - 1, pageIndex));
+    currentReadingPageIdx = validPageIdx;
 
-    const pageSheet = document.getElementById('foxitPageSheet');
-    const mainCanvas = document.getElementById('foxitMainCanvas');
-    if (!pageSheet) return;
+    const bodyEl = document.getElementById('docReaderBody');
+    if (!bodyEl) return;
 
     const docObj = (SHOP_CATALOG.docs || []).find(d => d.id === currentReadingDocId) || docData;
-    const pageObj = docData.pages[validPage - 1] || { content: '' };
+    const totalContentPages = pages.length - 1;
 
-    // Highlight active bookmark in sidebar
-    document.querySelectorAll('.foxit-tree-node, .foxit-child-item').forEach(el => {
-        const p = parseInt(el.getAttribute('data-page'), 10);
-        el.classList.toggle('active', p === validPage);
-        el.classList.toggle('active-node', p === validPage);
-    });
+    // Render TOC Drawer with updated active state
+    renderDocTocDrawer(docData, pages);
 
-    // RENDER SHEET CONTENT
-    if (validPage === 1) {
-        // Page 1: Premium Book Cover
-        pageSheet.innerHTML = `
-            <div class="foxit-sheet-header">
-                <span>${docObj.name}</span>
-                <span>BẢN CHUẨN FOXIT READER</span>
-            </div>
-            <div class="foxit-sheet-body" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 40px 10px;">
-                <div style="transform: scale(1.15); margin-bottom: 24px;">
-                    ${window.getBookCoverHTML ? window.getBookCoverHTML(currentReadingDocId, 'lg') : `<div class="dr-banner-icon">${docObj.icon || '📜'}</div>`}
+    if (validPageIdx === 0) {
+        // Page 0: Cover & Full TOC
+        bodyEl.innerHTML = `
+            <div class="dr-book-cover-banner" style="background:radial-gradient(circle at 50% 30%, rgba(233,197,107,0.12), rgba(5,5,10,0.98)), #05050A; border: 1px solid rgba(233,197,107,0.35); box-shadow: 0 16px 36px rgba(0,0,0,0.6);">
+                <div class="dr-banner-cover-wrap" style="display:flex; align-items:center; justify-content:center;">
+                    ${window.getBookCoverHTML ? window.getBookCoverHTML(currentReadingDocId, 'md') : `<div class="dr-banner-icon">${docObj.icon || '📜'}</div>`}
                 </div>
-                <h1 style="font-family:'Chakra Petch',sans-serif; font-size:28px; color:#E9C56B; text-transform:uppercase; margin: 16px 0 8px 0;">${docObj.name || docData.title}</h1>
-                <p style="color:rgba(233,197,107,0.8); font-size:15px; max-width:540px; margin-bottom: 28px;">${docObj.desc || docData.category}</p>
-                <button class="dr-nav-btn next-btn" style="padding: 14px 36px; font-size: 16px; border-radius: 12px;" onclick="window._foxitGoToPage(2)">
-                    🚀 Bắt Đầu Đọc (Trang 2: Lời Nói Đầu) →
+                <div class="dr-banner-meta">
+                    <span class="dr-banner-badge" style="background:rgba(233,197,107,0.18); color:#E9C56B; border:1px solid rgba(233,197,107,0.4);">${docObj.badge || 'BẢN ĐỦ'}</span>
+                    <h1 class="dr-banner-title" style="color:#E9C56B; font-family:'Chakra Petch',sans-serif; text-transform:uppercase; letter-spacing:0.04em;">${docObj.name || docData.title}</h1>
+                    <p class="dr-banner-desc" style="color:rgba(233,197,107,0.75);">${docObj.desc || docData.category || ''}</p>
+                </div>
+            </div>
+
+            ${getVerticalTOCInPageHTML(docData, pages)}
+
+            <div style="text-align:center; margin: 30px 0 50px 0;">
+                <button class="dr-nav-btn next-btn" style="padding:14px 32px; font-size:16px; border-radius:12px;" onclick="window._navigateDocPage(1)">
+                    🚀 Bắt Đầu Đọc: ${pages[1]?.title || 'Lời Nói Đầu'} →
                 </button>
-            </div>
-            <div class="foxit-sheet-footer">
-                <div class="foxit-sheet-page-indicator">— Trang 1 / ${totalPages} —</div>
-                <div class="foxit-flip-btn-group">
-                    <button class="dr-nav-btn next-btn" onclick="window._foxitNextPage()">Trang sau ▶</button>
-                </div>
             </div>
         `;
     } else {
-        // Page 2..218: Clean Book Content
-        const hasPrev = validPage > 1;
-        const hasNext = validPage < totalPages;
+        // Page 1..N: Clean, paginated reading unit
+        const p = pages[validPageIdx];
+        const pRange = (p.startPage && p.endPage) ? `Trang ${p.startPage} - ${p.endPage}` : (p.startPage ? `Trang ${p.startPage}` : '');
+        const hasNext = validPageIdx < pages.length - 1;
 
-        pageSheet.innerHTML = `
-            <div class="foxit-sheet-header">
-                <span>${docObj.name}</span>
-                <span>${pageObj.chapBadge || 'NỘI DUNG'} • ${pageObj.chapTitle || ''}</span>
-            </div>
-            <div class="foxit-sheet-body">
-                ${pageObj.content}
-            </div>
-            <div class="foxit-sheet-footer">
-                <div class="foxit-sheet-page-indicator">— Trang ${validPage} / ${totalPages} —</div>
-                <div class="foxit-flip-btn-group">
-                    ${hasPrev ? `<button class="dr-nav-btn prev-btn" onclick="window._foxitPrevPage()">◀ Trang trước</button>` : ''}
-                    <button class="dr-nav-btn toc-center-btn" onclick="window._toggleFoxitSidebar()">📑 Mục Lục</button>
-                    ${hasNext ? `<button class="dr-nav-btn next-btn" onclick="window._foxitNextPage()">Trang sau ▶</button>` : `
-                        <button class="dr-nav-btn next-btn finish-btn" onclick="window._markDocCompleted()">✨ Hoàn Thành Sách</button>
+        bodyEl.innerHTML = `
+            <div class="dr-content-container">
+                <div class="dr-page-top-header">
+                    <div class="dr-page-top-left">
+                        <span class="dr-chap-badge-pill">⚡ ${p.chapBadge}</span>
+                        <span class="dr-page-chap-name">${p.chapShortTitle}</span>
+                    </div>
+                    <div class="dr-page-counter-pill">
+                        📖 Mục ${validPageIdx}/${totalContentPages} ${pRange ? `• (${pRange})` : ''}
+                    </div>
+                </div>
+
+                <div class="dr-page-title-banner">
+                    <h2 class="dr-page-main-heading">${p.title}</h2>
+                </div>
+
+                ${p.quote ? `
+                    <div class="dr-quote-box">
+                        <div class="dr-quote-symbol">❝</div>
+                        <div class="dr-quote-body">${p.quote}</div>
+                    </div>
+                ` : ''}
+
+                <article class="dr-chapter-content">
+                    ${p.content}
+                </article>
+
+                <div class="dr-page-nav-footer">
+                    <button class="dr-nav-btn prev-btn" onclick="window._navigateDocPage(${validPageIdx - 1})">
+                        ← ${validPageIdx === 1 ? '📑 Bìa & Mục Lục' : 'Trang trước'}
+                    </button>
+                    
+                    <button class="dr-nav-btn toc-center-btn" onclick="window._toggleDocToc(true)">
+                        📑 Mục Lục (${validPageIdx}/${totalContentPages})
+                    </button>
+
+                    ${hasNext ? `
+                        <button class="dr-nav-btn next-btn" onclick="window._navigateDocPage(${validPageIdx + 1})">
+                            Trang sau →
+                        </button>
+                    ` : `
+                        <button class="dr-nav-btn next-btn finish-btn" onclick="window._markDocCompleted()">
+                            ✨ Hoàn Thành Sách (+20 Coins)
+                        </button>
                     `}
                 </div>
             </div>
         `;
     }
 
-    // Scroll to top of page canvas
-    if (mainCanvas) mainCanvas.scrollTop = 0;
+    // Scroll to top
+    bodyEl.scrollTop = 0;
 
-    // Update Progress Bar
+    // Update progress bar
     const barEl = document.getElementById('drProgressBar');
     if (barEl) {
-        const pct = totalPages > 1 ? ((validPage - 1) / (totalPages - 1)) * 100 : 0;
+        const pct = totalContentPages > 0 ? (validPageIdx / totalContentPages) * 100 : 0;
         barEl.style.width = `${pct}%`;
     }
 
     // Update footer progress text
     const progressEl = document.getElementById('drProgressText');
     if (progressEl) {
-        progressEl.textContent = `📖 Đang đọc: Trang ${validPage}/${totalPages} (${pageObj.chapTitle || docObj.name})`;
+        const curPage = pages[validPageIdx];
+        if (validPageIdx === 0) {
+            progressEl.textContent = `📖 Bìa Sách & Mục Lục (${totalContentPages} Mục)`;
+        } else {
+            progressEl.textContent = `📖 Đang đọc: ${curPage.title} (Mục ${validPageIdx}/${totalContentPages})`;
+        }
     }
 
     // Save reading progress
     try {
-        localStorage.setItem('hg_read_foxit_' + currentReadingDocId, validPage);
+        localStorage.setItem('hg_read_page_' + currentReadingDocId, validPageIdx);
     } catch(e) {}
 }
 
-function foxitNextPage() {
-    renderFoxitPage(currentFoxitPage + 1);
+function navigateDocPage(pageIndex) {
+    toggleDocToc(false);
+    renderDocPage(pageIndex);
 }
-window._foxitNextPage = foxitNextPage;
+window._navigateDocPage = navigateDocPage;
 
-function foxitPrevPage() {
-    renderFoxitPage(currentFoxitPage - 1);
-}
-window._foxitPrevPage = foxitPrevPage;
-
-function foxitGoToPage(p) {
-    const target = parseInt(p, 10);
-    if (!isNaN(target)) {
-        renderFoxitPage(target);
+function switchDocChapter(idx, targetSecId = null) {
+    const docData = getDocData(currentReadingDocId);
+    if (!docData) return;
+    const pages = getDocReadingPages(docData);
+    let targetPage = 1;
+    if (targetSecId) {
+        const found = pages.find(p => p.type === 'section' && p.secId === targetSecId);
+        if (found) targetPage = found.pageIndex;
+    } else {
+        const found = pages.find(p => p.type === 'section' && p.chapIdx === idx);
+        if (found) targetPage = found.pageIndex;
     }
+    navigateDocPage(targetPage);
 }
-window._foxitGoToPage = foxitGoToPage;
+window._switchDocChapter = switchDocChapter;
+
+function jumpToDocSection(chapIdx, secId) {
+    switchDocChapter(chapIdx, secId);
+}
+window._jumpToDocSection = jumpToDocSection;
 
 // Keyboard navigation (ArrowLeft / ArrowRight / PageUp / PageDown)
 document.addEventListener('keydown', (e) => {
@@ -7364,10 +7494,10 @@ document.addEventListener('keydown', (e) => {
 
     if (e.key === 'ArrowRight' || e.key === 'PageDown') {
         e.preventDefault();
-        window._foxitNextPage();
+        window._navigateDocPage(currentReadingPageIdx + 1);
     } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
         e.preventDefault();
-        window._foxitPrevPage();
+        window._navigateDocPage(currentReadingPageIdx - 1);
     }
 });
 
