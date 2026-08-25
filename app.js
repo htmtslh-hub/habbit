@@ -6375,7 +6375,7 @@ function renderShopUI(targetTab = null) {
 
         html += `
             <div class="backpack-header-row" style="margin-top: 24px;">
-                <div class="backpack-sec-title">📚 TỦ SÁCH TRI THỨC ĐÃ MỞ KHÓA (${myUnlockedBooks.length}/6 Quyển)</div>
+                <div class="backpack-sec-title">📚 TỦ SÁCH TRI THỨC ĐÃ MỞ KHÓA (${myUnlockedBooks.length}/${(SHOP_CATALOG.docs || []).length} Quyển)</div>
                 <button class="doc-browse-shop-btn" onclick="window._openShopModal('docs')">
                     + Thêm Sách Mới
                 </button>
@@ -6386,7 +6386,7 @@ function renderShopUI(targetTab = null) {
         myUnlockedBooks.forEach(doc => {
             html += `
                 <div class="backpack-card doc-backpack-card">
-                    <div class="backpack-card-art doc-art-mini" style="background:${doc.gradient};">${doc.icon}</div>
+                    ${window.getBookCoverHTML ? window.getBookCoverHTML(doc.id, 'sm') : `<div class="backpack-card-art doc-art-mini" style="background:${doc.gradient};">${doc.icon}</div>`}
                     <div class="backpack-card-info">
                         <div class="backpack-card-name">${doc.name}</div>
                         <div class="backpack-card-qty">${doc.category || 'Tài liệu'} • <span style="color:#10b981;font-weight:700;">Đã sẵn sàng</span></div>
@@ -6487,7 +6487,7 @@ function renderShopUI(targetTab = null) {
                 <div class="shop-card doc-card ${isOwned ? 'doc-owned' : ''}">
                     ${doc.badge ? `<span class="shop-card-badge ${doc.free ? 'free-badge' : 'doc-badge'}">${doc.badge}</span>` : ''}
                     <div class="shop-card-header">
-                        <div class="shop-card-art doc-cover-art" style="background:${doc.gradient};">${doc.icon}</div>
+                        ${window.getBookCoverHTML ? window.getBookCoverHTML(doc.id, 'sm') : `<div class="shop-card-art doc-cover-art" style="background:${doc.gradient};">${doc.icon}</div>`}
                         <div class="shop-card-meta">
                             <div class="shop-card-category">${doc.category || 'Tài Liệu Đặc Biệt'}</div>
                             <div class="shop-card-title">${doc.name}</div>
@@ -7322,12 +7322,14 @@ function renderDocChapter(chapterIdx, targetSecId = null) {
 
     bodyEl.innerHTML = `
         ${chapterIdx === 0 ? `
-            <div class="dr-book-cover-banner" style="background:${docObj.gradient || 'linear-gradient(135deg, #059669, #10b981)'};">
-                <div class="dr-banner-icon">${docObj.icon || '📜'}</div>
+            <div class="dr-book-cover-banner" style="background:radial-gradient(circle at 50% 30%, rgba(233,197,107,0.12), rgba(5,5,10,0.98)), #05050A; border: 1px solid rgba(233,197,107,0.35); box-shadow: 0 16px 36px rgba(0,0,0,0.6);">
+                <div class="dr-banner-cover-wrap" style="display:flex; align-items:center; justify-content:center;">
+                    ${window.getBookCoverHTML ? window.getBookCoverHTML(docId, 'md') : `<div class="dr-banner-icon">${docObj.icon || '📜'}</div>`}
+                </div>
                 <div class="dr-banner-meta">
-                    <span class="dr-banner-badge">${docObj.badge || 'BẢN ĐỦ 218 TRANG'}</span>
-                    <h1 class="dr-banner-title">${docObj.name || docData.title}</h1>
-                    <p class="dr-banner-desc">${docObj.desc || docData.category || ''}</p>
+                    <span class="dr-banner-badge" style="background:rgba(233,197,107,0.18); color:#E9C56B; border:1px solid rgba(233,197,107,0.4);">${docObj.badge || 'BẢN ĐỦ'}</span>
+                    <h1 class="dr-banner-title" style="color:#E9C56B; font-family:'Exo 2',sans-serif; text-transform:uppercase; letter-spacing:0.04em;">${docObj.name || docData.title}</h1>
+                    <p class="dr-banner-desc" style="color:rgba(233,197,107,0.75);">${docObj.desc || docData.category || ''}</p>
                 </div>
             </div>
         ` : ''}

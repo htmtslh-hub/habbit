@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Saira:wght@300;400;500&display=swap&subset=vietnamese,latin" rel="stylesheet">
+<style>
+  body { margin:0; background:#030306; }
+  a { color:#E9C56B; text-decoration:none; }
+  a:hover { color:#F7E7B4; }
+</style>
+</helmet>
+
+<svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true">
+  <defs>
+    <linearGradient id="gd" gradientUnits="userSpaceOnUse" x1="6" y1="0" x2="88" y2="100">
+      <stop offset="0" stop-color="#E9C56B" stop-opacity="1"></stop>
+      <stop offset="0.55" stop-color="#E9C56B" stop-opacity="0.82"></stop>
+      <stop offset="1" stop-color="#E9C56B" stop-opacity="0.42"></stop>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div style="{{ boardStyle }}min-height:100vh;padding:72px 64px 96px;font-family:'Saira','Chakra Petch',system-ui,sans-serif;box-sizing:border-box">
+
+  <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:56px">
+    <div style="font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.55)">Bộ bìa · 15 tựa · 400 × 460 px · vàng #E9C56B / đen #05050A</div>
+    <div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:44px;line-height:1;letter-spacing:.08em;text-transform:uppercase;color:#E9C56B">Thư Viện Huyền Cơ</div>
+    <div style="font-size:13px;color:rgba(233,197,107,.4);max-width:660px;line-height:1.6">Nền trong suốt ngoài viền bìa · xuất PNG @2x (800 × 920).</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(5,400px);gap:48px 40px;justify-content:start">
+
+    <div data-cover="ban-chat-tai-chinh" data-screen-label="Bản Chất Tài Chính" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:212px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.13),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">TÀI CHÍNH</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px);mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px)"></div>
+            <div style="position:absolute;left:50%;top:50%;width:158px;height:158px;transform:translate(-50%,-50%);border:1px solid rgba(233,197,107,.26);border-radius:50%"></div>
+            <svg viewBox="0 0 100 100" width="104" height="104" fill="none"><circle cx="50" cy="50" r="30" stroke="url(#gd)" stroke-width="4"></circle><circle cx="50" cy="50" r="19" stroke="url(#gd)" stroke-width="4"></circle><circle cx="50" cy="50" r="8" fill="url(#gd)"></circle><path d="M50 4v10M50 86v10M4 50h10M86 50h10" stroke="url(#gd)" stroke-width="3.5"></path></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:30px;line-height:1.2;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:#E9C56B">Bản Chất<br>Tài Chính</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">I / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="luat-ngam-tai-chinh" data-screen-label="Luật Ngầm Tài Chính" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:212px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.13),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">TÀI CHÍNH</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px);mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px)"></div>
+            <div style="position:absolute;left:50%;top:50%;width:158px;height:158px;transform:translate(-50%,-50%);border:1px solid rgba(233,197,107,.26);border-radius:50%"></div>
+            <svg viewBox="0 0 100 100" width="104" height="104" fill="none"><path d="M12 82L50 20L88 82" stroke="url(#gd)" stroke-width="4.5" stroke-linejoin="round"></path><path d="M28 82L50 46L72 82" stroke="url(#gd)" stroke-width="4" stroke-linejoin="round"></path><path d="M42 82L50 68L58 82" stroke="url(#gd)" stroke-width="3.5" stroke-linejoin="round"></path></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:30px;line-height:1.2;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:#E9C56B">Luật Ngầm<br>Tài Chính</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">II / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="muu-luoc-tai-chinh" data-screen-label="Mưu Lược Tài Chính" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:212px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.13),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">TÀI CHÍNH</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px);mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px)"></div>
+            <div style="position:absolute;left:50%;top:50%;width:158px;height:158px;transform:translate(-50%,-50%);border:1px solid rgba(233,197,107,.26);border-radius:50%"></div>
+            <svg viewBox="0 0 100 100" width="104" height="104" fill="none"><circle cx="50" cy="34" r="16" stroke="url(#gd)" stroke-width="4"></circle><circle cx="26" cy="66" r="16" stroke="url(#gd)" stroke-width="4"></circle><circle cx="74" cy="66" r="16" stroke="url(#gd)" stroke-width="4"></circle><circle cx="50" cy="34" r="5" fill="url(#gd)"></circle><circle cx="26" cy="66" r="5" fill="url(#gd)"></circle><circle cx="74" cy="66" r="5" fill="url(#gd)"></circle></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:30px;line-height:1.2;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:#E9C56B">Mưu Lược<br>Tài Chính</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">III / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="thuong-chien" data-screen-label="Thương Chiến" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:206px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.13),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">THƯƠNG CHIẾN</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:190px;height:190px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 79px,#000 79px 87px,transparent 87px);mask:radial-gradient(circle,transparent 0 79px,#000 79px 87px,transparent 87px)"></div>
+            <div style="position:absolute;left:50%;top:50%;width:150px;height:150px;transform:translate(-50%,-50%);border:1px solid rgba(233,197,107,.26);border-radius:50%"></div>
+            <svg viewBox="0 0 100 100" width="100" height="100" fill="none"><path d="M50 6L66 40L50 94L34 40Z" stroke="url(#gd)" stroke-width="4" stroke-linejoin="round"></path><path d="M50 26L58 44L50 74L42 44Z" fill="url(#gd)"></path><path d="M24 42h52" stroke="url(#gd)" stroke-width="4"></path></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:10px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:31px;line-height:1.16;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:#E9C56B">Thương Chiến</div><div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(233,197,107,.5);text-align:center;line-height:1.5">Bí thuật làm chủ<br>trận địa tiền bạc</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">IV / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="logic-nguoi-ngheo" data-screen-label="Logic Người Nghèo" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:206px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.13),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">NHẬN THỨC</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:190px;height:190px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 79px,#000 79px 87px,transparent 87px);mask:radial-gradient(circle,transparent 0 79px,#000 79px 87px,transparent 87px)"></div>
+            <svg viewBox="0 0 100 100" width="104" height="104" fill="none"><rect x="14" y="14" width="72" height="72" stroke="url(#gd)" stroke-width="3.5" stroke-dasharray="11 8"></rect><path d="M50 30L68 50L50 70L32 50Z" fill="url(#gd)"></path><path d="M50 42L56 50L50 58L44 50Z" fill="#05050A"></path></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:10px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:28px;line-height:1.18;letter-spacing:.05em;text-transform:uppercase;text-align:center;color:#E9C56B">Logic<br>Người Nghèo</div><div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(233,197,107,.5);text-align:center">Và cái bẫy vô hình</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">V / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="he-thong-manh-me" data-screen-label="Hệ Thống Mạnh Mẽ" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:212px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.13),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">NỘI LỰC</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px);mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px)"></div>
+            <div style="position:absolute;left:50%;top:50%;width:158px;height:158px;transform:translate(-50%,-50%);border:1px solid rgba(233,197,107,.26);border-radius:50%"></div>
+            <svg viewBox="0 0 100 100" width="106" height="106" fill="none"><path d="M50 16L78 78H22Z" fill="url(#gd)"></path><path d="M22 44L42 78H2Z" fill="url(#gd)" opacity=".6"></path><path d="M78 44L98 78H58Z" fill="url(#gd)" opacity=".6"></path><path d="M50 40L62 66H38Z" fill="#05050A"></path></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:30px;line-height:1.2;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:#E9C56B">Hệ Thống<br>Mạnh Mẽ</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">VI / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="tu-duy-cuong-gia" data-screen-label="Tư Duy Cường Giả" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:212px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.13),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">NỘI LỰC</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px);mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px)"></div>
+            <div style="position:absolute;left:50%;top:50%;width:158px;height:158px;transform:translate(-50%,-50%);border:1px solid rgba(233,197,107,.26);border-radius:50%"></div>
+            <svg viewBox="0 0 100 100" width="104" height="104" fill="none"><path d="M50 4L58 36L50 52L42 36Z" fill="url(#gd)"></path><path d="M26 14L42 42L37 56Z" fill="url(#gd)" opacity=".8"></path><path d="M74 14L58 42L63 56Z" fill="url(#gd)" opacity=".8"></path><path d="M8 32L33 50L31 62Z" fill="url(#gd)" opacity=".58"></path><path d="M92 32L67 50L69 62Z" fill="url(#gd)" opacity=".58"></path><path d="M24 66h52" stroke="url(#gd)" stroke-width="4"></path><circle cx="50" cy="82" r="10" stroke="url(#gd)" stroke-width="4"></circle></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:30px;line-height:1.2;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:#E9C56B">Tư Duy<br>Cường Giả</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">VII / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="tu-duy-sau-sac" data-screen-label="Tư Duy Sâu Sắc" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:212px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.13),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">TƯ DUY</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px);mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px)"></div>
+            <div style="position:absolute;left:50%;top:50%;width:158px;height:158px;transform:translate(-50%,-50%);border:1px solid rgba(233,197,107,.26);border-radius:50%"></div>
+            <svg viewBox="0 0 100 100" width="108" height="108" fill="none"><path d="M50 2L57 43L98 50L57 57L50 98L43 57L2 50L43 43Z" fill="url(#gd)"></path><circle cx="50" cy="50" r="7" fill="#05050A"></circle></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:30px;line-height:1.2;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:#E9C56B">Tư Duy<br>Sâu Sắc</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">VIII / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="thuc-tinh-nhan-thuc" data-screen-label="Thức Tỉnh Nhận Thức" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:212px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.16),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">NHẬN THỨC</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px);mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px)"></div>
+            <svg viewBox="0 0 100 100" width="118" height="118" fill="none"><circle cx="50" cy="58" r="24" stroke="url(#gd)" stroke-width="4"></circle><circle cx="50" cy="58" r="13" fill="url(#gd)"></circle><path d="M50 6v16M24 12l7 14M76 12l-7 14M6 30l14 8M94 30l-14 8M4 58h12M84 58h12" stroke="url(#gd)" stroke-width="3.5" stroke-linecap="round"></path></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:30px;line-height:1.2;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:#E9C56B">Thức Tỉnh<br>Nhận Thức</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">IX / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="an-chua-huyen-co" data-screen-label="Ẩn Chứa Huyền Cơ" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:212px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.16),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">HUYỀN CƠ</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px);mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px)"></div>
+            <div style="position:absolute;left:50%;top:50%;width:158px;height:158px;transform:translate(-50%,-50%);border:1px solid rgba(233,197,107,.26);border-radius:50%"></div>
+            <svg viewBox="0 0 100 100" width="110" height="110" fill="none"><path d="M50 2L56 40L84 16L60 44L98 50L60 56L84 84L56 60L50 98L44 60L16 84L40 56L2 50L40 44L16 16L44 40Z" fill="url(#gd)"></path><circle cx="50" cy="50" r="6" fill="#05050A"></circle></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:30px;line-height:1.2;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:#E9C56B">Ẩn Chứa<br>Huyền Cơ</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">X / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="nhan-tinh-den-trang" data-screen-label="Nhân Tính Đen Trắng" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:206px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.13),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">NHÂN TÍNH</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:190px;height:190px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 79px,#000 79px 87px,transparent 87px);mask:radial-gradient(circle,transparent 0 79px,#000 79px 87px,transparent 87px)"></div>
+            <svg viewBox="0 0 100 100" width="104" height="104" fill="none"><circle cx="50" cy="50" r="34" stroke="url(#gd)" stroke-width="4"></circle><path d="M50 16a34 34 0 000 68z" fill="url(#gd)"></path></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:10px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:29px;line-height:1.18;letter-spacing:.05em;text-transform:uppercase;text-align:center;color:#E9C56B">Nhân Tính<br>Đen Trắng</div><div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(233,197,107,.5);text-align:center">Hai mặt một con người</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">XI / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="tuyet-mat-nhan-tinh" data-screen-label="Tuyệt Mật Nhân Tính" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:212px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.13),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">NHÂN TÍNH</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px);mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px)"></div>
+            <svg viewBox="0 0 100 100" width="104" height="104" fill="none"><circle cx="50" cy="50" r="40" stroke="url(#gd)" stroke-width="3"></circle><path d="M62 16A36 36 0 1 0 62 84" stroke="url(#gd)" stroke-width="15" stroke-linecap="round"></path></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:30px;line-height:1.2;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:#E9C56B">Tuyệt Mật<br>Nhân Tính</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">XII / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="xuyen-thau-nhan-tinh" data-screen-label="Xuyên Thấu Nhân Tính" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:212px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.13),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">NHÂN TÍNH</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px);mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px)"></div>
+            <div style="position:absolute;left:50%;top:50%;width:158px;height:158px;transform:translate(-50%,-50%);border:1px solid rgba(233,197,107,.26);border-radius:50%"></div>
+            <svg viewBox="0 0 100 100" width="104" height="104" fill="none"><path d="M50 4L72 50L50 96L28 50Z" stroke="url(#gd)" stroke-width="4" stroke-linejoin="round"></path><path d="M50 26L61 50L50 74L39 50Z" fill="url(#gd)"></path><path d="M50 0v100" stroke="url(#gd)" stroke-width="2" opacity=".5"></path></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:30px;line-height:1.2;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:#E9C56B">Xuyên Thấu<br>Nhân Tính</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">XIII / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="muu-luoc-tuoi-tre" data-screen-label="Mưu Lược Tuổi Trẻ" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:212px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.16),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">MƯU LƯỢC</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px);mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px)"></div>
+            <svg viewBox="0 0 100 100" width="112" height="112" fill="none"><path d="M22 76a28 28 0 0156 0z" fill="url(#gd)"></path><path d="M6 76h88" stroke="url(#gd)" stroke-width="4"></path><path d="M50 8v16M22 18l8 14M78 18l-8 14M4 40l14 8M96 40l-14 8" stroke="url(#gd)" stroke-width="3.5" stroke-linecap="round"></path></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:30px;line-height:1.2;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:#E9C56B">Mưu Lược<br>Tuổi Trẻ</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">XIV / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+    <div data-cover="tinh-cam-bi-tich" data-screen-label="Tình Cảm Bí Tịch" style="width:400px;height:460px;position:relative;overflow:hidden;border-radius:5px 14px 14px 5px;background:#05050A;box-shadow:inset 0 0 0 1px rgba(233,197,107,.45),0 22px 54px rgba(0,0,0,.66)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(180deg,rgba(233,197,107,.9) 0 9px,rgba(233,197,107,.14) 9px 16px)"></div>
+      <div style="position:absolute;left:10px;top:0;bottom:0;width:1px;background:rgba(233,197,107,.34)"></div>
+      <div style="position:absolute;left:calc(50% + 5px);top:212px;width:330px;height:330px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(233,197,107,.13),transparent 66%)"></div>
+      <div style="position:absolute;inset:14px 16px 14px 24px;border:1px solid rgba(233,197,107,.15)"></div>
+      <div style="position:absolute;left:24px;top:14px;width:20px;height:20px;border-left:1px solid rgba(233,197,107,.85);border-top:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:absolute;right:16px;bottom:14px;width:20px;height:20px;border-right:1px solid rgba(233,197,107,.85);border-bottom:1px solid rgba(233,197,107,.85)"></div>
+      <div style="position:relative;height:100%;box-sizing:border-box;padding:36px 34px 30px 44px;display:flex;flex-direction:column;align-items:center">
+        <sc-if value="{{ showKicker }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:12px;align-self:stretch"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(233,197,107,.45))"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:rgba(233,197,107,.72)">TÂM PHÁP</div><div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(233,197,107,.45))"></div></div></sc-if>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border-radius:50%;opacity:.55;background:repeating-conic-gradient(from 0deg,#E9C56B 0deg .5deg,transparent .5deg 15deg);-webkit-mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px);mask:radial-gradient(circle,transparent 0 84px,#000 84px 92px,transparent 92px)"></div>
+            <div style="position:absolute;left:50%;top:50%;width:158px;height:158px;transform:translate(-50%,-50%);border:1px solid rgba(233,197,107,.26);border-radius:50%"></div>
+            <svg viewBox="0 0 100 100" width="104" height="104" fill="none"><path d="M44 24A25 25 0 0 0 44 76" stroke="url(#gd)" stroke-width="10" stroke-linecap="round"></path><path d="M56 24A25 25 0 0 1 56 76" stroke="url(#gd)" stroke-width="10" stroke-linecap="round"></path><path d="M50 38L57 50L50 62L43 50Z" fill="url(#gd)"></path></svg>
+          </div>
+        </div>
+        <sc-if value="{{ showTitles }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;align-self:stretch"><div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:30px;line-height:1.2;letter-spacing:.055em;text-transform:uppercase;text-align:center;color:#E9C56B">Tình Cảm<br>Bí Tịch</div><div style="display:flex;align-items:center;gap:10px;align-self:stretch"><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div><div style="font-family:'Chakra Petch',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:.3em;color:rgba(233,197,107,.6)">XV / XV</div><div style="flex:1;height:1px;background:rgba(233,197,107,.22)"></div></div></div></sc-if>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;boardBg&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;,&quot;checker&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Xem trước&quot;},&quot;showTitles&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Xem trước&quot;},&quot;showKicker&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Xem trước&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const mode = this.props.boardBg ?? 'dark';
+    const bg = mode === 'light'
+      ? 'background:#EFEAE0;'
+      : mode === 'checker'
+      ? 'background-color:#9C9C9C;background-image:linear-gradient(45deg,#7E7E7E 25%,transparent 25%,transparent 75%,#7E7E7E 75%),linear-gradient(45deg,#7E7E7E 25%,transparent 25%,transparent 75%,#7E7E7E 75%);background-size:32px 32px;background-position:0 0,16px 16px;'
+      : 'background:radial-gradient(120% 80% at 50% 0%,#0B0A10 0%,#030306 70%);';
+    return {
+      boardStyle: bg,
+      showTitles: this.props.showTitles ?? true,
+      showKicker: this.props.showKicker ?? true
+    };
+  }
+}
+</script>
+</body>
+</html>
