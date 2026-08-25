@@ -7204,6 +7204,59 @@ function renderDocChapterTabs(docData, activeIdx) {
     bar.innerHTML = html;
 }
 
+function getVerticalTOCInPageHTML(docData) {
+    if (!docData || !Array.isArray(docData.chapters)) return '';
+    let itemsHtml = '';
+    docData.chapters.forEach((chap, cIdx) => {
+        const sections = Array.isArray(chap.sections) ? chap.sections : [];
+        const chapRange = (chap.startPage && chap.endPage) ? `Trang ${chap.startPage} - ${chap.endPage}` : '';
+        
+        let secHtml = '';
+        sections.forEach((sec, sIdx) => {
+            const pRange = sec.startPage ? `Trang ${sec.startPage}` : '';
+            secHtml += `
+                <div class="dr-vtoc-item" onclick="window._jumpToDocSection(${cIdx}, '${sec.id}')">
+                    <div class="dr-vtoc-item-left">
+                        <span class="dr-vtoc-dot">▪</span>
+                        <span class="dr-vtoc-sec-title">${sec.title}</span>
+                    </div>
+                    <div class="dr-vtoc-leader"></div>
+                    <span class="dr-vtoc-page-pill">${pRange}</span>
+                </div>
+            `;
+        });
+
+        itemsHtml += `
+            <div class="dr-vtoc-chap-block">
+                <div class="dr-vtoc-chap-head" onclick="window._switchDocChapter(${cIdx})">
+                    <div class="dr-vtoc-chap-title">
+                        <span class="dr-vtoc-chap-badge">${chap.badge || `PHẦN ${cIdx}`}</span>
+                        <strong>${chap.title}</strong>
+                    </div>
+                    <div class="dr-vtoc-leader"></div>
+                    <span class="dr-vtoc-chap-page">${chapRange}</span>
+                </div>
+                <div class="dr-vtoc-sec-list">
+                    ${secHtml}
+                </div>
+            </div>
+        `;
+    });
+
+    return `
+        <div class="dr-vtoc-container">
+            <div class="dr-vtoc-top-banner">
+                <div class="dr-vtoc-kicker">✦ MỤC LỤC TỔNG QUAN CHI TIẾT ✦</div>
+                <h3 class="dr-vtoc-heading">CẤU TRÚC NỘI DUNG TOÀN THƯ</h3>
+                <p class="dr-vtoc-sub">Bấm vào bất kỳ mục nào bên dưới để nhảy ngay tới trang nội dung tương ứng</p>
+            </div>
+            <div class="dr-vtoc-chap-list">
+                ${itemsHtml}
+            </div>
+        </div>
+    `;
+}
+
 function renderDocTocDrawer(docData) {
     const listEl = document.getElementById('drTocList');
     if (!listEl) return;
@@ -7212,24 +7265,32 @@ function renderDocTocDrawer(docData) {
     (docData.chapters || []).forEach((chap, cIdx) => {
         const chapTitle = chap.title || `Chương ${cIdx + 1}`;
         const sections = Array.isArray(chap.sections) ? chap.sections : [];
-        
+        const isChapActive = cIdx === currentReadingChapterIdx;
+        const chapRange = (chap.startPage && chap.endPage) ? `Trang ${chap.startPage} - ${chap.endPage}` : '';
+
         let secItemsHtml = '';
         sections.forEach((sec, sIdx) => {
-            const isActive = cIdx === currentReadingChapterIdx && (sec.id === currentReadingSecId || (!currentReadingSecId && sIdx === 0));
-            const pRange = (sec.startPage && sec.endPage) ? `P.${sec.startPage}-${sec.endPage}` : '';
+            const isActive = isChapActive && (sec.id === currentReadingSecId || (!currentReadingSecId && sIdx === 0));
+            const pRange = sec.startPage ? `Trang ${sec.startPage}` : '';
             secItemsHtml += `
                 <div class="dr-toc-sec-item ${isActive ? 'active' : ''}" onclick="window._jumpToDocSection(${cIdx}, '${sec.id}')">
-                    <span>${sec.title}</span>
-                    ${pRange ? `<span class="dr-toc-sec-page">${pRange}</span>` : ''}
+                    <div class="dr-toc-sec-title-wrap">
+                        <span class="dr-toc-bullet">✦</span>
+                        <span class="dr-toc-sec-name">${sec.title}</span>
+                    </div>
+                    ${pRange ? `<span class="dr-toc-page-badge">${pRange}</span>` : ''}
                 </div>
             `;
         });
 
         html += `
-            <div class="dr-toc-chap-group" data-chap-idx="${cIdx}">
+            <div class="dr-toc-chap-group ${isChapActive ? 'active-chap' : ''}" data-chap-idx="${cIdx}">
                 <div class="dr-toc-chap-title" onclick="window._switchDocChapter(${cIdx})">
-                    <span>${chap.shortTitle || chapTitle}</span>
-                    <span style="font-size:11px; opacity:0.75;">${sections.length} phần ▾</span>
+                    <div class="dr-toc-chap-left">
+                        <span class="dr-toc-chap-badge">${chap.badge || `CHƯƠNG ${cIdx}`}</span>
+                        <span class="dr-toc-chap-name">${chap.shortTitle || chapTitle}</span>
+                    </div>
+                    ${chapRange ? `<span class="dr-toc-chap-range">${chapRange}</span>` : `<span style="font-size:11px; opacity:0.75;">${sections.length} phần ▾</span>`}
                 </div>
                 <div class="dr-toc-sec-wrap">
                     ${secItemsHtml}
@@ -7274,13 +7335,15 @@ function renderDocChapter(chapterIdx, targetSecId = null) {
 
     sections.forEach((sec, sIdx) => {
         const isGenericTitle = !sec.title || sec.title.startsWith('Mục ') || sec.title.startsWith('Phần ') || sec.title.includes('Từ trang');
+        const pRange = (sec.startPage && sec.endPage) ? `Trang ${sec.startPage} - ${sec.endPage}` : (sec.startPage ? `Trang ${sec.startPage}` : '');
         sectionsHtml += `
             <article class="dr-chapter" id="${sec.id || `sec_${chapterIdx}_${sIdx}`}">
-                ${(!isGenericTitle && sIdx > 0) ? `
-                    <div class="dr-chapter-header">
-                        <h3 class="dr-section-subtitle">${sec.title}</h3>
+                <div class="dr-sec-page-header">
+                    <div class="dr-sec-page-badge">
+                        ${pRange ? `<span class="dr-page-pill">📖 ${pRange}</span>` : ''}
+                        <span class="dr-sec-title-text">${sec.title}</span>
                     </div>
-                ` : ''}
+                </div>
                 <div class="dr-chapter-content">
                     ${sec.content}
                 </div>
@@ -7303,7 +7366,7 @@ function renderDocChapter(chapterIdx, targetSecId = null) {
             ` : '<div></div>'}
             
             <button class="dr-nav-btn toc-center-btn" onclick="window._toggleDocToc(true)">
-                📑 Mục Lục Cuốn Sách
+                📑 Mục Lục Cuốn Sách (${docData.totalPages || 218} Trang)
             </button>
 
             ${hasNext ? `
@@ -7330,12 +7393,15 @@ function renderDocChapter(chapterIdx, targetSecId = null) {
                     <p class="dr-banner-desc" style="color:rgba(233,197,107,0.75);">${docObj.desc || docData.category || ''}</p>
                 </div>
             </div>
+
+            ${getVerticalTOCInPageHTML(docData)}
         ` : `
             <div class="dr-chapter-hero-banner">
                 <div class="dr-chap-badge-pill">
                     <span class="dr-chap-badge-icon">⚡</span>
                     <span>${chap.badge || `PHẦN ${chapterIdx + 1}`}</span>
                     <span style="opacity:0.6; margin-left:4px;">• Chương ${chapterIdx + 1}/${docData.chapters.length}</span>
+                    ${(chap.startPage && chap.endPage) ? `<span style="opacity:0.75; margin-left:6px; color:#E9C56B;">(Trang ${chap.startPage} - ${chap.endPage})</span>` : ''}
                 </div>
                 <h2 class="dr-chap-main-title">${chap.title}</h2>
             </div>
