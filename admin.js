@@ -119,6 +119,39 @@ function initAuth(){
     });
 }
 
+// ===== SOURCE TRACKING METADATA =====
+const SOURCE_META = {
+    tiktok: { label: 'TikTok', icon: '🎵', badgeClass: 'tiktok' },
+    facebook: { label: 'Facebook', icon: '📘', badgeClass: 'facebook' },
+    youtube: { label: 'YouTube', icon: '📺', badgeClass: 'youtube' },
+    zalo: { label: 'Zalo', icon: '💬', badgeClass: 'zalo' },
+    threads: { label: 'Threads', icon: '🧵', badgeClass: 'threads' },
+    instagram: { label: 'Instagram', icon: '📷', badgeClass: 'instagram' },
+    google: { label: 'Google', icon: '🔍', badgeClass: 'google' },
+    twitter: { label: 'Twitter / X', icon: '🐦', badgeClass: 'twitter' },
+    telegram: { label: 'Telegram', icon: '✈️', badgeClass: 'telegram' },
+    direct: { label: 'Trực tiếp', icon: '🌐', badgeClass: 'direct' }
+};
+
+function getSourceInfo(sourceRaw){
+    if (!sourceRaw) return { label: 'Trực tiếp', icon: '🌐', badgeClass: 'direct', key: 'direct' };
+    const s = String(sourceRaw).toLowerCase().trim();
+    if (SOURCE_META[s]) {
+        return { ...SOURCE_META[s], key: s };
+    }
+    return {
+        label: s.charAt(0).toUpperCase() + s.slice(1),
+        icon: '🏷️',
+        badgeClass: 'other',
+        key: s
+    };
+}
+
+function sourceBadgeHtml(sourceRaw){
+    const info = getSourceInfo(sourceRaw);
+    return `<span class="source-badge ${info.badgeClass}">${info.icon} ${escHtml(info.label)}</span>`;
+}
+
 // ===== REAL-TIME LISTENER =====
 function startRealtimeListener() {
     // Unsubscribe previous listener if any
@@ -132,7 +165,8 @@ function startRealtimeListener() {
         updateStats();
         renderUsers(
             document.getElementById('filterPlan')?.value,
-            document.getElementById('searchInput')?.value?.trim()
+            document.getElementById('searchInput')?.value?.trim(),
+            document.getElementById('filterSource')?.value
         );
         renderPending();
 
@@ -165,24 +199,153 @@ async function loadUsers(){
     }
 }
 
-// ===== STATS =====
+// ===== STATS & SOURCE BREAKDOWN =====
 function updateStats(){
     document.getElementById('statTotal').textContent = allUsers.length;
     document.getElementById('statActive').textContent = allUsers.filter(u => isActive30d(u)).length;
     document.getElementById('statPremium').textContent = allUsers.filter(u => getEffectivePlan(u) === 'premium').length;
     document.getElementById('statTrial').textContent = allUsers.filter(u => getEffectivePlan(u) === 'trial').length;
+
+    renderSourceStats();
+    renderRecentUsers();
 }
 
+function renderRecentUsers(){
+    const tbody = document.getElementById('recentUsersBody');
+    if (!tbody) return;
+
+    const recent = [...allUsers].sort((a,b) => {
+        if(a.role === 'admin' && b.role !== 'admin') return -1;
+        if(b.role === 'admin' && a.role !== 'admin') return 1;
+        const aTime = a.createdAt ? (a.createdAt.toDate ? a.createdAt.toDate().getTime() : 0) : 0;
+        const bTime = b.createdAt ? (b.createdAt.toDate ? b.createdAt.toDate().getTime() : 0) : 0;
+        return bTime - aTime;
+    }).slice(0, 8);
+
+    if (recent.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted);">Chưa có người dùng nào</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = recent.map(u => {
+        const plan = getEffectivePlan(u);
+        const planLabel = plan === 'premium' ? '👑 Premium' : plan === 'trial' ? '⏳ Trial' : 'Free';
+        const name = u.displayName || u.email?.split('@')[0] || 'Unknown';
+
+        return `<tr>
+            <td>
+                <div class="user-cell">
+                    ${avatarHtml(u.photoURL, name)}
+                    <span class="user-cell-name">${escHtml(name)}${u.role==='admin'?' <svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg>':''}</span>
+                </div>
+            </td>
+            <td>${escHtml(u.email||'—')}</td>
+            <td><span class="plan-badge ${plan}">${planLabel}</span></td>
+            <td>${sourceBadgeHtml(u.registerSource || u.utm_source)}</td>
+            <td>${shortDate(u.createdAt)}</td>
+            <td>
+                <button class="btn-sm" onclick="window._adminViewUser('${u.uid}')" title="Chi tiết">👁️ Chi tiết</button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function renderSourceStats(){
+    const container = document.getElementById('sourceStatsGrid');
+    const totalEl = document.getElementById('sourceTotalCount');
+    if (!container) return;
+
+    const total = allUsers.length || 0;
+    if (totalEl) totalEl.textContent = `${total} user`;
+
+    const counts = {};
+    allUsers.forEach(u => {
+        const info = getSourceInfo(u.registerSource || u.utm_source);
+        const key = info.key;
+        counts[key] = (counts[key] || 0) + 1;
+    });
+
+    const priorityKeys = ['tiktok', 'facebook', 'youtube', 'zalo', 'threads', 'google', 'direct'];
+    const allKeys = Array.from(new Set([...priorityKeys, ...Object.keys(counts)]));
+    allKeys.sort((a, b) => (counts[b] || 0) - (counts[a] || 0));
+
+    const displayKeys = allKeys.filter(k => (counts[k] || 0) > 0 || ['tiktok', 'facebook', 'youtube', 'zalo', 'direct'].includes(k));
+
+    container.innerHTML = displayKeys.map(key => {
+        const info = getSourceInfo(key);
+        const count = counts[key] || 0;
+        const percent = total > 0 ? Math.round((count / total) * 100) : 0;
+        return `
+            <div class="source-stat-item ${info.badgeClass}" onclick="window._adminFilterBySource('${key}')" title="Bấm để lọc danh sách user ${info.label}">
+                <div class="source-stat-top">
+                    <span class="source-stat-icon">${info.icon}</span>
+                    <span class="source-stat-name">${escHtml(info.label)}</span>
+                    <span class="source-stat-count">${count}</span>
+                </div>
+                <div class="source-stat-bar-bg">
+                    <div class="source-stat-bar-fill" style="width: ${percent}%;"></div>
+                </div>
+                <div class="source-stat-bottom">
+                    <span class="source-stat-pct">${percent}%</span>
+                    <span class="source-stat-hint">Xem danh sách →</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+window._adminFilterBySource = (sourceKey) => {
+    const navUsers = document.querySelector('.nav-item[data-section="users"]');
+    if (navUsers) navUsers.click();
+    const filterSource = document.getElementById('filterSource');
+    if (filterSource) {
+        let opt = Array.from(filterSource.options).find(o => o.value === sourceKey);
+        if (opt) {
+            filterSource.value = sourceKey;
+        } else {
+            filterSource.value = 'all';
+        }
+    }
+    const filterPlan = document.getElementById('filterPlan');
+    const searchInput = document.getElementById('searchInput');
+    renderUsers(filterPlan ? filterPlan.value : 'all', searchInput ? searchInput.value.trim() : '', sourceKey);
+};
+
 // ===== RENDER USERS TABLE =====
-function renderUsers(filter, search){
+function renderUsers(filter, search, filterSource){
     const tbody = document.getElementById('userTableBody');
     const empty = document.getElementById('tableEmpty');
     
+    if (filter === undefined) filter = document.getElementById('filterPlan')?.value;
+    if (search === undefined) search = document.getElementById('searchInput')?.value?.trim();
+    if (filterSource === undefined) filterSource = document.getElementById('filterSource')?.value;
+
     let filtered = [...allUsers];
     
     // Filter by plan
     if(filter && filter !== 'all'){
         filtered = filtered.filter(u => getEffectivePlan(u) === filter);
+    }
+
+    // Filter by source
+    if(filterSource && filterSource !== 'all'){
+        if(filterSource === 'other'){
+            const standardSources = ['tiktok', 'facebook', 'youtube', 'zalo', 'threads', 'instagram', 'google', 'direct', 'twitter', 'telegram'];
+            filtered = filtered.filter(u => {
+                const s = (u.registerSource || u.utm_source || 'direct').toLowerCase();
+                return !standardSources.includes(s);
+            });
+        } else if (filterSource === 'threads') {
+            filtered = filtered.filter(u => {
+                const s = (u.registerSource || u.utm_source || '').toLowerCase();
+                return s === 'threads' || s === 'instagram';
+            });
+        } else {
+            filtered = filtered.filter(u => {
+                const s = (u.registerSource || u.utm_source || 'direct').toLowerCase();
+                return s === filterSource;
+            });
+        }
     }
     
     // Search
@@ -191,6 +354,8 @@ function renderUsers(filter, search){
         filtered = filtered.filter(u => 
             (u.displayName||'').toLowerCase().includes(q) || 
             (u.email||'').toLowerCase().includes(q) ||
+            (u.registerSource||'').toLowerCase().includes(q) ||
+            (u.utm_campaign||'').toLowerCase().includes(q) ||
             u.uid.toLowerCase().includes(q)
         );
     }
@@ -227,6 +392,7 @@ function renderUsers(filter, search){
             </td>
             <td>${escHtml(u.email||'—')}</td>
             <td><span class="plan-badge ${plan}">${planLabel}</span></td>
+            <td>${sourceBadgeHtml(u.registerSource || u.utm_source)}</td>
             <td>${shortDate(u.createdAt)}</td>
             <td>${shortDate(u.lastLoginAt)}</td>
             <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
@@ -313,17 +479,23 @@ function initNavigation(){
 function initSearch(){
     const searchInput = document.getElementById('searchInput');
     const filterPlan = document.getElementById('filterPlan');
+    const filterSource = document.getElementById('filterSource');
     
     let debounce;
     searchInput.oninput = () => {
         clearTimeout(debounce);
         debounce = setTimeout(() => {
-            renderUsers(filterPlan.value, searchInput.value.trim());
+            renderUsers(filterPlan.value, searchInput.value.trim(), filterSource ? filterSource.value : 'all');
         }, 300);
     };
     filterPlan.onchange = () => {
-        renderUsers(filterPlan.value, searchInput.value.trim());
+        renderUsers(filterPlan.value, searchInput.value.trim(), filterSource ? filterSource.value : 'all');
     };
+    if (filterSource) {
+        filterSource.onchange = () => {
+            renderUsers(filterPlan.value, searchInput.value.trim(), filterSource.value);
+        };
+    }
 }
 
 // ===== ACTIONS =====
@@ -332,20 +504,32 @@ function initActions(){
         await loadUsers();
     };
 
+    const btnGoToUsers = document.getElementById('btnGoToUsers');
+    if (btnGoToUsers) {
+        btnGoToUsers.onclick = () => {
+            const navUsers = document.querySelector('.nav-item[data-section="users"]');
+            if (navUsers) navUsers.click();
+        };
+    }
+
     document.getElementById('btnExportUsers').onclick = () => {
-        const headers = ['UID','Name','Email','Plan','Role','Created','LastLogin','Disabled'];
+        const headers = ['UID','Name','Email','Plan','Role','Source','UTM_Source','UTM_Campaign','Referrer','Created','LastLogin','Disabled'];
         const rows = allUsers.map(u => [
             u.uid,
             u.displayName||'',
             u.email||'',
             getEffectivePlan(u),
             u.role||'customer',
+            u.registerSource||'direct',
+            u.utm_source||'',
+            u.utm_campaign||'',
+            u.referrer||'',
             shortDate(u.createdAt),
             shortDate(u.lastLoginAt),
             u.disabled?'Yes':'No'
         ]);
         let csv = headers.join(',') + '\n';
-        rows.forEach(r => { csv += r.map(v => `"${v}"`).join(',') + '\n'; });
+        rows.forEach(r => { csv += r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',') + '\n'; });
         
         const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8;'});
         const url = URL.createObjectURL(blob);
@@ -492,6 +676,26 @@ function openUserModal(uid){
     const plan = getEffectivePlan(user);
     document.getElementById('detailPlan').innerHTML = `<span class="plan-badge ${plan}">${plan === 'premium' ? '👑 Premium' : plan === 'trial' ? '⏳ Trial' : 'Free'}</span>`;
     document.getElementById('detailRole').textContent = user.role || 'customer';
+    
+    // Registration Source details
+    const detailSourceEl = document.getElementById('detailSource');
+    if (detailSourceEl) {
+        detailSourceEl.innerHTML = sourceBadgeHtml(user.registerSource || user.utm_source);
+    }
+    const detailCampaignEl = document.getElementById('detailCampaign');
+    if (detailCampaignEl) {
+        const camp = user.utm_campaign || user.utm_medium || user.utm_source || '—';
+        detailCampaignEl.textContent = camp;
+    }
+    const detailReferrerEl = document.getElementById('detailReferrer');
+    if (detailReferrerEl) {
+        if (user.referrer) {
+            detailReferrerEl.innerHTML = `<a href="${escHtml(user.referrer)}" target="_blank" rel="noopener" style="color:var(--accent-blue-bright);word-break:break-all;">${escHtml(user.referrer)}</a>`;
+        } else {
+            detailReferrerEl.textContent = '— (Truy cập trực tiếp)';
+        }
+    }
+
     document.getElementById('detailCreated').textContent = formatDate(user.createdAt);
     document.getElementById('detailTrialExp').textContent = formatDate(user.trialExpiresAt);
     document.getElementById('detailPlanExp').textContent = user.planExpiresAt ? formatDate(user.planExpiresAt) : 'Vĩnh viễn';

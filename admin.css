@@ -406,6 +406,141 @@ body {
     margin-top: 6px;
 }
 
+/* ===== SOURCE BREAKDOWN CARDS ===== */
+.source-breakdown-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow);
+}
+.source-breakdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+.source-breakdown-header h3 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.source-total-badge {
+    background: rgba(148, 163, 184, 0.16);
+    border: 1px solid var(--border-bright);
+    color: #cbd5e1;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 12px;
+}
+.source-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+}
+.source-stat-item {
+    background: var(--bg-card-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.source-stat-item:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-bright);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+.source-stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.source-stat-icon {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+.source-stat-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #ffffff;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.source-stat-count {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--accent-green-bright);
+}
+.source-stat-bar-bg {
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    overflow: hidden;
+}
+.source-stat-bar-fill {
+    height: 100%;
+    background: var(--accent-green-bright);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+.source-stat-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11.5px;
+    color: var(--text-muted);
+}
+.source-stat-pct {
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+.source-stat-hint {
+    color: var(--accent-green-bright);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    font-weight: 600;
+}
+.source-stat-item:hover .source-stat-hint {
+    opacity: 1;
+}
+
+/* Individual Source Colors */
+.source-stat-item.tiktok .source-stat-bar-fill { background: #00f2fe; }
+.source-stat-item.tiktok:hover { border-color: rgba(0, 242, 254, 0.4); }
+
+.source-stat-item.facebook .source-stat-bar-fill { background: #1877f2; }
+.source-stat-item.facebook:hover { border-color: rgba(24, 119, 242, 0.4); }
+
+.source-stat-item.youtube .source-stat-bar-fill { background: #ff4b4b; }
+.source-stat-item.youtube:hover { border-color: rgba(255, 75, 75, 0.4); }
+
+.source-stat-item.zalo .source-stat-bar-fill { background: #0068ff; }
+.source-stat-item.zalo:hover { border-color: rgba(0, 104, 255, 0.4); }
+
+.source-stat-item.threads .source-stat-bar-fill { background: #d946ef; }
+.source-stat-item.threads:hover { border-color: rgba(217, 70, 239, 0.4); }
+
+.source-stat-item.google .source-stat-bar-fill { background: #fbbf24; }
+.source-stat-item.google:hover { border-color: rgba(251, 191, 36, 0.4); }
+
+.source-stat-item.direct .source-stat-bar-fill { background: #94a3b8; }
+
 /* ===== QUICK ACTIONS ===== */
 .quick-actions {
     background: var(--bg-card);
@@ -593,6 +728,77 @@ body {
     background: rgba(245, 158, 11, 0.2);
     color: #fde68a;
     border: 1px solid rgba(245, 158, 11, 0.45);
+}
+
+/* ===== SOURCE BADGES ===== */
+.source-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 14px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+}
+.source-badge.tiktok {
+    background: rgba(0, 242, 254, 0.12);
+    color: #38bdf8;
+    border: 1px solid rgba(0, 242, 254, 0.35);
+}
+.source-badge.facebook {
+    background: rgba(24, 119, 242, 0.15);
+    color: #60a5fa;
+    border: 1px solid rgba(24, 119, 242, 0.4);
+}
+.source-badge.youtube {
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+.source-badge.zalo {
+    background: rgba(0, 104, 255, 0.15);
+    color: #7dd3fc;
+    border: 1px solid rgba(0, 104, 255, 0.4);
+}
+.source-badge.threads, .source-badge.instagram {
+    background: rgba(217, 70, 239, 0.15);
+    color: #f0abfc;
+    border: 1px solid rgba(217, 70, 239, 0.4);
+}
+.source-badge.google {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fcd34d;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+}
+.source-badge.twitter {
+    background: rgba(14, 165, 233, 0.15);
+    color: #7dd3fc;
+    border: 1px solid rgba(14, 165, 233, 0.4);
+}
+.source-badge.telegram {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+}
+.source-badge.direct {
+    background: rgba(148, 163, 184, 0.12);
+    color: #cbd5e1;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+}
+.source-badge.other {
+    background: rgba(168, 85, 247, 0.12);
+    color: #d8b4fe;
+    border: 1px solid rgba(168, 85, 247, 0.35);
+}
+
+.detail-item.full-width {
+    grid-column: span 2;
+}
+.detail-link-text {
+    font-size: 13px;
+    word-break: break-all;
 }
 
 /* Action buttons */

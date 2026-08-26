@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
     <link rel="alternate icon" href="./icon-192.png">
-    <link rel="stylesheet" href="admin.css?v=5.1.2">
+    <link rel="stylesheet" href="admin.css?v=5.3.6">
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -124,6 +124,17 @@
                         <option value="trial">Trial</option>
                         <option value="free">Free</option>
                     </select>
+                    <select id="filterSource" class="filter-select">
+                        <option value="all">Tất cả nguồn</option>
+                        <option value="tiktok">🎵 TikTok</option>
+                        <option value="facebook">📘 Facebook</option>
+                        <option value="youtube">📺 YouTube</option>
+                        <option value="zalo">💬 Zalo</option>
+                        <option value="threads">🧵 Threads / IG</option>
+                        <option value="google">🔍 Google</option>
+                        <option value="direct">🌐 Trực tiếp</option>
+                        <option value="other">🏷️ Nguồn khác</option>
+                    </select>
                 </div>
             </header>
 
@@ -160,6 +171,43 @@
                     </div>
                 </div>
 
+                <!-- Registration Sources Breakdown -->
+                <div class="source-breakdown-card">
+                    <div class="source-breakdown-header">
+                        <h3>📊 Nguồn đăng ký từ Mạng Xã Hội <span class="live-indicator"><span class="live-dot"></span>LIVE</span></h3>
+                        <span class="source-total-badge" id="sourceTotalCount">0 user</span>
+                    </div>
+                    <div class="source-grid" id="sourceStatsGrid">
+                        <!-- Rendered by admin.js -->
+                    </div>
+                </div>
+
+                <!-- Recent Registrations on Dashboard -->
+                <div class="recent-users-card" style="margin-bottom:28px;">
+                    <div class="recent-users-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                        <h3 style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;color:#ffffff;display:flex;align-items:center;gap:8px;">
+                            <span>👥</span> Tài khoản mới đăng ký gần đây
+                        </h3>
+                        <button class="action-btn" id="btnGoToUsers" style="padding:6px 16px;font-size:13px;border-radius:8px;">Xem toàn bộ user →</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="user-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Gói</th>
+                                    <th>Nguồn</th>
+                                    <th>Ngày đăng ký</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentUsersBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <!-- Quick Actions -->
                 <div class="quick-actions">
                     <h3>Hành động nhanh <span class="live-indicator"><span class="live-dot"></span>LIVE</span></h3>
@@ -183,6 +231,7 @@
                                 <th>User</th>
                                 <th>Email</th>
                                 <th>Gói</th>
+                                <th>Nguồn</th>
                                 <th>Ngày đăng ký</th>
                                 <th>Hoạt động cuối</th>
                                 <th>Trạng thái</th>
@@ -288,6 +337,18 @@
                         <span id="detailRole"></span>
                     </div>
                     <div class="detail-item">
+                        <label>Nguồn đăng ký</label>
+                        <span id="detailSource"></span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Chiến dịch / Ref</label>
+                        <span id="detailCampaign"></span>
+                    </div>
+                    <div class="detail-item full-width">
+                        <label>Trang giới thiệu (Referrer)</label>
+                        <span id="detailReferrer" class="detail-link-text"></span>
+                    </div>
+                    <div class="detail-item">
                         <label>Ngày đăng ký</label>
                         <span id="detailCreated"></span>
                     </div>
@@ -372,6 +433,6 @@
     </div>
 
     <script src="gotiengviet.js"></script>
-    <script src="admin.js?v=5.1.2"></script>
+    <script src="admin.js?v=5.3.6"></script>
 </body>
 </html>

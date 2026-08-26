@@ -3858,7 +3858,7 @@ async function renderCommunity(forceReload = false) {
         if (forceReload || !container.children.length) {
             container.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:13px;">⏳ Đang tải bài viết cộng đồng...</div>';
         }
-        const snap = await db.collection('community_posts').orderBy('createdAt', 'desc').limit(40).get();
+        const snap = await db.collection('community_posts').orderBy('createdAt', 'desc').limit(100).get();
         communityPostsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         if (snap.empty) {
             container.innerHTML = '<div class="lb-empty">💬 Chưa có bài viết nào. Hãy là người đầu tiên chia sẻ hành trình rèn luyện!</div>';
@@ -3954,7 +3954,7 @@ async function renderCommunity(forceReload = false) {
                 </div>
                 <div class="cm-comments-section" id="comments-${doc.id}" style="display:${isCommentsOpen ? 'flex' : 'none'};">
                     <div class="cm-comment-input-box">
-                        <input type="text" id="cmCommentInput-${doc.id}" class="cm-comment-input" placeholder="Viết bình luận của bạn..." maxlength="500" onkeydown="if(event.key==='Enter') window._submitComment('${doc.id}')">
+                        <input type="text" id="cmCommentInput-${doc.id}" class="cm-comment-input" placeholder="Viết bình luận của bạn..." maxlength="2000" onkeydown="if(event.key==='Enter') window._submitComment('${doc.id}')">
                         <button type="button" class="cm-comment-send-btn" onclick="window._submitComment('${doc.id}')">Gửi 💬</button>
                     </div>
                     <div class="cm-comment-list">${commentsHtml}</div>
@@ -4660,7 +4660,70 @@ function performSignOut() {
 }
 window._performSignOut = performSignOut;
 
+// ===== TRAFFIC & REGISTRATION SOURCE TRACKING =====
+function detectAndSaveTrafficSource(){
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const ref = urlParams.get('ref') || urlParams.get('source') || urlParams.get('src') || urlParams.get('utm_source');
+        const utmMedium = urlParams.get('utm_medium') || '';
+        const utmCampaign = urlParams.get('utm_campaign') || urlParams.get('campaign') || '';
+        const rawReferrer = document.referrer || '';
+        
+        let detectedSource = '';
+        if (ref) {
+            const clean = ref.trim().toLowerCase();
+            if (['tiktok', 'tt', 'douyin'].includes(clean)) detectedSource = 'tiktok';
+            else if (['facebook', 'fb', 'meta', 'messenger'].includes(clean)) detectedSource = 'facebook';
+            else if (['youtube', 'yt', 'shorts'].includes(clean)) detectedSource = 'youtube';
+            else if (['zalo', 'zl'].includes(clean)) detectedSource = 'zalo';
+            else if (['threads'].includes(clean)) detectedSource = 'threads';
+            else if (['instagram', 'ig', 'insta'].includes(clean)) detectedSource = 'instagram';
+            else if (['google', 'gg', 'search'].includes(clean)) detectedSource = 'google';
+            else if (['telegram', 'tele', 'tg'].includes(clean)) detectedSource = 'telegram';
+            else if (['twitter', 'x'].includes(clean)) detectedSource = 'twitter';
+            else detectedSource = clean;
+        }
+        if (!detectedSource && rawReferrer) {
+            const refLower = rawReferrer.toLowerCase();
+            if (refLower.includes('tiktok.com') || refLower.includes('musical.ly')) detectedSource = 'tiktok';
+            else if (refLower.includes('facebook.com') || refLower.includes('fb.com') || refLower.includes('messenger.com') || refLower.includes('l.facebook.com') || refLower.includes('lm.facebook.com')) detectedSource = 'facebook';
+            else if (refLower.includes('youtube.com') || refLower.includes('youtu.be')) detectedSource = 'youtube';
+            else if (refLower.includes('zalo.me') || refLower.includes('chat.zalo.me')) detectedSource = 'zalo';
+            else if (refLower.includes('instagram.com')) detectedSource = 'instagram';
+            else if (refLower.includes('threads.net')) detectedSource = 'threads';
+            else if (refLower.includes('google.com') || refLower.includes('google.com.vn')) detectedSource = 'google';
+            else if (refLower.includes('t.co') || refLower.includes('twitter.com') || refLower.includes('x.com')) detectedSource = 'twitter';
+            else {
+                try {
+                    const host = new URL(rawReferrer).hostname;
+                    if (host && !host.includes(window.location.hostname)) {
+                        detectedSource = host;
+                    }
+                } catch(e){}
+            }
+        }
+        if (!detectedSource) detectedSource = 'direct';
+        const existingSource = localStorage.getItem('hm_register_source');
+        if (detectedSource !== 'direct' || !existingSource) {
+            localStorage.setItem('hm_register_source', detectedSource);
+            const sourceDetails = {
+                source: detectedSource,
+                utm_source: ref || detectedSource,
+                utm_medium: utmMedium,
+                utm_campaign: utmCampaign,
+                referrer: rawReferrer,
+                landingPage: window.location.href,
+                capturedAt: new Date().toISOString()
+            };
+            localStorage.setItem('hm_source_details', JSON.stringify(sourceDetails));
+        }
+    } catch(err) {
+        console.warn('[Traffic Tracking] Error detecting source:', err);
+    }
+}
+
 function initAuthGuard(){
+    detectAndSaveTrafficSource();
     const loading = document.getElementById('authLoading');
     const app = document.getElementById('mainApp');
     const logoutBtn = document.getElementById('logoutBtn');
@@ -4674,7 +4737,8 @@ function initAuthGuard(){
             setTimeout(initUniversalSpotlight, 200);
             setTimeout(initUniversalSpotlight, 1000);
         } else {
-            window.location.href = 'auth.html';
+            const search = window.location.search || '';
+            window.location.href = 'auth.html' + search;
         }
     });
     initProfileModal();

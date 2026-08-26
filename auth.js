@@ -5,13 +5,106 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 // ===== API BASE URL =====
-const API_BASE = (window.location.hostname.endsWith('.vercel.app'))
-    ? '/api'
-    : 'https://habbit-opal.vercel.app/api';
+const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:')
+    ? 'https://habbit-opal.vercel.app/api'
+    : '/api';
 
 
 // Flag to prevent redirect during OTP credential-check
 let _otpInProgress = false;
+
+// ===== TRAFFIC & REGISTRATION SOURCE TRACKING =====
+function detectAndSaveTrafficSource(){
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const ref = urlParams.get('ref') || urlParams.get('source') || urlParams.get('src') || urlParams.get('utm_source');
+        const utmMedium = urlParams.get('utm_medium') || '';
+        const utmCampaign = urlParams.get('utm_campaign') || urlParams.get('campaign') || '';
+        const rawReferrer = document.referrer || '';
+        
+        let detectedSource = '';
+        
+        // 1. Direct param match
+        if (ref) {
+            const clean = ref.trim().toLowerCase();
+            if (['tiktok', 'tt', 'douyin'].includes(clean)) detectedSource = 'tiktok';
+            else if (['facebook', 'fb', 'meta', 'messenger'].includes(clean)) detectedSource = 'facebook';
+            else if (['youtube', 'yt', 'shorts'].includes(clean)) detectedSource = 'youtube';
+            else if (['zalo', 'zl'].includes(clean)) detectedSource = 'zalo';
+            else if (['threads'].includes(clean)) detectedSource = 'threads';
+            else if (['instagram', 'ig', 'insta'].includes(clean)) detectedSource = 'instagram';
+            else if (['google', 'gg', 'search'].includes(clean)) detectedSource = 'google';
+            else if (['telegram', 'tele', 'tg'].includes(clean)) detectedSource = 'telegram';
+            else if (['twitter', 'x'].includes(clean)) detectedSource = 'twitter';
+            else detectedSource = clean; // custom influencer or channel tag like 'kol_linh'
+        }
+        
+        // 2. Referrer fallback if no query param
+        if (!detectedSource && rawReferrer) {
+            const refLower = rawReferrer.toLowerCase();
+            if (refLower.includes('tiktok.com') || refLower.includes('musical.ly')) detectedSource = 'tiktok';
+            else if (refLower.includes('facebook.com') || refLower.includes('fb.com') || refLower.includes('messenger.com') || refLower.includes('l.facebook.com') || refLower.includes('lm.facebook.com')) detectedSource = 'facebook';
+            else if (refLower.includes('youtube.com') || refLower.includes('youtu.be')) detectedSource = 'youtube';
+            else if (refLower.includes('zalo.me') || refLower.includes('chat.zalo.me')) detectedSource = 'zalo';
+            else if (refLower.includes('instagram.com')) detectedSource = 'instagram';
+            else if (refLower.includes('threads.net')) detectedSource = 'threads';
+            else if (refLower.includes('google.com') || refLower.includes('google.com.vn')) detectedSource = 'google';
+            else if (refLower.includes('t.co') || refLower.includes('twitter.com') || refLower.includes('x.com')) detectedSource = 'twitter';
+            else {
+                try {
+                    const host = new URL(rawReferrer).hostname;
+                    if (host && !host.includes(window.location.hostname)) {
+                        detectedSource = host;
+                    }
+                } catch(e){}
+            }
+        }
+        
+        if (!detectedSource) {
+            detectedSource = 'direct';
+        }
+        
+        const existingSource = localStorage.getItem('hm_register_source');
+        if (detectedSource !== 'direct' || !existingSource) {
+            localStorage.setItem('hm_register_source', detectedSource);
+            const sourceDetails = {
+                source: detectedSource,
+                utm_source: ref || detectedSource,
+                utm_medium: utmMedium,
+                utm_campaign: utmCampaign,
+                referrer: rawReferrer,
+                landingPage: window.location.href,
+                capturedAt: new Date().toISOString()
+            };
+            localStorage.setItem('hm_source_details', JSON.stringify(sourceDetails));
+        }
+    } catch(err) {
+        console.warn('[Traffic Tracking] Error detecting source:', err);
+    }
+}
+
+function getStoredTrafficSource(){
+    try {
+        const src = localStorage.getItem('hm_register_source');
+        if (src) return src;
+    } catch(e){}
+    return 'direct';
+}
+
+function getStoredTrafficDetails(){
+    try {
+        const str = localStorage.getItem('hm_source_details');
+        if (str) return JSON.parse(str);
+    } catch(e){}
+    return {
+        source: getStoredTrafficSource(),
+        utm_source: getStoredTrafficSource(),
+        utm_medium: '',
+        utm_campaign: '',
+        referrer: document.referrer || '',
+        landingPage: window.location.href
+    };
+}
 
 // ===== CREATE USER PROFILE =====
 async function createUserProfile(user, isNewUser){
@@ -20,6 +113,8 @@ async function createUserProfile(user, isNewUser){
     if(!doc.exists || isNewUser){
         const now = new Date();
         const trialEnd = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days
+        const sourceDetails = getStoredTrafficDetails();
+        const registerSource = getStoredTrafficSource();
         const profileData = {
             email: user.email || '',
             displayName: user.displayName || '',
@@ -33,6 +128,12 @@ async function createUserProfile(user, isNewUser){
             createdAt: firebase.firestore.Timestamp.fromDate(now),
             lastLoginAt: firebase.firestore.Timestamp.fromDate(now),
             disabled: false,
+            registerSource: registerSource,
+            utm_source: sourceDetails.utm_source || registerSource,
+            utm_medium: sourceDetails.utm_medium || '',
+            utm_campaign: sourceDetails.utm_campaign || '',
+            referrer: sourceDetails.referrer || '',
+            landingPage: sourceDetails.landingPage || '',
         };
         if(doc.exists){
             await userRef.set(profileData, {merge: true});
@@ -864,6 +965,7 @@ document.addEventListener('keydown', function(e) {
 
 // ===== INIT =====
 function init(){
+    detectAndSaveTrafficSource();
     initParticles();
     initTabs();
     initPassToggle();
