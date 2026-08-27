@@ -103,6 +103,7 @@ function initAuth(){
             initModal();
             initDeleteConfirmModal();
             initQuestManagement();
+            initAdminChatSystem();
 
             // Initialize Vietnamese Input Method Editor (default to Telex, active on admin management/search fields)
             if(typeof GoTiengViet !== 'undefined' && GoTiengViet.VietnameseInput){
@@ -244,6 +245,7 @@ function renderRecentUsers(){
             <td>${sourceBadgeHtml(u.registerSource || u.utm_source)}</td>
             <td>${shortDate(u.createdAt)}</td>
             <td>
+                <button class="btn-sm chat" onclick="window._adminOpenChat('${u.uid}')" title="Nhắn tin hỗ trợ">💬</button>
                 <button class="btn-sm" onclick="window._adminViewUser('${u.uid}')" title="Chi tiết">👁️ Chi tiết</button>
             </td>
         </tr>`;
@@ -397,6 +399,7 @@ function renderUsers(filter, search, filterSource){
             <td>${shortDate(u.lastLoginAt)}</td>
             <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
             <td>
+                <button class="btn-sm chat" onclick="window._adminOpenChat('${u.uid}')" title="Nhắn tin hỗ trợ">💬</button>
                 <button class="btn-sm" onclick="window._adminViewUser('${u.uid}')" title="Chi tiết">👁️</button>
                 ${plan !== 'premium' ? `<button class="btn-sm upgrade" onclick="window._adminQuickUpgrade('${u.uid}')" title="Upgrade Premium">👑</button>` : ''}
                 ${u.role !== 'admin' ? `<button class="btn-sm danger" onclick="window._adminDeleteUser('${u.uid}')" title="Xóa tài khoản">🗑️</button>` : ''}
@@ -469,7 +472,7 @@ function initNavigation(){
             if(target) target.style.display = 'block';
             
             // Update title
-            const titles = { dashboard: 'Dashboard', users: 'Quản lý User', pending: 'Chờ duyệt', quests: 'Nhiệm vụ Đột xuất' };
+            const titles = { dashboard: 'Dashboard', users: 'Quản lý User', pending: 'Chờ duyệt', quests: 'Nhiệm vụ Đột xuất', messages: 'Hộp Thư Chat & Hỗ Trợ User' };
             document.getElementById('pageTitle').textContent = titles[section] || 'Dashboard';
         };
     });
@@ -1032,6 +1035,500 @@ window._rejectSubmission = async (questId, subId) => {
         await db.collection('surprise_quests').doc(questId).collection('submissions').doc(subId).update({ status: 'rejected' });
         loadAdminQuests();
     } catch (e) { alert('Lỗi: ' + e.message); }
+};
+
+// ==========================================================================
+// ADMIN DIRECT MESSAGING & SUPPORT ENGINE (HỆ THỐNG HỘP THƯ CHAT ADMIN)
+// ==========================================================================
+
+let adminConversations = [];
+let activeAdminConvId = null;
+let activeAdminTargetUid = null;
+let activeAdminTargetUser = null;
+let adminMessagesUnsubscribe = null;
+let adminConversationsUnsubscribe = null;
+let adminChatTab = 'recent'; // 'recent' | 'all'
+let adminChatSearchQuery = '';
+
+function formatMsgTime(ts) {
+    if (!ts) return '';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    const now = new Date();
+    const isToday = d.toDateString() === now.toDateString();
+    if (isToday) {
+        return d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    }
+    const isThisYear = d.getFullYear() === now.getFullYear();
+    if (isThisYear) {
+        return d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+    }
+    return d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: '2-digit' });
+}
+
+function initAdminChatSystem() {
+    if (!currentAdmin) return;
+
+    // Listen for all conversations real-time
+    try {
+        if (adminConversationsUnsubscribe) adminConversationsUnsubscribe();
+        adminConversationsUnsubscribe = db.collection('conversations')
+            .orderBy('updatedAt', 'desc')
+            .onSnapshot(snapshot => {
+                adminConversations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                updateAdminChatBadges();
+                renderAdminChatThreads();
+            }, err => {
+                console.error('Admin conversations error:', err);
+            });
+    } catch (e) {
+        console.error('initAdminChatSystem error:', e);
+    }
+
+    // Bind Enter key on textarea
+    const textarea = document.getElementById('adminMessageInput');
+    if (textarea) {
+        textarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                window._adminHandleSendMessage();
+            }
+        });
+        textarea.addEventListener('input', () => {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+        });
+    }
+}
+
+function updateAdminChatBadges() {
+    if (!currentAdmin) return;
+    let totalUnread = 0;
+    adminConversations.forEach(c => {
+        const unread = (c.unreadCount && c.unreadCount[currentAdmin.uid]) || 0;
+        totalUnread += unread;
+    });
+
+    const badge = document.getElementById('adminMsgBadge');
+    if (badge) {
+        if (totalUnread > 0) {
+            badge.style.display = 'inline-block';
+            badge.textContent = totalUnread > 99 ? '99+' : totalUnread;
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    const tabBadge = document.getElementById('adminTabTotalBadge');
+    if (tabBadge) {
+        if (totalUnread > 0) {
+            tabBadge.style.display = 'inline-block';
+            tabBadge.textContent = totalUnread;
+        } else {
+            tabBadge.style.display = 'none';
+        }
+    }
+}
+
+function renderAdminChatThreads() {
+    const listEl = document.getElementById('adminChatThreadsList');
+    if (!listEl) return;
+
+    const q = (adminChatSearchQuery || '').toLowerCase().trim();
+
+    if (adminChatTab === 'all') {
+        // Render from allUsers list
+        let users = [...allUsers].filter(u => u.uid !== currentAdmin.uid);
+        if (q) {
+            users = users.filter(u => 
+                (u.displayName || '').toLowerCase().includes(q) ||
+                (u.email || '').toLowerCase().includes(q) ||
+                u.uid.toLowerCase().includes(q)
+            );
+        }
+
+        if (users.length === 0) {
+            listEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px;">Không tìm thấy user nào</div>';
+            return;
+        }
+
+        listEl.innerHTML = users.map(u => {
+            const name = u.displayName || u.email?.split('@')[0] || 'Chiến Binh';
+            const plan = getEffectivePlan(u);
+            const planLabel = plan === 'premium' ? '👑 VIP' : plan === 'trial' ? '⏳ Trial' : 'Free';
+            const isActive = activeAdminTargetUid === u.uid;
+
+            return `
+                <div class="admin-thread-item ${isActive ? 'active' : ''}" onclick="window._adminOpenChat('${u.uid}')">
+                    <div class="admin-thread-avatar">
+                        ${u.photoURL ? `<img src="${u.photoURL}" alt="">` : `<div class="avatar-fallback">${escHtml(name.charAt(0).toUpperCase())}</div>`}
+                    </div>
+                    <div class="admin-thread-info">
+                        <div class="admin-thread-top">
+                            <span class="admin-thread-name">${escHtml(name)}</span>
+                            <span class="plan-badge ${plan}" style="font-size:10px;padding:1px 6px;">${planLabel}</span>
+                        </div>
+                        <div class="admin-thread-bottom">
+                            <span class="admin-thread-preview">${escHtml(u.email || '—')}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        return;
+    }
+
+    // Default 'recent' tab
+    let convs = [...adminConversations];
+    if (q) {
+        convs = convs.filter(c => {
+            const details = c.participantDetails || {};
+            const otherUid = (c.participants || []).find(uid => uid !== currentAdmin.uid);
+            const otherInfo = (otherUid && details[otherUid]) || {};
+            const name = (otherInfo.displayName || otherInfo.email || '').toLowerCase();
+            const lastText = (c.lastMessage && c.lastMessage.text || '').toLowerCase();
+            return name.includes(q) || lastText.includes(q);
+        });
+    }
+
+    if (convs.length === 0) {
+        listEl.innerHTML = `
+            <div style="text-align:center;padding:32px 16px;color:var(--text-muted);font-size:13px;">
+                <div style="font-size:28px;margin-bottom:8px;">📭</div>
+                <div>Chưa có hội thoại nào</div>
+                <div style="font-size:11.5px;margin-top:6px;color:var(--accent-blue-bright);cursor:pointer;" onclick="window._switchAdminChatTab('all')">👉 Xem danh sách tất cả User để nhắn tin</div>
+            </div>
+        `;
+        return;
+    }
+
+    listEl.innerHTML = convs.map(c => {
+        const details = c.participantDetails || {};
+        const otherUid = (c.participants || []).find(uid => uid !== currentAdmin.uid) || c.participants?.[0];
+        const userObj = allUsers.find(u => u.uid === otherUid);
+        const otherInfo = (otherUid && details[otherUid]) || userObj || {};
+        const name = otherInfo.displayName || otherInfo.email?.split('@')[0] || userObj?.displayName || 'User';
+        const photo = otherInfo.photoURL || userObj?.photoURL;
+        const lastMsg = c.lastMessage || {};
+        const lastText = lastMsg.text || 'Đã bắt đầu hội thoại';
+        const isFromAdmin = lastMsg.senderId === currentAdmin.uid;
+        const timeStr = formatMsgTime(c.updatedAt || lastMsg.createdAt);
+        const unread = (c.unreadCount && c.unreadCount[currentAdmin.uid]) || 0;
+        const isActive = activeAdminConvId === c.id;
+
+        return `
+            <div class="admin-thread-item ${isActive ? 'active' : ''}" onclick="window._adminSelectConversationById('${c.id}', '${otherUid}')">
+                <div class="admin-thread-avatar">
+                    ${photo ? `<img src="${photo}" alt="">` : `<div class="avatar-fallback">${escHtml(name.charAt(0).toUpperCase())}</div>`}
+                </div>
+                <div class="admin-thread-info">
+                    <div class="admin-thread-top">
+                        <span class="admin-thread-name">${escHtml(name)}</span>
+                        <span class="admin-thread-time">${timeStr}</span>
+                    </div>
+                    <div class="admin-thread-bottom">
+                        <span class="admin-thread-preview">${isFromAdmin ? '👑 Bạn: ' : ''}${escHtml(lastText)}</span>
+                        ${unread > 0 ? `<span class="admin-thread-badge">${unread}</span>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+window._switchAdminChatTab = function(tab) {
+    adminChatTab = tab;
+    const btnRecent = document.getElementById('adminChatTabRecent');
+    const btnAll = document.getElementById('adminChatTabAll');
+    if (tab === 'all') {
+        btnAll?.classList.add('active');
+        btnRecent?.classList.remove('active');
+    } else {
+        btnRecent?.classList.add('active');
+        btnAll?.classList.remove('active');
+    }
+    renderAdminChatThreads();
+};
+
+window._filterAdminChatList = function(q) {
+    adminChatSearchQuery = q;
+    renderAdminChatThreads();
+};
+
+window._adminOpenChat = async function(targetUid) {
+    if (!targetUid || !currentAdmin) return;
+
+    // Switch section to messages
+    const navMessages = document.querySelector('.nav-item[data-section="messages"]');
+    if (navMessages) navMessages.click();
+
+    let user = allUsers.find(u => u.uid === targetUid);
+    if (!user) {
+        try {
+            const doc = await db.collection('users').doc(targetUid).get();
+            if (doc.exists) user = { uid: doc.id, ...doc.data() };
+        } catch (e) { console.error(e); }
+    }
+
+    const canonicalConvId = [currentAdmin.uid, targetUid].sort().join('_');
+    window._adminSelectConversationById(canonicalConvId, targetUid, user);
+};
+
+window._adminSelectConversationById = async function(convId, targetUid, preloadedUser) {
+    activeAdminConvId = convId;
+    activeAdminTargetUid = targetUid;
+
+    let targetUser = preloadedUser || allUsers.find(u => u.uid === targetUid);
+    if (!targetUser) {
+        try {
+            const doc = await db.collection('users').doc(targetUid).get();
+            if (doc.exists) targetUser = { uid: doc.id, ...doc.data() };
+        } catch (e) { console.error(e); }
+    }
+    activeAdminTargetUser = targetUser || { uid: targetUid, displayName: 'Chiến Binh' };
+
+    // Update active state in UI
+    const placeholder = document.getElementById('adminChatPlaceholder');
+    const activeBox = document.getElementById('adminChatActive');
+    if (placeholder) placeholder.style.display = 'none';
+    if (activeBox) activeBox.style.display = 'flex';
+
+    // Render header user info
+    const userInfoEl = document.getElementById('adminChatUserInfo');
+    if (userInfoEl) {
+        const name = targetUser?.displayName || targetUser?.email?.split('@')[0] || 'User';
+        const email = targetUser?.email || '—';
+        const plan = getEffectivePlan(targetUser);
+        const planLabel = plan === 'premium' ? '👑 Premium' : plan === 'trial' ? '⏳ Trial' : 'Free';
+        const totalDP = targetUser?.totalDP || 0;
+        const photo = targetUser?.photoURL;
+
+        userInfoEl.innerHTML = `
+            ${photo ? `<img src="${photo}" class="admin-chat-user-avatar" alt="">` : `<div class="admin-chat-user-avatar avatar-fallback" style="background:#6366f1;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;">${escHtml(name.charAt(0).toUpperCase())}</div>`}
+            <div class="admin-chat-user-meta">
+                <h4>${escHtml(name)} <span class="plan-badge ${plan}" style="font-size:10px;padding:2px 8px;">${planLabel}</span></h4>
+                <p>${escHtml(email)} • 🏆 ${totalDP.toLocaleString('vi-VN')} DP • UID: <span class="mono" style="font-size:11px;">${targetUid.substring(0,8)}...</span></p>
+            </div>
+        `;
+    }
+
+    renderAdminChatThreads();
+
+    // Mark as read for admin in Firestore
+    try {
+        db.collection('conversations').doc(convId).set({
+            unreadCount: { [currentAdmin.uid]: 0 }
+        }, { merge: true });
+    } catch (e) { console.error(e); }
+
+    // Stream messages
+    if (adminMessagesUnsubscribe) adminMessagesUnsubscribe();
+    const streamEl = document.getElementById('adminMessagesStream');
+    if (streamEl) {
+        streamEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px;">Đang tải tin nhắn...</div>';
+    }
+
+    adminMessagesUnsubscribe = db.collection('conversations').doc(convId)
+        .collection('messages')
+        .orderBy('createdAt', 'asc')
+        .limitToLast(100)
+        .onSnapshot(snapshot => {
+            if (!streamEl) return;
+            if (snapshot.empty) {
+                streamEl.innerHTML = `
+                    <div style="text-align:center;padding:40px 20px;color:var(--text-muted);">
+                        <div style="font-size:32px;margin-bottom:8px;">💬</div>
+                        <div style="font-weight:700;color:#ffffff;margin-bottom:4px;">Chưa có tin nhắn nào</div>
+                        <div style="font-size:13px;">Hãy gửi tin nhắn đầu tiên để hỗ trợ hoặc thông báo cho thành viên này.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            streamEl.innerHTML = snapshot.docs.map(doc => {
+                const msg = doc.data();
+                const isOutgoing = msg.senderId === currentAdmin.uid;
+                const timeStr = formatMsgTime(msg.createdAt);
+
+                return `
+                    <div class="admin-msg-row ${isOutgoing ? 'outgoing' : 'incoming'}">
+                        <div class="admin-msg-bubble">
+                            ${isOutgoing ? '<div class="admin-msg-tag">👑 Ban Quản Trị</div>' : ''}
+                            <div class="admin-msg-text">${escHtml(msg.text)}</div>
+                        </div>
+                        <div class="admin-msg-meta">
+                            <span>${timeStr}</span>
+                            ${isOutgoing ? '<span>✓ Đã gửi</span>' : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            streamEl.scrollTop = streamEl.scrollHeight;
+        }, err => {
+            console.error('Messages stream error:', err);
+            if (streamEl) streamEl.innerHTML = `<div style="color:#ef4444;text-align:center;padding:20px;">Lỗi tải tin nhắn: ${err.message}</div>`;
+        });
+};
+
+window._adminHandleSendMessage = async function(presetText) {
+    if (!activeAdminConvId || !activeAdminTargetUid || !currentAdmin) return;
+
+    const input = document.getElementById('adminMessageInput');
+    const text = presetText || (input ? input.value.trim() : '');
+    if (!text) return;
+
+    const sendBtn = document.getElementById('adminSendBtn');
+    if (sendBtn) sendBtn.disabled = true;
+
+    try {
+        const convRef = db.collection('conversations').doc(activeAdminConvId);
+        const msgRef = convRef.collection('messages').doc();
+
+        const targetUser = activeAdminTargetUser || {};
+        const targetName = targetUser.displayName || targetUser.email?.split('@')[0] || 'Chiến Binh';
+
+        const batch = db.batch();
+
+        // 1. Add message doc
+        batch.set(msgRef, {
+            senderId: currentAdmin.uid,
+            senderName: '👑 Ban Quản Trị (Admin)',
+            senderPhoto: currentAdmin.photoURL || '',
+            senderRankLevel: 10,
+            senderRealmName: 'Quản Trị Viên',
+            senderStep: 7,
+            senderEquippedTitle: 'creator_badge',
+            text: text,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            read: false,
+            isAdminMessage: true
+        });
+
+        // 2. Set/update parent conversation
+        batch.set(convRef, {
+            participants: [currentAdmin.uid, activeAdminTargetUid],
+            participantDetails: {
+                [currentAdmin.uid]: {
+                    uid: currentAdmin.uid,
+                    displayName: '👑 Ban Quản Trị (Admin)',
+                    photoURL: currentAdmin.photoURL || '',
+                    rankLevel: 10,
+                    realmName: 'Quản Trị Viên',
+                    step: 7,
+                    equippedTitle: 'creator_badge',
+                    isAdmin: true
+                },
+                [activeAdminTargetUid]: {
+                    uid: activeAdminTargetUid,
+                    displayName: targetName,
+                    photoURL: targetUser.photoURL || '',
+                    rankLevel: targetUser.rankLevel || 1,
+                    realmName: targetUser.realmName || 'Phàm Nhân',
+                    step: targetUser.step || 1,
+                    equippedTitle: targetUser.equippedTitle || '',
+                    totalDP: targetUser.totalDP || 0
+                }
+            },
+            lastMessage: {
+                text: text,
+                senderId: currentAdmin.uid,
+                senderName: '👑 Ban Quản Trị (Admin)',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                read: false
+            },
+            lastSenderId: currentAdmin.uid,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            unreadCount: {
+                [activeAdminTargetUid]: firebase.firestore.FieldValue.increment(1),
+                [currentAdmin.uid]: 0
+            }
+        }, { merge: true });
+
+        await batch.commit();
+
+        if (!presetText && input) {
+            input.value = '';
+            input.style.height = 'auto';
+        }
+    } catch (err) {
+        console.error('Admin send message error:', err);
+        alert('Lỗi gửi tin nhắn: ' + err.message);
+    } finally {
+        if (sendBtn) sendBtn.disabled = false;
+    }
+};
+
+window._adminSendPresetMessage = function(text) {
+    window._adminHandleSendMessage(text);
+};
+
+window._adminChatQuickVIP = async function() {
+    if (!activeAdminTargetUid) return;
+    if (!confirm('Nâng cấp gói Premium (1 Năm) cho người dùng này?')) return;
+    try {
+        const expires = new Date();
+        expires.setDate(expires.getDate() + 365);
+        await db.collection('users').doc(activeAdminTargetUid).update({
+            plan: 'premium',
+            planExpiresAt: expires,
+            upgradeRequested: false
+        });
+        window._adminSendPresetMessage('👑 Chúc mừng bạn! Tài khoản của bạn đã được Admin nâng cấp lên gói Premium (1 Năm). Hãy tận hưởng trọn vẹn mọi tính năng cao cấp!');
+        await loadUsers();
+        if (activeAdminConvId && activeAdminTargetUid) {
+            window._adminSelectConversationById(activeAdminConvId, activeAdminTargetUid);
+        }
+    } catch (e) { alert('Lỗi: ' + e.message); }
+};
+
+window._adminChatQuickDP = async function(amount = 100) {
+    if (!activeAdminTargetUid) return;
+    try {
+        const batch = db.batch();
+        const lbRef = db.collection('leaderboard').doc(activeAdminTargetUid);
+        const userRef = db.collection('users').doc(activeAdminTargetUid);
+
+        batch.set(lbRef, {
+            totalDP: firebase.firestore.FieldValue.increment(amount),
+            bonusDP: firebase.firestore.FieldValue.increment(amount),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+
+        batch.set(userRef, {
+            bonusDP: firebase.firestore.FieldValue.increment(amount),
+            totalDP: firebase.firestore.FieldValue.increment(amount),
+        }, { merge: true });
+
+        await batch.commit();
+
+        await db.collection('dp_grants').add({
+            uid: activeAdminTargetUid,
+            amount: amount,
+            reason: 'Tặng từ Hộp Thư Chat Admin',
+            grantedBy: currentAdmin.uid,
+            grantedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+
+        window._adminSendPresetMessage(`🎁 Admin vừa gửi tặng bạn +${amount} Điểm Kỷ Luật DP khích lệ tinh thần rèn luyện!`);
+        await loadUsers();
+        if (activeAdminConvId && activeAdminTargetUid) {
+            window._adminSelectConversationById(activeAdminConvId, activeAdminTargetUid);
+        }
+    } catch (e) { alert('Lỗi: ' + e.message); }
+};
+
+window._adminChatViewProfile = function() {
+    if (activeAdminTargetUid) {
+        window._adminViewUser(activeAdminTargetUid);
+    }
+};
+
+window._adminOpenChatFromModal = function() {
+    if (!currentModalUid) return;
+    const targetUid = currentModalUid;
+    const modal = document.getElementById('userModal');
+    if (modal) modal.style.display = 'none';
+    window._adminOpenChat(targetUid);
 };
 
 // ===== INIT =====

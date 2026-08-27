@@ -89,6 +89,11 @@
                     <span>Nhiệm vụ</span>
                     <span class="nav-badge" id="questBadge" style="display:none;">0</span>
                 </a>
+                <a href="#" class="nav-item" data-section="messages">
+                    <span class="nav-icon"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-echo"></use></svg></span>
+                    <span>Hộp Thư Chat</span>
+                    <span class="nav-badge" id="adminMsgBadge" style="display:none;">0</span>
+                </a>
             </div>
             <div class="sidebar-footer">
                 <div class="admin-profile">
@@ -308,6 +313,82 @@
                     <div id="questSubmissionsList"></div>
                 </div>
             </section>
+
+            <!-- Messages & Direct Support Section -->
+            <section class="section" id="sectionMessages" style="display:none;">
+                <div class="admin-chat-layout">
+                    <!-- LEFT THREADS & USERS LIST -->
+                    <div class="admin-chat-sidebar">
+                        <div class="admin-chat-sidebar-header">
+                            <div class="admin-chat-search-wrap">
+                                <span class="admin-chat-search-icon">🔍</span>
+                                <input type="text" id="adminChatSearch" placeholder="Tìm tên hoặc email user..." oninput="window._filterAdminChatList(this.value)">
+                            </div>
+                            <div class="admin-chat-tabs">
+                                <button type="button" class="admin-chat-tab-btn active" id="adminChatTabRecent" onclick="window._switchAdminChatTab('recent')">
+                                    <span>💬 Hội Thoại</span>
+                                    <span class="admin-tab-badge" id="adminTabTotalBadge" style="display:none;">0</span>
+                                </button>
+                                <button type="button" class="admin-chat-tab-btn" id="adminChatTabAll" onclick="window._switchAdminChatTab('all')">
+                                    <span>👥 Tất Cả User</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="admin-chat-threads-list" id="adminChatThreadsList">
+                            <!-- Injected by admin.js -->
+                        </div>
+                    </div>
+
+                    <!-- RIGHT ACTIVE CHAT PANE -->
+                    <div class="admin-chat-main">
+                        <!-- Placeholder when no chat is selected -->
+                        <div class="admin-chat-placeholder" id="adminChatPlaceholder">
+                            <div class="acp-icon">💬</div>
+                            <h3>Hộp Thư Quản Trị Viên (Admin Direct Chat)</h3>
+                            <p>Chọn một cuộc hội thoại từ danh sách bên trái hoặc bấm vào biểu tượng <strong>💬 Nhắn tin</strong> ở bất kỳ người dùng nào để bắt đầu hỗ trợ trực tiếp 1-1.</p>
+                        </div>
+
+                        <!-- Active Chat Box -->
+                        <div class="admin-chat-active" id="adminChatActive" style="display:none;">
+                            <!-- Header -->
+                            <div class="admin-chat-header">
+                                <div class="admin-chat-user-info" id="adminChatUserInfo">
+                                    <!-- User avatar, name, email, badge -->
+                                </div>
+                                <div class="admin-chat-header-actions">
+                                    <button type="button" class="btn-sm upgrade" id="adminChatBtnVip" onclick="window._adminChatQuickVIP()" title="Nâng cấp VIP nhanh">👑 VIP</button>
+                                    <button type="button" class="btn-sm" id="adminChatBtnDP" onclick="window._adminChatQuickDP(100)" title="Tặng nhanh 100 DP">🎁 +100 DP</button>
+                                    <button type="button" class="btn-sm" id="adminChatBtnProfile" onclick="window._adminChatViewProfile()" title="Xem chi tiết hồ sơ">👁️ Hồ sơ</button>
+                                </div>
+                            </div>
+
+                            <!-- Messages Thread -->
+                            <div class="admin-messages-stream" id="adminMessagesStream">
+                                <!-- Messages injected dynamically -->
+                            </div>
+
+                            <!-- Quick Preset Response Chips -->
+                            <div class="admin-quick-replies">
+                                <div class="admin-quick-replies-scroll">
+                                    <button type="button" class="admin-reply-chip" onclick="window._adminSendPresetMessage('Chào bạn! Ban quản trị Habit Mastery có thể hỗ trợ gì cho bạn?')">👋 Chào hỏi</button>
+                                    <button type="button" class="admin-reply-chip" onclick="window._adminSendPresetMessage('Tài khoản của bạn đã được kích hoạt VIP thành công! Chúc bạn rèn luyện thật tốt.')">👑 Đã kích hoạt VIP</button>
+                                    <button type="button" class="admin-reply-chip" onclick="window._adminSendPresetMessage('Admin vừa gửi tặng bạn 100 Điểm Kỷ Luật DP khích lệ tinh thần nhé!')">🎁 Tặng điểm DP</button>
+                                    <button type="button" class="admin-reply-chip" onclick="window._adminSendPresetMessage('Admin đã kiểm tra và hỗ trợ khôi phục chuỗi ngày Streak cho bạn nhé!')">🧊 Khôi phục chuỗi</button>
+                                    <button type="button" class="admin-reply-chip" onclick="window._adminSendPresetMessage('Cảm ơn bạn đã phản hồi! Đội ngũ phát triển đang xử lý và hoàn thiện cho bạn.')">🙏 Cảm ơn góp ý</button>
+                                </div>
+                            </div>
+
+                            <!-- Chat Input Bar -->
+                            <div class="admin-chat-input-area">
+                                <textarea id="adminMessageInput" class="admin-message-input" placeholder="Nhập tin nhắn hỗ trợ từ Quản trị viên... (Enter để gửi, Shift+Enter xuống dòng)" rows="1" maxlength="5000"></textarea>
+                                <button type="button" class="admin-chat-send-btn" id="adminSendBtn" onclick="window._adminHandleSendMessage()">
+                                    <span>Gửi tin</span> ✈️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -380,6 +461,7 @@
                     <option value="365">365 Ngày (1 Năm)</option>
                 </select>
                 <button class="btn-action save" id="modalSavePlan">💾 Lưu gói</button>
+                <button class="btn-action chat" id="modalOpenChatBtn" onclick="window._adminOpenChatFromModal()" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;">💬 Nhắn tin hỗ trợ</button>
                 <button class="btn-action toggle" id="modalToggleDisable">🔒 Vô hiệu hóa</button>
                 <div class="modal-actions-spacer"></div>
                 <div class="dp-grant-section">
