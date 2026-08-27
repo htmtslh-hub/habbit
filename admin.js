@@ -7,6 +7,8 @@ let currentAdmin = null;
 let allUsers = [];
 let currentModalUid = null;
 let usersUnsubscribe = null; // Real-time listener handle
+let selectedUserUids = new Set();
+let currentFilteredUsersList = [];
 
 // ===== HELPERS =====
 function formatDate(ts){
@@ -104,6 +106,7 @@ function initAuth(){
             initDeleteConfirmModal();
             initQuestManagement();
             initAdminChatSystem();
+            initUserSelectionSystem();
 
             // Initialize Vietnamese Input Method Editor (default to Telex, active on admin management/search fields)
             if(typeof GoTiengViet !== 'undefined' && GoTiengViet.VietnameseInput){
@@ -362,9 +365,12 @@ function renderUsers(filter, search, filterSource){
         );
     }
 
+    currentFilteredUsersList = filtered;
+
     if(filtered.length === 0){
         tbody.innerHTML = '';
         empty.style.display = 'block';
+        updateSelectionUI();
         return;
     }
     empty.style.display = 'none';
@@ -384,8 +390,12 @@ function renderUsers(filter, search, filterSource){
         const statusClass = u.disabled ? 'disabled' : isTrialExpired(u) ? 'expired' : 'active';
         const statusLabel = u.disabled ? '🔒 Vô hiệu' : isTrialExpired(u) ? '⚠️ Hết trial' : '✅ Active';
         const name = u.displayName || u.email?.split('@')[0] || 'Unknown';
+        const isSelected = selectedUserUids.has(u.uid);
 
-        return `<tr data-uid="${u.uid}">
+        return `<tr data-uid="${u.uid}" class="${isSelected ? 'selected-row' : ''}">
+            <td style="width:44px;text-align:center;">
+                <input type="checkbox" class="user-row-chk admin-custom-chk" data-uid="${u.uid}" ${isSelected ? 'checked' : ''} onchange="window._adminToggleUserSelection('${u.uid}', event)" title="Chọn user ${escHtml(name)}">
+            </td>
             <td>
                 <div class="user-cell">
                     ${avatarHtml(u.photoURL, name)}
@@ -406,6 +416,8 @@ function renderUsers(filter, search, filterSource){
             </td>
         </tr>`;
     }).join('');
+
+    updateSelectionUI();
 }
 
 function escHtml(s){
@@ -551,6 +563,383 @@ function initActions(){
         } catch(e) {}
         auth.signOut().then(() => { window.location.href = 'auth.html'; });
     };
+}
+
+// ===== USER SELECTION & BULK ACTIONS SYSTEM =====
+function updateSelectionUI() {
+    const count = selectedUserUids.size;
+    const total = currentFilteredUsersList.length;
+
+    // Update Counter texts
+    const countEl = document.getElementById('selectedUsersCount');
+    if (countEl) countEl.textContent = count;
+
+    const totalEl = document.getElementById('totalUsersFilteredCount');
+    if (totalEl) totalEl.textContent = total;
+
+    // Toggle Deselect button and action button group
+    const deselectBtn = document.getElementById('btnDeselectAll');
+    if (deselectBtn) deselectBtn.style.display = count > 0 ? 'inline-flex' : 'none';
+
+    const groupEl = document.getElementById('bulkActionButtonsGroup');
+    if (groupEl) groupEl.style.display = count > 0 ? 'flex' : 'none';
+
+    const barEl = document.getElementById('bulkActionsBar');
+    if (barEl) {
+        if (count > 0) barEl.classList.add('active');
+        else barEl.classList.remove('active');
+    }
+
+    // Sync header check-all checkbox states
+    const headerChk = document.getElementById('selectAllUsersHeader');
+    const tableChk = document.getElementById('userTableCheckAll');
+    const isAllChecked = total > 0 && count === total;
+    const isIndeterminate = count > 0 && count < total;
+
+    [headerChk, tableChk].forEach(chk => {
+        if (chk) {
+            chk.checked = isAllChecked;
+            chk.indeterminate = isIndeterminate;
+        }
+    });
+
+    // Update row highlights and checkboxes
+    document.querySelectorAll('#userTableBody tr[data-uid]').forEach(tr => {
+        const uid = tr.getAttribute('data-uid');
+        const chk = tr.querySelector('.user-row-chk');
+        if (selectedUserUids.has(uid)) {
+            tr.classList.add('selected-row');
+            if (chk) chk.checked = true;
+        } else {
+            tr.classList.remove('selected-row');
+            if (chk) chk.checked = false;
+        }
+    });
+}
+
+window._adminToggleUserSelection = function(uid, event) {
+    if (event) event.stopPropagation();
+    if (selectedUserUids.has(uid)) {
+        selectedUserUids.delete(uid);
+    } else {
+        selectedUserUids.add(uid);
+    }
+    updateSelectionUI();
+};
+
+window._adminSelectAllFiltered = function(shouldSelect) {
+    if (shouldSelect) {
+        currentFilteredUsersList.forEach(u => selectedUserUids.add(u.uid));
+    } else {
+        selectedUserUids.clear();
+    }
+    updateSelectionUI();
+};
+
+window._adminDeselectAll = function() {
+    selectedUserUids.clear();
+    updateSelectionUI();
+};
+
+function initUserSelectionSystem() {
+    // Bind Header Checkboxes
+    const headerChk = document.getElementById('selectAllUsersHeader');
+    if (headerChk) {
+        headerChk.onchange = (e) => window._adminSelectAllFiltered(e.target.checked);
+    }
+
+    const tableChk = document.getElementById('userTableCheckAll');
+    if (tableChk) {
+        tableChk.onchange = (e) => window._adminSelectAllFiltered(e.target.checked);
+    }
+
+    // Bind Deselect All
+    const deselectBtn = document.getElementById('btnDeselectAll');
+    if (deselectBtn) {
+        deselectBtn.onclick = () => window._adminDeselectAll();
+    }
+
+    // 1. Bulk VIP Upgrade
+    const bulkUpgradeBtn = document.getElementById('bulkBtnUpgrade');
+    if (bulkUpgradeBtn) {
+        bulkUpgradeBtn.onclick = async () => {
+            if (selectedUserUids.size === 0) return;
+            const count = selectedUserUids.size;
+            if (!confirm(`Xác nhận nâng cấp gói 👑 PREMIUM (1 Năm) cho ${count} user đã chọn?`)) return;
+
+            try {
+                const batch = db.batch();
+                const now = new Date();
+                const nextYear = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);
+                selectedUserUids.forEach(uid => {
+                    const userRef = db.collection('users').doc(uid);
+                    batch.set(userRef, {
+                        plan: 'premium',
+                        role: 'customer',
+                        planUpdatedAt: firebase.firestore.Timestamp.fromDate(now),
+                        planExpiresAt: firebase.firestore.Timestamp.fromDate(nextYear)
+                    }, { merge: true });
+                });
+                await batch.commit();
+                alert(`🎉 Đã nâng cấp Premium (1 Năm) thành công cho ${count} user!`);
+                selectedUserUids.clear();
+                updateSelectionUI();
+            } catch(err) {
+                alert('Lỗi nâng cấp hàng loạt: ' + err.message);
+            }
+        };
+    }
+
+    // 2. Bulk Extend Trial
+    const bulkTrialBtn = document.getElementById('bulkBtnExtendTrial');
+    if (bulkTrialBtn) {
+        bulkTrialBtn.onclick = async () => {
+            if (selectedUserUids.size === 0) return;
+            const count = selectedUserUids.size;
+            if (!confirm(`Gia hạn thêm 14 ngày dùng thử (Trial) cho ${count} user đã chọn?`)) return;
+
+            try {
+                const batch = db.batch();
+                const now = new Date();
+                const trialExp = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+                selectedUserUids.forEach(uid => {
+                    const userRef = db.collection('users').doc(uid);
+                    batch.set(userRef, {
+                        trialExpiresAt: firebase.firestore.Timestamp.fromDate(trialExp)
+                    }, { merge: true });
+                });
+                await batch.commit();
+                alert(`⏳ Đã gia hạn 14 ngày Trial thành công cho ${count} user!`);
+                selectedUserUids.clear();
+                updateSelectionUI();
+            } catch(err) {
+                alert('Lỗi gia hạn hàng loạt: ' + err.message);
+            }
+        };
+    }
+
+    // 3. Bulk Gift DP
+    const bulkGiftDPBtn = document.getElementById('bulkBtnGiftDP');
+    if (bulkGiftDPBtn) {
+        bulkGiftDPBtn.onclick = async () => {
+            if (selectedUserUids.size === 0) return;
+            const count = selectedUserUids.size;
+            const val = prompt(`Nhập số điểm Tu Vi DP muốn tặng cho ${count} user đã chọn:`, "100");
+            if (!val) return;
+            const amount = parseInt(val);
+            if (isNaN(amount) || amount <= 0) {
+                alert('Vui lòng nhập số DP hợp lệ > 0');
+                return;
+            }
+            try {
+                const promises = Array.from(selectedUserUids).map(uid => {
+                    return db.collection('user_items').doc(uid).set({
+                        bonusDP: firebase.firestore.FieldValue.increment(amount)
+                    }, { merge: true });
+                });
+                await Promise.all(promises);
+                alert(`🎁 Đã tặng +${amount} DP thành công cho ${count} user!`);
+                selectedUserUids.clear();
+                updateSelectionUI();
+            } catch(err) {
+                alert('Lỗi tặng DP hàng loạt: ' + err.message);
+            }
+        };
+    }
+
+    // 4. Bulk Broadcast Message Modal
+    const bulkBroadcastBtn = document.getElementById('bulkBtnBroadcast');
+    const broadcastModal = document.getElementById('bulkBroadcastModal');
+    const broadcastTargetCount = document.getElementById('broadcastTargetCount');
+    const broadcastClose = document.getElementById('bulkBroadcastClose');
+    const broadcastCancel = document.getElementById('bulkBroadcastCancel');
+    const broadcastSendBtn = document.getElementById('bulkBroadcastSendBtn');
+
+    if (bulkBroadcastBtn && broadcastModal) {
+        bulkBroadcastBtn.onclick = () => {
+            if (selectedUserUids.size === 0) return;
+            if (broadcastTargetCount) broadcastTargetCount.textContent = selectedUserUids.size;
+            broadcastModal.style.display = 'flex';
+        };
+
+        const closeBroadcastModal = () => { broadcastModal.style.display = 'none'; };
+        if (broadcastClose) broadcastClose.onclick = closeBroadcastModal;
+        if (broadcastCancel) broadcastCancel.onclick = closeBroadcastModal;
+        broadcastModal.onclick = (e) => { if (e.target === broadcastModal) closeBroadcastModal(); };
+
+        if (broadcastSendBtn) {
+            broadcastSendBtn.onclick = async () => {
+                const input = document.getElementById('broadcastMessageInput');
+                const text = (input ? input.value : '').trim();
+                if (!text) {
+                    alert('Vui lòng nhập nội dung tin nhắn!');
+                    return;
+                }
+                const count = selectedUserUids.size;
+                broadcastSendBtn.disabled = true;
+                broadcastSendBtn.textContent = 'Đang gửi...';
+
+                try {
+                    const now = new Date();
+                    const sendPromises = Array.from(selectedUserUids).map(async (targetUid) => {
+                        const convId = [currentAdmin.uid, targetUid].sort().join('_');
+                        const convRef = db.collection('conversations').doc(convId);
+                        const targetUser = allUsers.find(u => u.uid === targetUid) || {};
+                        
+                        const targetDetails = {
+                            displayName: targetUser.displayName || targetUser.email?.split('@')[0] || 'User',
+                            photoURL: targetUser.photoURL || '',
+                            rankLevel: 1
+                        };
+                        const adminDetails = {
+                            displayName: currentAdmin.displayName || 'Ban Quản Trị',
+                            photoURL: currentAdmin.photoURL || '',
+                            rankLevel: 99
+                        };
+
+                        const batch = db.batch();
+                        batch.set(convRef, {
+                            participants: [currentAdmin.uid, targetUid],
+                            participantDetails: {
+                                [currentAdmin.uid]: adminDetails,
+                                [targetUid]: targetDetails
+                            },
+                            lastMessage: text,
+                            lastSenderId: currentAdmin.uid,
+                            updatedAt: firebase.firestore.Timestamp.fromDate(now),
+                            unreadCount: {
+                                [targetUid]: firebase.firestore.FieldValue.increment(1),
+                                [currentAdmin.uid]: 0
+                            }
+                        }, { merge: true });
+
+                        const msgRef = convRef.collection('messages').doc();
+                        batch.set(msgRef, {
+                            senderId: currentAdmin.uid,
+                            senderName: currentAdmin.displayName || 'Ban Quản Trị (Admin)',
+                            senderPhoto: currentAdmin.photoURL || '',
+                            senderRankLevel: 99,
+                            isAdminMessage: true,
+                            text: text,
+                            createdAt: firebase.firestore.Timestamp.fromDate(now),
+                            read: false
+                        });
+
+                        return batch.commit();
+                    });
+
+                    await Promise.all(sendPromises);
+                    alert(`💬 Đã gửi tin nhắn đồng loạt thành công đến ${count} user!`);
+                    closeBroadcastModal();
+                    if (input) input.value = '';
+                    selectedUserUids.clear();
+                    updateSelectionUI();
+                } catch(err) {
+                    alert('Lỗi gửi tin nhắn hàng loạt: ' + err.message);
+                } finally {
+                    broadcastSendBtn.disabled = false;
+                    broadcastSendBtn.textContent = '🚀 Gửi hàng loạt';
+                }
+            };
+        }
+    }
+
+    // 5. Bulk Disable
+    const bulkDisableBtn = document.getElementById('bulkBtnDisable');
+    if (bulkDisableBtn) {
+        bulkDisableBtn.onclick = async () => {
+            if (selectedUserUids.size === 0) return;
+            const count = selectedUserUids.size;
+            if (!confirm(`Xác nhận KHÓA tài khoản của ${count} user đã chọn?`)) return;
+            try {
+                const batch = db.batch();
+                selectedUserUids.forEach(uid => {
+                    batch.update(db.collection('users').doc(uid), { disabled: true });
+                });
+                await batch.commit();
+                alert(`🔒 Đã khóa ${count} tài khoản!`);
+                selectedUserUids.clear();
+                updateSelectionUI();
+            } catch(e) { alert('Lỗi: ' + e.message); }
+        };
+    }
+
+    // 6. Bulk Enable
+    const bulkEnableBtn = document.getElementById('bulkBtnEnable');
+    if (bulkEnableBtn) {
+        bulkEnableBtn.onclick = async () => {
+            if (selectedUserUids.size === 0) return;
+            const count = selectedUserUids.size;
+            if (!confirm(`Xác nhận MỞ KHÓA tài khoản cho ${count} user đã chọn?`)) return;
+            try {
+                const batch = db.batch();
+                selectedUserUids.forEach(uid => {
+                    batch.update(db.collection('users').doc(uid), { disabled: false });
+                });
+                await batch.commit();
+                alert(`🔓 Đã mở khóa ${count} tài khoản!`);
+                selectedUserUids.clear();
+                updateSelectionUI();
+            } catch(e) { alert('Lỗi: ' + e.message); }
+        };
+    }
+
+    // 7. Bulk Export CSV
+    const bulkExportBtn = document.getElementById('bulkBtnExport');
+    if (bulkExportBtn) {
+        bulkExportBtn.onclick = () => {
+            if (selectedUserUids.size === 0) return;
+            const selectedUsers = allUsers.filter(u => selectedUserUids.has(u.uid));
+            const headers = ['UID','Name','Email','Plan','Role','Source','UTM_Source','UTM_Campaign','Referrer','Created','LastLogin','Disabled'];
+            const rows = selectedUsers.map(u => [
+                u.uid,
+                u.displayName||'',
+                u.email||'',
+                getEffectivePlan(u),
+                u.role||'customer',
+                u.registerSource||'direct',
+                u.utm_source||'',
+                u.utm_campaign||'',
+                u.referrer||'',
+                shortDate(u.createdAt),
+                shortDate(u.lastLoginAt),
+                u.disabled?'Yes':'No'
+            ]);
+            let csv = headers.join(',') + '\n';
+            rows.forEach(r => { csv += r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',') + '\n'; });
+            
+            const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8;'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `habit-selected-users-${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+    }
+
+    // 8. Bulk Delete
+    const bulkDeleteBtn = document.getElementById('bulkBtnDelete');
+    if (bulkDeleteBtn) {
+        bulkDeleteBtn.onclick = async () => {
+            if (selectedUserUids.size === 0) return;
+            const count = selectedUserUids.size;
+            const promptVal = prompt(`⚠️ CẢNH BÁO NGUY HIỂM:\nBạn sắp XÓA VĨNH VIỄN ${count} tài khoản đã chọn khỏi hệ thống.\nNhập "XÓA HẾT" để xác nhận:`);
+            if (promptVal !== 'XÓA HẾT') {
+                alert('Hủy thao tác xóa hàng loạt.');
+                return;
+            }
+            try {
+                const promises = Array.from(selectedUserUids).map(uid => {
+                    return db.collection('users').doc(uid).delete();
+                });
+                await Promise.all(promises);
+                alert(`🗑️ Đã xóa vĩnh viễn ${count} tài khoản!`);
+                selectedUserUids.clear();
+                updateSelectionUI();
+            } catch(e) { alert('Lỗi xóa hàng loạt: ' + e.message); }
+        };
+    }
 }
 
 // ===== MODAL =====

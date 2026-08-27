@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
     <link rel="alternate icon" href="./icon-192.png">
-    <link rel="stylesheet" href="admin.css?v=5.6.0">
+    <link rel="stylesheet" href="admin.css?v=5.7.0">
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -229,10 +229,35 @@
 
             <!-- Users Section -->
             <section class="section" id="sectionUsers" style="display:none;">
+                <!-- Bulk Actions Toolbar -->
+                <div class="bulk-actions-bar" id="bulkActionsBar">
+                    <div class="bulk-selection-info">
+                        <label class="bulk-select-all-label">
+                            <input type="checkbox" id="selectAllUsersHeader" class="admin-custom-chk">
+                            <span>Chọn tất cả (<span id="totalUsersFilteredCount">0</span>)</span>
+                        </label>
+                        <span class="bulk-counter-pill">Đã chọn: <strong id="selectedUsersCount">0</strong> user</span>
+                        <button class="bulk-btn ghost" id="btnDeselectAll" title="Bỏ chọn tất cả" style="display:none;">✕ Bỏ chọn</button>
+                    </div>
+                    <div class="bulk-action-buttons" id="bulkActionButtonsGroup" style="display:none;">
+                        <button class="bulk-btn upgrade" id="bulkBtnUpgrade" title="Nâng gói VIP 1 năm">👑 Nâng VIP</button>
+                        <button class="bulk-btn trial" id="bulkBtnExtendTrial" title="Gia hạn 14 ngày Trial">⏳ +14 Ngày Trial</button>
+                        <button class="bulk-btn reward" id="bulkBtnGiftDP" title="Tặng điểm Tu Vi">🎁 Tặng DP</button>
+                        <button class="bulk-btn broadcast" id="bulkBtnBroadcast" title="Gửi tin nhắn cho các user đã chọn">💬 Nhắn tin</button>
+                        <button class="bulk-btn disable" id="bulkBtnDisable" title="Khóa tài khoản">🔒 Khóa</button>
+                        <button class="bulk-btn enable" id="bulkBtnEnable" title="Mở khóa tài khoản">🔓 Mở khóa</button>
+                        <button class="bulk-btn export" id="bulkBtnExport" title="Xuất CSV user đã chọn">📥 Xuất CSV</button>
+                        <button class="bulk-btn danger" id="bulkBtnDelete" title="Xóa vĩnh viễn user đã chọn">🗑️ Xóa</button>
+                    </div>
+                </div>
+
                 <div class="table-container">
                     <table class="user-table" id="userTable">
                         <thead>
                             <tr>
+                                <th style="width:44px;text-align:center;">
+                                    <input type="checkbox" id="userTableCheckAll" class="admin-custom-chk" title="Chọn / Bỏ chọn tất cả">
+                                </th>
                                 <th>User</th>
                                 <th>Email</th>
                                 <th>Gói</th>
@@ -514,7 +539,33 @@
         </div>
     </div>
 
-    <script src="gotiengviet.js?v=5.6.0"></script>
-    <script src="admin.js?v=5.6.0"></script>
+    <!-- Bulk Broadcast Modal -->
+    <div class="modal-overlay" id="bulkBroadcastModal" style="display:none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>💬 Gửi tin nhắn cho <span id="broadcastTargetCount">0</span> user đã chọn</h3>
+                <button class="modal-close" id="bulkBroadcastClose">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom:12px;">
+                    <label style="font-size:12.5px;color:var(--text-secondary);display:block;margin-bottom:6px;">Mẫu tin nhắn nhanh:</label>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+                        <button type="button" class="admin-reply-chip" onclick="document.getElementById('broadcastMessageInput').value='👑 Chúc mừng bạn! Ban quản trị đã kích hoạt đặc quyền VIP Premium cho tài khoản của bạn.'">👑 Tặng VIP</button>
+                        <button type="button" class="admin-reply-chip" onclick="document.getElementById('broadcastMessageInput').value='🎁 Ban quản trị vừa gửi tặng bạn Điểm Tu Vi DP để khích lệ rèn luyện thói quen!'">🎁 Tặng DP</button>
+                        <button type="button" class="admin-reply-chip" onclick="document.getElementById('broadcastMessageInput').value='⚡ Chào bạn! Habit Mastery vừa cập nhật tính năng mới siêu xịn, bạn vào khám phá nhé!'">⚡ Tính năng mới</button>
+                        <button type="button" class="admin-reply-chip" onclick="document.getElementById('broadcastMessageInput').value='⚠️ Thông báo bảo trì: Hệ thống sẽ nâng cấp máy chủ trong ít phút, chúc bạn một ngày tốt lành!'">⚠️ Bảo trì</button>
+                    </div>
+                    <textarea id="broadcastMessageInput" class="admin-message-input" rows="4" placeholder="Nhập nội dung tin nhắn gửi đồng loạt..." style="width:100%;resize:vertical;"></textarea>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-action cancel" id="bulkBroadcastCancel">Hủy bỏ</button>
+                <button class="btn-action save" id="bulkBroadcastSendBtn" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;">🚀 Gửi hàng loạt</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="gotiengviet.js?v=5.7.0"></script>
+    <script src="admin.js?v=5.7.0"></script>
 </body>
 </html>
