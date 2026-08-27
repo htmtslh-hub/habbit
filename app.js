@@ -2624,6 +2624,7 @@ async function startApp(user){
         initCommunity();
         initQuestSystem();
         initGuideModal();
+        initInboxSystem();
         renderAll();
         if(typeof updateUserDPState==='function') updateUserDPState(true);
         else syncUserLeaderboard();
@@ -3569,7 +3570,12 @@ function renderLeaderboard() {
                     <div class="lb-podium-tier" style="color:${tier.color}" title="${escHtml(tier.stepFullName || '')}">${tier.realmName ? `Bước thứ ${tier.step} - ${tier.realmName}` : getRankTierName(tier)}</div>
                     <div class="lb-podium-dp">${(entry.totalDP || 0).toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div>
                     <div class="lb-podium-streak">🔥 ${entry.streak || 0}</div>
-                    ${!isMe ? `<button class="lb-kudos-btn lb-podium-kudos ${hasKudos ? 'given' : ''}" onclick="window._giveKudos('${entry.uid}')" ${hasKudos ? 'disabled' : ''} title="Kudos">${hasKudos ? '❤️' : '👏'}</button>` : ''}
+                    ${!isMe ? `
+                        <div style="display:flex; align-items:center; gap:6px; margin-top:2px;">
+                            <button class="lb-kudos-btn lb-podium-kudos ${hasKudos ? 'given' : ''}" onclick="window._giveKudos('${entry.uid}')" ${hasKudos ? 'disabled' : ''} title="Kudos">${hasKudos ? '❤️' : '👏'}</button>
+                            <button class="lb-chat-btn" onclick="window._openInbox('${entry.uid}')" title="Nhắn tin với ${escHtml(entry.displayName || 'chiến binh')}">💬</button>
+                        </div>
+                    ` : ''}
                 </div>
                 <div class="lb-podium-step rank-${rank}">
                     <div class="lb-step-glow"></div>
@@ -3622,7 +3628,10 @@ function renderLeaderboard() {
                             </div>
                             <div class="lb-stats">
                                 <span class="lb-streak">🔥 ${entry.streak || 0}</span>
-                                ${!isMe ? `<button class="lb-kudos-btn ${hasKudos ? 'given' : ''}" onclick="window._giveKudos('${entry.uid}')" ${hasKudos ? 'disabled' : ''}>Kudos</button>` : ''}
+                                ${!isMe ? `
+                                    <button class="lb-kudos-btn ${hasKudos ? 'given' : ''}" onclick="window._giveKudos('${entry.uid}')" ${hasKudos ? 'disabled' : ''}>Kudos</button>
+                                    <button class="lb-chat-btn" onclick="window._openInbox('${entry.uid}')" title="Nhắn tin với ${escHtml(entry.displayName || 'chiến binh')}">💬</button>
+                                ` : ''}
                             </div>
                         </div>`;
                     }).join('')}
@@ -3913,6 +3922,7 @@ async function renderCommunity(forceReload = false) {
                                     <span>${escHtml(c.displayName || 'User')}</span>
                                     ${getUserTitleBadgeHTML(c.equippedTitle)}
                                     <span class="cm-comment-rank-badge">${cRankName}</span>
+                                    ${currentUid && c.uid && c.uid !== currentUid ? `<button class="cm-chat-btn" onclick="window._openInbox('${c.uid}')" title="Nhắn tin với ${escHtml(c.displayName || 'chiến binh')}">💬</button>` : ''}
                                 </div>
                                 <span class="cm-comment-time">${cTimeStr}</span>
                             </div>
@@ -3934,6 +3944,7 @@ async function renderCommunity(forceReload = false) {
                                 <span>${escHtml(p.displayName || 'User')}</span>
                                 ${getUserTitleBadgeHTML(p.equippedTitle)}
                                 <span class="cm-post-author-rank">${rankName}</span>
+                                ${currentUid && p.uid && p.uid !== currentUid ? `<button class="cm-chat-btn" onclick="window._openInbox('${p.uid}')" title="Nhắn tin với ${escHtml(p.displayName || 'tác giả')}">💬 Nhắn tin</button>` : ''}
                             </div>
                             <span class="cm-post-time">📅 ${timeStr}</span>
                         </div>
@@ -10535,9 +10546,20 @@ const GUIDE_SECTIONS = {
                     'Thả tim, bình luận và học hỏi bí quyết từ các thành viên xuất sắc.'
                 ],
                 action: { label: '🌐 Vào Bảng Tin Cộng Đồng', onClick: 'closeGuideModal(); if(typeof openCommunityModal==="function")openCommunityModal();' }
+            },
+            {
+                icon: '👥',
+                title: 'Nhóm Zalo Cộng Đồng & Hỗ Trợ Trực Tiếp',
+                badge: 'Hỗ Trợ 1:1',
+                steps: [
+                    'Quét mã QR bên dưới để tham gia vào <strong>Nhóm Zalo Cộng Đồng Kỷ Luật Habit Mastery</strong>.',
+                    'Để được <strong>hỗ trợ trực tiếp, giải đáp thắc mắc và nhận hỗ trợ kỹ thuật 1:1</strong> từ đội ngũ phát triển.',
+                    'Giao lưu, kết nối bạn bè cùng rèn luyện thói quen mỗi ngày, chia sẻ kinh nghiệm và nhận các tài liệu độc quyền.',
+                    '<div class="guide-zalo-box" style="text-align:center; padding:12px; background:rgba(0,0,0,0.25); border-radius:14px; border:1px solid rgba(16,185,129,0.25); margin-top:8px;"><img src="zalo-qr.png" alt="Mã QR Nhóm Zalo Cộng Đồng" style="width:160px; max-width:100%; height:auto; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.35); border:2px solid rgba(255,255,255,0.1);"><div style="font-size:12px; font-weight:700; color:var(--accent, #10b981); margin-top:8px;">📱 Quét Mã Bằng Zalo Để Tham Gia Nhóm Ngay</div></div>'
+                ]
             }
         ],
-        tip: '📸 <strong>Khoe thẻ Rank:</strong> Đăng Story kỷ luật mỗi tuần không chỉ giúp bạn tự hào về hành trình của mình mà còn tạo áp lực tích cực để giữ vững kỷ luật!'
+        tip: '📸 <strong>Cộng đồng kỷ luật:</strong> Tham gia nhóm Zalo để được hỗ trợ trực tiếp 1:1 từ đội ngũ phát triển và cùng nhau rèn luyện kỷ luật mỗi ngày!'
     },
     'pwa-sync': {
         title: 'Cài App Màn Hình Chính & Sao Lưu Đám Mây',
@@ -10700,6 +10722,752 @@ function initGuideModal() {
     });
 }
 window.initGuideModal = initGuideModal;
+
+// ==========================================================================
+// DIRECT MESSAGING & INBOX CHAT SYSTEM (HỘP THƯ KẾT NỐI TRỰC TIẾP GIỮA CÁC TÀI KHOẢN)
+// ==========================================================================
+
+let activeConvId = null;
+let activeConvPartner = null;
+let inboxConversationsCache = [];
+let inboxUnsubscribeAll = null;
+let activeChatUnsubscribe = null;
+let inboxFilterText = '';
+let inboxActiveTab = 'recent';
+let discoverUsersCache = [];
+let lastKnownUnreadTotal = 0;
+
+function playMessageSound() {
+    try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, now); // D5
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.08); // A5
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.25);
+    } catch(e) {}
+}
+
+function getCanonicalConvId(uidA, uidB) {
+    if (!uidA || !uidB) return null;
+    return [uidA, uidB].sort().join('_');
+}
+
+function formatChatTime(dateVal) {
+    if (!dateVal) return '';
+    let d;
+    if (dateVal.toDate && typeof dateVal.toDate === 'function') {
+        d = dateVal.toDate();
+    } else if (typeof dateVal === 'number' || typeof dateVal === 'string') {
+        d = new Date(dateVal);
+    } else {
+        d = new Date();
+    }
+    if (isNaN(d.getTime())) return '';
+    const now = new Date();
+    const isToday = d.toDateString() === now.toDateString();
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const isYesterday = d.toDateString() === yesterday.toDateString();
+
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+
+    if (isToday) return `${hh}:${mm}`;
+    if (isYesterday) return `Hôm qua ${hh}:${mm}`;
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mon = String(d.getMonth() + 1).padStart(2, '0');
+    return `${dd}/${mon} ${hh}:${mm}`;
+}
+
+function formatDetailedChatDate(dateVal) {
+    if (!dateVal) return 'Hôm nay';
+    let d;
+    if (dateVal.toDate && typeof dateVal.toDate === 'function') {
+        d = dateVal.toDate();
+    } else if (typeof dateVal === 'number' || typeof dateVal === 'string') {
+        d = new Date(dateVal);
+    } else {
+        d = new Date();
+    }
+    if (isNaN(d.getTime())) return 'Hôm nay';
+    const now = new Date();
+    const isToday = d.toDateString() === now.toDateString();
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const isYesterday = d.toDateString() === yesterday.toDateString();
+
+    if (isToday) return 'Hôm nay';
+    if (isYesterday) return 'Hôm qua';
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mon = String(d.getMonth() + 1).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    return `${dd}/${mon}/${yyyy}`;
+}
+
+function getCurrentUserChatDetails() {
+    if (!currentUser) return null;
+    const computed = calculateUserDPAndStreak();
+    const isAdmin = (typeof userPlan !== 'undefined' && userPlan && userPlan.role === 'admin') || (currentUser && currentUser.email === 'admin@gmail.com');
+    const dp = isAdmin ? 999999 : (computed.totalDP + (userBonusDP || 0));
+    const rank = getRankLevel(dp);
+    const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'Chiến Binh';
+    const photoURL = getUserAvatar(currentUser) || '';
+    const equippedTitle = (S.inventory && S.inventory.equippedTitle) || '';
+
+    return {
+        uid: currentUser.uid,
+        displayName: displayName,
+        photoURL: photoURL,
+        rankLevel: rank.level || 1,
+        realmName: rank.realmName || '',
+        step: rank.step || 1,
+        equippedTitle: equippedTitle,
+        totalDP: dp
+    };
+}
+
+function initInboxSystem() {
+    if (!db || !currentUser) return;
+
+    // Bind Navbar Inbox Button
+    const navBtn = document.getElementById('navInboxBtn');
+    if (navBtn) {
+        navBtn.onclick = () => openInboxModal();
+    }
+
+    // Bind More Menu Inbox Button
+    const moreBtn = document.getElementById('moreBtnInbox');
+    if (moreBtn) {
+        moreBtn.onclick = () => {
+            if (window._closeMoreMenu) window._closeMoreMenu();
+            openInboxModal();
+        };
+    }
+
+    // Bind Modal Close & Backdrop
+    const closeBtn = document.getElementById('inboxCloseBtn');
+    if (closeBtn) closeBtn.onclick = closeInboxModal;
+
+    const modalBg = document.getElementById('inboxModalBg');
+    if (modalBg) {
+        modalBg.onclick = (e) => {
+            if (e.target === modalBg) closeInboxModal();
+        };
+    }
+
+    // Bind Message Input Enter Key & Textarea Autosize
+    const inputArea = document.getElementById('inboxMessageInput');
+    if (inputArea && !inputArea.dataset.bound) {
+        inputArea.dataset.bound = 'true';
+        inputArea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+            }
+        });
+        inputArea.addEventListener('input', () => {
+            inputArea.style.height = 'auto';
+            inputArea.style.height = Math.min(inputArea.scrollHeight, 120) + 'px';
+        });
+    }
+
+    // Start Global Realtime Listener on user's conversations
+    if (inboxUnsubscribeAll) {
+        inboxUnsubscribeAll();
+        inboxUnsubscribeAll = null;
+    }
+
+    try {
+        inboxUnsubscribeAll = db.collection('conversations')
+            .where('participants', 'array-contains', currentUser.uid)
+            .orderBy('updatedAt', 'desc')
+            .onSnapshot((snapshot) => {
+                inboxConversationsCache = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                // Calculate total unread count
+                let totalUnread = 0;
+                inboxConversationsCache.forEach(conv => {
+                    const unread = (conv.unreadCount && conv.unreadCount[currentUser.uid]) || 0;
+                    totalUnread += unread;
+                });
+
+                // Update Navbar Badge
+                const navBadge = document.getElementById('navInboxBadge');
+                if (navBadge) {
+                    if (totalUnread > 0) {
+                        navBadge.textContent = totalUnread > 99 ? '99+' : totalUnread;
+                        navBadge.style.display = 'inline-flex';
+                    } else {
+                        navBadge.style.display = 'none';
+                    }
+                }
+
+                // Update Sidebar Total Badge
+                const sideBadge = document.getElementById('inboxTotalBadge');
+                if (sideBadge) {
+                    if (totalUnread > 0) {
+                        sideBadge.textContent = totalUnread > 99 ? '99+' : totalUnread;
+                        sideBadge.style.display = 'inline-block';
+                    } else {
+                        sideBadge.style.display = 'none';
+                    }
+                }
+
+                // Audio notification if unread count increased
+                if (totalUnread > lastKnownUnreadTotal) {
+                    playMessageSound();
+                }
+                lastKnownUnreadTotal = totalUnread;
+
+                // Re-render conversation list if modal is open
+                if (modalBg && modalBg.classList.contains('show')) {
+                    if (inboxActiveTab === 'recent') {
+                        renderInboxConversationsList();
+                    }
+                }
+            }, (err) => {
+                console.warn('Inbox realtime sync error:', err);
+            });
+    } catch(e) {
+        console.warn('Inbox listener init error:', e);
+    }
+}
+window.initInboxSystem = initInboxSystem;
+
+async function openInboxModal(targetPartnerUid = null) {
+    const modal = document.getElementById('inboxModalBg');
+    if (!modal) return;
+    modal.classList.add('show');
+
+    // Default to 'recent' tab
+    switchInboxTab('recent');
+
+    if (targetPartnerUid && targetPartnerUid !== currentUser?.uid) {
+        // Direct jump to conversation with this user
+        await openChatWithUser(targetPartnerUid);
+    } else {
+        renderInboxConversationsList();
+        // If on desktop (screen > 768) and we have conversations, auto-select first one if none selected
+        if (window.innerWidth > 768 && inboxConversationsCache.length > 0 && !activeConvId) {
+            const firstConv = inboxConversationsCache[0];
+            const partnerUid = firstConv.participants.find(p => p !== currentUser.uid);
+            const partnerDetails = (firstConv.participantDetails && firstConv.participantDetails[partnerUid]) || { uid: partnerUid, displayName: 'Chiến Binh' };
+            selectConversation(firstConv.id, partnerDetails);
+        }
+    }
+}
+window._openInbox = openInboxModal;
+
+function closeInboxModal() {
+    const modal = document.getElementById('inboxModalBg');
+    if (modal) modal.classList.remove('show');
+    
+    // Clear active chat subscription when closing modal
+    if (activeChatUnsubscribe) {
+        activeChatUnsubscribe();
+        activeChatUnsubscribe = null;
+    }
+    activeConvId = null;
+    activeConvPartner = null;
+    
+    const container = document.querySelector('.inbox-container');
+    if (container) container.classList.remove('chat-open');
+}
+window._closeInbox = closeInboxModal;
+
+function switchInboxTab(tab) {
+    inboxActiveTab = tab;
+    const tabRecent = document.getElementById('inboxTabRecent');
+    const tabDiscover = document.getElementById('inboxTabDiscover');
+    const listRecent = document.getElementById('inboxConversationsList');
+    const listDiscover = document.getElementById('inboxDiscoverList');
+    const searchInput = document.getElementById('inboxSearchInput');
+
+    if (tabRecent) tabRecent.classList.toggle('active', tab === 'recent');
+    if (tabDiscover) tabDiscover.classList.toggle('active', tab === 'discover');
+
+    if (searchInput) searchInput.value = '';
+    inboxFilterText = '';
+
+    if (tab === 'recent') {
+        if (listRecent) listRecent.style.display = 'block';
+        if (listDiscover) listDiscover.style.display = 'none';
+        renderInboxConversationsList();
+    } else {
+        if (listRecent) listRecent.style.display = 'none';
+        if (listDiscover) listDiscover.style.display = 'block';
+        loadAndRenderDiscoverList();
+    }
+}
+window._switchInboxTab = switchInboxTab;
+
+function filterInboxUsers(query) {
+    inboxFilterText = (query || '').toLowerCase().trim();
+    const clearBtn = document.getElementById('inboxSearchClear');
+    if (clearBtn) clearBtn.style.display = inboxFilterText ? 'inline-block' : 'none';
+
+    if (inboxActiveTab === 'recent') {
+        renderInboxConversationsList();
+    } else {
+        renderInboxDiscoverList();
+    }
+}
+window._filterInboxUsers = filterInboxUsers;
+
+function renderInboxConversationsList() {
+    const container = document.getElementById('inboxConversationsList');
+    if (!container) return;
+
+    let convs = [...inboxConversationsCache];
+    if (inboxFilterText) {
+        convs = convs.filter(c => {
+            const partnerUid = c.participants?.find(p => p !== currentUser.uid);
+            const pInfo = (c.participantDetails && c.participantDetails[partnerUid]) || {};
+            const name = (pInfo.displayName || '').toLowerCase();
+            const lastText = (c.lastMessage && c.lastMessage.text || '').toLowerCase();
+            return name.includes(inboxFilterText) || lastText.includes(inboxFilterText);
+        });
+    }
+
+    if (convs.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; padding:36px 16px; color:var(--text-muted); font-size:12px;">
+                <div style="font-size:32px; margin-bottom:8px;">💬</div>
+                <div>${inboxFilterText ? 'Không tìm thấy cuộc trò chuyện nào' : 'Chưa có cuộc trò chuyện nào'}</div>
+                <button type="button" class="icp-start-btn" style="margin-top:12px; font-size:11px;" onclick="window._switchInboxTab('discover')">
+                    🔍 Tìm bạn & Top chiến binh
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '';
+    convs.forEach(conv => {
+        const partnerUid = conv.participants?.find(p => p !== currentUser.uid) || 'unknown';
+        const partner = (conv.participantDetails && conv.participantDetails[partnerUid]) || {
+            uid: partnerUid,
+            displayName: 'Chiến Binh',
+            photoURL: '',
+            rankLevel: 1,
+            realmName: 'Tập sự'
+        };
+
+        const isActive = activeConvId === conv.id;
+        const unread = (conv.unreadCount && conv.unreadCount[currentUser.uid]) || 0;
+        const isUnread = unread > 0;
+        const lastMsg = conv.lastMessage || {};
+        const timeStr = formatChatTime(conv.updatedAt || lastMsg.createdAt);
+        const preview = lastMsg.text ? (lastMsg.senderId === currentUser.uid ? `Bạn: ${lastMsg.text}` : lastMsg.text) : 'Bắt đầu trò chuyện...';
+
+        const frameLevel = partner.rankLevel || 1;
+        const avatarSrc = partner.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(partner.displayName || 'U')}&background=0d1117&color=10b981&bold=true`;
+        const avatarHtml = window.getAvatarHTML ? window.getAvatarHTML(frameLevel, avatarSrc, 42) : `<img class="inbox-conv-avatar" src="${avatarSrc}" alt="">`;
+
+        html += `
+            <div class="inbox-conv-item ${isActive ? 'active' : ''} ${isUnread ? 'unread' : ''}" onclick="window._selectConversationById('${conv.id}', '${partnerUid}')">
+                <div class="inbox-conv-avatar-wrap">
+                    ${avatarHtml}
+                </div>
+                <div class="inbox-conv-meta">
+                    <div class="inbox-conv-top-row">
+                        <span class="inbox-conv-name">${escHtml(partner.displayName || 'Chiến Binh')}${getUserTitleBadgeHTML(partner.equippedTitle)}</span>
+                        <span class="inbox-conv-time">${timeStr}</span>
+                    </div>
+                    <div class="inbox-conv-bot-row">
+                        <span class="inbox-conv-preview">${escHtml(preview)}</span>
+                        ${isUnread ? `<span class="inbox-conv-badge">${unread}</span>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+window._selectConversationById = (convId, partnerUid) => {
+    const conv = inboxConversationsCache.find(c => c.id === convId);
+    const partner = (conv && conv.participantDetails && conv.participantDetails[partnerUid]) || { uid: partnerUid, displayName: 'Chiến Binh' };
+    selectConversation(convId, partner);
+};
+
+async function loadAndRenderDiscoverList() {
+    const container = document.getElementById('inboxDiscoverList');
+    if (!container) return;
+
+    container.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:12px;">⏳ Đang tải danh sách chiến binh...</div>';
+
+    try {
+        // Fetch Top warriors from leaderboard collection
+        const snap = await db.collection('leaderboard').orderBy('totalDP', 'desc').limit(50).get();
+        discoverUsersCache = [];
+        snap.forEach(doc => {
+            const data = doc.data();
+            if (data.isAdmin || data.role === 'admin' || data.email === 'admin@gmail.com' || doc.id === currentUser?.uid) {
+                return;
+            }
+            discoverUsersCache.push({ uid: doc.id, ...data });
+        });
+        renderInboxDiscoverList();
+    } catch(e) {
+        console.warn('Load discover warriors error:', e);
+        container.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:12px;">Không thể tải danh sách chiến binh.</div>';
+    }
+}
+
+function renderInboxDiscoverList() {
+    const container = document.getElementById('inboxDiscoverList');
+    if (!container) return;
+
+    let users = [...discoverUsersCache];
+    if (inboxFilterText) {
+        users = users.filter(u => (u.displayName || '').toLowerCase().includes(inboxFilterText));
+    }
+
+    if (users.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; padding:32px 16px; color:var(--text-muted); font-size:12px;">
+                Không tìm thấy chiến binh phù hợp với "${escHtml(inboxFilterText)}"
+            </div>
+        `;
+        return;
+    }
+
+    let html = '';
+    users.forEach(u => {
+        const tier = getRankLevel(u.totalDP || 0);
+        const frameLevel = tier.level || 1;
+        const avatarSrc = u.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.displayName || 'U')}&background=0d1117&color=10b981&bold=true`;
+        const avatarHtml = window.getAvatarHTML ? window.getAvatarHTML(frameLevel, avatarSrc, 38) : `<img style="width:38px;height:38px;border-radius:50%;" src="${avatarSrc}" alt="">`;
+        const realmStr = tier.realmName ? `Bước ${tier.step} · ${tier.realmName}` : getRankTierName(tier);
+
+        html += `
+            <div class="inbox-user-card">
+                <div class="inbox-user-info">
+                    <div style="flex-shrink:0;">${avatarHtml}</div>
+                    <div class="inbox-user-text">
+                        <span class="inbox-user-name">${escHtml(u.displayName || 'Chiến Binh')}${getUserTitleBadgeHTML(u.equippedTitle)}</span>
+                        <span class="inbox-user-rank">${realmStr}</span>
+                    </div>
+                </div>
+                <button type="button" class="inbox-user-chat-btn" onclick="window._openChatWithUser('${u.uid}')">
+                    💬 Nhắn tin
+                </button>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+async function openChatWithUser(targetUid) {
+    if (!currentUser || !targetUid || targetUid === currentUser.uid) return;
+
+    // Check if conversation already exists in cache
+    const canonicalId = getCanonicalConvId(currentUser.uid, targetUid);
+    let partnerInfo = null;
+
+    // Try finding partner details from cache or fetch from DB
+    const existingConv = inboxConversationsCache.find(c => c.id === canonicalId);
+    if (existingConv && existingConv.participantDetails && existingConv.participantDetails[targetUid]) {
+        partnerInfo = existingConv.participantDetails[targetUid];
+    } else {
+        // Try leaderboard cache
+        const lbUser = (typeof leaderboardCache !== 'undefined' && leaderboardCache.find(u => u.uid === targetUid)) || discoverUsersCache.find(u => u.uid === targetUid);
+        if (lbUser) {
+            const tier = getRankLevel(lbUser.totalDP || 0);
+            partnerInfo = {
+                uid: targetUid,
+                displayName: lbUser.displayName || 'Chiến Binh',
+                photoURL: lbUser.photoURL || '',
+                rankLevel: tier.level || 1,
+                realmName: tier.realmName || '',
+                step: tier.step || 1,
+                equippedTitle: lbUser.equippedTitle || ''
+            };
+        } else {
+            // Fetch from Firestore
+            try {
+                const doc = await db.collection('leaderboard').doc(targetUid).get();
+                if (doc.exists) {
+                    const d = doc.data();
+                    const tier = getRankLevel(d.totalDP || 0);
+                    partnerInfo = {
+                        uid: targetUid,
+                        displayName: d.displayName || 'Chiến Binh',
+                        photoURL: d.photoURL || '',
+                        rankLevel: tier.level || 1,
+                        realmName: tier.realmName || '',
+                        step: tier.step || 1,
+                        equippedTitle: d.equippedTitle || ''
+                    };
+                } else {
+                    const uDoc = await db.collection('users').doc(targetUid).get();
+                    const uData = uDoc.exists ? uDoc.data() : {};
+                    partnerInfo = {
+                        uid: targetUid,
+                        displayName: uData.displayName || 'Chiến Binh',
+                        photoURL: uData.photoURL || '',
+                        rankLevel: 1,
+                        realmName: 'Tập sự',
+                        step: 1,
+                        equippedTitle: ''
+                    };
+                }
+            } catch(e) {
+                partnerInfo = { uid: targetUid, displayName: 'Chiến Binh', photoURL: '', rankLevel: 1, realmName: '', step: 1 };
+            }
+        }
+    }
+
+    selectConversation(canonicalId, partnerInfo);
+}
+window._openChatWithUser = openChatWithUser;
+
+function selectConversation(convId, partnerInfo) {
+    if (!convId || !partnerInfo) return;
+
+    activeConvId = convId;
+    activeConvPartner = partnerInfo;
+
+    // Mobile layout transition: Add class 'chat-open' to container
+    const container = document.querySelector('.inbox-container');
+    if (container) container.classList.add('chat-open');
+
+    // Toggle Panes
+    const placeholder = document.getElementById('inboxChatPlaceholder');
+    const activeChat = document.getElementById('inboxChatActive');
+    if (placeholder) placeholder.style.display = 'none';
+    if (activeChat) activeChat.style.display = 'flex';
+
+    // Render Chat Partner Header
+    const headerPartner = document.getElementById('inboxChatPartner');
+    if (headerPartner) {
+        const frameLevel = partnerInfo.rankLevel || 1;
+        const avatarSrc = partnerInfo.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(partnerInfo.displayName || 'U')}&background=0d1117&color=10b981&bold=true`;
+        const avatarHtml = window.getAvatarHTML ? window.getAvatarHTML(frameLevel, avatarSrc, 38) : `<img style="width:38px;height:38px;border-radius:50%;" src="${avatarSrc}" alt="">`;
+        const realmStr = partnerInfo.realmName ? `Bước thứ ${partnerInfo.step || 1} - ${partnerInfo.realmName}` : 'Đồng đội rèn luyện';
+
+        headerPartner.innerHTML = `
+            <div style="flex-shrink:0;">${avatarHtml}</div>
+            <div class="inbox-chat-partner-info">
+                <div class="inbox-partner-name-row">
+                    <span>${escHtml(partnerInfo.displayName || 'Chiến Binh')}</span>
+                    ${getUserTitleBadgeHTML(partnerInfo.equippedTitle)}
+                </div>
+                <div class="inbox-partner-sub">${realmStr}</div>
+            </div>
+        `;
+    }
+
+    // Reset unread count for current user in this conversation
+    markConversationAsRead(convId);
+
+    // Refresh conversation list UI for active indicator
+    renderInboxConversationsList();
+
+    // Subscribe to messages subcollection in realtime
+    if (activeChatUnsubscribe) {
+        activeChatUnsubscribe();
+        activeChatUnsubscribe = null;
+    }
+
+    const stream = document.getElementById('inboxMessagesStream');
+    if (stream) {
+        stream.innerHTML = '<div style="text-align:center; padding:32px; color:var(--text-muted); font-size:12px;">⏳ Đang tải tin nhắn...</div>';
+    }
+
+    try {
+        activeChatUnsubscribe = db.collection('conversations')
+            .doc(convId)
+            .collection('messages')
+            .orderBy('createdAt', 'asc')
+            .limit(150)
+            .onSnapshot((snap) => {
+                const messages = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderActiveChatMessages(messages);
+            }, (err) => {
+                console.warn('Messages stream error:', err);
+                if (stream) stream.innerHTML = '<div style="text-align:center; padding:20px; color:#ef4444; font-size:12px;">Không thể tải tin nhắn.</div>';
+            });
+    } catch(e) {
+        console.warn('Messages listener error:', e);
+    }
+}
+
+function renderActiveChatMessages(messages) {
+    const stream = document.getElementById('inboxMessagesStream');
+    if (!stream) return;
+
+    if (!messages || messages.length === 0) {
+        stream.innerHTML = `
+            <div style="text-align:center; padding:48px 16px; color:var(--text-muted); font-size:12px;">
+                <div style="font-size:36px; margin-bottom:8px;">✨</div>
+                <div style="font-weight:700; color:var(--text-main); margin-bottom:4px;">Chưa có tin nhắn nào</div>
+                <div>Gửi lời chào hoặc một lời nhắc kỷ luật để bắt đầu kết nối!</div>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '';
+    let lastDateStr = '';
+
+    messages.forEach(msg => {
+        const isOutgoing = msg.senderId === currentUser.uid;
+        const msgDateStr = formatDetailedChatDate(msg.createdAt);
+        const timeStr = formatChatTime(msg.createdAt);
+
+        // Date divider
+        if (msgDateStr !== lastDateStr) {
+            html += `<div class="inbox-date-divider"><span>${msgDateStr}</span></div>`;
+            lastDateStr = msgDateStr;
+        }
+
+        const avatarSrc = msg.senderPhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.senderName || 'U')}&background=0d1117&color=10b981&bold=true`;
+        const readStatusHtml = isOutgoing ? `<span class="inbox-msg-status" title="Đã gửi">✓</span>` : '';
+
+        html += `
+            <div class="inbox-msg-row ${isOutgoing ? 'outgoing' : 'incoming'}">
+                ${!isOutgoing ? `<img class="inbox-msg-avatar" src="${avatarSrc}" alt="">` : ''}
+                <div class="inbox-msg-body">
+                    <div class="inbox-msg-bubble">
+                        ${escHtml(msg.text || '')}
+                    </div>
+                    <div class="inbox-msg-footer">
+                        <span>${timeStr}</span>
+                        ${readStatusHtml}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    stream.innerHTML = html;
+    // Scroll to bottom
+    requestAnimationFrame(() => {
+        stream.scrollTop = stream.scrollHeight;
+    });
+}
+
+async function handleSendMessage(presetText = null) {
+    if (!currentUser || !activeConvId || !activeConvPartner) return;
+
+    const input = document.getElementById('inboxMessageInput');
+    const text = (presetText || (input ? input.value : '') || '').trim();
+    if (!text) return;
+
+    if (input) {
+        input.value = '';
+        input.style.height = 'auto';
+    }
+
+    const myDetails = getCurrentUserChatDetails();
+    const partnerDetails = activeConvPartner;
+
+    const newMsg = {
+        senderId: currentUser.uid,
+        senderName: myDetails.displayName,
+        senderPhoto: myDetails.photoURL,
+        senderRankLevel: myDetails.rankLevel,
+        senderRealmName: myDetails.realmName,
+        senderStep: myDetails.step,
+        senderEquippedTitle: myDetails.equippedTitle,
+        text: text,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        read: false
+    };
+
+    try {
+        // 1. Add message to subcollection
+        await db.collection('conversations')
+            .doc(activeConvId)
+            .collection('messages')
+            .add(newMsg);
+
+        // 2. Update conversation header document
+        await db.collection('conversations').doc(activeConvId).set({
+            participants: [currentUser.uid, partnerDetails.uid],
+            participantDetails: {
+                [currentUser.uid]: myDetails,
+                [partnerDetails.uid]: partnerDetails
+            },
+            lastMessage: {
+                text: text,
+                senderId: currentUser.uid,
+                senderName: myDetails.displayName,
+                createdAt: new Date().toISOString(),
+                read: false
+            },
+            lastSenderId: currentUser.uid,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            unreadCount: {
+                [partnerDetails.uid]: firebase.firestore.FieldValue.increment(1),
+                [currentUser.uid]: 0
+            }
+        }, { merge: true });
+
+        // Play feedback chime
+        playMessageSound();
+    } catch(e) {
+        console.error('Send message error:', e);
+        alert('Lỗi gửi tin nhắn: ' + e.message);
+    }
+}
+window._handleSendMessage = handleSendMessage;
+window._sendPresetMessage = (text) => handleSendMessage(text);
+
+async function markConversationAsRead(convId) {
+    if (!currentUser || !convId) return;
+    try {
+        await db.collection('conversations').doc(convId).set({
+            unreadCount: {
+                [currentUser.uid]: 0
+            }
+        }, { merge: true });
+    } catch(e) {
+        console.warn('Mark as read error:', e);
+    }
+}
+
+function backToConversationsList() {
+    const container = document.querySelector('.inbox-container');
+    if (container) container.classList.remove('chat-open');
+}
+window._backToConversationsList = backToConversationsList;
+
+function toggleEmojiBar() {
+    const bar = document.getElementById('inboxEmojiBar');
+    if (bar) {
+        bar.style.display = bar.style.display === 'none' ? 'flex' : 'none';
+    }
+}
+window._toggleEmojiBar = toggleEmojiBar;
+
+function insertEmoji(emoji) {
+    const input = document.getElementById('inboxMessageInput');
+    if (!input) return;
+    const start = input.selectionStart || input.value.length;
+    const end = input.selectionEnd || input.value.length;
+    const val = input.value;
+    input.value = val.substring(0, start) + emoji + val.substring(end);
+    input.selectionStart = input.selectionEnd = start + emoji.length;
+    input.focus();
+}
+window._insertEmoji = insertEmoji;
 
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',initAuthGuard):initAuthGuard();
 })();

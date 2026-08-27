@@ -98,6 +98,7 @@
                 <!-- User Profile (Rendered via Dynamic Rank Nameplate) -->
                 <div class="user-profile" id="userProfile" onclick="window._openProfile()" title="Hồ sơ nhân vật"></div>
                 <div class="nav-boost-badge" id="navBoostBadge" style="display:none;" onclick="if(window._openShopModal)window._openShopModal('items')" title="Vé 2X Boost đang kích hoạt!"><svg class="rune-icon rune-xs" viewBox="0 0 48 48"><use href="#i-coin"></use></svg> 2X Boost: <span id="navBoostCountdown">24:00</span></div>
+                <button class="nav-action-btn inbox-nav-btn" id="navInboxBtn" title="Hộp thư & Trò chuyện" onclick="if(window._openInbox)window._openInbox();"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-echo"></use></svg><span class="nav-inbox-badge" id="navInboxBadge" style="display:none;">0</span></button>
                 <button class="nav-action-btn shop-nav-btn" id="navShopBtn" title="Cửa hàng kỷ luật"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-market"></use></svg></button>
                 <button class="nav-action-btn" id="pomodoroBtn" title="Đồng hồ tập trung Deep Work"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-focus"></use></svg></button>
                 <button class="nav-action-btn" id="squadHubBtn" title="Tổ đội & Thách đấu"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg></button>
@@ -1166,6 +1167,10 @@
                 <button class="lb-close-btn" id="moreMenuCloseBtn"><svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-close"></use></svg></button>
             </div>
             <div class="more-menu-grid">
+                <button class="more-grid-item" id="moreBtnInbox" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openInbox)window._openInbox();">
+                    <div class="more-item-icon inbox-icon" style="background:rgba(16,185,129,0.16);color:#10b981;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-echo"></use></svg></div>
+                    <span class="more-item-name">Hộp Thư Chat</span>
+                </button>
                 <button class="more-grid-item" id="moreBtnPomo" onclick="if(window._closeMoreMenu)window._closeMoreMenu();if(window._openPomodoro)window._openPomodoro();">
                     <div class="more-item-icon pomo-icon" style="background:rgba(239,68,68,0.16);color:#ef4444;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-focus"></use></svg></div>
                     <span class="more-item-name" data-i18n="tabPomodoro">Pomodoro</span>
@@ -1206,6 +1211,119 @@
                     <div class="more-item-icon profile-icon" style="background:rgba(148,163,184,0.16);color:#94a3b8;"><svg class="rune-icon rune-md" viewBox="0 0 48 48"><use href="#i-core"></use></svg></div>
                     <span class="more-item-name" data-i18n="editProfileTitle">Hồ Sơ & Cài Đặt</span>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DIRECT INBOX & CHAT MODAL (HỘP THƯ TRÒ CHUYỆN KẾT NỐI TRỰC TIẾP) -->
+    <div class="modal-bg inbox-modal-bg" id="inboxModalBg">
+        <div class="lb-modal inbox-modal" id="inboxModalBox">
+            <div class="lb-modal-header inbox-header">
+                <h2><svg class="rune-inline rune-md" viewBox="0 0 48 48"><use href="#i-echo"></use></svg> HỘP THƯ & TRÒ CHUYỆN KẾT NỐI</h2>
+                <button class="lb-close-btn" id="inboxCloseBtn" title="Đóng hộp thư"><svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-close"></use></svg></button>
+            </div>
+            
+            <div class="inbox-container">
+                <!-- LEFT SIDEBAR: CONVERSATIONS & SEARCH -->
+                <div class="inbox-sidebar" id="inboxSidebar">
+                    <div class="inbox-sidebar-tabs">
+                        <button type="button" class="inbox-tab-btn active" id="inboxTabRecent" onclick="window._switchInboxTab('recent')">
+                            <span>💬 Hội Thoại</span>
+                            <span class="inbox-total-badge" id="inboxTotalBadge" style="display:none;">0</span>
+                        </button>
+                        <button type="button" class="inbox-tab-btn" id="inboxTabDiscover" onclick="window._switchInboxTab('discover')">
+                            <span>🔍 Tìm Bạn & BXH</span>
+                        </button>
+                    </div>
+
+                    <div class="inbox-search-wrap">
+                        <span class="inbox-search-icon">🔍</span>
+                        <input type="text" id="inboxSearchInput" class="inbox-search-input" placeholder="Tìm kiếm tên chiến binh..." oninput="window._filterInboxUsers(this.value)">
+                        <button type="button" class="inbox-search-clear" id="inboxSearchClear" onclick="document.getElementById('inboxSearchInput').value='';window._filterInboxUsers('');this.style.display='none';" style="display:none;">✕</button>
+                    </div>
+
+                    <div class="inbox-list-scroll">
+                        <div class="inbox-conversations-list" id="inboxConversationsList">
+                            <!-- Injected dynamically via app.js -->
+                        </div>
+                        <div class="inbox-discover-list" id="inboxDiscoverList" style="display:none;">
+                            <!-- Injected dynamically via app.js -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT PANE: ACTIVE CHAT THREAD -->
+                <div class="inbox-chat-pane" id="inboxChatPane">
+                    <div class="inbox-chat-placeholder" id="inboxChatPlaceholder">
+                        <div class="icp-empty-icon"><svg class="rune-icon rune-xl" viewBox="0 0 48 48"><use href="#i-echo"></use></svg></div>
+                        <div class="icp-empty-title">Chọn Một Cuộc Trò Chuyện</div>
+                        <div class="icp-empty-desc">Nhắn tin trực tiếp với đồng đội rèn luyện, nhắc nhở điểm danh, chia sẻ kinh nghiệm và cùng nhau giữ vững kỷ luật!</div>
+                        <button type="button" class="icp-start-btn" onclick="window._switchInboxTab('discover')">
+                            🔍 Khám phá chiến binh từ BXH
+                        </button>
+                    </div>
+
+                    <div class="inbox-chat-active" id="inboxChatActive" style="display:none;">
+                        <!-- Chat Top Bar -->
+                        <div class="inbox-chat-header">
+                            <button type="button" class="inbox-back-btn" id="inboxBackBtn" onclick="window._backToConversationsList()" title="Quay lại danh sách">
+                                ‹
+                            </button>
+                            <div class="inbox-chat-partner" id="inboxChatPartner">
+                                <!-- Partner info injected dynamically -->
+                            </div>
+                            <div class="inbox-chat-header-actions">
+                                <button type="button" class="inbox-nudge-btn" onclick="window._sendPresetMessage('Hôm nay bạn đã check-in thói quen chưa? ⚡')" title="Nhắc nhở điểm danh">
+                                    ⚡ Nhắc check-in
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Chat Message Stream -->
+                        <div class="inbox-messages-stream" id="inboxMessagesStream">
+                            <!-- Message bubbles injected here -->
+                        </div>
+
+                        <!-- Motivation Prompt Chips (Quick 1-Tap Messages) -->
+                        <div class="inbox-quick-prompts-bar">
+                            <div class="inbox-quick-prompts-scroll" id="inboxQuickPromptsScroll">
+                                <button type="button" class="inbox-chip-btn" onclick="window._sendPresetMessage('Hôm nay bạn đã check-in thói quen chưa? ⚡')">⚡ Nhắc check-in</button>
+                                <button type="button" class="inbox-chip-btn" onclick="window._sendPresetMessage('Cố lên bạn ơi, giữ vững chuỗi Streak nhé! 🔥')">🔥 Giữ Streak</button>
+                                <button type="button" class="inbox-chip-btn" onclick="window._sendPresetMessage('Nhớ dùng Bình Đóng Băng nếu bận việc nhé! 🧊')">🧊 Bình Freeze</button>
+                                <button type="button" class="inbox-chip-btn" onclick="window._sendPresetMessage('Chúc mừng bạn vừa thăng cấp cảnh giới! Tuyệt vời quá 🏆')">🏆 Chúc mừng</button>
+                                <button type="button" class="inbox-chip-btn" onclick="window._sendPresetMessage('Cùng làm 1 phiên Pomodoro Deep Work 25 phút không bạn? ☕')">☕ Pomodoro</button>
+                                <button type="button" class="inbox-chip-btn" onclick="window._sendPresetMessage('Thách đấu 1v1 kỷ luật 7 ngày với mình không? ⚔️')">⚔️ Thách đấu 1v1</button>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input Bar -->
+                        <div class="inbox-input-area">
+                            <div class="inbox-emoji-bar" id="inboxEmojiBar" style="display:none;">
+                                <span class="inbox-emoji-item" onclick="window._insertEmoji('😀')">😀</span>
+                                <span class="inbox-emoji-item" onclick="window._insertEmoji('🔥')">🔥</span>
+                                <span class="inbox-emoji-item" onclick="window._insertEmoji('⚡')">⚡</span>
+                                <span class="inbox-emoji-item" onclick="window._insertEmoji('🏆')">🏆</span>
+                                <span class="inbox-emoji-item" onclick="window._insertEmoji('👏')">👏</span>
+                                <span class="inbox-emoji-item" onclick="window._insertEmoji('💪')">💪</span>
+                                <span class="inbox-emoji-item" onclick="window._insertEmoji('☕')">☕</span>
+                                <span class="inbox-emoji-item" onclick="window._insertEmoji('🎯')">🎯</span>
+                                <span class="inbox-emoji-item" onclick="window._insertEmoji('🧘')">🧘</span>
+                                <span class="inbox-emoji-item" onclick="window._insertEmoji('🚀')">🚀</span>
+                                <span class="inbox-emoji-item" onclick="window._insertEmoji('👑')">👑</span>
+                                <span class="inbox-emoji-item" onclick="window._insertEmoji('💖')">💖</span>
+                            </div>
+                            <div class="inbox-input-row">
+                                <button type="button" class="inbox-emoji-toggle-btn" id="inboxEmojiToggleBtn" onclick="window._toggleEmojiBar()" title="Chọn biểu cảm Emoji">
+                                    😊
+                                </button>
+                                <textarea id="inboxMessageInput" class="inbox-message-input" placeholder="Nhập tin nhắn... (Nhấn Enter để gửi)" rows="1" maxlength="5000"></textarea>
+                                <button type="button" class="inbox-send-btn" id="inboxSendBtn" onclick="window._handleSendMessage()" title="Gửi tin nhắn">
+                                    <svg class="rune-icon rune-xs" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
