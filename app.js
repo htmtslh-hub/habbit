@@ -10756,6 +10756,64 @@ function playMessageSound() {
     } catch(e) {}
 }
 
+function showInAppMessageToast(senderName, messageText, photoURL, partnerUid) {
+    try {
+        let container = document.getElementById('messageToastContainer');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'messageToastContainer';
+            container.className = 'msg-toast-container';
+            document.body.appendChild(container);
+        }
+
+        const toast = document.createElement('div');
+        toast.className = 'msg-toast-card';
+
+        const initial = (senderName || 'U').charAt(0).toUpperCase();
+        const avatarHtml = photoURL
+            ? `<img src="${photoURL}" class="msg-toast-avatar" alt="${escapeHtml(senderName)}" onerror="this.outerHTML='<div class=\\'msg-toast-avatar-fallback\\'>${initial}</div>'">`
+            : `<div class="msg-toast-avatar-fallback">${initial}</div>`;
+
+        toast.innerHTML = `
+            ${avatarHtml}
+            <div class="msg-toast-body">
+                <div class="msg-toast-title">
+                    <span>${escapeHtml(senderName)}</span>
+                    <span class="msg-toast-badge">💬 Tin nhắn mới</span>
+                </div>
+                <div class="msg-toast-text">${escapeHtml(messageText || 'Đã gửi một tin nhắn...')}</div>
+            </div>
+        `;
+
+        toast.onclick = () => {
+            toast.classList.add('hide');
+            setTimeout(() => toast.remove(), 300);
+            openInboxModal(partnerUid);
+        };
+
+        container.appendChild(toast);
+
+        // System notification if tab is backgrounded
+        if (typeof Notification !== 'undefined' && Notification.permission === 'granted' && document.hidden) {
+            try {
+                new Notification(`Habit Mastery - ${senderName}`, {
+                    body: messageText || 'Bạn có tin nhắn mới',
+                    icon: photoURL || '/icons/icon-192.png'
+                });
+            } catch(e) {}
+        }
+
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 300);
+            }
+        }, 5500);
+    } catch(err) {
+        console.warn('Toast display error:', err);
+    }
+}
+
 function getCanonicalConvId(uidA, uidB) {
     if (!uidA || !uidB) return null;
     return [uidA, uidB].sort().join('_');
@@ -10835,8 +10893,20 @@ function getCurrentUserChatDetails() {
     };
 }
 
+let isInboxInitialSnapshot = true;
+
 function initInboxSystem() {
     if (!db || !currentUser) return;
+
+    // Request notification permission smoothly if supported
+    if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+        try {
+            document.addEventListener('click', function reqNotifOnce() {
+                Notification.requestPermission().catch(() => {});
+                document.removeEventListener('click', reqNotifOnce);
+            }, { once: true });
+        } catch(e) {}
+    }
 
     // Bind Navbar Inbox Button
     const navBtn = document.getElementById('navInboxBtn');
@@ -10887,18 +10957,19 @@ function initInboxSystem() {
     }
 
     try {
+        isInboxInitialSnapshot = true;
         inboxUnsubscribeAll = db.collection('conversations')
             .where('participants', 'array-contains', currentUser.uid)
             .orderBy('updatedAt', 'desc')
             .onSnapshot((snapshot) => {
-                inboxConversationsCache = snapshot.docs.map(doc => ({
+                const newConversations = snapshot.docs.map(doc => ({
                     id: doc.id,
                     ...doc.data()
                 }));
 
                 // Calculate total unread count
                 let totalUnread = 0;
-                inboxConversationsCache.forEach(conv => {
+                newConversations.forEach(conv => {
                     const unread = (conv.unreadCount && conv.unreadCount[currentUser.uid]) || 0;
                     totalUnread += unread;
                 });
@@ -10925,11 +10996,33 @@ function initInboxSystem() {
                     }
                 }
 
-                // Audio notification if unread count increased
-                if (totalUnread > lastKnownUnreadTotal) {
+                // Audio & Floating Toast notification if unread count increased after initial load
+                if (!isInboxInitialSnapshot && totalUnread > lastKnownUnreadTotal) {
                     playMessageSound();
+
+                    // Find latest incoming unread conversation
+                    const unreadConv = newConversations.find(conv => 
+                        (conv.unreadCount && conv.unreadCount[currentUser.uid] > 0) &&
+                        conv.lastSenderId !== currentUser.uid
+                    );
+
+                    if (unreadConv) {
+                        const partnerUid = (unreadConv.participants || []).find(p => p !== currentUser.uid);
+                        const partnerDetails = (unreadConv.participantDetails && partnerUid && unreadConv.participantDetails[partnerUid]) || {};
+                        const senderName = partnerDetails.displayName || 'Bạn đồng hành';
+                        const photoURL = partnerDetails.photoURL || '';
+                        const msgPreview = unreadConv.lastMessage || 'Đã gửi một tin nhắn...';
+
+                        // Show floating toast if modal is closed or user chatting with someone else
+                        if (!modalBg || !modalBg.classList.contains('show') || activeConvPartner?.uid !== partnerUid) {
+                            showInAppMessageToast(senderName, msgPreview, photoURL, partnerUid);
+                        }
+                    }
                 }
+
+                isInboxInitialSnapshot = false;
                 lastKnownUnreadTotal = totalUnread;
+                inboxConversationsCache = newConversations;
 
                 // Re-render conversation list if modal is open
                 if (modalBg && modalBg.classList.contains('show')) {

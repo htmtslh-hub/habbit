@@ -1049,6 +1049,90 @@ let adminMessagesUnsubscribe = null;
 let adminConversationsUnsubscribe = null;
 let adminChatTab = 'recent'; // 'recent' | 'all'
 let adminChatSearchQuery = '';
+let lastKnownAdminUnreadTotal = 0;
+let isAdminChatInitialSnapshot = true;
+
+function playAdminMessageSound() {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(659.25, now); // E5
+        osc.frequency.exponentialRampToValueAtTime(987.77, now + 0.09); // B5
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.3);
+    } catch(e) {}
+}
+
+function showAdminMessageToast(senderName, messageText, photoURL, userUid) {
+    try {
+        let container = document.getElementById('adminMsgToastContainer');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'adminMsgToastContainer';
+            container.className = 'admin-msg-toast-container';
+            document.body.appendChild(container);
+        }
+
+        const toast = document.createElement('div');
+        toast.className = 'admin-msg-toast-card';
+
+        const initial = (senderName || 'U').charAt(0).toUpperCase();
+        const avatarHtml = photoURL
+            ? `<img src="${photoURL}" class="admin-msg-toast-avatar" alt="${escapeHtml(senderName)}" onerror="this.outerHTML='<div class=\\'admin-msg-toast-avatar-fallback\\'>${initial}</div>'">`
+            : `<div class="admin-msg-toast-avatar-fallback">${initial}</div>`;
+
+        toast.innerHTML = `
+            ${avatarHtml}
+            <div class="admin-msg-toast-body">
+                <div class="admin-msg-toast-title">
+                    <span>${escapeHtml(senderName)}</span>
+                    <span class="admin-msg-toast-badge">💬 Tin nhắn mới</span>
+                </div>
+                <div class="admin-msg-toast-text">${escapeHtml(messageText || 'Đã gửi một tin nhắn...')}</div>
+            </div>
+        `;
+
+        toast.onclick = () => {
+            toast.classList.add('hide');
+            setTimeout(() => toast.remove(), 300);
+            
+            // Switch to Messages section and open chat
+            const navItem = document.querySelector('.nav-item[data-section="messages"]');
+            if (navItem) navItem.click();
+            window._openAdminChatWithUser(userUid);
+        };
+
+        container.appendChild(toast);
+
+        // Native notification if browser in background
+        if (typeof Notification !== 'undefined' && Notification.permission === 'granted' && document.hidden) {
+            try {
+                new Notification(`Habit Admin - ${senderName}`, {
+                    body: messageText || 'User vừa gửi tin nhắn hỗ trợ',
+                    icon: photoURL || '/favicon.ico'
+                });
+            } catch(e) {}
+        }
+
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 300);
+            }
+        }, 6000);
+    } catch(err) {
+        console.warn('Admin Toast display error:', err);
+    }
+}
 
 function formatMsgTime(ts) {
     if (!ts) return '';
@@ -1068,13 +1152,59 @@ function formatMsgTime(ts) {
 function initAdminChatSystem() {
     if (!currentAdmin) return;
 
+    // Request notification permission smoothly if supported
+    if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
+        try {
+            document.addEventListener('click', function reqAdminNotif() {
+                Notification.requestPermission().catch(() => {});
+                document.removeEventListener('click', reqAdminNotif);
+            }, { once: true });
+        } catch(e) {}
+    }
+
     // Listen for all conversations real-time
     try {
+        isAdminChatInitialSnapshot = true;
         if (adminConversationsUnsubscribe) adminConversationsUnsubscribe();
         adminConversationsUnsubscribe = db.collection('conversations')
             .orderBy('updatedAt', 'desc')
             .onSnapshot(snapshot => {
-                adminConversations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                const newConversations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                let totalUnread = 0;
+                newConversations.forEach(c => {
+                    const unread = (c.unreadCount && c.unreadCount[currentAdmin.uid]) || 0;
+                    totalUnread += unread;
+                });
+
+                // Audio and Floating Toast Notification for admin
+                if (!isAdminChatInitialSnapshot && totalUnread > lastKnownAdminUnreadTotal) {
+                    playAdminMessageSound();
+
+                    // Find newest unread conversation
+                    const unreadConv = newConversations.find(conv => 
+                        (conv.unreadCount && conv.unreadCount[currentAdmin.uid] > 0) &&
+                        conv.lastSenderId !== currentAdmin.uid
+                    );
+
+                    if (unreadConv) {
+                        const userUid = (unreadConv.participants || []).find(p => p !== currentAdmin.uid);
+                        const userDetails = (unreadConv.participantDetails && userUid && unreadConv.participantDetails[userUid]) || {};
+                        const senderName = userDetails.displayName || 'Khách hàng';
+                        const photoURL = userDetails.photoURL || '';
+                        const msgPreview = unreadConv.lastMessage || 'Đã gửi một tin nhắn...';
+
+                        // Show floating toast if not actively chatting with this user
+                        if (activeAdminTargetUid !== userUid) {
+                            showAdminMessageToast(senderName, msgPreview, photoURL, userUid);
+                        }
+                    }
+                }
+
+                isAdminChatInitialSnapshot = false;
+                lastKnownAdminUnreadTotal = totalUnread;
+                adminConversations = newConversations;
+
                 updateAdminChatBadges();
                 renderAdminChatThreads();
             }, err => {
