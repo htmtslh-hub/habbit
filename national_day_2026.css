@@ -1,12 +1,11 @@
 /* ==========================================================================
-   GIAO DIỆN SỰ KIỆN QUỐC KHÁNH VIỆT NAM (2/9) - HỌA TIẾT CỜ VIỆT NAM CHÌM MỜ
-   - Giữ nguyên 100% màu sắc gốc của ứng dụng (Dark / Light mode)
-   - Bỏ toàn bộ hoa & ruy băng
-   - Họa tiết Cờ đỏ sao vàng Việt Nam to, chìm mờ (watermark) ngẫu nhiên ở nền
+   GIAO DIỆN SỰ KIỆN QUỐC KHÁNH VIỆT NAM (2/9) - HIỆU ỨNG CỜ LỤA SÓNG NƯỚC CHÌM MỜ
+   - Hiệu ứng lá cờ đỏ sao vàng bằng lụa uốn lượn mềm mại như ảnh mẫu
+   - Chìm mờ ở nền (watermark), giữ 100% màu sắc gốc của app, không chói, cực kỳ êm mắt
    - Thời hạn hiệu lực: Đến hết 03/09/2026
    ========================================================================== */
 
-/* ===== 1. BACKGROUND WATERMARK LAYER ===== */
+/* ===== 1. BACKGROUND SILK FLAG WATERMARK LAYER ===== */
 #vnBackgroundDecorLayer {
     position: fixed;
     top: 0;
@@ -15,40 +14,55 @@
     height: 100vh;
     pointer-events: none;
     overflow: hidden;
-    z-index: 1;
+    z-index: 0;
     user-select: none;
 }
 
-/* Họa tiết cờ Việt Nam to, chìm mờ nghệ thuật */
-.vn-bg-flag-watermark {
-    position: absolute;
-    pointer-events: none;
-    user-select: none;
-    opacity: 0.07;
-    transition: opacity 0.5s ease;
-    will-change: transform;
-    animation: vnWatermarkFloat 12s ease-in-out infinite;
-}
-
-[data-theme="dark"] .vn-bg-flag-watermark {
+/* Nền cờ lụa đỏ sao vàng uốn lượn to toàn cảnh chìm mờ */
+.vn-silk-flag-bg {
+    position: fixed;
+    top: -5%;
+    left: -5%;
+    width: 110%;
+    height: 110%;
+    background-image: url('assets/vietnam_silk_flag.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     opacity: 0.09;
+    filter: saturate(1.2) contrast(1.05);
+    pointer-events: none;
+    z-index: 0;
+    animation: vnSilkWave 20s ease-in-out infinite alternate;
+    will-change: transform;
 }
 
-.vn-bg-flag-watermark svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-    filter: drop-shadow(0 4px 20px rgba(218, 37, 29, 0.3));
-    border-radius: 6px;
+/* Dark mode tinh chỉnh độ mờ & độ hòa trộn sang trọng */
+[data-theme="dark"] .vn-silk-flag-bg {
+    opacity: 0.13;
+    mix-blend-mode: screen;
+    filter: saturate(1.25) contrast(1.1);
 }
 
-/* Chuyển động bồng bềnh êm dịu, không giật lắc */
-@keyframes vnWatermarkFloat {
-    0%, 100% {
-        transform: translateY(0) rotate(var(--rot, 0deg)) scale(1);
+/* Light mode nhẹ nhàng, trang nhã */
+[data-theme="light"] .vn-silk-flag-bg {
+    opacity: 0.08;
+    mix-blend-mode: multiply;
+}
+
+/* Chuyển động lượn sóng lụa êm ái, bồng bềnh tự nhiên */
+@keyframes vnSilkWave {
+    0% {
+        transform: scale(1.0) translate(0, 0) rotate(0deg);
     }
-    50% {
-        transform: translateY(-20px) rotate(calc(var(--rot, 0deg) + 3deg)) scale(1.03);
+    33% {
+        transform: scale(1.03) translate(-1.2%, -1%) rotate(0.4deg);
+    }
+    66% {
+        transform: scale(1.05) translate(1.5%, -1.8%) rotate(-0.5deg);
+    }
+    100% {
+        transform: scale(1.02) translate(0.8%, 1.2%) rotate(0.2deg);
     }
 }
 
@@ -94,13 +108,20 @@
 }
 
 .vn-brand-flag {
-    width: 20px;
-    height: 14px;
-    border-radius: 2px;
+    width: 22px;
+    height: 15px;
+    border-radius: 3px;
     overflow: hidden;
     display: inline-block;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 215, 0, 0.5);
+}
+
+.vn-brand-flag img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 /* Canvas hiệu ứng sao vàng nhẹ nhàng khi click */
@@ -116,8 +137,8 @@
 
 /* ===== 3. RESPONSIVE MOBILE ===== */
 @media (max-width: 768px) {
-    .vn-bg-flag-watermark {
-        opacity: 0.06;
+    .vn-silk-flag-bg {
+        opacity: 0.10;
     }
     
     .vn-nav-toggle-btn {
