@@ -95,6 +95,8 @@ function initAuth(){
             // Set admin profile
             const av = document.getElementById('adminAvatar');
             if(av && user.photoURL) av.src = user.photoURL;
+            const mobileAv = document.getElementById('mobileAdminAvatar');
+            if(mobileAv && user.photoURL) mobileAv.src = user.photoURL;
             const nm = document.getElementById('adminName');
             if(nm) nm.textContent = user.displayName || user.email || 'Admin';
 
@@ -432,13 +434,19 @@ function renderPending(){
     
     const pending = allUsers.filter(u => u.upgradeRequested === true);
     const badge = document.getElementById('pendingBadge');
+    const bottomBadge = document.getElementById('bottomPendingBadge');
+    const count = pending.length;
     
-    if(pending.length > 0){
-        badge.style.display = 'inline';
-        badge.textContent = pending.length;
-    } else {
-        badge.style.display = 'none';
-    }
+    [badge, bottomBadge].forEach(b => {
+        if (b) {
+            if (count > 0) {
+                b.style.display = 'inline-block';
+                b.textContent = count > 99 ? '99+' : count;
+            } else {
+                b.style.display = 'none';
+            }
+        }
+    });
 
     if(pending.length === 0){
         tbody.innerHTML = '';
@@ -467,27 +475,105 @@ function renderPending(){
     }).join('');
 }
 
-// ===== NAVIGATION =====
+// ===== NAVIGATION & MOBILE DRAWER =====
+function openMobileDrawer(){
+    const sidebar = document.getElementById('adminSidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    if (sidebar) sidebar.classList.add('open');
+    if (backdrop) backdrop.classList.add('active');
+}
+
+function closeMobileDrawer(){
+    const sidebar = document.getElementById('adminSidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    if (sidebar) sidebar.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('active');
+}
+
+function switchSection(section){
+    if (!section) return;
+
+    // Update nav active state (both sidebar and bottom nav)
+    document.querySelectorAll('.nav-item[data-section], .bottom-nav-item[data-section]').forEach(n => {
+        if (n.dataset.section === section) {
+            n.classList.add('active');
+        } else {
+            n.classList.remove('active');
+        }
+    });
+
+    // Show/hide sections
+    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+    const target = document.getElementById('section' + section.charAt(0).toUpperCase() + section.slice(1));
+    if (target) target.style.display = 'block';
+
+    // Update titles
+    const titles = { 
+        dashboard: 'Dashboard', 
+        users: 'Quản lý User', 
+        pending: 'Chờ duyệt', 
+        quests: 'Nhiệm vụ Đột xuất', 
+        messages: 'Hộp Thư Chat & Hỗ Trợ User' 
+    };
+    const titleText = titles[section] || 'Dashboard';
+    const pageTitle = document.getElementById('pageTitle');
+    if (pageTitle) pageTitle.textContent = titleText;
+    const mobilePageTitle = document.getElementById('mobilePageTitle');
+    if (mobilePageTitle) mobilePageTitle.textContent = titleText;
+
+    // Close mobile drawer if open
+    closeMobileDrawer();
+
+    // Scroll to top of content
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function initNavigation(){
+    // Sidebar nav items
     document.querySelectorAll('.nav-item[data-section]').forEach(item => {
         item.onclick = (e) => {
             e.preventDefault();
-            const section = item.dataset.section;
-            
-            // Update nav active state
-            document.querySelectorAll('.nav-item[data-section]').forEach(n => n.classList.remove('active'));
-            item.classList.add('active');
-            
-            // Show/hide sections
-            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-            const target = document.getElementById('section' + section.charAt(0).toUpperCase() + section.slice(1));
-            if(target) target.style.display = 'block';
-            
-            // Update title
-            const titles = { dashboard: 'Dashboard', users: 'Quản lý User', pending: 'Chờ duyệt', quests: 'Nhiệm vụ Đột xuất', messages: 'Hộp Thư Chat & Hỗ Trợ User' };
-            document.getElementById('pageTitle').textContent = titles[section] || 'Dashboard';
+            switchSection(item.dataset.section);
         };
     });
+
+    // Bottom nav items
+    document.querySelectorAll('.bottom-nav-item[data-section]').forEach(item => {
+        item.onclick = (e) => {
+            e.preventDefault();
+            switchSection(item.dataset.section);
+        };
+    });
+
+    // Mobile drawer toggle buttons
+    const btnToggle = document.getElementById('btnMobileNavToggle');
+    if (btnToggle) {
+        btnToggle.onclick = (e) => {
+            e.preventDefault();
+            const sidebar = document.getElementById('adminSidebar');
+            if (sidebar && sidebar.classList.contains('open')) {
+                closeMobileDrawer();
+            } else {
+                openMobileDrawer();
+            }
+        };
+    }
+
+    const btnClose = document.getElementById('btnSidebarClose');
+    if (btnClose) {
+        btnClose.onclick = (e) => {
+            e.preventDefault();
+            closeMobileDrawer();
+        };
+    }
+
+    const backdrop = document.getElementById('sidebarBackdrop');
+    if (backdrop) {
+        backdrop.onclick = (e) => {
+            e.preventDefault();
+            closeMobileDrawer();
+        };
+    }
 }
 
 // ===== SEARCH & FILTER =====
@@ -1012,40 +1098,86 @@ function initModal(){
         if(!amount || amount <= 0) { alert('Số DP phải lớn hơn 0'); return; }
         if(!reason) { alert('Vui lòng nhập lý do'); return; }
 
+        const grantBtn = document.getElementById('modalGrantDP');
+        grantBtn.disabled = true;
+        grantBtn.textContent = '⏳ Đang xử lý...';
+
         try {
-            // Update both leaderboard and users document with bonusDP & totalDP
-            const batch = db.batch();
+            const targetUser = allUsers.find(u => u.uid === currentModalUid) || {};
+            const displayName = targetUser.displayName || targetUser.email?.split('@')[0] || 'Chiến Binh';
+            const photoURL = targetUser.photoURL || '';
+            const isAdmin = targetUser.role === 'admin';
+
             const lbRef = db.collection('leaderboard').doc(currentModalUid);
             const userRef = db.collection('users').doc(currentModalUid);
 
+            // Fetch existing leaderboard data to compute accurate total
+            const lbSnap = await lbRef.get();
+            const lbData = lbSnap.exists ? lbSnap.data() : {};
+
+            let currentBaseDP = 0;
+            if (targetUser.habitData) {
+                try {
+                    const s = typeof targetUser.habitData === 'string' ? JSON.parse(targetUser.habitData) : targetUser.habitData;
+                    if (s && s.c) currentBaseDP = Object.keys(s.c).length * 10;
+                } catch(e){}
+            }
+
+            const prevBonus = targetUser.bonusDP || lbData.bonusDP || 0;
+            const newBonus = prevBonus + amount;
+            const prevTotal = (lbData.totalDP !== undefined) ? lbData.totalDP : (currentBaseDP + prevBonus);
+            const newTotal = prevTotal + amount;
+
+            const batch = db.batch();
+
+            // Set/merge into leaderboard collection
             batch.set(lbRef, {
-                totalDP: firebase.firestore.FieldValue.increment(amount),
-                bonusDP: firebase.firestore.FieldValue.increment(amount),
+                uid: currentModalUid,
+                displayName: displayName,
+                photoURL: photoURL,
+                totalDP: newTotal,
+                bonusDP: newBonus,
+                streak: targetUser.streak || lbData.streak || 0,
+                maxStreak: targetUser.maxStreak || lbData.maxStreak || 0,
+                weeklyDP: (lbData.weeklyDP || 0) + amount,
+                isAdmin: isAdmin,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             }, { merge: true });
 
+            // Set/merge into users collection
             batch.set(userRef, {
-                bonusDP: firebase.firestore.FieldValue.increment(amount),
-                totalDP: firebase.firestore.FieldValue.increment(amount),
+                bonusDP: newBonus,
+                totalDP: newTotal,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             }, { merge: true });
 
             await batch.commit();
+
+            // Update local memory
+            targetUser.bonusDP = newBonus;
+            targetUser.totalDP = newTotal;
 
             // Log the grant
             await db.collection('dp_grants').add({
                 uid: currentModalUid,
                 amount: amount,
                 reason: reason,
-                grantedBy: firebase.auth().currentUser.uid,
+                grantedBy: currentAdmin?.uid || 'admin',
                 grantedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
 
-            alert(`✅ Đã tặng ${amount} DP cho user!`);
+            alert(`✅ Đã tặng thành công +${amount} DP cho user (${displayName})!\nTổng DP mới trên BXH: ${newTotal.toLocaleString()} DP`);
             document.getElementById('modalDPAmount').value = '100';
             document.getElementById('modalDPReason').value = '';
+            
+            // Reload user list in admin
+            await loadUsers();
         } catch(err) {
             console.error('DP grant error:', err);
-            alert('Lỗi: ' + err.message);
+            alert('Lỗi tặng điểm: ' + err.message);
+        } finally {
+            grantBtn.disabled = false;
+            grantBtn.textContent = '🎁 Tặng DP';
         }
     };
 
@@ -1109,6 +1241,12 @@ function openUserModal(uid){
 
 // ===== GLOBAL ACTION HANDLERS =====
 window._adminViewUser = (uid) => { openUserModal(uid); };
+window._adminOpenChatFromModal = () => {
+    if(!currentModalUid) return;
+    const uid = currentModalUid;
+    document.getElementById('userModal').style.display = 'none';
+    window._adminOpenChat(uid);
+};
 
 window._adminQuickUpgrade = async (uid) => {
     if(!confirm('Nâng cấp user này lên Premium?')) return;
@@ -1361,16 +1499,19 @@ async function loadAdminQuests() {
             subContainer.innerHTML = subHtml || '<p style="color:#94a3b8;padding:16px;font-weight:600;">Không có báo cáo chờ duyệt</p>';
         }
 
-        // Update badge
+        // Update badges
         const badge = document.getElementById('questBadge');
-        if (badge) {
-            if (pendingCount > 0) {
-                badge.textContent = pendingCount;
-                badge.style.display = 'inline-flex';
-            } else {
-                badge.style.display = 'none';
+        const bottomBadge = document.getElementById('bottomQuestBadge');
+        [badge, bottomBadge].forEach(b => {
+            if (b) {
+                if (pendingCount > 0) {
+                    b.textContent = pendingCount > 99 ? '99+' : pendingCount;
+                    b.style.display = 'inline-flex';
+                } else {
+                    b.style.display = 'none';
+                }
             }
-        }
+        });
     } catch (e) {
         console.error('Load quests error:', e);
         container.innerHTML = '<p style="color:#ef4444;">Lỗi tải dữ liệu</p>';
@@ -1628,13 +1769,22 @@ function updateAdminChatBadges() {
     });
 
     const badge = document.getElementById('adminMsgBadge');
-    if (badge) {
-        if (totalUnread > 0) {
-            badge.style.display = 'inline-block';
-            badge.textContent = totalUnread > 99 ? '99+' : totalUnread;
-        } else {
-            badge.style.display = 'none';
+    const bottomBadge = document.getElementById('bottomMsgBadge');
+    const mobileDot = document.getElementById('mobileUnreadDot');
+
+    [badge, bottomBadge].forEach(b => {
+        if (b) {
+            if (totalUnread > 0) {
+                b.style.display = 'inline-block';
+                b.textContent = totalUnread > 99 ? '99+' : totalUnread;
+            } else {
+                b.style.display = 'none';
+            }
         }
+    });
+
+    if (mobileDot) {
+        mobileDot.style.display = totalUnread > 0 ? 'block' : 'none';
     }
 
     const tabBadge = document.getElementById('adminTabTotalBadge');
@@ -1647,6 +1797,11 @@ function updateAdminChatBadges() {
         }
     }
 }
+
+window._adminChatBackToList = function() {
+    const layout = document.getElementById('adminChatLayout');
+    if (layout) layout.classList.remove('in-chat');
+};
 
 function renderAdminChatThreads() {
     const listEl = document.getElementById('adminChatThreadsList');
@@ -1810,6 +1965,10 @@ window._adminSelectConversationById = async function(convId, targetUid, preloade
     const activeBox = document.getElementById('adminChatActive');
     if (placeholder) placeholder.style.display = 'none';
     if (activeBox) activeBox.style.display = 'flex';
+
+    // Toggle mobile layout view to active chat pane
+    const layout = document.getElementById('adminChatLayout');
+    if (layout) layout.classList.add('in-chat');
 
     // Render header user info
     const userInfoEl = document.getElementById('adminChatUserInfo');
@@ -2003,37 +2162,73 @@ window._adminChatQuickVIP = async function() {
 window._adminChatQuickDP = async function(amount = 100) {
     if (!activeAdminTargetUid) return;
     try {
-        const batch = db.batch();
+        const targetUser = allUsers.find(u => u.uid === activeAdminTargetUid) || {};
+        const displayName = targetUser.displayName || targetUser.email?.split('@')[0] || 'Chiến Binh';
+        const photoURL = targetUser.photoURL || '';
+        const isAdmin = targetUser.role === 'admin';
+
         const lbRef = db.collection('leaderboard').doc(activeAdminTargetUid);
         const userRef = db.collection('users').doc(activeAdminTargetUid);
 
+        const lbSnap = await lbRef.get();
+        const lbData = lbSnap.exists ? lbSnap.data() : {};
+
+        let currentBaseDP = 0;
+        if (targetUser.habitData) {
+            try {
+                const s = typeof targetUser.habitData === 'string' ? JSON.parse(targetUser.habitData) : targetUser.habitData;
+                if (s && s.c) currentBaseDP = Object.keys(s.c).length * 10;
+            } catch(e){}
+        }
+
+        const prevBonus = targetUser.bonusDP || lbData.bonusDP || 0;
+        const newBonus = prevBonus + amount;
+        const prevTotal = (lbData.totalDP !== undefined) ? lbData.totalDP : (currentBaseDP + prevBonus);
+        const newTotal = prevTotal + amount;
+
+        const batch = db.batch();
+
         batch.set(lbRef, {
-            totalDP: firebase.firestore.FieldValue.increment(amount),
-            bonusDP: firebase.firestore.FieldValue.increment(amount),
+            uid: activeAdminTargetUid,
+            displayName: displayName,
+            photoURL: photoURL,
+            totalDP: newTotal,
+            bonusDP: newBonus,
+            streak: targetUser.streak || lbData.streak || 0,
+            maxStreak: targetUser.maxStreak || lbData.maxStreak || 0,
+            weeklyDP: (lbData.weeklyDP || 0) + amount,
+            isAdmin: isAdmin,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         }, { merge: true });
 
         batch.set(userRef, {
-            bonusDP: firebase.firestore.FieldValue.increment(amount),
-            totalDP: firebase.firestore.FieldValue.increment(amount),
+            bonusDP: newBonus,
+            totalDP: newTotal,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         }, { merge: true });
 
         await batch.commit();
+
+        targetUser.bonusDP = newBonus;
+        targetUser.totalDP = newTotal;
 
         await db.collection('dp_grants').add({
             uid: activeAdminTargetUid,
             amount: amount,
             reason: 'Tặng từ Hộp Thư Chat Admin',
-            grantedBy: currentAdmin.uid,
+            grantedBy: currentAdmin?.uid || 'admin',
             grantedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
 
-        window._adminSendPresetMessage(`🎁 Admin vừa gửi tặng bạn +${amount} Điểm Kỷ Luật DP khích lệ tinh thần rèn luyện!`);
+        window._adminSendPresetMessage(`🎁 Admin vừa gửi tặng bạn +${amount} Điểm Kỷ Luật DP khích lệ tinh thần rèn luyện! (Tổng tích lũy: ${newTotal.toLocaleString()} DP)`);
         await loadUsers();
         if (activeAdminConvId && activeAdminTargetUid) {
             window._adminSelectConversationById(activeAdminConvId, activeAdminTargetUid);
         }
-    } catch (e) { alert('Lỗi: ' + e.message); }
+    } catch (e) { 
+        console.error('Chat quick DP error:', e);
+        alert('Lỗi tặng điểm: ' + e.message); 
+    }
 };
 
 window._adminChatViewProfile = function() {

@@ -1,0 +1,127 @@
+/* ==========================================================================
+   GIAO DIỆN SỰ KIỆN QUỐC KHÁNH VIỆT NAM (2/9) - HỌA TIẾT CỜ VIỆT NAM CHÌM MỜ
+   - Giữ nguyên 100% màu sắc gốc của ứng dụng (Dark / Light mode)
+   - Bỏ toàn bộ hoa & ruy băng
+   - Họa tiết Cờ đỏ sao vàng Việt Nam to, chìm mờ (watermark) ngẫu nhiên ở nền
+   - Thời hạn hiệu lực: Đến hết 03/09/2026
+   ========================================================================== */
+
+/* ===== 1. BACKGROUND WATERMARK LAYER ===== */
+#vnBackgroundDecorLayer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+    user-select: none;
+}
+
+/* Họa tiết cờ Việt Nam to, chìm mờ nghệ thuật */
+.vn-bg-flag-watermark {
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.07;
+    transition: opacity 0.5s ease;
+    will-change: transform;
+    animation: vnWatermarkFloat 12s ease-in-out infinite;
+}
+
+[data-theme="dark"] .vn-bg-flag-watermark {
+    opacity: 0.09;
+}
+
+.vn-bg-flag-watermark svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: drop-shadow(0 4px 20px rgba(218, 37, 29, 0.3));
+    border-radius: 6px;
+}
+
+/* Chuyển động bồng bềnh êm dịu, không giật lắc */
+@keyframes vnWatermarkFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(var(--rot, 0deg)) scale(1);
+    }
+    50% {
+        transform: translateY(-20px) rotate(calc(var(--rot, 0deg) + 3deg)) scale(1.03);
+    }
+}
+
+/* ===== 2. NAVBAR TOGGLE BUTTON (🇻🇳 2/9) ===== */
+.vn-nav-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(135deg, rgba(185, 28, 28, 0.9), rgba(153, 27, 27, 0.9));
+    border: 1px solid #ffd700;
+    color: #fffdf5;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), 0 0 6px rgba(255, 215, 0, 0.25);
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.vn-nav-toggle-btn:hover {
+    transform: translateY(-1px) scale(1.04);
+    box-shadow: 0 3px 10px rgba(185, 28, 28, 0.35), 0 0 10px rgba(255, 215, 0, 0.45);
+}
+
+.vn-nav-toggle-flag {
+    font-size: 13px;
+    line-height: 1;
+}
+
+.vn-nav-toggle-text {
+    letter-spacing: 0.3px;
+}
+
+/* Quốc kỳ nhỏ tinh tế cạnh logo */
+.vn-brand-flag-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.vn-brand-flag {
+    width: 20px;
+    height: 14px;
+    border-radius: 2px;
+    overflow: hidden;
+    display: inline-block;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+}
+
+/* Canvas hiệu ứng sao vàng nhẹ nhàng khi click */
+#vnFireworksCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 999998;
+}
+
+/* ===== 3. RESPONSIVE MOBILE ===== */
+@media (max-width: 768px) {
+    .vn-bg-flag-watermark {
+        opacity: 0.06;
+    }
+    
+    .vn-nav-toggle-btn {
+        padding: 3px 8px;
+        font-size: 10.5px;
+    }
+}

@@ -2,14 +2,14 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Habit Mastery - Admin Dashboard</title>
     <meta name="description" content="Admin dashboard for managing Habit Mastery users and subscriptions">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
     <link rel="alternate icon" href="./icon-192.png">
-    <link rel="stylesheet" href="admin.css?v=5.7.0">
+    <link rel="stylesheet" href="admin.css?v=5.8.0">
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -64,11 +64,33 @@
 
     <!-- Main Admin Dashboard -->
     <div class="admin-app" id="adminApp" style="display:none;">
+        <!-- Mobile Topbar -->
+        <header class="admin-mobile-topbar" id="adminMobileTopbar">
+            <button class="mobile-nav-toggle" id="btnMobileNavToggle" type="button" aria-label="Mở menu quản trị">
+                <span class="nav-toggle-icon">☰</span>
+                <span class="mobile-unread-dot" id="mobileUnreadDot" style="display:none;"></span>
+            </button>
+            <div class="mobile-brand">
+                <span class="brand-star">✦</span>
+                <span class="mobile-brand-title" id="mobilePageTitle">Dashboard</span>
+            </div>
+            <div class="mobile-topbar-actions">
+                <a href="index.html" class="mobile-app-link" title="Vào Ứng dụng">
+                    <svg class="rune-icon" viewBox="0 0 48 48"><use href="#i-market"></use></svg>
+                </a>
+                <img class="mobile-admin-avatar" id="mobileAdminAvatar" src="" alt="Admin" onerror="this.style.display='none'">
+            </div>
+        </header>
+
+        <!-- Backdrop for mobile drawer -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
         <!-- Sidebar -->
-        <nav class="admin-sidebar">
+        <nav class="admin-sidebar" id="adminSidebar">
             <div class="sidebar-brand">
                 <span class="brand-star">✦</span>
                 <span class="brand-text">HABIT<br>ADMIN</span>
+                <button class="sidebar-close-btn" id="btnSidebarClose" type="button" aria-label="Đóng menu">✕</button>
             </div>
             <div class="sidebar-nav">
                 <a href="#" class="nav-item active" data-section="dashboard">
@@ -195,6 +217,7 @@
                         </h3>
                         <button class="action-btn" id="btnGoToUsers" style="padding:6px 16px;font-size:13px;border-radius:8px;">Xem toàn bộ user →</button>
                     </div>
+                    <div class="table-scroll-hint"><span>👉 Vuốt ngang để xem toàn bộ thông tin</span></div>
                     <div class="table-container">
                         <table class="user-table">
                             <thead>
@@ -251,6 +274,7 @@
                     </div>
                 </div>
 
+                <div class="table-scroll-hint"><span>👉 Vuốt ngang để xem toàn bộ thông tin</span></div>
                 <div class="table-container">
                     <table class="user-table" id="userTable">
                         <thead>
@@ -284,6 +308,7 @@
                     <h3>⏳ Yêu cầu nâng cấp Premium</h3>
                     <p>Các user đã chuyển khoản và chờ xác nhận.</p>
                 </div>
+                <div class="table-scroll-hint"><span>👉 Vuốt ngang để xem toàn bộ thông tin</span></div>
                 <div class="table-container">
                     <table class="user-table" id="pendingTable">
                         <thead>
@@ -341,9 +366,9 @@
 
             <!-- Messages & Direct Support Section -->
             <section class="section" id="sectionMessages" style="display:none;">
-                <div class="admin-chat-layout">
+                <div class="admin-chat-layout" id="adminChatLayout">
                     <!-- LEFT THREADS & USERS LIST -->
-                    <div class="admin-chat-sidebar">
+                    <div class="admin-chat-sidebar" id="adminChatSidebar">
                         <div class="admin-chat-sidebar-header">
                             <div class="admin-chat-search-wrap">
                                 <span class="admin-chat-search-icon">🔍</span>
@@ -365,7 +390,7 @@
                     </div>
 
                     <!-- RIGHT ACTIVE CHAT PANE -->
-                    <div class="admin-chat-main">
+                    <div class="admin-chat-main" id="adminChatMain">
                         <!-- Placeholder when no chat is selected -->
                         <div class="admin-chat-placeholder" id="adminChatPlaceholder">
                             <div class="acp-icon">💬</div>
@@ -377,8 +402,13 @@
                         <div class="admin-chat-active" id="adminChatActive" style="display:none;">
                             <!-- Header -->
                             <div class="admin-chat-header">
-                                <div class="admin-chat-user-info" id="adminChatUserInfo">
-                                    <!-- User avatar, name, email, badge -->
+                                <div class="admin-chat-header-left">
+                                    <button type="button" class="admin-chat-back-btn" id="adminChatBackBtn" onclick="window._adminChatBackToList()" title="Quay lại danh sách hội thoại">
+                                        <span>←</span>
+                                    </button>
+                                    <div class="admin-chat-user-info" id="adminChatUserInfo">
+                                        <!-- User avatar, name, email, badge -->
+                                    </div>
                                 </div>
                                 <div class="admin-chat-header-actions">
                                     <button type="button" class="btn-sm upgrade" id="adminChatBtnVip" onclick="window._adminChatQuickVIP()" title="Nâng cấp VIP nhanh">👑 VIP</button>
@@ -415,6 +445,33 @@
                 </div>
             </section>
         </main>
+
+        <!-- Mobile Bottom Navigation Bar -->
+        <nav class="admin-bottom-nav" id="adminBottomNav">
+            <button type="button" class="bottom-nav-item active" data-section="dashboard">
+                <span class="bottom-nav-icon"><svg class="rune-icon" viewBox="0 0 48 48"><use href="#i-metric"></use></svg></span>
+                <span class="bottom-nav-label">Dashboard</span>
+            </button>
+            <button type="button" class="bottom-nav-item" data-section="users">
+                <span class="bottom-nav-icon">👥</span>
+                <span class="bottom-nav-label">Users</span>
+            </button>
+            <button type="button" class="bottom-nav-item" data-section="pending">
+                <span class="bottom-nav-icon">⏳</span>
+                <span class="bottom-nav-label">Chờ duyệt</span>
+                <span class="bottom-nav-badge" id="bottomPendingBadge" style="display:none;">0</span>
+            </button>
+            <button type="button" class="bottom-nav-item" data-section="quests">
+                <span class="bottom-nav-icon"><svg class="rune-icon" viewBox="0 0 48 48"><use href="#i-dp"></use></svg></span>
+                <span class="bottom-nav-label">Nhiệm vụ</span>
+                <span class="bottom-nav-badge" id="bottomQuestBadge" style="display:none;">0</span>
+            </button>
+            <button type="button" class="bottom-nav-item" data-section="messages">
+                <span class="bottom-nav-icon"><svg class="rune-icon" viewBox="0 0 48 48"><use href="#i-echo"></use></svg></span>
+                <span class="bottom-nav-label">Hộp thư</span>
+                <span class="bottom-nav-badge" id="bottomMsgBadge" style="display:none;">0</span>
+            </button>
+        </nav>
     </div>
 
     <!-- User Detail Modal -->
@@ -565,7 +622,7 @@
         </div>
     </div>
 
-    <script src="gotiengviet.js?v=5.7.0"></script>
-    <script src="admin.js?v=5.7.0"></script>
+    <script src="gotiengviet.js?v=5.8.0"></script>
+    <script src="admin.js?v=5.8.0"></script>
 </body>
 </html>
