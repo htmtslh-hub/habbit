@@ -10468,12 +10468,12 @@ const GUIDE_SECTIONS = {
         tip: '💡 <strong>Mẹo chuyên gia:</strong> Trong 7 ngày đầu, hãy bắt đầu với 3-5 thói quen cốt lõi nhỏ để tạo đà quán tính thành công trước khi thêm nhiều thói quen mới!'
     },
     'streak-rank': {
-        title: 'Chuỗi Kỷ Luật (Streak) & 10 Cấp Cảnh Giới Rank',
-        desc: 'Hiểu rõ cơ chế duy trì ngọn lửa Streak, bảo vệ chuỗi và hành trình thăng cấp 10 cảnh giới.',
+        title: 'Chuỗi Kỷ Luật (Streak) & 7 Bước 21 Cảnh Giới Rank',
+        desc: 'Hiểu rõ cơ chế duy trì ngọn lửa Streak, bảo vệ chuỗi và hành trình chuyển hóa tâm thức qua 7 Bước và 21 Cảnh Giới.',
         icon: '🔥',
         badge: 'Cốt Lõi',
-        heroTitle: 'Ngọn Lửa Kỷ Luật & Hệ Thống Cảnh Giới',
-        heroDesc: 'Mỗi ngày liên tiếp bạn duy trì ít nhất 1 thói quen, ngọn lửa Streak sẽ bùng cháy mạnh mẽ hơn. Tích lũy DP để thăng cấp cảnh giới từ Phàm Nhân đến Niết Bàn Vô Cực!',
+        heroTitle: 'Ngọn Lửa Kỷ Luật & Hệ Thống 21 Cảnh Giới Chuyển Hóa',
+        heroDesc: 'Mỗi ngày liên tiếp bạn duy trì ít nhất 1 thói quen, ngọn lửa Streak sẽ bùng cháy mạnh mẽ hơn. Tích lũy DP để thăng cấp cảnh giới từ Vô Minh đến Siêu Thoát Niết Bàn!',
         cards: [
             {
                 icon: '🔥',
@@ -10498,20 +10498,18 @@ const GUIDE_SECTIONS = {
             },
             {
                 icon: '👑',
-                title: '10 Cấp Cảnh Giới Kỷ Luật',
-                badge: '10 Rank',
+                title: 'Hành Trình Chuyển Hóa: 7 Bước & 21 Cảnh Giới',
+                badge: '21 Cảnh Giới',
                 steps: [
-                    '<strong>1. Phàm Nhân Khởi Tâm</strong>: 0 - 199 DP',
-                    '<strong>2. Luyện Khí Sơ Tâm</strong>: 200 - 499 DP',
-                    '<strong>3. Trúc Cơ Kiên Định</strong>: 500 - 999 DP',
-                    '<strong>4. Kim Đan Bất Hoại</strong>: 1.000 - 1.999 DP',
-                    '<strong>5. Nguyên Anh Xuất Khiếu</strong>: 2.000 - 3.499 DP',
-                    '<strong>6. Hóa Thần Xuất Thế</strong>: 3.500 - 5.499 DP',
-                    '<strong>7. Luyện Hư Nhập Đạo</strong>: 5.500 - 7.999 DP',
-                    '<strong>8. Hợp Thể Cực Hạn</strong>: 8.000 - 11.999 DP',
-                    '<strong>9. Đại Thừa Viên Mãn</strong>: 12.000 - 19.999 DP',
-                    '<strong>10. Niết Bàn Vô Cực</strong>: 20.000+ DP'
-                ]
+                    '<strong>Bước 1: Vô Thức (0 - 3.000 DP)</strong>: Vô minh (0-750) ➔ Mê muội (751-1.500) ➔ Thỏa hiệp (1.501-3.000)',
+                    '<strong>Bước 2: Thức Tỉnh (3.001 - 9.000 DP)</strong>: Sụp đổ (3.001-4.500) ➔ Overthinking (4.501-6.500) ➔ Tri khuyết (6.501-9.000)',
+                    '<strong>Bước 3: Thiết Lập Trật Tự (9.001 - 19.500 DP)</strong>: Ranh giới (9.001-12.000) ➔ Độc lập (12.001-15.000) ➔ Kỷ luật (15.001-19.500)',
+                    '<strong>Bước 4: Tích Lũy (19.501 - 36.000 DP)</strong>: Luyện tâm (19.501-24.000) ➔ Kiên nhẫn (24.001-30.000) ➔ Kiên định (30.001-36.000)',
+                    '<strong>Bước 5: Tinh Thông (36.001 - 54.000 DP)</strong>: Tập trung (36.001-42.000) ➔ Si mê (42.001-48.000) ➔ Trực giác (48.001-54.000)',
+                    '<strong>Bước 6: Siêu Nhận Thức (54.001 - 105.000 DP)</strong>: Buông bỏ (54.001-64.500) ➔ Bình tĩnh (64.501-75.000) ➔ Không hối tiếc (75.001-90.000) ➔ Tự tại (90.001-105.000)',
+                    '<strong>Bước 7: Siêu Thoát, Niết Bàn (105.001+ DP)</strong>: Siêu thoát (105.001-150.000) ➔ Niết bàn (150.001+ DP)'
+                ],
+                action: { label: '🏆 Xem 21 Cảnh Giới & Khung Avatar', onClick: 'closeGuideModal(); const cmTab = document.querySelector("[data-tab=\'community\']"); if(cmTab) cmTab.click(); setTimeout(() => { const rTab = document.querySelector("[data-cm-tab=\'ranks\']"); if(rTab) rTab.click(); }, 150);' }
             },
             {
                 icon: '🖼️',

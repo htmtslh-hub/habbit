@@ -2105,7 +2105,7 @@ window._adminHandleSendMessage = async function(presetText) {
                     displayName: targetName,
                     photoURL: targetUser.photoURL || '',
                     rankLevel: targetUser.rankLevel || 1,
-                    realmName: targetUser.realmName || 'Phàm Nhân',
+                    realmName: targetUser.realmName || 'Vô minh',
                     step: targetUser.step || 1,
                     equippedTitle: targetUser.equippedTitle || '',
                     totalDP: targetUser.totalDP || 0
