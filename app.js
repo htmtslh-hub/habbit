@@ -10509,7 +10509,7 @@ const GUIDE_SECTIONS = {
                     '<strong>Bước 6: Siêu Nhận Thức (54.001 - 105.000 DP)</strong>: Buông bỏ (54.001-64.500) ➔ Bình tĩnh (64.501-75.000) ➔ Không hối tiếc (75.001-90.000) ➔ Tự tại (90.001-105.000)',
                     '<strong>Bước 7: Siêu Thoát, Niết Bàn (105.001+ DP)</strong>: Siêu thoát (105.001-150.000) ➔ Niết bàn (150.001+ DP)'
                 ],
-                action: { label: '🏆 Xem 21 Cảnh Giới & Khung Avatar', onClick: 'closeGuideModal(); const cmTab = document.querySelector("[data-tab=\'community\']"); if(cmTab) cmTab.click(); setTimeout(() => { const rTab = document.querySelector("[data-cm-tab=\'ranks\']"); if(rTab) rTab.click(); }, 150);' }
+                action: { label: '🏆 Xem 21 Cảnh Giới & Khung Avatar', onClick: 'window._openRankShowcaseFromGuide()' }
             },
             {
                 icon: '🖼️',
@@ -10776,6 +10776,16 @@ const GUIDE_SECTIONS = {
         ],
         tip: '✨ <strong>Trải nghiệm tốt nhất:</strong> Khi cài lên Màn hình chính, ứng dụng sẽ chạy ở chế độ Toàn màn hình (Full Screen), ẩn thanh địa chỉ trình duyệt giúp thao tác nhanh và mượt mà hơn rất nhiều!'
     }
+};
+
+window._openRankShowcaseFromGuide = function() {
+    closeGuideModal();
+    const cmTab = document.querySelector('[data-tab="community"]');
+    if (cmTab) cmTab.click();
+    setTimeout(() => {
+        const rTab = document.querySelector('[data-cm-tab="ranks"]');
+        if (rTab) rTab.click();
+    }, 150);
 };
 
 function renderGuideContent(tabKey) {
