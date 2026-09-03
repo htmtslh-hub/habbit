@@ -320,6 +320,20 @@ function setLoading(btn, loading){
 }
 
 function translateFirebaseError(code){
+    const keyMap = {
+        'auth/user-not-found': 'fb_user_not_found',
+        'auth/wrong-password': 'fb_wrong_password',
+        'auth/invalid-credential': 'fb_invalid_credential',
+        'auth/email-already-in-use': 'fb_email_in_use',
+        'auth/weak-password': 'fb_weak_password',
+        'auth/invalid-email': 'fb_invalid_email',
+        'auth/too-many-requests': 'fb_too_many_requests',
+        'auth/popup-closed-by-user': 'fb_popup_closed',
+        'auth/network-request-failed': 'fb_network_failed',
+    };
+    if (window.I18N && keyMap[code]) {
+        return window.I18N.t(keyMap[code]);
+    }
     const map = {
         'auth/user-not-found': 'Email chưa được đăng ký',
         'auth/wrong-password': 'Mật khẩu không đúng',
@@ -331,7 +345,7 @@ function translateFirebaseError(code){
         'auth/popup-closed-by-user': 'Đã đóng cửa sổ đăng nhập Google',
         'auth/network-request-failed': 'Lỗi mạng, vui lòng kiểm tra kết nối',
     };
-    return map[code] || 'Đã xảy ra lỗi. Vui lòng thử lại.';
+    return (window.I18N ? window.I18N.t('err_generic') : (map[code] || 'Đã xảy ra lỗi. Vui lòng thử lại.'));
 }
 
 // =======================================================================
@@ -455,9 +469,9 @@ function createExpiryTimer(countdownElId, timerElId){
                 if(cdEl) cdEl.textContent = `${min}:${String(sec).padStart(2,'0')}`;
                 if(remaining <= 0){
                     clearInterval(timerId); timerId = null;
-                    if(cdEl) cdEl.textContent = 'Hết hạn';
+                    if(cdEl) cdEl.textContent = (window.I18N ? window.I18N.t('otp_expired') : 'Hết hạn');
                     if(timerEl) timerEl.classList.add('expired');
-                    showError('Mã OTP đã hết hạn. Vui lòng gửi mã mới.');
+                    showError(window.I18N ? window.I18N.t('err_otp_expired') : 'Mã OTP đã hết hạn. Vui lòng gửi mã mới.');
                 }
                 remaining--;
             };
@@ -481,7 +495,8 @@ function createResendCooldown(btnId, countdownSpanId){
             if(!btn) return;
             btn.disabled = true;
             btn.classList.remove('ready');
-            btn.innerHTML = `Gửi lại (<span id="${countdownSpanId}">${cooldown}</span>s)`;
+            const resendTemplate = window.I18N ? window.I18N.t('btn_resend_with_timer') : 'Gửi lại ({time}s)';
+            btn.innerHTML = resendTemplate.replace('{time}', `<span id="${countdownSpanId}">${cooldown}</span>`);
 
             const tick = () => {
                 cooldown--;
@@ -491,7 +506,7 @@ function createResendCooldown(btnId, countdownSpanId){
                     clearInterval(timerId); timerId = null;
                     btn.disabled = false;
                     btn.classList.add('ready');
-                    btn.textContent = '🔄 Gửi lại mã';
+                    btn.textContent = window.I18N ? window.I18N.t('btn_resend_active') : '🔄 Gửi lại mã';
                 }
             };
             timerId = setInterval(tick, 1000);
@@ -524,7 +539,7 @@ function initLogin(){
         const pass = passInput ? passInput.value : '';
 
         if(!email || !pass){
-            showError('Vui lòng nhập đầy đủ email và mật khẩu');
+            showError(window.I18N ? window.I18N.t('err_enter_email_pass') : 'Vui lòng nhập đầy đủ email và mật khẩu');
             return;
         }
 
@@ -540,7 +555,7 @@ function initLogin(){
             const cred = await auth.signInWithEmailAndPassword(email, pass);
             await createUserProfile(cred.user, false);
 
-            showSuccess('✅ Đăng nhập thành công! Đang chuyển hướng...');
+            showSuccess(window.I18N ? window.I18N.t('msg_login_success') : '✅ Đăng nhập thành công! Đang chuyển hướng...');
             setTimeout(() => { window.location.href = 'index.html'; }, 800);
         } catch(err) {
             showError(translateFirebaseError(err.code));
@@ -578,10 +593,10 @@ function initRegister(){
         const pass = passInput ? passInput.value : '';
         const confirm = confirmInput ? confirmInput.value : '';
 
-        if(!name){ showError('Vui lòng nhập họ và tên'); return; }
-        if(!email){ showError('Vui lòng nhập email'); return; }
-        if(pass.length < 6){ showError('Mật khẩu phải có ít nhất 6 ký tự'); return; }
-        if(pass !== confirm){ showError('Mật khẩu xác nhận không khớp'); return; }
+        if(!name){ showError(window.I18N ? window.I18N.t('err_enter_name') : 'Vui lòng nhập họ và tên'); return; }
+        if(!email){ showError(window.I18N ? window.I18N.t('err_enter_email') : 'Vui lòng nhập email'); return; }
+        if(pass.length < 6){ showError(window.I18N ? window.I18N.t('err_pass_min') : 'Mật khẩu phải có ít nhất 6 ký tự'); return; }
+        if(pass !== confirm){ showError(window.I18N ? window.I18N.t('err_pass_match') : 'Mật khẩu xác nhận không khớp'); return; }
 
         setLoading(btnRegister, true);
         try {
@@ -589,10 +604,10 @@ function initRegister(){
             await cred.user.updateProfile({ displayName: name });
             await createUserProfile(cred.user, true);
 
-            showSuccess('✅ Đăng ký thành công! Đang chuyển hướng...');
+            showSuccess(window.I18N ? window.I18N.t('msg_register_success') : '✅ Đăng ký thành công! Đang chuyển hướng...');
             setTimeout(() => { window.location.href = 'index.html'; }, 1000);
         } catch(err){
-            showError(err.code ? translateFirebaseError(err.code) : (err.message || 'Đã xảy ra lỗi. Vui lòng thử lại.'));
+            showError(err.code ? translateFirebaseError(err.code) : (err.message || (window.I18N ? window.I18N.t('err_generic') : 'Đã xảy ra lỗi. Vui lòng thử lại.')));
             setLoading(btnRegister, false);
         }
     };
@@ -676,7 +691,7 @@ function initGoogle(){
                 const result = await auth.signInWithPopup(provider);
                 const isNew = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
                 await createUserProfile(result.user, isNew);
-                showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
+                showSuccess(window.I18N ? window.I18N.t('msg_login_success') : 'Đăng nhập thành công! Đang chuyển hướng...');
                 setTimeout(() => { window.location.href = 'index.html'; }, 800);
                 return;
             } catch (popupErr) {
@@ -694,7 +709,7 @@ function initGoogle(){
             if (window.electronAPI && window.electronAPI.openExternal) {
                 window.electronAPI.openExternal(webAuthUrl);
             } else {
-                showError('Không thể mở trình duyệt hệ thống.');
+                showError(window.I18N ? window.I18N.t('err_cannot_open_browser') : 'Không thể mở trình duyệt hệ thống.');
                 resetFromWaiting();
                 return;
             }
@@ -717,15 +732,15 @@ function initGoogle(){
                                 const result = await auth.signInWithPopup(provider);
                                 const isNew = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
                                 await createUserProfile(result.user, isNew);
-                                showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
+                                showSuccess(window.I18N ? window.I18N.t('msg_login_success') : 'Đăng nhập thành công! Đang chuyển hướng...');
                                 setTimeout(() => { window.location.href = 'index.html'; }, 800);
                             } catch(retryErr) {
-                                showError('Đăng nhập không thành công. Vui lòng thử lại.');
+                                showError(window.I18N ? window.I18N.t('err_login_failed_retry') : 'Đăng nhập không thành công. Vui lòng thử lại.');
                                 resetFromWaiting();
                             }
                         } else {
                             // Got proper Google OAuth tokens — use signInWithCredential
-                            showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
+                            showSuccess(window.I18N ? window.I18N.t('msg_login_success') : 'Đăng nhập thành công! Đang chuyển hướng...');
                             const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken || null);
                             const result = await auth.signInWithCredential(credential);
                             await createUserProfile(result.user, result.additionalUserInfo?.isNewUser || false);
@@ -749,7 +764,7 @@ function initGoogle(){
                     const result = await auth.signInWithPopup(provider);
                     const isNew = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
                     await createUserProfile(result.user, isNew);
-                    showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
+                    showSuccess(window.I18N ? window.I18N.t('msg_login_success') : 'Đăng nhập thành công! Đang chuyển hướng...');
                     setTimeout(() => { window.location.href = 'index.html'; }, 600);
                     return;
                 } catch (mobErr) {
@@ -766,7 +781,7 @@ function initGoogle(){
             const result = await auth.signInWithPopup(provider);
             const isNew = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
             await createUserProfile(result.user, isNew);
-            showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
+            showSuccess(window.I18N ? window.I18N.t('msg_login_success') : 'Đăng nhập thành công! Đang chuyển hướng...');
             setTimeout(() => { window.location.href = 'index.html'; }, 800);
         } catch(err) {
             if(err.code === 'auth/popup-blocked'){
@@ -883,7 +898,7 @@ async function checkAuth(){
         if (result && result.user) {
             const isNew = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
             await createUserProfile(result.user, isNew);
-            showSuccess('Đăng nhập thành công! Đang chuyển hướng...');
+            showSuccess(window.I18N ? window.I18N.t('msg_login_success') : 'Đăng nhập thành công! Đang chuyển hướng...');
             setTimeout(() => { window.location.href = 'index.html'; }, 600);
             return;
         }

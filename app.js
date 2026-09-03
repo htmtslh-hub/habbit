@@ -321,15 +321,46 @@ const I18N = {
     }
 };
 
-let curLang=localStorage.getItem('hg_lang')||'vi';
-function t(k){return(I18N[curLang]||I18N.en)[k]||(I18N.en[k])||k}
+let curLang = (window.I18N && window.I18N.getLanguage) 
+    ? window.I18N.getLanguage() 
+    : (localStorage.getItem('hm_app_lang') || localStorage.getItem('hg_lang') || 'vi');
+
+function t(k){
+    if (window.I18N && typeof window.I18N.t === 'function') {
+        const val = window.I18N.t(k);
+        if (val !== undefined && val !== k) return val;
+    }
+    return (I18N[curLang]||I18N.en)[k] || (I18N.en[k]) || k;
+}
 
 function applyI18n(){
-    document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n)});
-    document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=t(el.dataset.i18nPh)});
+    if (window.I18N && window.I18N.translateDOM) {
+        window.I18N.translateDOM();
+    } else {
+        document.querySelectorAll('[data-i18n]').forEach(el=>{el.innerHTML=t(el.dataset.i18n)});
+        document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=t(el.dataset.i18nPh)});
+    }
     const ms=document.querySelector('#monthSel');
-    if(ms){ms.innerHTML='';t('months').forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m;ms.appendChild(o)});ms.value=cM}
+    if(ms){
+        ms.innerHTML='';
+        const monthArr = (window.I18N ? window.I18N.t('months') : null) || t('months');
+        if (Array.isArray(monthArr)) {
+            monthArr.forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m;ms.appendChild(o)});
+            ms.value=cM;
+        }
+    }
 }
+
+// Lắng nghe sự kiện đổi ngôn ngữ toàn cục
+window.addEventListener('hmLanguageChanged', (e) => {
+    if (e.detail && e.detail.lang) {
+        curLang = e.detail.lang;
+        localStorage.setItem('hg_lang', curLang);
+        applyI18n();
+        if (typeof renderAll === 'function') renderAll();
+        if (window._updateProfileModalUI) window._updateProfileModalUI();
+    }
+});
 
 const DEF=[
     {id:1,name:'Dậy sớm trước 06:00',emoji:'⏰'},
@@ -884,7 +915,7 @@ function showUserProfile(user){
     const customAva = getUserAvatar(user);
     const imgUrl = customAva || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${((user?.displayName||user?.email||'U')).charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
     const displayName = user?.displayName || user?.email?.split('@')[0] || 'User';
-    const subText = rank.realmName ? `Bước thứ ${rank.step} - ${rank.realmName}` : getRankTierName(rank);
+    const subText = rank.realmName ? formatRankBadge(rank.step, rank.realmName, rank.realm) : getRankTierName(rank);
 
     if(userProfileEl) {
         const vw = window.innerWidth;
@@ -1760,8 +1791,12 @@ function initLang(){
 function switchLang(lang) {
     curLang = lang;
     localStorage.setItem('hg_lang', curLang);
-    applyI18n();
-    renderAll();
+    if (window.I18N && typeof window.I18N.setLanguage === 'function') {
+        window.I18N.setLanguage(lang);
+    } else {
+        applyI18n();
+        renderAll();
+    }
     if (window._updateProfileModalUI) window._updateProfileModalUI();
 }
 window._switchLang = switchLang;
@@ -2678,49 +2713,70 @@ const MAJOR_STEPS = [
         step: 1,
         name: 'Vô thức',
         nameEn: 'Unconscious',
+        nameZh: '无意识',
         desc: 'Sống theo bản năng và thói quen cũ, hoàn toàn thiếu nhận thức về bản thân.',
+        descEn: 'Living on instinct and old habits, completely lacking self-awareness.',
+        descZh: '顺应本能与旧习惯生活，完全缺乏对自我的觉察。',
         color: '#94a3b8'
     },
     {
         step: 2,
         name: 'Thức tỉnh',
         nameEn: 'Awakening',
+        nameZh: '觉醒',
         desc: 'Đối mặt với đổ vỡ, xung đột nội tâm và dừng chối bỏ sự thật.',
+        descEn: 'Facing collapse, internal conflict, and stopping the denial of truth.',
+        descZh: '直面瓦解与内在冲突，停止逃避并勇敢正视真相。',
         color: '#22c55e'
     },
     {
         step: 3,
         name: 'Thiết lập Trật tự',
         nameEn: 'Order',
+        nameZh: '建立秩序',
         desc: 'Vạch rõ ranh giới, độc lập cảm xúc và đưa hành vi vào khuôn khổ kỷ luật.',
+        descEn: 'Drawing boundaries, emotional independence, and bringing actions into disciplined order.',
+        descZh: '确立个人边界，情绪独立，将行为纳入自律规矩之中。',
         color: '#3b82f6'
     },
     {
         step: 4,
         name: 'Tích lũy',
         nameEn: 'Accumulation',
+        nameZh: '沉淀积累',
         desc: 'Tôi rèn nhận thức, làm chủ thời gian và kiên định trước mọi cám dỗ.',
+        descEn: 'Tempering awareness, mastering time, and staying steadfast against temptation.',
+        descZh: '淬炼心智认知，掌控时间节奏，面对诱惑坚定不移。',
         color: '#a855f7'
     },
     {
         step: 5,
         name: 'Tinh thông',
         nameEn: 'Mastery',
+        nameZh: '精通掌控',
         desc: 'Tập trung tuyệt đối, hòa mình si mê và trực giác hóa mọi hành động chuẩn xác.',
+        descEn: 'Absolute focus, passionate flow, and intuitive precision in every action.',
+        descZh: '高度专注，心流沉浸，令每一次行动都精准合一。',
         color: '#06b6d4'
     },
     {
         step: 6,
         name: 'Siêu nhận thức',
         nameEn: 'Metacognition',
+        nameZh: '元认知',
         desc: 'Chủ động buông bỏ, giữ tâm tĩnh lặng, không dằn vặt quá khứ và tự tại trước được mất.',
+        descEn: 'Proactively letting go, keeping inner stillness, free of regrets and detached from gain and loss.',
+        descZh: '主动放下非控之物，内心宁静泰然，不悔过往，超然得失。',
         color: '#ec4899'
     },
     {
         step: 7,
         name: 'Siêu thoát, niết bàn',
         nameEn: 'Liberation & Nirvana',
+        nameZh: '超脱涅槃',
         desc: 'Vượt lên mọi trói buộc, an lạc tuyệt đối, hòa nhập trọn vẹn vào dòng chảy tự do.',
+        descEn: 'Transcending all constraints, absolute serenity, fully unified with limitless freedom.',
+        descZh: '超越一切束缚与执念，抵达终极安乐，完全融入纯然自由。',
         color: '#fbbf24'
     }
 ];
@@ -2731,42 +2787,57 @@ const REALM_TIERS = [
         id: 'r_vominh',
         realmIndex: 1,
         step: 1,
-        stepName: 'Vô thức',
-        stepFullName: 'Bước 1: Vô thức',
         name: 'Vô minh',
         nameEn: 'Ignorance',
+        nameZh: '无明',
+        stepName: 'Vô thức',
+        stepNameEn: 'Unconscious',
+        stepNameZh: '无意识',
+        stepFullName: 'Bước 1: Vô thức',
         level: 1,
         minDp: 0,
         maxDp: 750,
         desc: 'Sống theo bản năng và thói quen cũ, hoàn toàn thiếu nhận thức về bản thân.',
+        descEn: 'Living on instinct and old habits, completely lacking self-awareness.',
+        descZh: '顺应本能与旧习惯生活，完全缺乏对自我的觉察。',
         color: '#94a3b8'
     },
     {
         id: 'r_memuoi',
         realmIndex: 2,
         step: 1,
-        stepName: 'Vô thức',
-        stepFullName: 'Bước 1: Vô thức',
         name: 'Mê muội',
         nameEn: 'Delusion',
+        nameZh: '执迷',
+        stepName: 'Vô thức',
+        stepNameEn: 'Unconscious',
+        stepNameZh: '无意识',
+        stepFullName: 'Bước 1: Vô thức',
         level: 1,
         minDp: 751,
         maxDp: 1500,
         desc: 'Không phân biệt được thật giả, sống nhập nhằng, mất khả năng đánh giá giá trị thực và coi mọi thứ "sao cũng được", phớt lờ mọi dấu hiệu cảnh báo của thực tế.',
+        descEn: 'Unable to distinguish true from false, living ambiguously, ignoring reality warnings.',
+        descZh: '不辨真假，浑浑噩噩，丧失真实价值判断，事事“无所谓”，无视现实的警告信号。',
         color: '#94a3b8'
     },
     {
         id: 'r_thoahiep',
         realmIndex: 3,
         step: 1,
-        stepName: 'Vô thức',
-        stepFullName: 'Bước 1: Vô thức',
         name: 'Thỏa hiệp',
         nameEn: 'Compromise',
+        nameZh: '妥协',
+        stepName: 'Vô thức',
+        stepNameEn: 'Unconscious',
+        stepNameZh: '无意识',
+        stepFullName: 'Bước 1: Vô thức',
         level: 2,
         minDp: 1501,
         maxDp: 3000,
         desc: 'Để ngoại cảnh dẫn dắt, trôi dạt và không có định hướng sống rõ ràng, tự hạ thấp tiêu chuẩn sống, chấp nhận sự tầm thường, bình thường hóa những sai lệch và coi đó là điều dĩ nhiên.',
+        descEn: 'Drifting aimlessly without clear direction, lowering personal standards, normalizing mediocrity.',
+        descZh: '任由外境摆布，随波逐流无明确目标，自行降低标准，甘于平庸并视为理所当然。',
         color: '#22c55e'
     },
 
@@ -2775,42 +2846,57 @@ const REALM_TIERS = [
         id: 'r_supdo',
         realmIndex: 4,
         step: 2,
-        stepName: 'Thức tỉnh',
-        stepFullName: 'Bước 2: Thức tỉnh',
         name: 'Sụp đổ',
         nameEn: 'Collapse',
+        nameZh: '瓦解',
+        stepName: 'Thức tỉnh',
+        stepNameEn: 'Awakening',
+        stepNameZh: '觉醒',
+        stepFullName: 'Bước 2: Thức tỉnh',
         level: 2,
         minDp: 3001,
         maxDp: 4500,
         desc: 'Đối mặt với đổ vỡ, thất bại hoặc sự thiếu hụt nghiêm trọng, khởi đầu của quá trình nhận thức.',
+        descEn: 'Confronting breakdown, failure, or severe deficiency; the raw awakening of consciousness.',
+        descZh: '直面破灭、挫折或严重缺失，开启自我觉知的最初契机。',
         color: '#22c55e'
     },
     {
         id: 'r_overthinking',
         realmIndex: 5,
         step: 2,
-        stepName: 'Thức tỉnh',
-        stepFullName: 'Bước 2: Thức tỉnh',
         name: 'Overthinking',
         nameEn: 'Overthinking',
+        nameZh: '过虑内耗',
+        stepName: 'Thức tỉnh',
+        stepNameEn: 'Awakening',
+        stepNameZh: '觉醒',
+        stepFullName: 'Bước 2: Thức tỉnh',
         level: 3,
         minDp: 4501,
         maxDp: 6500,
         desc: 'Xung đột dữ dội giữa thực tế đau đớn và mong muốn thay đổi, nghĩ quá nhiều, hồi tưởng về quá khứ, phóng đại rủi ro, không đưa ra được quyết định.',
+        descEn: 'Intense conflict between reality and the urge to change, overthinking, magnifying risks.',
+        descZh: '现实剧痛与改变渴望激烈冲突，思虑过度，沉溺悔恨，夸大风险，难以决断。',
         color: '#3b82f6'
     },
     {
         id: 'r_trikhuyet',
         realmIndex: 6,
         step: 2,
-        stepName: 'Thức tỉnh',
-        stepFullName: 'Bước 2: Thức tỉnh',
         name: 'Tri khuyết',
         nameEn: 'Acceptance',
+        nameZh: '知缺',
+        stepName: 'Thức tỉnh',
+        stepNameEn: 'Awakening',
+        stepNameZh: '觉醒',
+        stepFullName: 'Bước 2: Thức tỉnh',
         level: 3,
         minDp: 6501,
         maxDp: 9000,
         desc: 'Dừng chối bỏ, dũng cảm nhìn thẳng vào sự thật để bắt đầu hành trình mới.',
+        descEn: 'Ending denial, courageously facing reality and imperfection to embark on a new journey.',
+        descZh: '停止否认与逃避，坦然面对自身缺陷与真相，迈向蜕变新程。',
         color: '#3b82f6'
     },
 
@@ -2819,42 +2905,57 @@ const REALM_TIERS = [
         id: 'r_ranhgioi',
         realmIndex: 7,
         step: 3,
-        stepName: 'Thiết lập Trật tự',
-        stepFullName: 'Bước 3: Thiết lập Trật tự',
         name: 'Ranh giới',
         nameEn: 'Boundary',
+        nameZh: '边界',
+        stepName: 'Thiết lập Trật tự',
+        stepNameEn: 'Order',
+        stepNameZh: '建立秩序',
+        stepFullName: 'Bước 3: Thiết lập Trật tự',
         level: 4,
         minDp: 9001,
         maxDp: 12000,
         desc: 'Vạch rõ giới hạn bản thân, ngăn chặn tác động tiêu cực từ bên ngoài.',
+        descEn: 'Defining personal boundaries clearly, guarding against external negativity.',
+        descZh: '清晰划定自我界限，抵御外界负面侵扰与能量消耗。',
         color: '#a855f7'
     },
     {
         id: 'r_doclap',
         realmIndex: 8,
         step: 3,
-        stepName: 'Thiết lập Trật tự',
-        stepFullName: 'Bước 3: Thiết lập Trật tự',
         name: 'Độc lập',
         nameEn: 'Independence',
+        nameZh: '独立',
+        stepName: 'Thiết lập Trật tự',
+        stepNameEn: 'Order',
+        stepNameZh: '建立秩序',
+        stepFullName: 'Bước 3: Thiết lập Trật tự',
         level: 4,
         minDp: 12001,
         maxDp: 15000,
         desc: 'Tách rời sự lệ thuộc vào cảm xúc, dư luận và sự công nhận của người khác.',
+        descEn: 'Severing emotional dependence on external validation, praise, and others\' opinions.',
+        descZh: '摆脱对他人情绪反应、舆论评判与外在认可的过度依附。',
         color: '#a855f7'
     },
     {
         id: 'r_kyluat',
         realmIndex: 9,
         step: 3,
-        stepName: 'Thiết lập Trật tự',
-        stepFullName: 'Bước 3: Thiết lập Trật tự',
         name: 'Kỷ luật',
         nameEn: 'Discipline',
+        nameZh: '自律',
+        stepName: 'Thiết lập Trật tự',
+        stepNameEn: 'Order',
+        stepNameZh: '建立秩序',
+        stepFullName: 'Bước 3: Thiết lập Trật tự',
         level: 5,
         minDp: 15001,
         maxDp: 19500,
         desc: 'Đưa hành vi vào khuôn khổ, tuân thủ nguyên tắc đã đề ra.',
+        descEn: 'Aligning actions with deliberate structure, strictly honoring chosen principles.',
+        descZh: '令日常行止契合严整框架，始终恪守自身既定准则。',
         color: '#f97316'
     },
 
@@ -2863,42 +2964,57 @@ const REALM_TIERS = [
         id: 'r_luyentam',
         realmIndex: 10,
         step: 4,
-        stepName: 'Tích lũy',
-        stepFullName: 'Bước 4: Tích lũy',
         name: 'Luyện tâm',
         nameEn: 'Mental Tempering',
+        nameZh: '炼心',
+        stepName: 'Tích lũy',
+        stepNameEn: 'Accumulation',
+        stepNameZh: '沉淀积累',
+        stepFullName: 'Bước 4: Tích lũy',
         level: 5,
         minDp: 19501,
         maxDp: 24000,
         desc: 'Quá trình tôi rèn nhận thức, chuyển hóa nghịch cảnh thành năng lực.',
+        descEn: 'Tempering awareness, forging inner fortitude, turning adversity into raw capability.',
+        descZh: '在反复淬砺中心智日坚，化逆境挫败为砥砺心力的养分。',
         color: '#f97316'
     },
     {
         id: 'r_kiennhan',
         realmIndex: 11,
         step: 4,
-        stepName: 'Tích lũy',
-        stepFullName: 'Bước 4: Tích lũy',
         name: 'Kiên nhẫn',
         nameEn: 'Patience',
+        nameZh: '耐心',
+        stepName: 'Tích lũy',
+        stepNameEn: 'Accumulation',
+        stepNameZh: '沉淀积累',
+        stepFullName: 'Bước 4: Tích lũy',
         level: 6,
         minDp: 24001,
         maxDp: 30000,
         desc: 'Làm chủ thời gian, chịu đựng sức ép khi chưa thấy kết quả tức thì.',
+        descEn: 'Mastering the tempo of time, bearing pressure patiently before outcomes materialize.',
+        descZh: '沉着执掌时间节奏，静候因缘，在尚未见效之时耐受高压。',
         color: '#06b6d4'
     },
     {
         id: 'r_kiendinh',
         realmIndex: 12,
         step: 4,
-        stepName: 'Tích lũy',
-        stepFullName: 'Bước 4: Tích lũy',
         name: 'Kiên định',
         nameEn: 'Perseverance',
+        nameZh: '坚定',
+        stepName: 'Tích lũy',
+        stepNameEn: 'Accumulation',
+        stepNameZh: '沉淀积累',
+        stepFullName: 'Bước 4: Tích lũy',
         level: 6,
         minDp: 30001,
         maxDp: 36000,
         desc: 'Giữ vững phương hướng, không dao động trước khó khăn hay cám dỗ.',
+        descEn: 'Holding true to chosen direction, unshakable before hardship and distraction.',
+        descZh: '笃志不移，任凭前路艰难诱惑纷扰，意志皆如磐石。',
         color: '#06b6d4'
     },
 
@@ -2907,42 +3023,57 @@ const REALM_TIERS = [
         id: 'r_taptrung',
         realmIndex: 13,
         step: 5,
-        stepName: 'Tinh thông',
-        stepFullName: 'Bước 5: Tinh thông',
         name: 'Tập trung',
         nameEn: 'Focus',
+        nameZh: '专注',
+        stepName: 'Tinh thông',
+        stepNameEn: 'Mastery',
+        stepNameZh: '精通掌控',
+        stepFullName: 'Bước 5: Tinh thông',
         level: 7,
         minDp: 36001,
         maxDp: 42000,
         desc: 'Gom toàn bộ tâm trí và năng lượng vào một hành động duy nhất.',
+        descEn: 'Channeling total mental energy into a single present-moment action.',
+        descZh: '收摄身心，将全部精气神凝聚于当前唯一行动之中。',
         color: '#eab308'
     },
     {
         id: 'r_sime',
         realmIndex: 14,
         step: 5,
-        stepName: 'Tinh thông',
-        stepFullName: 'Bước 5: Tinh thông',
         name: 'Si mê',
         nameEn: 'Passion & Flow',
+        nameZh: '心流',
+        stepName: 'Tinh thông',
+        stepNameEn: 'Mastery',
+        stepNameZh: '精通掌控',
+        stepFullName: 'Bước 5: Tinh thông',
         level: 7,
         minDp: 42001,
         maxDp: 48000,
         desc: 'Động lực nội tại mãnh liệt, hòa mình trọn vẹn vào công việc và thói quen.',
+        descEn: 'Fierce intrinsic drive, deeply immersed in the flow of purposeful habits.',
+        descZh: '内在驱动力充盈沛然，与日常自律与研习全然融为一体。',
         color: '#eab308'
     },
     {
         id: 'r_trucgiac',
         realmIndex: 15,
         step: 5,
-        stepName: 'Tinh thông',
-        stepFullName: 'Bước 5: Tinh thông',
         name: 'Trực giác',
         nameEn: 'Intuition',
+        nameZh: '直觉',
+        stepName: 'Tinh thông',
+        stepNameEn: 'Mastery',
+        stepNameZh: '精通掌控',
+        stepFullName: 'Bước 5: Tinh thông',
         level: 7,
         minDp: 48001,
         maxDp: 54000,
         desc: 'Hành động tự động, chuẩn xác và không một chút do dự.',
+        descEn: 'Actions flow automatically, flawlessly precise without a moment of hesitation.',
+        descZh: '行云流水，身心自然合一，举手投足无须犹疑即精准无差。',
         color: '#eab308'
     },
 
@@ -2951,56 +3082,76 @@ const REALM_TIERS = [
         id: 'r_buongbo',
         realmIndex: 16,
         step: 6,
-        stepName: 'Siêu nhận thức',
-        stepFullName: 'Bước 6: Siêu nhận thức',
         name: 'Buông bỏ',
         nameEn: 'Letting Go',
+        nameZh: '放下',
+        stepName: 'Siêu nhận thức',
+        stepNameEn: 'Metacognition',
+        stepNameZh: '元认知',
+        stepFullName: 'Bước 6: Siêu nhận thức',
         level: 8,
         minDp: 54001,
         maxDp: 64500,
         desc: 'Chủ động buông những thứ ngoài tầm kiểm soát.',
+        descEn: 'Proactively releasing attachment to what lies beyond personal control.',
+        descZh: '洞见实相，主动放下非人力所及之执着与重负。',
         color: '#ec4899'
     },
     {
         id: 'r_binhtinh',
         realmIndex: 17,
         step: 6,
-        stepName: 'Siêu nhận thức',
-        stepFullName: 'Bước 6: Siêu nhận thức',
         name: 'Bình tĩnh',
         nameEn: 'Equanimity',
+        nameZh: '泰然',
+        stepName: 'Siêu nhận thức',
+        stepNameEn: 'Metacognition',
+        stepNameZh: '元认知',
+        stepFullName: 'Bước 6: Siêu nhận thức',
         level: 8,
         minDp: 64501,
         maxDp: 75000,
         desc: 'Giữ sự tĩnh lặng tuyệt đối ngay giữa biến động dữ dội.',
+        descEn: 'Preserving profound tranquility in the epicenter of turbulence.',
+        descZh: '纵使外在风云激荡，心湖依然澄澈无波，湛然常寂。',
         color: '#ec4899'
     },
     {
         id: 'r_khonghoitiec',
         realmIndex: 18,
         step: 6,
-        stepName: 'Siêu nhận thức',
-        stepFullName: 'Bước 6: Siêu nhận thức',
         name: 'Không hối tiếc',
         nameEn: 'No Regrets',
+        nameZh: '无悔',
+        stepName: 'Siêu nhận thức',
+        stepNameEn: 'Metacognition',
+        stepNameZh: '元认知',
+        stepFullName: 'Bước 6: Siêu nhận thức',
         level: 9,
         minDp: 75001,
         maxDp: 90000,
         desc: 'Chịu trách nhiệm trọn vẹn về mọi lựa chọn trong quá khứ.',
+        descEn: 'Embracing full ownership of every past decision with peace of mind.',
+        descZh: '坦然承当过往所有抉择，内心通达，无挂碍亦无悔怨。',
         color: '#ef4444'
     },
     {
         id: 'r_tutai',
         realmIndex: 19,
         step: 6,
-        stepName: 'Siêu nhận thức',
-        stepFullName: 'Bước 6: Siêu nhận thức',
         name: 'Tự tại',
         nameEn: 'Self-Mastery',
+        nameZh: '自在',
+        stepName: 'Siêu nhận thức',
+        stepNameEn: 'Metacognition',
+        stepNameZh: '元认知',
+        stepFullName: 'Bước 6: Siêu nhận thức',
         level: 9,
         minDp: 90001,
         maxDp: 105000,
         desc: 'Hoàn toàn làm chủ tâm trí, không dính mắc vào được mất hay khen chê.',
+        descEn: 'Complete sovereignty of mind, unattached to praise, blame, gain, or loss.',
+        descZh: '彻底主宰心念，任得失毁誉如清风过耳，来去自如。',
         color: '#ef4444'
     },
 
@@ -3009,31 +3160,100 @@ const REALM_TIERS = [
         id: 'r_sieuthoat',
         realmIndex: 20,
         step: 7,
-        stepName: 'Siêu thoát, niết bàn',
-        stepFullName: 'Bước 7: Siêu thoát, niết bàn',
         name: 'Siêu thoát',
         nameEn: 'Liberation',
+        nameZh: '超脱',
+        stepName: 'Siêu thoát, niết bàn',
+        stepNameEn: 'Liberation & Nirvana',
+        stepNameZh: '超脱涅槃',
+        stepFullName: 'Bước 7: Siêu thoát, niết bàn',
         level: 10,
         minDp: 105001,
         maxDp: 150000,
         desc: 'Vượt lên mọi rào cản và thói quen cũ, giải phóng tự do tâm thức vô lượng.',
+        descEn: 'Transcending all self-imposed barriers, liberating boundless awareness.',
+        descZh: '破除旧我重重禁锢，觉性明朗，释放不可思议之无量心智。',
         color: '#fbbf24'
     },
     {
         id: 'r_nietban',
         realmIndex: 21,
         step: 7,
-        stepName: 'Siêu thoát, niết bàn',
-        stepFullName: 'Bước 7: Siêu thoát, niết bàn',
         name: 'Niết bàn',
         nameEn: 'Nirvana',
+        nameZh: '涅槃',
+        stepName: 'Siêu thoát, niết bàn',
+        stepNameEn: 'Liberation & Nirvana',
+        stepNameZh: '超脱涅槃',
+        stepFullName: 'Bước 7: Siêu thoát, niết bàn',
         level: 10,
         minDp: 150001,
         maxDp: Infinity,
         desc: 'Đỉnh cao an lạc tuyệt đối, hợp nhất trọn vẹn giữa ý chí kỷ luật và tự do tự tại.',
+        descEn: 'Supreme peace and fulfillment, complete harmony of discipline and pure freedom.',
+        descZh: '至极圆满安乐之境，钢铁纪律与绝对自由融汇于一。',
         color: '#fbbf24'
     }
 ];
+
+function getAppLanguage() {
+    return (window.I18N && typeof window.I18N.getLanguage === 'function') ? window.I18N.getLanguage() : (typeof curLang !== 'undefined' ? curLang : 'vi');
+}
+
+function getLocalizedStepName(stepNum) {
+    const lang = getAppLanguage();
+    const s = MAJOR_STEPS.find(item => item.step === stepNum);
+    if (!s) return '';
+    if (lang === 'en') return s.nameEn || s.name;
+    if (lang === 'zh') return s.nameZh || s.name;
+    return s.name;
+}
+
+function getLocalizedStepFullName(stepNum) {
+    const lang = getAppLanguage();
+    const stepName = getLocalizedStepName(stepNum);
+    if (lang === 'en') return `Step ${stepNum}: ${stepName}`;
+    if (lang === 'zh') return `第${stepNum}步：${stepName}`;
+    return `Bước ${stepNum}: ${stepName}`;
+}
+
+function getLocalizedRealmName(realmObj) {
+    if (!realmObj) return '';
+    const lang = getAppLanguage();
+    if (lang === 'en') return realmObj.nameEn || realmObj.name;
+    if (lang === 'zh') return realmObj.nameZh || realmObj.name;
+    return realmObj.name;
+}
+
+function getLocalizedRealmDesc(realmObj) {
+    if (!realmObj) return '';
+    const lang = getAppLanguage();
+    if (lang === 'en') return realmObj.descEn || realmObj.desc;
+    if (lang === 'zh') return realmObj.descZh || realmObj.desc;
+    return realmObj.desc;
+}
+
+function formatRankBadge(step, realmName, realmObj) {
+    const lang = getAppLanguage();
+    let rName = realmName;
+    if (realmObj) {
+        rName = getLocalizedRealmName(realmObj);
+    } else if (typeof realmName === 'string') {
+        const found = REALM_TIERS.find(r => r.name === realmName || r.nameEn === realmName || r.nameZh === realmName);
+        if (found) {
+            rName = getLocalizedRealmName(found);
+            step = found.step;
+        }
+    }
+    if (!step) step = 1;
+    if (lang === 'en') return `Step ${step} - ${rName}`;
+    if (lang === 'zh') return `第${step}步 - ${rName}`;
+    return `Bước thứ ${step} - ${rName}`;
+}
+window.formatRankBadge = formatRankBadge;
+window.getLocalizedRealmName = getLocalizedRealmName;
+window.getLocalizedStepName = getLocalizedStepName;
+window.getLocalizedStepFullName = getLocalizedStepFullName;
 
 function getUserRealmInfo(dp = 0) {
     const val = Math.max(0, parseInt(dp, 10) || 0);
@@ -3056,10 +3276,10 @@ function getUserRealmInfo(dp = 0) {
                 dpToNext: dpToNext,
                 level: currentRealm.level,
                 step: currentRealm.step,
-                stepName: currentRealm.stepName,
-                stepFullName: currentRealm.stepFullName,
-                name: currentRealm.name,
-                desc: currentRealm.desc,
+                stepName: getLocalizedStepName(currentRealm.step),
+                stepFullName: getLocalizedStepFullName(currentRealm.step),
+                name: getLocalizedRealmName(currentRealm),
+                desc: getLocalizedRealmDesc(currentRealm),
                 color: currentRealm.color
             };
         }
@@ -3072,10 +3292,10 @@ function getUserRealmInfo(dp = 0) {
         dpToNext: REALM_TIERS[1] ? Math.max(0, REALM_TIERS[1].minDp - val) : 0,
         level: firstRealm.level,
         step: firstRealm.step,
-        stepName: firstRealm.stepName,
-        stepFullName: firstRealm.stepFullName,
-        name: firstRealm.name,
-        desc: firstRealm.desc,
+        stepName: getLocalizedStepName(firstRealm.step),
+        stepFullName: getLocalizedStepFullName(firstRealm.step),
+        name: getLocalizedRealmName(firstRealm),
+        desc: getLocalizedRealmDesc(firstRealm),
         color: firstRealm.color
     };
 }
@@ -3085,13 +3305,16 @@ window.REALM_TIERS = REALM_TIERS;
 
 function getRankTierName(tier) {
     if (!tier) return '';
+    if (tier.realm) {
+        return formatRankBadge(tier.step || tier.realm.step, null, tier.realm);
+    }
     if (tier.realmName && tier.step) {
-        return `Bước thứ ${tier.step} - ${tier.realmName}`;
+        return formatRankBadge(tier.step, tier.realmName);
     }
     if (tier.step && tier.name) {
-        return `Bước thứ ${tier.step} - ${tier.name}`;
+        return formatRankBadge(tier.step, tier.name);
     }
-    return tier.name || (tier.realmName || '');
+    return tier.name || tier.realmName || '';
 }
 
 function getRankLevel(dp) {
@@ -3105,7 +3328,7 @@ function getRankLevel(dp) {
     const realmInfo = getUserRealmInfo(dp);
     return {
         ...tier,
-        name: `Bước thứ ${realmInfo.step} - ${realmInfo.name}`,
+        name: formatRankBadge(realmInfo.step, null, realmInfo.realm),
         realm: realmInfo.realm,
         realmName: realmInfo.name,
         realmDesc: realmInfo.desc,
@@ -3115,6 +3338,8 @@ function getRankLevel(dp) {
         realmInfo: realmInfo
     };
 }
+window.getRankLevel = getRankLevel;
+window.getRankTierName = getRankTierName;
 
 function getRankProgressInfo(dp) {
     const currentTier = getRankLevel(dp);
@@ -3570,7 +3795,7 @@ function renderLeaderboard() {
                         ${avatarHtml}
                     </div>
                     <div class="lb-podium-name" title="${escHtml(entry.displayName || 'User')}">${escHtml(entry.displayName || 'User')}${getUserTitleBadgeHTML(entry.equippedTitle)}${adminBadge}${meBadge}</div>
-                    <div class="lb-podium-tier" style="color:${tier.color}" title="${escHtml(tier.stepFullName || '')}">${tier.realmName ? `Bước thứ ${tier.step} - ${tier.realmName}` : getRankTierName(tier)}</div>
+                    <div class="lb-podium-tier" style="color:${tier.color}" title="${escHtml(tier.stepFullName || '')}">${tier.realmName ? formatRankBadge(tier.step, tier.realmName, tier.realm) : getRankTierName(tier)}</div>
                     <div class="lb-podium-dp">${(entry.totalDP || 0).toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div>
                     <div class="lb-podium-streak">🔥 ${entry.streak || 0}</div>
                     ${!isMe ? `
@@ -3627,7 +3852,7 @@ function renderLeaderboard() {
                             </div>
                             <div class="lb-info">
                                 <div class="lb-name">${escHtml(entry.displayName || 'User')}${getUserTitleBadgeHTML(entry.equippedTitle)}${adminBadge}${meBadge}</div>
-                                <div class="lb-tier" title="${escHtml(tier.stepFullName || '')}">${tier.realmName ? `Bước thứ ${tier.step} - ${tier.realmName}` : getRankTierName(tier)} · ${(entry.totalDP || 0).toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div>
+                                <div class="lb-tier" title="${escHtml(tier.stepFullName || '')}">${tier.realmName ? formatRankBadge(tier.step, tier.realmName, tier.realm) : getRankTierName(tier)} · ${(entry.totalDP || 0).toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div>
                             </div>
                             <div class="lb-stats">
                                 <span class="lb-streak">🔥 ${entry.streak || 0}</span>
@@ -3773,7 +3998,7 @@ window._openCommunity = async function() {
         const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'Chiến Binh';
         
         if (nameEl) nameEl.textContent = displayName;
-        if (badgeEl) badgeEl.textContent = rank.realmName ? `Bước thứ ${rank.step} - ${rank.realmName}` : getRankTierName(rank);
+        if (badgeEl) badgeEl.textContent = rank.realmName ? formatRankBadge(rank.step, rank.realmName, rank.realm) : getRankTierName(rank);
         if (avatarMini && window.getAvatarHTML) {
             const customAva = getUserAvatar(currentUser);
             const imgUrl = customAva || `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>`;
@@ -3887,7 +4112,7 @@ async function renderCommunity(forceReload = false) {
             const rankLvl = p.rankLevel || (p.userDP ? getRankLevel(p.userDP).level : 1);
             const rankTier = RANK_TIERS[rankLvl - 1] || RANK_TIERS[0];
             const pRankObj = p.userDP ? getRankLevel(p.userDP) : null;
-            const rankName = p.realmName ? `Bước thứ ${p.step || 1} - ${p.realmName}` : (pRankObj && pRankObj.realmName ? `Bước thứ ${pRankObj.step} - ${pRankObj.realmName}` : getRankTierName(rankTier));
+            const rankName = p.realmName ? formatRankBadge(p.step || 1, p.realmName) : (pRankObj && pRankObj.realmName ? formatRankBadge(pRankObj.step, pRankObj.realmName, pRankObj.realm) : getRankTierName(rankTier));
             const avatarSrc = p.photoURL || `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>`;
             const avatarHtml = window.getAvatarHTML ? window.getAvatarHTML(rankLvl, avatarSrc, 38) : `<img class="cm-avatar" src="${avatarSrc}" alt="">`;
             
@@ -3912,7 +4137,7 @@ async function renderCommunity(forceReload = false) {
                 comments.forEach(c => {
                     const cRankLvl = c.rankLevel || 1;
                     const cRankTier = RANK_TIERS[cRankLvl - 1] || RANK_TIERS[0];
-                    const cRankName = c.realmName ? `Bước thứ ${c.step || 1} - ${c.realmName}` : getRankTierName(cRankTier);
+                    const cRankName = c.realmName ? formatRankBadge(c.step || 1, c.realmName) : getRankTierName(cRankTier);
                     const cTimeStr = formatDetailedPostTime(c.createdAt);
                     const cAvatarSrc = c.photoURL || `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2220%22 fill=%22%2310b981%22/><text x=%2220%22 y=%2226%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2218%22 font-family=%22sans-serif%22>U</text></svg>`;
                     const canDeleteComment = currentUid && (c.uid === currentUid || p.uid === currentUid || isAdmin);
@@ -4193,13 +4418,45 @@ function renderRankTiersShowcase() {
     const imgUrl = customAva || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%2310b981'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(currentUser?.displayName||currentUser?.email||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`;
     const myDisplayName = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User';
 
+    const lang = getAppLanguage();
+    
+    // Localized Showcase Header & Labels
+    const headingTitle = lang === 'en' ? '✦ Consciousness Journey: 7 Steps & 21 Realms ✦' : (lang === 'zh' ? '✦ 意识蜕变之旅：七大阶梯与二十一重境界 ✦' : '✦ Hành Trình Chuyển Hóa: 7 Bước & 21 Cảnh Giới ✦');
+    const headingDesc = lang === 'en' ? 'Mental mastery journey through 7 Steps and 21 Realms — From Unconscious to Supreme Nirvana.' : (lang === 'zh' ? '心智淬炼之旅：跨越七阶二十一境——由无意识通往超脱涅槃。' : 'Hành trình tôi luyện tâm thức qua 7 Bước và 21 Cảnh Giới — Từ Vô thức đến Siêu thoát Niết bàn.');
+    const stepBadgeLabel = lang === 'en' ? `STEP ${myRank.step} • ${myRank.stepName.toUpperCase()}` : (lang === 'zh' ? `第${myRank.step}步 • ${myRank.stepName}` : `BƯỚC THỨ ${myRank.step} • ${myRank.stepName}`);
+    const progressTitle = lang === 'en' ? 'Realm Progress' : (lang === 'zh' ? '境界进度' : 'Tiến độ cảnh giới');
+    const coinIconSm = window.getCoinIconHTML ? window.getCoinIconHTML('sm') : '';
+    const coinIconXs = window.getCoinIconHTML ? window.getCoinIconHTML('xs') : '';
+
+    let nextProgressText = '';
+    if (myRank.realmInfo.dpToNext > 0 && myRank.realmInfo.nextRealm) {
+        const nextR = myRank.realmInfo.nextRealm;
+        const nextRName = getLocalizedRealmName(nextR);
+        if (lang === 'en') {
+            nextProgressText = `${myRank.realmInfo.dpToNext.toLocaleString()} ${coinIconXs} left ➔ Step ${nextR.step} - ${nextRName}`;
+        } else if (lang === 'zh') {
+            nextProgressText = `还需 ${myRank.realmInfo.dpToNext.toLocaleString()} ${coinIconXs} ➔ 第${nextR.step}步 - ${nextRName}`;
+        } else {
+            nextProgressText = `Còn ${myRank.realmInfo.dpToNext.toLocaleString()} ${coinIconXs} ➔ Bước thứ ${nextR.step} - ${nextRName}`;
+        }
+    } else {
+        nextProgressText = lang === 'en' ? 'Reached Supreme Nirvana' : (lang === 'zh' ? '已登临涅槃巅峰' : 'Đã đạt đỉnh cao Niết Bàn');
+    }
+
+    const currentBadgeText = lang === 'en' ? 'CURRENT' : (lang === 'zh' ? '当前境界' : 'ĐANG Ở ĐÂY');
+    const achievedBadgeText = lang === 'en' ? '✓ ACHIEVED' : (lang === 'zh' ? '✓ 已达成' : '✓ ĐÃ ĐẠT');
+    const lockedBadgeText = lang === 'en' ? '🔒 LOCKED' : (lang === 'zh' ? '🔒 未达成' : '🔒 CHƯA ĐẠT');
+    const reqUnlockLabel = lang === 'en' ? 'Unlock requirement:' : (lang === 'zh' ? '解锁要求：' : 'Yêu cầu mở khóa:');
+    const unlockedLabel = lang === 'en' ? '✓ Unlocked' : (lang === 'zh' ? '✓ 已解锁' : '✓ Đã mở khóa');
+    const notUnlockedLabel = lang === 'en' ? '🔒 Locked' : (lang === 'zh' ? '🔒 未解锁' : '🔒 Chưa mở khóa');
+
     let html = `
         <div style="width:100%; max-width:540px; margin:0 auto 20px auto; text-align:center; padding:0 12px;">
             <div style="font-family:var(--font-heading); font-size:17px; font-weight:800; color:var(--accent); letter-spacing:0.03em; margin-bottom:4px; text-transform:uppercase;">
-                ✦ Hành Trình Chuyển Hóa: 7 Bước & 21 Cảnh Giới ✦
+                ${headingTitle}
             </div>
             <div style="font-size:12px; color:var(--text-sub, #94a3b8); line-height:1.45;">
-                Hành trình tôi luyện tâm thức qua 7 Bước và 21 Cảnh Giới — Từ Vô thức đến Siêu thoát Niết bàn.
+                ${headingDesc}
             </div>
         </div>
 
@@ -4207,22 +4464,22 @@ function renderRankTiersShowcase() {
         <div style="width:100%; max-width:480px; margin:0 auto 24px auto; background:var(--bg-card, rgba(13,17,23,0.85)); border:1.5px solid ${myRank.color}; border-radius:18px; padding:16px 20px; box-shadow:0 0 24px ${myRank.color}22; position:relative; overflow:hidden;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
                 <span style="font-size:11px; font-weight:800; color:${myRank.color}; background:${myRank.color}22; padding:3px 10px; border-radius:12px; border:1px solid ${myRank.color}44; text-transform:uppercase;">
-                    BƯỚC THỨ ${myRank.step} • ${myRank.stepName}
+                    ${stepBadgeLabel}
                 </span>
                 <span style="font-size:12.5px; font-weight:800; color:var(--text-main); font-family:var(--font-mono, monospace);">
-                    ${myDP.toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('sm') : ''}
+                    ${myDP.toLocaleString()} ${coinIconSm}
                 </span>
             </div>
             <div style="font-size:17.5px; font-weight:800; color:${myRank.color}; margin-bottom:4px;">
-                <span>Bước thứ ${myRank.step} - ${myRank.realmName}</span>
+                <span>${formatRankBadge(myRank.step, myRank.realmName, myRank.realm)}</span>
             </div>
             <div style="font-size:12px; font-style:italic; color:var(--text-sub, #94a3b8); line-height:1.45; margin-bottom:12px;">
                 "${myRank.realmDesc}"
             </div>
             <div style="margin-top:8px;">
                 <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-sub); margin-bottom:5px;">
-                    <span>Tiến độ cảnh giới</span>
-                    <span style="font-weight:700; color:${myRank.color};">${myRank.realmInfo.dpToNext > 0 ? `Còn ${myRank.realmInfo.dpToNext.toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''} ➔ Bước thứ ${myRank.realmInfo.nextRealm.step} - ${myRank.realmInfo.nextRealm.name}` : 'Đã đạt đỉnh cao Niết Bàn'}</span>
+                    <span>${progressTitle}</span>
+                    <span style="font-weight:700; color:${myRank.color};">${nextProgressText}</span>
                 </div>
                 <div style="height:7px; background:rgba(255,255,255,0.08); border-radius:6px; overflow:hidden;">
                     <div style="height:100%; width:${myRank.realmInfo.pct}%; background:${myRank.color}; border-radius:6px; transition:width 0.3s ease;"></div>
@@ -4237,8 +4494,7 @@ function renderRankTiersShowcase() {
         const level = idx + 1;
         const achieved = myDP >= tier.minDp;
         const cardHtml = window.getFullRankCardHTML ? window.getFullRankCardHTML(level, imgUrl, 0.65, myDisplayName, getRankTierName(tier)) : '';
-        const coinIcon = window.getCoinIconHTML ? window.getCoinIconHTML('xs') : '';
-        const dpText = `${tier.minDp.toLocaleString()} ${coinIcon}${tier.maxDp !== Infinity ? ` – ${tier.maxDp.toLocaleString()} ${coinIcon}` : '+'}`;
+        const dpText = `${tier.minDp.toLocaleString()} ${coinIconXs}${tier.maxDp !== Infinity ? ` – ${tier.maxDp.toLocaleString()} ${coinIconXs}` : '+'}`;
         
         // Find sub-realms belonging to this Level
         const levelRealms = REALM_TIERS.filter(r => r.level === level);
@@ -4250,19 +4506,19 @@ function renderRankTiersShowcase() {
                 const isPassed = myDP >= r.minDp;
                 const isCurrent = myDP >= r.minDp && (r.maxDp === Infinity || myDP <= r.maxDp);
                 const statusColor = isCurrent ? r.color : (isPassed ? '#10b981' : '#64748b');
-                const statusBadge = isCurrent ? `<span style="font-size:10px; font-weight:800; padding:2px 8px; border-radius:8px; background:${r.color}22; color:${r.color}; border:1px solid ${r.color}55;">ĐANG Ở ĐÂY</span>` : (isPassed ? '<span style="font-size:10px; font-weight:700; color:#10b981;">✓ ĐÃ ĐẠT</span>' : '<span style="font-size:10px; font-weight:600; color:#64748b;">🔒 CHƯA ĐẠT</span>');
+                const statusBadge = isCurrent ? `<span style="font-size:10px; font-weight:800; padding:2px 8px; border-radius:8px; background:${r.color}22; color:${r.color}; border:1px solid ${r.color}55;">${currentBadgeText}</span>` : (isPassed ? `<span style="font-size:10px; font-weight:700; color:#10b981;">${achievedBadgeText}</span>` : `<span style="font-size:10px; font-weight:600; color:#64748b;">${lockedBadgeText}</span>`);
                 
                 realmsListHtml += `
                     <div style="border-left:3px solid ${statusColor}; padding-left:10px; margin-bottom:2px;">
                         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
                             <div style="font-size:12.5px; font-weight:700; color:${isCurrent ? r.color : 'var(--text-main)'};">
-                                Bước thứ ${r.step} - ${r.name}
-                                <span style="font-size:11px; font-weight:400; color:var(--text-sub); opacity:0.8; margin-left:4px;">(${r.minDp.toLocaleString()} - ${r.maxDp !== Infinity ? r.maxDp.toLocaleString() : '∞'} ${coinIcon})</span>
+                                ${formatRankBadge(r.step, null, r)}
+                                <span style="font-size:11px; font-weight:400; color:var(--text-sub); opacity:0.8; margin-left:4px;">(${r.minDp.toLocaleString()} - ${r.maxDp !== Infinity ? r.maxDp.toLocaleString() : '∞'} ${coinIconXs})</span>
                             </div>
                             <div>${statusBadge}</div>
                         </div>
                         <div style="font-size:11px; color:var(--text-sub, #94a3b8); font-style:italic; line-height:1.35; margin-top:2px;">
-                            ${r.desc}
+                            ${getLocalizedRealmDesc(r)}
                         </div>
                     </div>
                 `;
@@ -4274,7 +4530,7 @@ function renderRankTiersShowcase() {
             <div class="rank-card-wrapper ${achieved ? 'achieved' : 'locked'}" style="width:100%; max-width:480px; padding:16px; border-radius:18px; display:flex; flex-direction:column; align-items:center;">
                 ${cardHtml}
                 <div class="rank-card-requirement" style="margin-top:10px; font-size:12px;">
-                    Yêu cầu mở khóa: <span style="color:${tier.color}; font-weight:700;">${dpText}</span> · ${achieved ? '<span style="color:#10b981; font-weight:700;">✓ Đã mở khóa</span>' : '<span style="color:#ef4444; font-weight:700;">🔒 Chưa mở khóa</span>'}
+                    ${reqUnlockLabel} <span style="color:${tier.color}; font-weight:700;">${dpText}</span> · ${achieved ? `<span style="color:#10b981; font-weight:700;">${unlockedLabel}</span>` : `<span style="color:#ef4444; font-weight:700;">${notUnlockedLabel}</span>`}
                 </div>
                 ${realmsListHtml}
             </div>
@@ -10918,35 +11174,47 @@ function renderGuideContent(tabKey) {
     
     curGuideTab = tabKey || 'quickstart';
     const data = GUIDE_SECTIONS[curGuideTab] || GUIDE_SECTIONS.quickstart;
+    const lang = getAppLanguage();
+
+    const heroTitle = lang === 'en' ? (data.heroTitleEn || data.heroTitle) : (lang === 'zh' ? (data.heroTitleZh || data.heroTitle) : data.heroTitle);
+    const heroDesc = lang === 'en' ? (data.heroDescEn || data.heroDesc) : (lang === 'zh' ? (data.heroDescZh || data.heroDesc) : data.heroDesc);
+    const tipText = lang === 'en' ? (data.tipEn || data.tip) : (lang === 'zh' ? (data.tipZh || data.tip) : data.tip);
 
     let cardsHtml = '';
     if (data.cards && data.cards.length > 0) {
         cardsHtml = `
             <div class="guide-cards-grid">
-                ${data.cards.map(card => `
-                    <div class="guide-card">
-                        <div class="guide-card-header">
-                            <span class="guide-card-icon">${card.icon}</span>
-                            <span class="guide-card-title">${card.title}</span>
-                            ${card.badge ? `<span class="guide-card-badge">${card.badge}</span>` : ''}
-                        </div>
-                        <div class="guide-steps">
-                            ${card.steps.map((st, idx) => `
-                                <div class="guide-step-item">
-                                    <span class="guide-step-num">${idx + 1}</span>
-                                    <div>${st}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                        ${card.action ? `
-                            <div class="guide-action-row">
-                                <button type="button" class="guide-action-btn" onclick="${card.action.onClick}">
-                                    ${card.action.label} →
-                                </button>
+                ${data.cards.map(card => {
+                    const cTitle = lang === 'en' ? (card.titleEn || card.title) : (lang === 'zh' ? (card.titleZh || card.title) : card.title);
+                    const cBadge = lang === 'en' ? (card.badgeEn || card.badge) : (lang === 'zh' ? (card.badgeZh || card.badge) : card.badge);
+                    const cSteps = lang === 'en' ? (card.stepsEn || card.steps) : (lang === 'zh' ? (card.stepsZh || card.steps) : card.steps);
+                    const actionLabel = card.action ? (lang === 'en' ? (card.action.labelEn || card.action.label) : (lang === 'zh' ? (card.action.labelZh || card.action.label) : card.action.label)) : '';
+
+                    return `
+                        <div class="guide-card">
+                            <div class="guide-card-header">
+                                <span class="guide-card-icon">${card.icon}</span>
+                                <span class="guide-card-title">${cTitle}</span>
+                                ${cBadge ? `<span class="guide-card-badge">${cBadge}</span>` : ''}
                             </div>
-                        ` : ''}
-                    </div>
-                `).join('')}
+                            <div class="guide-steps">
+                                ${cSteps.map((st, idx) => `
+                                    <div class="guide-step-item">
+                                        <span class="guide-step-num">${idx + 1}</span>
+                                        <div>${st}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            ${card.action ? `
+                                <div class="guide-action-row">
+                                    <button type="button" class="guide-action-btn" onclick="${card.action.onClick}">
+                                        ${actionLabel} →
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('')}
             </div>
         `;
     }
@@ -10955,12 +11223,12 @@ function renderGuideContent(tabKey) {
         <div class="guide-hero">
             <div class="guide-hero-icon">${data.icon}</div>
             <div class="guide-hero-info">
-                <h3>${data.heroTitle}</h3>
-                <p>${data.heroDesc}</p>
+                <h3>${heroTitle}</h3>
+                <p>${heroDesc}</p>
             </div>
         </div>
         ${cardsHtml}
-        ${data.tip ? `<div class="guide-tip">${data.tip}</div>` : ''}
+        ${tipText ? `<div class="guide-tip">${tipText}</div>` : ''}
     `;
 }
 
@@ -11541,7 +11809,7 @@ function renderInboxDiscoverList() {
         const frameLevel = tier.level || 1;
         const avatarSrc = u.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.displayName || 'U')}&background=0d1117&color=10b981&bold=true`;
         const avatarHtml = window.getAvatarHTML ? window.getAvatarHTML(frameLevel, avatarSrc, 38) : `<img style="width:38px;height:38px;border-radius:50%;" src="${avatarSrc}" alt="">`;
-        const realmStr = tier.realmName ? `Bước ${tier.step} · ${tier.realmName}` : getRankTierName(tier);
+        const realmStr = tier.realmName ? formatRankBadge(tier.step, tier.realmName, tier.realm) : getRankTierName(tier);
 
         html += `
             <div class="inbox-user-card">
@@ -11648,7 +11916,7 @@ function selectConversation(convId, partnerInfo) {
         const frameLevel = partnerInfo.rankLevel || 1;
         const avatarSrc = partnerInfo.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(partnerInfo.displayName || 'U')}&background=0d1117&color=10b981&bold=true`;
         const avatarHtml = window.getAvatarHTML ? window.getAvatarHTML(frameLevel, avatarSrc, 38) : `<img style="width:38px;height:38px;border-radius:50%;" src="${avatarSrc}" alt="">`;
-        const realmStr = partnerInfo.realmName ? `Bước thứ ${partnerInfo.step || 1} - ${partnerInfo.realmName}` : 'Đồng đội rèn luyện';
+        const realmStr = partnerInfo.realmName ? formatRankBadge(partnerInfo.step || 1, partnerInfo.realmName) : (curLang === 'en' ? 'Training Partner' : (curLang === 'zh' ? '自律同行伙伴' : 'Đồng đội rèn luyện'));
 
         headerPartner.innerHTML = `
             <div style="flex-shrink:0;">${avatarHtml}</div>
