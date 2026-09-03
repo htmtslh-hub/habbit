@@ -4531,7 +4531,7 @@ function renderQuestPanel() {
 
     // Pinned Zalo Quest Card if not claimed yet (shows at top of ALL tabs for maximum discoverability)
     if (!isZaloClaimed && questActiveFilter !== 'achievement') {
-        html += `<div class="quest-card ready zalo-quest-card" style="margin-bottom:12px;">
+        html += `<div class="quest-card ready zalo-quest-card" style="margin-bottom:12px; flex-shrink:0;">
             <div class="quest-card-header">
                 <span class="quest-icon" style="color:#0088ff;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg></span>
                 <div class="quest-card-title">
@@ -4572,10 +4572,11 @@ function renderQuestPanel() {
         }
     } else {
         quests.forEach(q => {
+            const qName = curLang === 'en' ? q.nameEn : (curLang === 'zh' ? q.nameZh : q.name);
             if (q.id === 'a_join_zalo') {
                 const isClaimed = !!(S.questData && S.questData.claimed && S.questData.claimed[q.id]);
                 const qDesc = curLang === 'en' ? (q.descEn || q.desc) : (curLang === 'zh' ? (q.descZh || q.desc) : q.desc);
-                html += `<div class="quest-card ${isClaimed ? 'claimed' : 'ready'} zalo-quest-card">
+                html += `<div class="quest-card ${isClaimed ? 'claimed' : 'ready'} zalo-quest-card" style="flex-shrink:0;">
                     <div class="quest-card-header">
                         <span class="quest-icon" style="color:#0088ff;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg></span>
                         <div class="quest-card-title">
@@ -4597,7 +4598,6 @@ function renderQuestPanel() {
 
             const completed = q.check(ctx);
             const claimed = !!S.questData.claimed[q.id];
-            const qName = curLang === 'en' ? q.nameEn : (curLang === 'zh' ? q.nameZh : q.name);
             const statusClass = claimed ? 'claimed' : completed ? 'ready' : 'locked';
 
             html += `<div class="quest-card ${statusClass}">
