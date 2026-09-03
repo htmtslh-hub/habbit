@@ -4525,8 +4525,29 @@ function renderQuestPanel() {
 
     const ctx = getQuestContext();
     const quests = QUEST_DEFINITIONS.filter(q => q.type === questActiveFilter || (questActiveFilter === 'weekly' && q.type === 'weekly'));
+    const isZaloClaimed = !!(S.questData && S.questData.claimed && S.questData.claimed['a_join_zalo']);
 
     let html = '';
+
+    // Pinned Zalo Quest Card if not claimed yet (shows at top of ALL tabs for maximum discoverability)
+    if (!isZaloClaimed && questActiveFilter !== 'achievement') {
+        html += `<div class="quest-card ready zalo-quest-card" style="margin-bottom:12px;">
+            <div class="quest-card-header">
+                <span class="quest-icon" style="color:#0088ff;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg></span>
+                <div class="quest-card-title">
+                    <div class="quest-name" style="color:#38bdf8; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                        Gia Nhập Nhóm Chat Zalo
+                        <span class="zalo-badge-pill">CỐ ĐỊNH</span>
+                    </div>
+                    <div class="quest-desc">Tham gia nhóm chat Zalo cộng đồng Habit Mastery để nhận 1.000 DP & kết nối đồng đội</div>
+                </div>
+                <div class="quest-dp-badge" style="background:rgba(0,136,255,0.15); color:#38bdf8; border:1px solid rgba(0,136,255,0.35);">+1.000 ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div>
+            </div>
+            <div class="quest-card-footer" style="gap:8px; align-items:center;">
+                <button class="quest-claim-btn zalo-quest-btn" onclick="window._openZaloQuestModal()"><svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg> 📱 Tham Gia & Nhận 1.000 DP</button>
+            </div>
+        </div>`;
+    }
 
     if (questActiveFilter === 'surprise') {
         // Render surprise quests from admin
