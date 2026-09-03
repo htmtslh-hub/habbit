@@ -888,7 +888,7 @@ function initDesktopGateway() {
 async function checkAuth(){
     const urlParams = new URLSearchParams(window.location.search);
     const mode = urlParams.get('mode');
-    if (mode === 'desktop') {
+    if (mode === 'desktop' || mode === 'preview' || urlParams.has('preview')) {
         return;
     }
 

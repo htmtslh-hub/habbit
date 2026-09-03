@@ -1467,11 +1467,19 @@
      * Khởi tạo widget chọn ngôn ngữ (Language Switcher)
      */
     function mountLanguageSwitcher() {
+        // Nếu trang đã có bất kỳ nút chuyển đổi ngôn ngữ nào (#navLangSwitch, #authLangPills, .auth-card-lang-bar), KHÔNG mount widget nổi đè lên!
+        if (document.getElementById('navLangSwitch') || 
+            document.getElementById('authLangPills') || 
+            document.querySelector('.auth-card-lang-bar') || 
+            document.querySelector('[data-no-floating-lang]')) {
+            const existing = document.getElementById('hmLanguageSwitcher');
+            if (existing) existing.remove();
+            return;
+        }
+
         // Tự động inject CSS cho floating switcher nếu chưa có
         injectSwitcherStyles();
 
-        // Nếu trang đã có #navLangSwitch (như navbar của index.html), không bắt buộc phải mount floating widget đè lên
-        if (document.getElementById('navLangSwitch')) return;
         if (document.getElementById('hmLanguageSwitcher')) return;
 
         const switcherContainer = document.createElement('div');
