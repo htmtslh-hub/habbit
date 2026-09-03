@@ -512,7 +512,7 @@ function switchSection(section){
         dashboard: 'Dashboard', 
         users: 'Quản lý User', 
         pending: 'Chờ duyệt', 
-        quests: 'Nhiệm vụ Đột xuất', 
+        quests: 'Nhiệm vụ & Zalo Code', 
         messages: 'Hộp Thư Chat & Hỗ Trợ User' 
     };
     const titleText = titles[section] || 'Dashboard';
@@ -520,6 +520,10 @@ function switchSection(section){
     if (pageTitle) pageTitle.textContent = titleText;
     const mobilePageTitle = document.getElementById('mobilePageTitle');
     if (mobilePageTitle) mobilePageTitle.textContent = titleText;
+
+    if (section === 'quests') {
+        loadZaloSecretCode();
+    }
 
     // Close mobile drawer if open
     closeMobileDrawer();
@@ -2243,6 +2247,54 @@ window._adminOpenChatFromModal = function() {
     const modal = document.getElementById('userModal');
     if (modal) modal.style.display = 'none';
     window._adminOpenChat(targetUid);
+};
+
+// ===== ZALO QUEST SECRET CODE MANAGEMENT =====
+async function loadZaloSecretCode() {
+    const input = document.getElementById('adminZaloSecretCode');
+    const status = document.getElementById('zaloSecretCodeStatus');
+    if (!input || !db) return;
+    try {
+        const doc = await db.collection('system_config').doc('zalo_quest').get();
+        if (doc.exists && doc.data() && doc.data().secretCode) {
+            input.value = doc.data().secretCode;
+        } else {
+            input.value = 'HABIT2026';
+        }
+    } catch(e) {
+        console.warn('Load Zalo secret code error:', e);
+        input.value = 'HABIT2026';
+    }
+}
+window._loadZaloSecretCode = loadZaloSecretCode;
+
+window._saveZaloSecretCode = async function() {
+    const input = document.getElementById('adminZaloSecretCode');
+    const status = document.getElementById('zaloSecretCodeStatus');
+    const btn = document.getElementById('btnSaveZaloSecretCode');
+    if (!input || !db) return;
+    const newCode = input.value.trim().toUpperCase();
+    if (!newCode) {
+        alert('Vui lòng nhập mã bí mật Zalo!');
+        return;
+    }
+    try {
+        if (btn) btn.disabled = true;
+        await db.collection('system_config').doc('zalo_quest').set({
+            secretCode: newCode,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedBy: currentAdmin?.email || currentAdmin?.uid || 'admin'
+        }, { merge: true });
+        if (status) {
+            status.style.color = '#10b981';
+            status.innerHTML = `✓ Đã lưu mã bí mật mới: <strong>${newCode}</strong>. Thành viên nhập mã này sẽ nhận 1.000 DP!`;
+            setTimeout(() => { if (status) status.innerHTML = ''; }, 6000);
+        }
+    } catch(e) {
+        alert('Lỗi lưu mã Zalo: ' + e.message);
+    } finally {
+        if (btn) btn.disabled = false;
+    }
 };
 
 // ===== INIT =====

@@ -79,7 +79,7 @@
         wrap.className = 'vn-brand-flag-wrap';
         wrap.innerHTML = `
             <span class="vn-brand-flag" title="Quốc kỳ Việt Nam">
-                <img src="assets/vietnam_silk_flag.jpg" alt="🇻🇳">
+                <img src="assets/vietnam_flag.svg" alt="🇻🇳">
             </span>
         `;
         brand.appendChild(wrap);

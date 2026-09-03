@@ -4566,6 +4566,332 @@ body {
 .quest-toast { position:fixed; bottom:-60px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg,#0d1117,#1e293b); border:1px solid rgba(16,185,129,.3); color:#f1f5f9; padding:12px 24px; border-radius:14px; font-size:14px; font-weight:600; z-index:99999; transition:all .4s cubic-bezier(.16,1,.3,1); display:flex; align-items:center; gap:8px; box-shadow:0 10px 30px rgba(0,0,0,.5); font-family:Outfit,sans-serif; }
 .quest-toast.show { bottom:30px; }
 
+/* ==================== ZALO QUEST & MODAL ==================== */
+.quest-card.zalo-quest-card {
+    border-color: rgba(0, 136, 255, 0.35);
+    background: linear-gradient(135deg, rgba(0, 104, 255, 0.08) 0%, rgba(13, 17, 23, 0.6) 100%);
+    box-shadow: 0 4px 20px rgba(0, 104, 255, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+.quest-card.zalo-quest-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #0088ff, #00f2fe, #10b981);
+}
+.zalo-badge-pill {
+    background: linear-gradient(135deg, #0088ff, #0050d4);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(0, 104, 255, 0.35);
+}
+.quest-claim-btn.zalo-quest-btn {
+    background: linear-gradient(135deg, #0088ff, #0052d9);
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 104, 255, 0.35);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.quest-claim-btn.zalo-quest-btn:hover {
+    background: linear-gradient(135deg, #0099ff, #0060f0);
+    box-shadow: 0 6px 20px rgba(0, 104, 255, 0.55);
+    transform: translateY(-1.5px);
+}
+
+.zalo-quest-modal {
+    max-width: 480px;
+    text-align: center;
+}
+.zalo-modal-body {
+    padding: 20px 24px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+}
+.zalo-reward-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(0, 136, 255, 0.12);
+    border: 1px solid rgba(0, 136, 255, 0.3);
+    margin-bottom: 12px;
+}
+.zalo-reward-text {
+    font-size: 12.5px;
+    color: #38bdf8;
+    font-family: Outfit, sans-serif;
+}
+.zalo-reward-dp {
+    color: #ffd700;
+    font-weight: 800;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+.zalo-modal-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #f1f5f9;
+    margin: 0 0 8px;
+    font-family: Outfit, sans-serif;
+}
+.zalo-modal-desc {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.5;
+    margin: 0 0 18px;
+    max-width: 380px;
+}
+.zalo-modal-qr-card {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1.5px solid rgba(0, 136, 255, 0.35);
+    border-radius: 18px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    margin-bottom: 20px;
+    max-width: 240px;
+}
+.zalo-modal-qr-card:hover {
+    border-color: #0088ff;
+    box-shadow: 0 10px 35px rgba(0, 104, 255, 0.3);
+    transform: translateY(-2px);
+}
+.zalo-modal-qr-img {
+    width: 170px;
+    height: 170px;
+    border-radius: 12px;
+    object-fit: contain;
+    background: #fff;
+    padding: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+.zalo-modal-qr-hint {
+    font-size: 11px;
+    color: #38bdf8;
+    font-weight: 600;
+    margin-top: 10px;
+    line-height: 1.3;
+}
+.zalo-modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 340px;
+}
+.btn-zalo-open {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #0088ff, #0052d9);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 11px 18px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 4px 18px rgba(0, 104, 255, 0.35);
+    font-family: Outfit, sans-serif;
+}
+.btn-zalo-open:hover {
+    background: linear-gradient(135deg, #0099ff, #0060f0);
+    box-shadow: 0 6px 24px rgba(0, 104, 255, 0.5);
+    transform: translateY(-1px);
+    color: #fff;
+}
+.btn-zalo-claim {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: none;
+    color: #fff;
+    font-weight: 800;
+    font-size: 13.5px;
+    padding: 11px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 18px rgba(16, 185, 129, 0.35);
+    font-family: Outfit, sans-serif;
+}
+.btn-zalo-claim:hover:not(:disabled) {
+    background: linear-gradient(135deg, #34d399, #10b981);
+    box-shadow: 0 6px 24px rgba(16, 185, 129, 0.5);
+    transform: translateY(-1px);
+}
+.btn-zalo-claim.claimed, .btn-zalo-claim:disabled {
+    background: rgba(255, 255, 255, 0.08);
+    color: #eab308;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+.zalo-steps-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: rgba(0, 136, 255, 0.06);
+    border: 1px solid rgba(0, 136, 255, 0.2);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    width: 100%;
+    max-width: 360px;
+    text-align: left;
+}
+.zalo-step-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: #cbd5e1;
+    line-height: 1.4;
+}
+.zalo-step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0088ff, #0052d9);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0, 104, 255, 0.4);
+}
+.zalo-code-input-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    text-align: left;
+    margin: 6px 0;
+}
+.zalo-code-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #38bdf8;
+    letter-spacing: 0.5px;
+    font-family: Outfit, sans-serif;
+}
+.zalo-code-field {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+}
+.zalo-code-input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1.5px solid rgba(0, 136, 255, 0.35);
+    border-radius: 12px;
+    color: #f1f5f9;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Courier New', Courier, monospace;
+    outline: none;
+    transition: all 0.2s;
+}
+.zalo-code-input:focus {
+    border-color: #0088ff;
+    background: rgba(0, 136, 255, 0.08);
+    box-shadow: 0 0 16px rgba(0, 104, 255, 0.35);
+}
+.btn-zalo-paste {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #cbd5e1;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: Outfit, sans-serif;
+    white-space: nowrap;
+}
+.btn-zalo-paste:hover {
+    background: rgba(0, 136, 255, 0.2);
+    border-color: #0088ff;
+    color: #fff;
+}
+.zalo-code-error {
+    font-size: 12px;
+    color: #f87171;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    padding: 6px 10px;
+    line-height: 1.35;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+}
+.shake {
+    animation: shake 0.4s ease-in-out;
+}
+
+/* Light Mode Overrides for Zalo Quest */
+[data-theme="light"] .quest-card.zalo-quest-card {
+    background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+    border-color: #93c5fd;
+    box-shadow: 0 4px 16px rgba(0, 104, 255, 0.06);
+}
+[data-theme="light"] .zalo-modal-title {
+    color: #1e293b;
+}
+[data-theme="light"] .zalo-modal-desc {
+    color: #64748b;
+}
+[data-theme="light"] .zalo-steps-box {
+    background: #f0f7ff;
+    border-color: #bfdbfe;
+}
+[data-theme="light"] .zalo-step-item {
+    color: #334155;
+}
+[data-theme="light"] .zalo-code-input {
+    background: #f8fafc;
+    border-color: #93c5fd;
+    color: #0f172a;
+}
+[data-theme="light"] .btn-zalo-paste {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    color: #334155;
+}
+[data-theme="light"] .zalo-modal-qr-card {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
 /* ==================== TABS & MODAL SCROLLING ==================== */
 .lb-tab-panel {
     display: flex;

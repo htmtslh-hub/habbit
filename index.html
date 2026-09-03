@@ -16,9 +16,9 @@
     <link rel="apple-touch-icon" href="./icon-512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="style.css?v=5.7.0">
+    <link rel="stylesheet" href="style.css?v=5.7.1">
     <!-- Vietnam National Day 2/9 Event Theme (Active until Sept 3, 2026) -->
-    <link rel="stylesheet" href="national_day_2026.css?v=2.9.2026">
+    <link rel="stylesheet" href="national_day_2026.css?v=2.9.2026.1">
 
     <!-- Firebase SDK (CDN) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -63,6 +63,7 @@
     <symbol id="i-dp" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" stroke="#fbbf24" stroke-width="2.2" fill="#090d16"></circle><circle cx="24" cy="24" r="18" stroke="#10b981" stroke-width="1" stroke-dasharray="3 2" opacity="0.85"></circle><polygon points="24,9 36,30 12,30" stroke="#10b981" stroke-width="1.2" fill="none" opacity="0.5"></polygon><polygon points="24,39 36,18 12,18" stroke="#10b981" stroke-width="1.2" fill="none" opacity="0.5"></polygon><polygon points="24,10 34,24 24,38 14,24" fill="#10b981"></polygon><polygon points="24,10 24,38 14,24" fill="#ffffff" opacity="0.35"></polygon><polygon points="24,15 30,24 24,33 18,24" fill="#042f2e" opacity="0.6"></polygon><circle cx="24" cy="24" r="2.8" fill="#00f2fe"></circle></symbol>
     <symbol id="i-streak" viewBox="0 0 48 48"><path d="M24 4l7 11-3 6 6 6-10 17-10-17 6-6-3-6z"></path><path d="M24 4l3.5 12M24 4l-3.5 12" stroke-width="1"></path><path d="M18 26l-4 3.5M30 26l4 3.5" stroke-width="1"></path><path d="M24 21l5 9-5 10-5-10z" fill="#BEEFFF" stroke="none"></path></symbol>
     <symbol id="i-spark" viewBox="0 0 48 48"><path d="M24 5l4 15 15 4-15 4-4 15-4-15-15-4 15-4z" fill="#BEEFFF" stroke="none"></path><circle cx="24" cy="24" r="15.5" stroke-width="0.9" stroke-dasharray="1.5 3.5"></circle><path d="M39 8l1.2 3.3 3.3 1.2-3.3 1.2L39 17l-1.2-3.3-3.3-1.2 3.3-1.2z" fill="#BEEFFF" stroke="none"></path><path d="M10 34l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z" fill="#BEEFFF" stroke="none"></path></symbol>
+    <symbol id="i-zalo" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#0068ff"></circle><path d="M13 17h10l-9 14h11M26 17v14h10M37 24a4.5 4.5 0 1 1 0-.01" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></symbol>
     <symbol id="i-sigil" viewBox="0 0 48 48"><path d="M24 4l16 20-16 20L8 24z"></path><path d="M24 4v40M8 24h32" stroke-width="1"></path><path d="M24 14l8 10-8 10-8-10z" fill="#FFD37A" stroke="none"></path><circle cx="24" cy="24" r="1.6" fill="#05090a" stroke="none"></circle></symbol>
     <symbol id="i-target" viewBox="0 0 48 48"><circle cx="24" cy="24" r="15"></circle><circle cx="24" cy="24" r="11" stroke-width="1"></circle><circle cx="24" cy="24" r="8"></circle><circle cx="24" cy="24" r="2.5" fill="#FFD37A" stroke="none"></circle><path d="M24 4v8M24 36v8M4 24h8M36 24h8"></path><path d="M24 9v4M24 35v4M9 24h4M35 24h4" stroke-width="1"></path></symbol>
     <symbol id="i-cycle" viewBox="0 0 48 48"><path d="M24 9a15 15 0 1 1-15 15"></path><path d="M24 12.5a11.5 11.5 0 1 1-11.5 11.5" stroke-width="1"></path><path d="M24 24V14a10 10 0 0 1 10 10z" fill="#FFD37A" stroke="none"></path><circle cx="24" cy="24" r="2" fill="#FFD37A" stroke="none"></circle></symbol>
@@ -516,6 +517,65 @@
                 <button class="lb-tab-btn quest-tab-btn" data-filter="surprise"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> <span data-i18n="questSurprise">Đột xuất</span></button>
             </div>
             <div class="quest-feed-container" id="questFeedContainer"></div>
+        </div>
+    </div>
+
+    <!-- ZALO QUEST DETAIL MODAL -->
+    <div class="modal-bg zalo-quest-modal-bg" id="zaloQuestModalBg" style="display:none;" onclick="if(event.target===this)window._closeZaloQuestModal()">
+        <div class="lb-modal zalo-quest-modal">
+            <div class="lb-modal-header">
+                <h2><svg class="rune-inline rune-md" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg> NHIỆM VỤ NHÓM CHAT ZALO</h2>
+                <button class="lb-close-btn" onclick="window._closeZaloQuestModal()" title="Đóng"><svg class="rune-icon rune-sm" viewBox="0 0 48 48"><use href="#i-close"></use></svg></button>
+            </div>
+            <div class="zalo-modal-body">
+                <div class="zalo-reward-tag">
+                    <span class="zalo-reward-icon">🎁</span>
+                    <span class="zalo-reward-text">Phần Thưởng Cố Định: <strong class="zalo-reward-dp">+1.000 DP</strong></span>
+                </div>
+                <h3 class="zalo-modal-title">Gia Nhập Cộng Đồng Zalo Habit Mastery</h3>
+                <p class="zalo-modal-desc">Tham gia nhóm chat Zalo để kết nối cùng những người bạn đồng hành kỷ luật, chia sẻ mục tiêu rèn luyện mỗi ngày và nhận hỗ trợ trực tiếp từ Admin.</p>
+
+                <!-- Steps Guide -->
+                <div class="zalo-steps-box">
+                    <div class="zalo-step-item">
+                        <span class="zalo-step-num">1</span>
+                        <span>Quét mã QR hoặc bấm <strong>"Mở Nhóm Zalo"</strong> để tham gia.</span>
+                    </div>
+                    <div class="zalo-step-item">
+                        <span class="zalo-step-num">2</span>
+                        <span>Đọc <strong>Mã bí mật</strong> được ghim ở đầu nhóm chat Zalo.</span>
+                    </div>
+                    <div class="zalo-step-item">
+                        <span class="zalo-step-num">3</span>
+                        <span>Nhập mã bí mật vào ô bên dưới và bấm <strong>"Nhận 1.000 DP"</strong>!</span>
+                    </div>
+                </div>
+                
+                <div class="zalo-modal-qr-card" onclick="window._openZaloLink()" title="Bấm để mở nhóm Zalo">
+                    <img src="zalo-qr.png" alt="Mã QR Nhóm Zalo Habit Mastery" class="zalo-modal-qr-img">
+                    <div class="zalo-modal-qr-hint">📱 Quét mã bằng Zalo trên điện thoại hoặc bấm nút mở bên dưới</div>
+                </div>
+
+                <div class="zalo-modal-actions">
+                    <a href="https://zalo.me/g/wrcfyarfbc6tljvkmgst" target="_blank" rel="noopener noreferrer" class="btn-zalo-open" onclick="window._onZaloOpened()">
+                        <svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg> 1. Mở Nhóm Zalo (zalo.me) ↗
+                    </a>
+
+                    <!-- Passcode Verification Box -->
+                    <div class="zalo-code-input-wrap" id="zaloCodeInputWrap">
+                        <label for="zaloSecretCodeInput" class="zalo-code-label">🔑 NHẬP MÃ BÍ MẬT TỪ BÀI GHIM ZALO:</label>
+                        <div class="zalo-code-field">
+                            <input type="text" id="zaloSecretCodeInput" class="zalo-code-input" placeholder="Nhập mã bí mật từ bài ghim..." autocomplete="off" spellcheck="false" maxlength="30" onkeydown="if(event.key==='Enter')window._claimZaloRewardFromModal()">
+                            <button type="button" class="btn-zalo-paste" onclick="window._pasteZaloCode()" title="Dán từ bộ nhớ tạm">📋 Dán</button>
+                        </div>
+                        <div class="zalo-code-error" id="zaloCodeError" style="display:none;"></div>
+                    </div>
+
+                    <button class="btn-zalo-claim" id="btnZaloClaim" onclick="window._claimZaloRewardFromModal()">
+                        ✨ 2. Xác Nhận & Nhận 1.000 DP Ngay
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1352,14 +1412,14 @@
     </div>
 
     <!-- SCRIPTS -->
-    <script src="gotiengviet.js?v=5.7.0"></script>
-    <script src="nameplate_templates.js?v=5.7.0"></script>
-    <script src="avatar_frames.js?v=5.7.0"></script>
-    <script src="book_covers.js?v=5.7.0"></script>
-    <script src="doc_nhan_tinh_data.js?v=5.7.0"></script>
-    <script src="all_books_data.js?v=5.7.0"></script>
-    <script src="app.js?v=5.7.0"></script>
+    <script src="gotiengviet.js?v=5.7.1"></script>
+    <script src="nameplate_templates.js?v=5.7.1"></script>
+    <script src="avatar_frames.js?v=5.7.1"></script>
+    <script src="book_covers.js?v=5.7.1"></script>
+    <script src="doc_nhan_tinh_data.js?v=5.7.1"></script>
+    <script src="all_books_data.js?v=5.7.1"></script>
+    <script src="app.js?v=5.7.1"></script>
     <!-- Vietnam National Day 2/9 Event Script -->
-    <script src="national_day_2026.js?v=2.9.2026"></script>
+    <script src="national_day_2026.js?v=2.9.2026.1"></script>
 </body>
 </html>

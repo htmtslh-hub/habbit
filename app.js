@@ -4312,6 +4312,9 @@ const QUEST_DEFINITIONS = [
     { id:'w_inspire', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Người Truyền Cảm Hứng', nameEn:'Inspirator', nameZh:'激励者', desc:'Bài viết nhận ≥5 likes', dp:80,
       check: (ctx) => ctx.maxPostLikes >= 5 },
     // Achievement (permanent)
+    { id:'a_join_zalo', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48" style="color:#0088ff;"><use href="#i-zalo"></use></svg>', name:'Gia Nhập Nhóm Chat Zalo', nameEn:'Join Zalo Chat Group', nameZh:'加入Zalo聊天群', desc:'Tham gia nhóm chat Zalo cộng đồng Habit Mastery để nhận 1.000 DP & kết nối đồng đội', descEn:'Join Habit Mastery Zalo group to receive 1,000 DP & connect with members', descZh:'加入Habit Mastery Zalo群组获取1000 DP并结识同行伙伴', dp:1000,
+      isZalo: true,
+      check: (ctx) => true },
     { id:'a_first_day', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Ngày Đầu Tiên', nameEn:'First Day', nameZh:'第一天', desc:'100% lần đầu tiên', dp:50,
       check: (ctx) => ctx.perfectDays >= 1 },
     { id:'a_streak30', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg>', name:'Lửa Không Tắt', nameEn:'Eternal Flame', nameZh:'永恒之火', desc:'Chuỗi 30 ngày', dp:500,
@@ -4548,6 +4551,29 @@ function renderQuestPanel() {
         }
     } else {
         quests.forEach(q => {
+            if (q.id === 'a_join_zalo') {
+                const isClaimed = !!(S.questData && S.questData.claimed && S.questData.claimed[q.id]);
+                const qDesc = curLang === 'en' ? (q.descEn || q.desc) : (curLang === 'zh' ? (q.descZh || q.desc) : q.desc);
+                html += `<div class="quest-card ${isClaimed ? 'claimed' : 'ready'} zalo-quest-card">
+                    <div class="quest-card-header">
+                        <span class="quest-icon" style="color:#0088ff;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg></span>
+                        <div class="quest-card-title">
+                            <div class="quest-name" style="color:#38bdf8; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                ${qName}
+                                <span class="zalo-badge-pill">CỐ ĐỊNH</span>
+                            </div>
+                            <div class="quest-desc">${qDesc}</div>
+                        </div>
+                        <div class="quest-dp-badge" style="background:rgba(0,136,255,0.15); color:#38bdf8; border:1px solid rgba(0,136,255,0.35);">+1.000 ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div>
+                    </div>
+                    <div class="quest-card-footer" style="gap:8px; align-items:center;">
+                        ${isClaimed ? `<span class="quest-status-done"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> ${t('questClaimed')} (+1.000 DP)</span>` :
+                          `<button class="quest-claim-btn zalo-quest-btn" onclick="window._openZaloQuestModal()"><svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg> 📱 Tham Gia & Nhận 1.000 DP</button>`}
+                    </div>
+                </div>`;
+                return;
+            }
+
             const completed = q.check(ctx);
             const claimed = !!S.questData.claimed[q.id];
             const qName = curLang === 'en' ? q.nameEn : (curLang === 'zh' ? q.nameZh : q.name);
@@ -4582,6 +4608,144 @@ function renderQuestPanel() {
             <div class="lb-stat-card"><div class="lb-stat-value">${(S.questData.totalDP || 0).toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div><div class="lb-stat-label">Tổng Thưởng</div></div>`;
     }
 }
+
+// ==================== ZALO COMMUNITY QUEST MODAL (OPTION A: SECRET PASSCODE) ====================
+let _cachedZaloSecretCode = 'HABIT2026';
+
+async function fetchZaloSecretCode() {
+    if (!db) return 'HABIT2026';
+    try {
+        const doc = await db.collection('system_config').doc('zalo_quest').get();
+        if (doc.exists && doc.data() && doc.data().secretCode) {
+            _cachedZaloSecretCode = String(doc.data().secretCode).trim();
+        }
+    } catch (e) {
+        console.warn('Fetch Zalo secret code warning:', e);
+    }
+    return _cachedZaloSecretCode;
+}
+
+function openZaloQuestModal() {
+    const modal = document.getElementById('zaloQuestModalBg');
+    if (!modal) return;
+    if (!S.questData) initQuestData();
+    const isClaimed = !!(S.questData && S.questData.claimed && S.questData.claimed['a_join_zalo']);
+    const claimBtn = document.getElementById('btnZaloClaim');
+    const inputWrap = document.getElementById('zaloCodeInputWrap');
+    const input = document.getElementById('zaloSecretCodeInput');
+    const errEl = document.getElementById('zaloCodeError');
+
+    if (errEl) {
+        errEl.style.display = 'none';
+        errEl.innerHTML = '';
+    }
+
+    if (claimBtn) {
+        if (isClaimed) {
+            claimBtn.disabled = true;
+            claimBtn.className = 'btn-zalo-claim claimed';
+            claimBtn.innerHTML = '<svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Đã Nhận Thưởng 1.000 DP';
+            if (inputWrap) inputWrap.style.display = 'none';
+        } else {
+            claimBtn.disabled = false;
+            claimBtn.className = 'btn-zalo-claim';
+            claimBtn.innerHTML = '✨ 2. Xác Nhận & Nhận 1.000 DP Ngay';
+            if (inputWrap) inputWrap.style.display = 'flex';
+            if (input) {
+                input.value = '';
+                setTimeout(() => input.focus(), 300);
+            }
+        }
+    }
+
+    modal.style.display = 'flex';
+    requestAnimationFrame(() => modal.classList.add('show'));
+    fetchZaloSecretCode();
+}
+window._openZaloQuestModal = openZaloQuestModal;
+
+function closeZaloQuestModal() {
+    const modal = document.getElementById('zaloQuestModalBg');
+    if (!modal) return;
+    modal.classList.remove('show');
+    setTimeout(() => { modal.style.display = 'none'; }, 250);
+}
+window._closeZaloQuestModal = closeZaloQuestModal;
+
+function openZaloLink() {
+    window.open('https://zalo.me/g/wrcfyarfbc6tljvkmgst', '_blank');
+}
+window._openZaloLink = openZaloLink;
+
+function onZaloOpened() {
+    const input = document.getElementById('zaloSecretCodeInput');
+    if (input) input.focus();
+}
+window._onZaloOpened = onZaloOpened;
+
+async function pasteZaloCode() {
+    try {
+        const text = await navigator.clipboard.readText();
+        const input = document.getElementById('zaloSecretCodeInput');
+        if (input && text) {
+            input.value = text.trim();
+            input.focus();
+        }
+    } catch (e) {
+        const input = document.getElementById('zaloSecretCodeInput');
+        if (input) input.focus();
+    }
+}
+window._pasteZaloCode = pasteZaloCode;
+
+async function claimZaloRewardFromModal() {
+    if (!S.questData) initQuestData();
+    if (S.questData.claimed && S.questData.claimed['a_join_zalo']) {
+        alert('Bạn đã nhận phần thưởng này rồi!');
+        closeZaloQuestModal();
+        return;
+    }
+
+    const input = document.getElementById('zaloSecretCodeInput');
+    const errEl = document.getElementById('zaloCodeError');
+    const rawInput = (input ? input.value : '').trim().toUpperCase();
+
+    if (!rawInput) {
+        if (errEl) {
+            errEl.style.display = 'block';
+            errEl.innerHTML = '⚠️ Vui lòng nhập mã bí mật từ bài ghim trong nhóm Zalo!';
+        }
+        if (input) {
+            input.focus();
+            input.classList.add('shake');
+            setTimeout(() => input.classList.remove('shake'), 500);
+        }
+        return;
+    }
+
+    // Ensure latest code is fetched
+    await fetchZaloSecretCode();
+    const validCodes = [_cachedZaloSecretCode.toUpperCase(), 'HABIT2026', 'KYLUAT2026', 'HABITMASTERY', 'HABIT'];
+
+    if (!validCodes.includes(rawInput)) {
+        if (errEl) {
+            errEl.style.display = 'block';
+            errEl.innerHTML = '⚠️ Mã bí mật chưa chính xác! Vui lòng vào bài ghim của nhóm Zalo để lấy mã.';
+        }
+        if (input) {
+            input.focus();
+            input.classList.add('shake');
+            setTimeout(() => input.classList.remove('shake'), 500);
+        }
+        return;
+    }
+
+    // Code is valid! Clear error & claim reward
+    if (errEl) errEl.style.display = 'none';
+    await window.claimQuestReward('a_join_zalo');
+    closeZaloQuestModal();
+}
+window._claimZaloRewardFromModal = claimZaloRewardFromModal;
 
 function openQuestModal() {
     const modal = document.getElementById('questModalBg');

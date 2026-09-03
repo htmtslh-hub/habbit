@@ -1,6 +1,6 @@
 // ===== HABIT MASTERY - SERVICE WORKER =====
 // Change CACHE_VERSION when deploying updates
-const CACHE_VERSION = '5.7.0';
+const CACHE_VERSION = '5.7.1';
 const CACHE_NAME = `habit-game-v${CACHE_VERSION}`;
 
 const ASSETS_TO_CACHE = [
@@ -22,6 +22,7 @@ const ASSETS_TO_CACHE = [
   '/all_books_data.js',
   '/icon-192.png',
   '/icon-512.png',
+  '/zalo-qr.png',
   '/manifest.json'
 ];
 

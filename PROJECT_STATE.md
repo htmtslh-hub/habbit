@@ -73,6 +73,7 @@
 
 ### 2. Hệ Thống Nhiệm Vụ Rèn Luyện (Quests)
 - 4 Nhóm nhiệm vụ: **Hàng ngày** (tự reset 00:00), **Hàng tuần** (tự reset thứ 2), **Thành tích vĩnh viễn**, **Nhiệm vụ đột xuất từ Admin**.
+- **Nhiệm vụ Cố Định Gia Nhập Nhóm Chat Zalo (`a_join_zalo`)**: Thưởng **+1.000 DP** cho tất cả tài khoản. Áp dụng cơ chế **Phương án A (Mã bí mật trong bài ghim Zalo)** — người dùng mở nhóm Zalo, xem mã bí mật được ghim đầu nhóm chat và nhập vào ứng dụng để xác thực nhận 1.000 DP. Admin có thể thay đổi mã bí mật này bất kỳ lúc nào ngay trên trang Quản trị (`admin.html`).
 - Nút **Nhận thưởng** kích hoạt pháo giấy Confetti, Toast, cộng điểm DP và thăng cấp cảnh giới tức thì.
 
 ### 3. Tab Bảng Tin Cộng Đồng (Community Feed)
