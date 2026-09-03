@@ -9536,18 +9536,28 @@ td.td-chk.frozen-day {
 
 /* Mode Buttons (04 · Tím #B58CFF) */
 .pomo-modes-row {
-    display: flex; gap: 6px; width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    width: 100%;
     background: rgba(255,255,255,0.02);
     border-radius: 12px; padding: 4px;
     border: 1px solid rgba(255,255,255,0.06);
 }
+@media (max-width: 480px) {
+    .pomo-modes-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 .pomo-mode-btn {
-    flex: 1; padding: 10px 8px; border-radius: 9px;
+    padding: 10px 6px; border-radius: 9px;
     border: 1px solid transparent; background: transparent;
     color: rgba(255,255,255,0.45);
     font-family: var(--font-heading); font-size: 11px;
-    font-weight: 800; letter-spacing: 0.8px;
+    font-weight: 800; letter-spacing: 0.5px;
     cursor: pointer; transition: all 0.25s;
+    text-align: center; white-space: nowrap;
+    display: flex; align-items: center; justify-content: center; gap: 4px;
 }
 .pomo-mode-btn:hover { color: #E7DBFF; background: rgba(181,140,255,0.08); }
 .pomo-mode-btn.active {

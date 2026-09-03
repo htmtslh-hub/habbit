@@ -16,7 +16,7 @@
     <link rel="apple-touch-icon" href="./icon-512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="style.css?v=5.7.5">
+    <link rel="stylesheet" href="style.css?v=5.7.6">
     <!-- Vietnam National Day 2/9 Event Theme (Active until Sept 3, 2026) -->
     <link rel="stylesheet" href="national_day_2026.css?v=2.9.2026.1">
 
@@ -967,6 +967,35 @@
                     <button class="pomo-mode-btn active" data-mode="pomodoro" id="pomoMode25" data-i18n="pomoPomodoro"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-cycle"></use></svg> FOCUS · 25m</button>
                     <button class="pomo-mode-btn" data-mode="short" id="pomoMode5" data-i18n="pomoShortBreak"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> REST · 5m</button>
                     <button class="pomo-mode-btn" data-mode="long" id="pomoMode15" data-i18n="pomoLongBreak"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg> RECHARGE · 15m</button>
+                    <button class="pomo-mode-btn" data-mode="custom" id="pomoModeCustom" data-i18n="pomoCustom"><svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-target"></use></svg> TÙY CHỈNH</button>
+                </div>
+
+                <!-- Custom Time Controls Panel (Hidden by default, shown in custom mode) -->
+                <div class="pomo-custom-time-row" id="pomoCustomTimeRow" style="display:none;">
+                    <div class="pomo-custom-label-wrap">
+                        <span class="pomo-custom-label">⏱️ THỜI GIAN ĐẾM NGƯỢC:</span>
+                        <span class="pomo-custom-no-dp-badge">Chế độ tự do · Không cộng DP</span>
+                    </div>
+                    <div class="pomo-custom-controls">
+                        <button type="button" class="pomo-stepper-btn" id="pomoCustomMinus5" title="Giảm 5 phút">-5m</button>
+                        <button type="button" class="pomo-stepper-btn" id="pomoCustomMinus1" title="Giảm 1 phút">-1m</button>
+                        <div class="pomo-custom-input-wrap">
+                            <input type="number" id="pomoCustomInput" min="1" max="180" value="30" class="pomo-custom-input">
+                            <span class="pomo-custom-unit">phút</span>
+                        </div>
+                        <button type="button" class="pomo-stepper-btn" id="pomoCustomPlus1" title="Tăng 1 phút">+1m</button>
+                        <button type="button" class="pomo-stepper-btn" id="pomoCustomPlus5" title="Tăng 5 phút">+5m</button>
+                    </div>
+                    <!-- Quick preset chips -->
+                    <div class="pomo-custom-presets">
+                        <button type="button" class="pomo-preset-chip" data-mins="10">10m</button>
+                        <button type="button" class="pomo-preset-chip" data-mins="20">20m</button>
+                        <button type="button" class="pomo-preset-chip active" data-mins="30">30m</button>
+                        <button type="button" class="pomo-preset-chip" data-mins="45">45m</button>
+                        <button type="button" class="pomo-preset-chip" data-mins="60">60m</button>
+                        <button type="button" class="pomo-preset-chip" data-mins="90">90m</button>
+                        <button type="button" class="pomo-preset-chip" data-mins="120">120m</button>
+                    </div>
                 </div>
 
                 <!-- Watch-Face HUD Timer -->
@@ -1416,13 +1445,13 @@
     </div>
 
     <!-- SCRIPTS -->
-    <script src="gotiengviet.js?v=5.7.5"></script>
-    <script src="nameplate_templates.js?v=5.7.5"></script>
-    <script src="avatar_frames.js?v=5.7.5"></script>
-    <script src="book_covers.js?v=5.7.5"></script>
-    <script src="doc_nhan_tinh_data.js?v=5.7.5"></script>
-    <script src="all_books_data.js?v=5.7.5"></script>
-    <script src="app.js?v=5.7.5"></script>
+    <script src="gotiengviet.js?v=5.7.6"></script>
+    <script src="nameplate_templates.js?v=5.7.6"></script>
+    <script src="avatar_frames.js?v=5.7.6"></script>
+    <script src="book_covers.js?v=5.7.6"></script>
+    <script src="doc_nhan_tinh_data.js?v=5.7.6"></script>
+    <script src="all_books_data.js?v=5.7.6"></script>
+    <script src="app.js?v=5.7.6"></script>
     <!-- Vietnam National Day 2/9 Event Script -->
     <script src="national_day_2026.js?v=2.9.2026.1"></script>
 </body>

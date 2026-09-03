@@ -102,7 +102,8 @@ const I18N = {
         pomoHabitCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Đã hoàn thành 25p! Thói quen đã tự động check-in (+15 Điểm)',
         quoteCopiedToast:'Đã sao chép câu trích dẫn!',
         pomoLinkHabit:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg> GẮN VỚI THÓI QUEN:',pomoFreeDeepWork:'-- Tập trung tự do (Deep Work) --',
-        pomoPomodoro:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cycle"></use></svg> Pomodoro (25m)',pomoShortBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> Nghỉ ngắn (5m)',pomoLongBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg> Nghỉ dài (15m)',
+        pomoPomodoro:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cycle"></use></svg> FOCUS · 25m',pomoShortBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> REST · 5m',pomoLongBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg> RECHARGE · 15m',pomoCustom:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg> TÙY CHỈNH',
+        pomoCustomNoDp:'⏱️ Chế độ tự do · Không cộng điểm DP',pomoCustomReady:'Đếm ngược tùy chỉnh',
         pomoStart:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Bắt Đầu',pomoReset:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-reset"></use></svg> Đặt Lại',pomoPause:'⏸ Tạm Dừng',pomoContinue:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Tiếp Tục',
         pomoReady:'Đang sẵn sàng',pomoFocusing:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg> Đang tập trung...',pomoResting:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> Đang nghỉ ngơi...',
         pomoPaused:'Đang tạm dừng',pomoShortRest:'Nghỉ ngơi 5 phút',pomoLongRest:'Nghỉ ngơi 15 phút',
@@ -197,7 +198,8 @@ const I18N = {
         pomoHabitCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 25分钟专注完成！习惯已自动打卡 (+15)',
         quoteCopiedToast:'格言已复制到剪贴板！',
         pomoLinkHabit:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg> 关联习惯:',pomoFreeDeepWork:'-- 自由专注 (Deep Work) --',
-        pomoPomodoro:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cycle"></use></svg> 番茄钟 (25m)',pomoShortBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> 短休 (5m)',pomoLongBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg> 长休 (15m)',
+        pomoPomodoro:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cycle"></use></svg> FOCUS · 25m',pomoShortBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> REST · 5m',pomoLongBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg> RECHARGE · 15m',pomoCustom:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg> 自定义',
+        pomoCustomNoDp:'⏱️ 自由模式 · 不计DP积分',pomoCustomReady:'自定义倒计时',
         pomoStart:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> 开始',pomoReset:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-reset"></use></svg> 重置',pomoPause:'⏸ 暂停',pomoContinue:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> 继续',
         pomoReady:'准备就绪',pomoFocusing:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg> 专注中...',pomoResting:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> 休息中...',
         pomoPaused:'已暂停',pomoShortRest:'休息5分钟',pomoLongRest:'休息15分钟',
@@ -290,7 +292,8 @@ const I18N = {
         pomoHabitCompletedToast:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> 25m Focus done! Habit automatically checked-in (+15)',
         quoteCopiedToast:'Quote copied to clipboard!',
         pomoLinkHabit:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg> LINK TO HABIT:',pomoFreeDeepWork:'-- Free Focus (Deep Work) --',
-        pomoPomodoro:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cycle"></use></svg> Pomodoro (25m)',pomoShortBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> Short Break (5m)',pomoLongBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg> Long Break (15m)',
+        pomoPomodoro:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cycle"></use></svg> FOCUS · 25m',pomoShortBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> REST · 5m',pomoLongBreak:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg> RECHARGE · 15m',pomoCustom:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg> CUSTOM',
+        pomoCustomNoDp:'⏱️ Free mode · No DP reward',pomoCustomReady:'Custom countdown',
         pomoStart:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Start',pomoReset:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-reset"></use></svg> Reset',pomoPause:'⏸ Pause',pomoContinue:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Resume',
         pomoReady:'Ready',pomoFocusing:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg> Focusing...',pomoResting:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-cup"></use></svg> Resting...',
         pomoPaused:'Paused',pomoShortRest:'5 min break',pomoLongRest:'15 min break',
@@ -10027,12 +10030,13 @@ function playPomodoroEndChime() {
 // --- 2. POMODORO TIMER ENGINE ---
 
 let pomoState = {
-    mode: 'pomodoro', // 'pomodoro' | 'short' | 'long'
+    mode: 'pomodoro', // 'pomodoro' | 'short' | 'long' | 'custom'
     totalSeconds: 25 * 60,
     secondsLeft: 25 * 60,
     isRunning: false,
     intervalId: null,
-    selectedHabitId: null
+    selectedHabitId: null,
+    customMinutes: 30
 };
 
 const MAX_DAILY_POMO_REWARDS = 4; // Giới hạn tối đa 4 phiên nhận Coins / ngày
@@ -10087,9 +10091,43 @@ window._openPomodoroModal = openPomodoroModal;
 
 function switchPomoMode(mode) {
     pomoState.mode = mode;
-    if (mode === 'pomodoro') pomoState.totalSeconds = 25 * 60;
-    else if (mode === 'short') pomoState.totalSeconds = 5 * 60;
-    else if (mode === 'long') pomoState.totalSeconds = 15 * 60;
+    const customRow = document.getElementById('pomoCustomTimeRow');
+    const rewardPill = document.getElementById('pomoRewardPill');
+
+    if (mode === 'pomodoro') {
+        pomoState.totalSeconds = 25 * 60;
+        if (customRow) customRow.style.display = 'none';
+        if (rewardPill) {
+            rewardPill.className = 'pomo-reward-pill';
+            rewardPill.innerHTML = t('pomoRewardHint');
+        }
+    } else if (mode === 'short') {
+        pomoState.totalSeconds = 5 * 60;
+        if (customRow) customRow.style.display = 'none';
+        if (rewardPill) {
+            rewardPill.className = 'pomo-reward-pill neutral';
+            rewardPill.innerHTML = '☕ Nghỉ ngơi ngắn (5m)';
+        }
+    } else if (mode === 'long') {
+        pomoState.totalSeconds = 15 * 60;
+        if (customRow) customRow.style.display = 'none';
+        if (rewardPill) {
+            rewardPill.className = 'pomo-reward-pill neutral';
+            rewardPill.innerHTML = '🔋 Nghỉ ngơi sâu (15m)';
+        }
+    } else if (mode === 'custom') {
+        const savedMins = parseInt(localStorage.getItem('pomo_custom_mins') || '30', 10) || 30;
+        pomoState.customMinutes = Math.min(180, Math.max(1, savedMins));
+        pomoState.totalSeconds = pomoState.customMinutes * 60;
+        if (customRow) customRow.style.display = 'flex';
+        const customInput = document.getElementById('pomoCustomInput');
+        if (customInput) customInput.value = pomoState.customMinutes;
+        updateActivePresetChip(pomoState.customMinutes);
+        if (rewardPill) {
+            rewardPill.className = 'pomo-reward-pill no-dp';
+            rewardPill.innerHTML = t('pomoCustomNoDp') || '⏱️ Chế độ tự do · Không cộng điểm DP';
+        }
+    }
 
     pausePomodoroTimer();
     pomoState.secondsLeft = pomoState.totalSeconds;
@@ -10100,10 +10138,42 @@ function switchPomoMode(mode) {
 
     const statusEl = document.getElementById('pomoStatusLabel');
     if (statusEl) {
-        statusEl.innerHTML = mode === 'pomodoro' ? t('pomoReady') : (mode === 'short' ? t('pomoShortRest') : t('pomoLongRest'));
+        if (mode === 'pomodoro') statusEl.innerHTML = t('pomoReady');
+        else if (mode === 'short') statusEl.innerHTML = t('pomoShortRest');
+        else if (mode === 'long') statusEl.innerHTML = t('pomoLongRest');
+        else if (mode === 'custom') statusEl.innerHTML = t('pomoCustomReady') || 'Đếm ngược tùy chỉnh';
     }
 
     updatePomoDisplay();
+}
+
+function setPomoCustomMinutes(mins) {
+    const val = Math.min(180, Math.max(1, parseInt(mins, 10) || 1));
+    pomoState.customMinutes = val;
+    localStorage.setItem('pomo_custom_mins', val);
+    const customInput = document.getElementById('pomoCustomInput');
+    if (customInput) customInput.value = val;
+    updateActivePresetChip(val);
+
+    if (pomoState.mode === 'custom') {
+        pomoState.totalSeconds = val * 60;
+        pomoState.secondsLeft = pomoState.totalSeconds;
+        pausePomodoroTimer();
+        updatePomoDisplay();
+        const startBtn = document.getElementById('pomoStartBtn');
+        if (startBtn) {
+            startBtn.innerHTML = t('pomoStart');
+            startBtn.classList.remove('running');
+        }
+        const statusEl = document.getElementById('pomoStatusLabel');
+        if (statusEl) statusEl.innerHTML = t('pomoCustomReady') || 'Đếm ngược tùy chỉnh';
+    }
+}
+
+function updateActivePresetChip(mins) {
+    document.querySelectorAll('.pomo-preset-chip').forEach(chip => {
+        chip.classList.toggle('active', parseInt(chip.dataset.mins, 10) === mins);
+    });
 }
 
 function startPomodoroTimer() {
@@ -10189,57 +10259,65 @@ async function onPomodoroFinished() {
     playPomodoroEndChime();
     if (typeof fireConfetti === 'function') fireConfetti();
 
-    let toastMsg = t('pomoCompletedToast') || '🎉 Hoàn thành phiên tập trung!';
+    let toastMsg = '';
 
-    // If pomodoro mode and habit was selected -> auto check-in!
-    const sel = document.getElementById('pomoHabitSelect');
-    const habitId = sel ? sel.value : null;
+    // If custom mode or break mode -> NO DP/Coins, NO habit check-in, NO daily limit consumption!
+    if (pomoState.mode === 'custom') {
+        const mins = Math.round(pomoState.totalSeconds / 60);
+        toastMsg = `⏱️ Đã hoàn thành ${mins} phút đếm ngược! (Chế độ tự do · Không cộng điểm DP)`;
+    } else if (pomoState.mode === 'short' || pomoState.mode === 'long') {
+        toastMsg = `☕ Đã kết thúc thời gian nghỉ ngơi! Sẵn sàng cho phiên làm việc mới.`;
+    } else {
+        // Standard Pomodoro mode (25m) -> Rewards eligible!
+        const sel = document.getElementById('pomoHabitSelect');
+        const habitId = sel ? sel.value : null;
 
-    if (pomoState.mode === 'pomodoro' && habitId) {
-        const now = new Date();
-        const k = ck(habitId, now.getDate());
-        if (!S.c[k]) {
-            S.c[k] = true;
-            sv();
-            renderAll();
-            if (typeof onHabitCheckedSyncSquadAndDuel === 'function') {
-                onHabitCheckedSyncSquadAndDuel();
+        if (habitId) {
+            const now = new Date();
+            const k = ck(habitId, now.getDate());
+            if (!S.c[k]) {
+                S.c[k] = true;
+                sv();
+                renderAll();
+                if (typeof onHabitCheckedSyncSquadAndDuel === 'function') {
+                    onHabitCheckedSyncSquadAndDuel();
+                }
             }
         }
-    }
 
-    // Daily Pomodoro anti-abuse limit (Max 4 rewarded sessions/day)
-    const todayKey = getLocalDateKey();
-    if (!S.pomoDailyRewards || S.pomoDailyRewards.date !== todayKey) {
-        S.pomoDailyRewards = { date: todayKey, count: 0 };
-    }
-
-    const canEarnPomoCoins = (S.pomoDailyRewards.count < MAX_DAILY_POMO_REWARDS);
-    let bonusAmount = 0;
-
-    if (canEarnPomoCoins) {
-        S.pomoDailyRewards.count++;
-        sv();
-
-        bonusAmount = 15;
-        if (S.inventory && S.inventory.focusElixirCharges > 0) {
-            bonusAmount = 30;
-            S.inventory.focusElixirCharges--;
-            sv();
-            toastMsg = `🧪 [Thuốc Tiên Focus] Hoàn thành phiên tập trung! +30 Coins (Phiên ${S.pomoDailyRewards.count}/${MAX_DAILY_POMO_REWARDS} hôm nay)`;
-        } else {
-            toastMsg = `🎉 Hoàn thành phiên tập trung! +15 Coins (Phiên ${S.pomoDailyRewards.count}/${MAX_DAILY_POMO_REWARDS} hôm nay)`;
+        // Daily Pomodoro anti-abuse limit (Max 4 rewarded sessions/day)
+        const todayKey = getLocalDateKey();
+        if (!S.pomoDailyRewards || S.pomoDailyRewards.date !== todayKey) {
+            S.pomoDailyRewards = { date: todayKey, count: 0 };
         }
 
-        userBonusDP = (userBonusDP || 0) + bonusAmount;
-        localStorage.setItem('hg_bonus_dp', userBonusDP);
-        updateUserDPState(true);
-        if (typeof syncUserLeaderboard === 'function') syncUserLeaderboard();
-    } else {
-        toastMsg = `⏱️ Hoàn thành 25p tập trung sâu! (Hôm nay đã đạt giới hạn nhận thưởng ${MAX_DAILY_POMO_REWARDS}/${MAX_DAILY_POMO_REWARDS} phiên)`;
-    }
+        const canEarnPomoCoins = (S.pomoDailyRewards.count < MAX_DAILY_POMO_REWARDS);
+        let bonusAmount = 0;
 
-    updatePomoLimitBadge();
+        if (canEarnPomoCoins) {
+            S.pomoDailyRewards.count++;
+            sv();
+
+            bonusAmount = 15;
+            if (S.inventory && S.inventory.focusElixirCharges > 0) {
+                bonusAmount = 30;
+                S.inventory.focusElixirCharges--;
+                sv();
+                toastMsg = `🧪 [Thuốc Tiên Focus] Hoàn thành phiên tập trung! +30 Coins (Phiên ${S.pomoDailyRewards.count}/${MAX_DAILY_POMO_REWARDS} hôm nay)`;
+            } else {
+                toastMsg = `🎉 Hoàn thành phiên tập trung! +15 Coins (Phiên ${S.pomoDailyRewards.count}/${MAX_DAILY_POMO_REWARDS} hôm nay)`;
+            }
+
+            userBonusDP = (userBonusDP || 0) + bonusAmount;
+            localStorage.setItem('hg_bonus_dp', userBonusDP);
+            updateUserDPState(true);
+            if (typeof syncUserLeaderboard === 'function') syncUserLeaderboard();
+        } else {
+            toastMsg = `⏱️ Hoàn thành 25p tập trung sâu! (Hôm nay đã đạt giới hạn nhận thưởng ${MAX_DAILY_POMO_REWARDS}/${MAX_DAILY_POMO_REWARDS} phiên)`;
+        }
+
+        updatePomoLimitBadge();
+    }
 
     // Show Toast
     const toast = document.createElement('div');
@@ -10289,9 +10367,34 @@ function initPomodoroModal() {
     const m25 = document.getElementById('pomoMode25');
     const m5 = document.getElementById('pomoMode5');
     const m15 = document.getElementById('pomoMode15');
+    const mCustom = document.getElementById('pomoModeCustom');
     if (m25) m25.onclick = () => switchPomoMode('pomodoro');
     if (m5) m5.onclick = () => switchPomoMode('short');
     if (m15) m15.onclick = () => switchPomoMode('long');
+    if (mCustom) mCustom.onclick = () => switchPomoMode('custom');
+
+    // Custom countdown controls
+    const minus5 = document.getElementById('pomoCustomMinus5');
+    const minus1 = document.getElementById('pomoCustomMinus1');
+    const plus1 = document.getElementById('pomoCustomPlus1');
+    const plus5 = document.getElementById('pomoCustomPlus5');
+    const customInput = document.getElementById('pomoCustomInput');
+
+    if (minus5) minus5.onclick = () => setPomoCustomMinutes(pomoState.customMinutes - 5);
+    if (minus1) minus1.onclick = () => setPomoCustomMinutes(pomoState.customMinutes - 1);
+    if (plus1) plus1.onclick = () => setPomoCustomMinutes(pomoState.customMinutes + 1);
+    if (plus5) plus5.onclick = () => setPomoCustomMinutes(pomoState.customMinutes + 5);
+    if (customInput) {
+        customInput.onchange = (e) => setPomoCustomMinutes(e.target.value);
+        customInput.oninput = (e) => {
+            const v = parseInt(e.target.value, 10);
+            if (v >= 1 && v <= 180) setPomoCustomMinutes(v);
+        };
+    }
+
+    document.querySelectorAll('.pomo-preset-chip').forEach(chip => {
+        chip.onclick = () => setPomoCustomMinutes(chip.dataset.mins);
+    });
 
     // Master volume controls
     const masterSlider = document.getElementById('pomoMasterVolSlider');
