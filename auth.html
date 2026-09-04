@@ -15,7 +15,7 @@
     <link rel="alternate icon" href="./icon-192.png">
     <link rel="apple-touch-icon" href="./icon-512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="auth.css?v=5.8.4">
+    <link rel="stylesheet" href="auth.css?v=5.8.5">
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -45,6 +45,40 @@
                 <div class="brand-icon">✦</div>
                 <h1 class="brand-title" data-i18n="brand_title">HABIT<br>MASTERY</h1>
                 <p class="brand-subtitle" data-i18n="brand_subtitle">Theo dõi thói quen • Xây dựng kỷ luật • Đạt mục tiêu</p>
+
+                <!-- Desktop App Download Box (Elevated to center) -->
+                <div class="desktop-download-box" id="desktopDownloadBox">
+                    <div class="desktop-download-header">
+                        <div class="desktop-download-badge" data-i18n="desktop_app_badge">💻 DESKTOP APP</div>
+                    </div>
+                    <div class="desktop-download-body">
+                        <div class="desktop-download-icon-card">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </div>
+                        <div class="desktop-download-text">
+                            <div class="desktop-download-headline" data-i18n="desktop_app_headline">Tải ứng dụng Máy tính (Windows & Mac)</div>
+                            <p class="desktop-download-subtext" data-i18n="desktop_app_desc">Khởi động cùng máy tính, mượt mà & thông báo chuẩn xác không cần mở trình duyệt.</p>
+                        </div>
+                    </div>
+                    <div class="desktop-download-actions">
+                        <a href="downloads/HabitMastery-Setup.zip" class="btn-desktop-download" download="HabitMastery-Setup.zip" title="Tải bản cài đặt Windows (.zip)">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span data-i18n="btn_download_setup">Tải bản Cài đặt (.zip)</span>
+                        </a>
+                        <button type="button" class="btn-desktop-guide" onclick="window.openDownloadModal()" title="Xem bản Portable & Bản dành cho Mac">
+                            <span data-i18n="btn_download_guide">Tùy chọn & Bản cho Mac</span>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="brand-features">
                     <div class="feature-item">
                         <span class="feature-icon">📊</span>
@@ -78,39 +112,6 @@
                         <p class="zalo-subtext" data-i18n="community_subtext">Quét mã QR để giao lưu, chia sẻ thói quen & nhận thông báo hỗ trợ từ Admin.</p>
                     </div>
                 </div>
-
-                <!-- Desktop App Download Box -->
-                <div class="desktop-download-box" id="desktopDownloadBox">
-                    <div class="desktop-download-header">
-                        <div class="desktop-download-badge" data-i18n="desktop_app_badge">💻 DESKTOP APP</div>
-                    </div>
-                    <div class="desktop-download-body">
-                        <div class="desktop-download-icon-card">
-                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                <line x1="8" y1="21" x2="16" y2="21"></line>
-                                <line x1="12" y1="17" x2="12" y2="21"></line>
-                            </svg>
-                        </div>
-                        <div class="desktop-download-text">
-                            <div class="desktop-download-headline" data-i18n="desktop_app_headline">Tải ứng dụng Máy tính (Windows & Mac)</div>
-                            <p class="desktop-download-subtext" data-i18n="desktop_app_desc">Khởi động cùng máy tính, mượt mà & thông báo chuẩn xác không cần mở trình duyệt.</p>
-                        </div>
-                    </div>
-                    <div class="desktop-download-actions">
-                        <a href="downloads/HabitMastery-Setup.zip" class="btn-desktop-download" download="HabitMastery-Setup.zip" title="Tải bản cài đặt Windows (.zip)">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                            <span data-i18n="btn_download_setup">Tải bản Cài đặt (.zip)</span>
-                        </a>
-                        <button type="button" class="btn-desktop-guide" onclick="window.openDownloadModal()" title="Xem bản Portable & Bản dành cho Mac">
-                            <span data-i18n="btn_download_guide">Tùy chọn & Bản cho Mac</span>
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -136,6 +137,33 @@
                 <div class="auth-tabs">
                     <button class="auth-tab active" id="tabLogin" data-tab="login" data-i18n="tab_login">Đăng nhập</button>
                     <button class="auth-tab" id="tabRegister" data-tab="register" data-i18n="tab_register">Đăng ký</button>
+                </div>
+
+                <!-- Prominent In-Card Desktop Download Banner -->
+                <div class="auth-card-download-banner" onclick="window.openDownloadModal()" role="button" tabindex="0" title="Tải ứng dụng Habit Mastery cho Máy tính">
+                    <div class="card-dl-left">
+                        <div class="card-dl-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </div>
+                        <div class="card-dl-text">
+                            <div class="card-dl-title-row">
+                                <span class="card-dl-title" data-i18n="card_dl_title">Tải ứng dụng cho Máy tính</span>
+                                <span class="card-dl-badge" data-i18n="card_dl_badge">Tải về ⬇</span>
+                            </div>
+                            <span class="card-dl-sub" data-i18n="card_dl_sub">Windows & macOS • Khởi động cùng máy, mượt mà</span>
+                        </div>
+                    </div>
+                    <div class="card-dl-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </div>
                 </div>
 
                 <!-- Error message -->
@@ -706,9 +734,9 @@
         </div>
     </div>
 
-    <script src="i18n.js?v=5.8.4"></script>
+    <script src="i18n.js?v=5.8.5"></script>
     <script src="gotiengviet.js?v=5.0.8"></script>
-    <script src="auth.js?v=5.8.4"></script>
+    <script src="auth.js?v=5.8.5"></script>
     <script>
     (function(){
       if (!('serviceWorker' in navigator)) return;
