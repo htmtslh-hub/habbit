@@ -26,12 +26,12 @@
         return now >= EVENT_CONFIG.startDate && now <= EVENT_CONFIG.endDate;
     }
 
-    // Kiểm tra trạng thái bật/tắt (Mặc định BẬT trong thời gian sự kiện nếu chưa tắt)
+    // Kiểm tra trạng thái bật/tắt (Chỉ bật nếu đang trong thời gian sự kiện)
     function isDecorEnabled() {
+        if (!isEventPeriod()) return false;
         const stored = localStorage.getItem(EVENT_CONFIG.storageKeys.enabled);
         if (stored === 'false') return false;
-        if (stored === 'true') return true;
-        return isEventPeriod();
+        return true;
     }
 
     function applyDecorTheme(enabled) {
@@ -218,6 +218,18 @@
 
     // ===== 5. KHỞI CHẠY =====
     function initNationalDayDecor() {
+        if (!isEventPeriod()) {
+            document.documentElement.removeAttribute('data-event-decor');
+            localStorage.removeItem(EVENT_CONFIG.storageKeys.enabled);
+            const container = document.getElementById('vnBackgroundDecorLayer');
+            if (container) container.remove();
+            const btn = document.getElementById('vnNavToggleBtn');
+            if (btn) btn.remove();
+            const brandWrap = document.getElementById('vnBrandFlagWrap');
+            if (brandWrap) brandWrap.remove();
+            return;
+        }
+
         const enabled = isDecorEnabled();
 
         // Xóa các phần tử cũ nếu có
