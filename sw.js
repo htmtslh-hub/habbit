@@ -1,6 +1,6 @@
 // ===== HABIT MASTERY - SERVICE WORKER =====
 // Change CACHE_VERSION when deploying updates
-const CACHE_VERSION = '5.8.2';
+const CACHE_VERSION = '5.8.3';
 const CACHE_NAME = `habit-game-v${CACHE_VERSION}`;
 
 const ASSETS_TO_CACHE = [
@@ -69,6 +69,7 @@ self.addEventListener('fetch', event => {
 
   // Skip non-GET and external API requests
   if (event.request.method !== 'GET') return;
+  if (url.pathname.startsWith('/downloads/') || url.pathname.endsWith('.exe')) return;
   if (url.hostname.includes('googleapis.com') && !url.hostname.includes('fonts')) return;
   if (url.hostname.includes('firebaseio.com') ||
       url.hostname.includes('gstatic.com') ||

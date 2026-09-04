@@ -15,8 +15,7 @@
     <link rel="alternate icon" href="./icon-192.png">
     <link rel="apple-touch-icon" href="./icon-512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="auth.css?v=5.8.1">
+    <link rel="stylesheet" href="auth.css?v=5.8.3">
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -77,6 +76,39 @@
                         <div class="zalo-badge" data-i18n="community_badge">💬 CỘNG ĐỒNG ZALO</div>
                         <div class="zalo-headline" data-i18n="community_headline">Nhóm Kỷ Luật Habit Mastery</div>
                         <p class="zalo-subtext" data-i18n="community_subtext">Quét mã QR để giao lưu, chia sẻ thói quen & nhận thông báo hỗ trợ từ Admin.</p>
+                    </div>
+                </div>
+
+                <!-- Desktop App Download Box -->
+                <div class="desktop-download-box" id="desktopDownloadBox">
+                    <div class="desktop-download-header">
+                        <div class="desktop-download-badge" data-i18n="desktop_app_badge">💻 WINDOWS APP</div>
+                    </div>
+                    <div class="desktop-download-body">
+                        <div class="desktop-download-icon-card">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </div>
+                        <div class="desktop-download-text">
+                            <div class="desktop-download-headline" data-i18n="desktop_app_headline">Tải ứng dụng cho Máy tính</div>
+                            <p class="desktop-download-subtext" data-i18n="desktop_app_desc">Khởi động cùng Windows, mượt mà & thông báo chuẩn xác không cần mở trình duyệt.</p>
+                        </div>
+                    </div>
+                    <div class="desktop-download-actions">
+                        <a href="downloads/HabitMastery-Setup.exe" class="btn-desktop-download" download="HabitMastery-Setup.exe" title="Tải bản cài đặt chính thức (.exe)">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span data-i18n="btn_download_setup">Tải bản Cài đặt (.exe)</span>
+                        </a>
+                        <button type="button" class="btn-desktop-guide" onclick="window.openDownloadModal()" title="Xem bản Portable & Hướng dẫn mở ứng dụng">
+                            <span data-i18n="btn_download_guide">Tùy chọn & Hướng dẫn</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -332,6 +364,15 @@
                     <button type="button" class="mobile-zalo-btn" data-i18n="community_mobile_btn">Xem QR</button>
                 </div>
 
+                <!-- Desktop App Quick Link -->
+                <div class="auth-desktop-quick-link" onclick="window.openDownloadModal()" title="Tải ứng dụng Habit Mastery cho máy tính Windows">
+                    <div class="desktop-quick-left">
+                        <span class="desktop-quick-icon">💻</span>
+                        <span class="desktop-quick-text" data-i18n="desktop_quick_text">Dùng máy tính? Tải ứng dụng Habit Mastery cho Windows</span>
+                    </div>
+                    <span class="desktop-quick-arrow">⬇</span>
+                </div>
+
                 <!-- Footer with Policy Links -->
                 <div class="auth-footer">
                     <div class="auth-policy-bar">
@@ -535,9 +576,77 @@
         </div>
     </div>
 
-    <script src="i18n.js?v=5.8.0"></script>
+    <!-- DESKTOP APP DOWNLOAD MODAL -->
+    <div class="download-modal-bg" id="downloadAppModalBg" style="display:none;" onclick="if(event.target===this)window.closeDownloadModal()">
+        <div class="download-modal-sheet">
+            <div class="download-modal-header">
+                <div class="download-modal-title">
+                    <span class="download-title-icon">💻</span>
+                    <span data-i18n="modal_download_title">Tải Ứng Dụng Habit Mastery Cho Máy Tính</span>
+                </div>
+                <button type="button" class="download-modal-close" id="downloadModalClose" onclick="window.closeDownloadModal()" title="Đóng">✕</button>
+            </div>
+            <div class="download-modal-body">
+                <p class="download-modal-subtitle" data-i18n="modal_download_subtitle">Trải nghiệm rèn luyện kỷ luật độc lập, mượt mà và tập trung tối đa trên Windows.</p>
+
+                <!-- Dual Download Options -->
+                <div class="download-grid">
+                    <!-- Setup Card -->
+                    <div class="download-choice-card recommended">
+                        <div class="download-choice-badge">⭐ KHUYÊN DÙNG</div>
+                        <div class="download-choice-icon">🚀</div>
+                        <h4 class="download-choice-title" data-i18n="card_installer_title">Bản Cài Đặt (Setup .exe)</h4>
+                        <p class="download-choice-desc" data-i18n="card_installer_desc">Tự động tạo biểu tượng trên Desktop, Start Menu & tích hợp thông báo hệ thống Windows.</p>
+                        <a href="downloads/HabitMastery-Setup.exe" class="btn-download-choice btn-primary-dl" download="HabitMastery-Setup.exe">
+                            <span data-i18n="card_installer_btn">⬇ Tải HabitMastery-Setup.exe (86 MB)</span>
+                        </a>
+                    </div>
+
+                    <!-- Portable Card -->
+                    <div class="download-choice-card">
+                        <div class="download-choice-badge portable-badge">⚡ KHÔNG CẦN CÀI ĐẶT</div>
+                        <div class="download-choice-icon">💼</div>
+                        <h4 class="download-choice-title" data-i18n="card_portable_title">Bản Di Động (Portable .exe)</h4>
+                        <p class="download-choice-desc" data-i18n="card_portable_desc">Không cần cài đặt, tải về bấm chạy ngay lập tức. Thích hợp lưu trữ USB mang đi mọi nơi.</p>
+                        <a href="downloads/HabitMastery-Portable.exe" class="btn-download-choice btn-secondary-dl" download="HabitMastery-Portable.exe">
+                            <span data-i18n="card_portable_btn">⬇ Tải HabitMastery-Portable.exe (78 MB)</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 3-step Guide for Windows SmartScreen -->
+                <div class="download-guide-box">
+                    <div class="guide-box-header">
+                        <span class="guide-box-icon">💡</span>
+                        <span class="guide-box-title" data-i18n="guide_sec_title">Hướng dẫn mở lần đầu nếu Windows cảnh báo:</span>
+                    </div>
+                    <div class="guide-steps-list">
+                        <div class="guide-step-row">
+                            <span class="step-num">1</span>
+                            <span class="step-text" data-i18n="guide_step1">Nếu màn hình hiện <em>"Windows protected your PC"</em>: Bấm <strong>"More info" (Thông tin thêm)</strong> → Chọn <strong>"Run anyway" (Vẫn chạy)</strong>.</span>
+                        </div>
+                        <div class="guide-step-row">
+                            <span class="step-num">2</span>
+                            <span class="step-text" data-i18n="guide_step2">Nếu file tải về bị chặn: Chuột phải vào file → chọn <strong>Properties</strong> → tick ô <strong>Unblock</strong> ở dưới cùng → bấm OK.</span>
+                        </div>
+                        <div class="guide-step-row">
+                            <span class="step-num">3</span>
+                            <span class="step-text" data-i18n="guide_step3">Đăng nhập tài khoản của bạn để đồng bộ ngay lập tức toàn bộ thói quen và dữ liệu từ web!</span>
+                        </div>
+                    </div>
+                    <div class="guide-file-link">
+                        <a href="downloads/Huong-Dan-Cai-Dat.txt" download="Huong-Dan-Cai-Dat.txt" class="btn-guide-txt">
+                            <span data-i18n="guide_txt_btn">📄 Tải file hướng dẫn chi tiết (.txt)</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="i18n.js?v=5.8.3"></script>
     <script src="gotiengviet.js?v=5.0.8"></script>
-    <script src="auth.js?v=5.8.2"></script>
+    <script src="auth.js?v=5.8.3"></script>
     <script>
     (function(){
       if (!('serviceWorker' in navigator)) return;

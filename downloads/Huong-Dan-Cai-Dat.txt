@@ -1,0 +1,178 @@
+╔══════════════════════════════════════════════════════════════╗
+║              HABIT MASTERY - HƯỚNG DẪN SỬ DỤNG              ║
+║          Theo dõi thói quen • Xây dựng kỷ luật              ║
+╚══════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 📌 CÁCH 1: SỬ DỤNG TRÊN TRÌNH DUYỆT (Khuyên dùng)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Truy cập: https://habitmastery.web.app
+
+  Bước 1: Mở link trên bằng Chrome, Edge hoặc Safari
+  Bước 2: Đăng ký tài khoản bằng Email
+  Bước 3: Nhập mã OTP gửi về Gmail để xác minh
+  Bước 4: Bắt đầu sử dụng!
+
+  ✅ Hoạt động trên điện thoại, máy tính bảng, laptop
+  ✅ Dữ liệu tự động đồng bộ giữa các thiết bị
+  ✅ Không cần cài đặt, luôn được cập nhật mới nhất
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 📱 CÀI ĐẶT NHƯ ỨNG DỤNG TRÊN ĐIỆN THOẠI (PWA)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  iPhone / iPad:
+    1. Mở Safari → vào https://habitmastery.web.app
+    2. Nhấn nút Chia sẻ (⬆) ở thanh dưới
+    3. Chọn "Thêm vào Màn hình chính"
+    4. Nhấn "Thêm" → Icon xuất hiện trên màn hình chính
+
+  Android:
+    1. Mở Chrome → vào https://habitmastery.web.app
+    2. Nhấn dấu ⋮ (menu 3 chấm) góc trên phải
+    3. Chọn "Thêm vào màn hình chính" hoặc "Cài đặt ứng dụng"
+    4. Nhấn "Cài đặt" → Icon xuất hiện trên màn hình chính
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 💻 CÁCH 2: CÀI ĐẶT PHẦN MỀM TRÊN MÁY TÍNH (Windows)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ⚠ QUAN TRỌNG: Đọc kỹ trước khi cài đặt!
+
+  Phần mềm chưa có chữ ký số (code signing certificate)
+  nên Windows sẽ cảnh báo hoặc chặn. Đây là điều bình
+  thường với phần mềm cá nhân, KHÔNG phải virus.
+
+  ─────────────────────────────────────────────────────
+  BƯỚC 1: BỎ CHẶN FILE (Bắt buộc sau khi tải về)
+  ─────────────────────────────────────────────────────
+    1. Chuột phải vào file "HabitMastery-Setup-1.0.0.exe"
+    2. Chọn "Properties" (Thuộc tính)
+    3. Ở tab General, tìm dòng "Security:" phía dưới cùng
+    4. Tick vào ô "Unblock" (Bỏ chặn)
+    5. Nhấn "Apply" → "OK"
+
+    ※ Nếu không thấy nút "Unblock" → file không bị chặn,
+      bỏ qua bước này.
+
+  ─────────────────────────────────────────────────────
+  BƯỚC 2: TẮT TẠM THỜI WINDOWS DEFENDER (nếu cần)
+  ─────────────────────────────────────────────────────
+    Nếu sau Bước 1, nhấn đúp file vẫn không có phản hồi:
+
+    1. Mở "Windows Security" (tìm trên Start Menu)
+    2. Chọn "Virus & threat protection"
+    3. Nhấn "Manage settings"
+    4. Tắt "Real-time protection" (tạm thời)
+    5. Chạy file cài đặt
+    6. BẬT LẠI Real-time protection sau khi cài xong
+
+  ─────────────────────────────────────────────────────
+  BƯỚC 3: CHẠY FILE CÀI ĐẶT
+  ─────────────────────────────────────────────────────
+    1. Nhấn đúp "HabitMastery-Setup-1.0.0.exe"
+    2. Nếu Windows SmartScreen hiện cảnh báo màu xanh:
+       → Nhấn "More info" (Thông tin thêm)
+       → Nhấn "Run anyway" (Vẫn chạy)
+    3. Chọn thư mục cài đặt hoặc giữ mặc định
+    4. Nhấn "Install" → Chờ cài đặt hoàn tất
+    5. Nhấn "Finish" → Ứng dụng tự động mở
+
+  ─────────────────────────────────────────────────────
+  SAU KHI CÀI ĐẶT
+  ─────────────────────────────────────────────────────
+    • Mở ứng dụng từ biểu tượng "Habit Mastery" trên Desktop
+    • Hoặc tìm "Habit Mastery" trong Start Menu
+    • Đăng nhập bằng tài khoản đã đăng ký trên web
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 🚀 HƯỚNG DẪN SỬ DỤNG
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  1. ĐĂNG KÝ / ĐĂNG NHẬP
+     • Nhập email + mật khẩu → Nhận mã OTP qua Gmail → Xác minh
+     • Tick "Ghi nhớ đăng nhập" để không cần đăng nhập lại
+     • Có thể đăng nhập bằng Google
+
+  2. THÊM THÓI QUEN
+     • Nhấn nút "+ Thêm thói quen"
+     • Nhập tên thói quen (VD: Tập thể dục, Đọc sách, Uống nước)
+     • Đặt mục tiêu ngày/tháng (VD: 20 ngày/tháng)
+
+  3. THEO DÕI HÀNG NGÀY
+     • Tick ✓ vào ô tương ứng khi hoàn thành thói quen
+     • Xem biểu đồ tiến độ tự động cập nhật
+     • Giữ streak 🔥 để duy trì động lực
+
+  4. XEM THỐNG KÊ
+     • Biểu đồ tròn: Tỷ lệ hoàn thành tổng thể
+     • Biểu đồ đường: Xu hướng theo thời gian
+     • Heatmap: Mật độ hoạt động cả năm (giống GitHub)
+     • Top 10: Thói quen hoàn thành tốt nhất
+
+  5. TÍNH NĂNG KHÁC
+     • 🌙 Chế độ tối/sáng
+     • 🌐 3 ngôn ngữ: Tiếng Việt, English, 中文
+     • 📝 Ghi chú hàng ngày
+     • 🎉 Hiệu ứng confetti khi đạt 100%
+     • ↕️ Kéo thả sắp xếp thói quen
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 💎 NÂNG CẤP PREMIUM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Gói miễn phí: Tối đa 3 thói quen
+  Gói Premium:  Không giới hạn + Heatmap + Ghi chú + Biểu đồ
+
+  Cách nâng cấp:
+    1. Nhấn "Nâng cấp Premium" trên ứng dụng
+    2. Quét mã QR bằng ứng dụng ngân hàng
+    3. Chuyển khoản đúng nội dung hiển thị
+    4. Hệ thống tự động kích hoạt trong 1-2 phút
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ❓ CÂU HỎI THƯỜNG GẶP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  H: Tải file cài đặt về nhấn Run không có phản hồi gì?
+  Đ: Windows hoặc antivirus đang chặn file. Chuột phải →
+     Properties → tick "Unblock" → OK rồi thử lại.
+     Nếu vẫn không được, tạm tắt Windows Defender 
+     (xem hướng dẫn ở phần cài đặt phía trên).
+
+  H: Dữ liệu có bị mất không?
+  Đ: Không. Dữ liệu được lưu trên đám mây, đăng nhập ở
+     thiết bị nào cũng có đầy đủ.
+
+  H: Có dùng được trên nhiều thiết bị không?
+  Đ: Có. Đăng nhập cùng tài khoản trên điện thoại, máy tính,
+     iPad... dữ liệu tự động đồng bộ.
+
+  H: Quên mật khẩu thì sao?
+  Đ: Nhấn "Quên mật khẩu" trên trang đăng nhập để nhận
+     email đặt lại mật khẩu.
+
+  H: Không nhận được mã OTP?
+  Đ: Kiểm tra thư mục Spam/Junk trong Gmail. Mỗi mã OTP
+     có hiệu lực 5 phút. Tối đa gửi 3 mã trong 10 phút.
+
+  H: Nên dùng bản web hay bản cài đặt?
+  Đ: Bản web (https://habitmastery.web.app) được khuyến khích
+     vì luôn cập nhật mới nhất và không gặp vấn đề cài đặt.
+     Bản desktop phù hợp nếu muốn trải nghiệm app riêng.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 📞 LIÊN HỆ HỖ TRỢ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Website: https://habitmastery.web.app
+  Email:   htmt.slh@gmail.com
+
+  © 2026 Habit Mastery. All rights reserved.

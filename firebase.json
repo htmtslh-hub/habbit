@@ -30,7 +30,6 @@
         "serviceAccountKey.json",
         "*.bat",
         "*.sh",
-        "*.exe",
         "*.zip",
         "*.tar.gz",
         "vercel.json",
@@ -48,6 +47,13 @@
             { "key": "X-Content-Type-Options", "value": "nosniff" },
             { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
             { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+          ]
+        },
+        {
+          "source": "downloads/**",
+          "headers": [
+            { "key": "Cache-Control", "value": "public, max-age=604800, immutable" },
+            { "key": "Content-Disposition", "value": "attachment" }
           ]
         },
         {
@@ -85,7 +91,6 @@
         "serviceAccountKey.json",
         "*.bat",
         "*.sh",
-        "*.exe",
         "*.zip",
         "*.tar.gz",
         "vercel.json",
@@ -103,6 +108,13 @@
             { "key": "X-Content-Type-Options", "value": "nosniff" },
             { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
             { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+          ]
+        },
+        {
+          "source": "downloads/**",
+          "headers": [
+            { "key": "Cache-Control", "value": "public, max-age=604800, immutable" },
+            { "key": "Content-Disposition", "value": "attachment" }
           ]
         },
         {

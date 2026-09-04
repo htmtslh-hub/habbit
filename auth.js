@@ -967,11 +967,22 @@ window.closeQrModal = function() {
     if (modal) modal.style.display = 'none';
 };
 
+window.openDownloadModal = function() {
+    const modal = document.getElementById('downloadAppModalBg');
+    if (modal) modal.style.display = 'flex';
+};
+
+window.closeDownloadModal = function() {
+    const modal = document.getElementById('downloadAppModalBg');
+    if (modal) modal.style.display = 'none';
+};
+
 // Keyboard ESC to close modals
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         window.closePolicyModal();
         window.closeQrModal();
+        window.closeDownloadModal();
     }
 });
 

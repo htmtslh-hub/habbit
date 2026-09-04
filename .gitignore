@@ -28,4 +28,6 @@ skills/
 traffice/
 .thumbnail
 *.zip
+*.exe
+downloads/*.exe
 
