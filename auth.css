@@ -18,7 +18,7 @@ html,body{height:100%;font-family:var(--font-body);background:var(--bg-primary);
 .auth-form-area{width:500px;min-width:420px;display:flex;align-items:center;justify-content:center;padding:32px;background:var(--bg-secondary);position:relative;overflow-y:auto}
 .auth-form-area::before{content:'';position:absolute;top:0;left:0;width:1px;height:100%;background:linear-gradient(to bottom,transparent,rgba(0,245,160,0.2),transparent)}
 .auth-card{width:100%;max-width:380px}
-.auth-tabs{display:flex;background:var(--bg-input);border-radius:12px;padding:4px;margin-bottom:14px;border:1px solid var(--border-color)}
+.auth-tabs{display:flex;background:var(--bg-input);border-radius:12px;padding:4px;margin-bottom:26px;border:1px solid var(--border-color)}
 .auth-tab{flex:1;padding:12px;background:transparent;border:none;color:var(--text-muted);font-family:var(--font-heading);font-size:.85rem;font-weight:700;cursor:pointer;border-radius:10px;transition:all .3s;letter-spacing:.3px}
 .auth-tab:hover{color:var(--text-secondary)}
 .auth-tab.active{background:var(--accent);color:#0a0a1a;box-shadow:0 4px 15px rgba(0,245,160,0.25)}
@@ -945,131 +945,6 @@ html,body{height:100%;font-family:var(--font-body);background:var(--bg-primary);
     background: rgba(255, 255, 255, 0.12);
     border-color: rgba(0, 245, 160, 0.35);
     color: #ffffff;
-}
-
-/* In-Card Download Banner (Prominent middle of auth card) */
-.auth-card-download-banner {
-    margin-bottom: 16px;
-    padding: 10px 14px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, rgba(0, 245, 160, 0.12) 0%, rgba(0, 217, 245, 0.06) 100%);
-    border: 1px solid rgba(0, 245, 160, 0.35);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 16px rgba(0, 245, 160, 0.08);
-    user-select: none;
-}
-
-.auth-card-download-banner:hover {
-    background: linear-gradient(135deg, rgba(0, 245, 160, 0.18) 0%, rgba(0, 217, 245, 0.12) 100%);
-    border-color: rgba(0, 245, 160, 0.65);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 245, 160, 0.2), 0 0 16px rgba(0, 217, 245, 0.12);
-}
-
-.auth-card-download-banner:active {
-    transform: translateY(0);
-}
-
-.card-dl-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 0;
-    flex: 1;
-}
-
-.card-dl-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: rgba(0, 245, 160, 0.14);
-    border: 1px solid rgba(0, 245, 160, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #00f5a0;
-    flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0, 245, 160, 0.15);
-    transition: all 0.25s ease;
-}
-
-.auth-card-download-banner:hover .card-dl-icon {
-    transform: scale(1.08) rotate(-3deg);
-    background: rgba(0, 245, 160, 0.22);
-    box-shadow: 0 0 14px rgba(0, 245, 160, 0.35);
-}
-
-.card-dl-text {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-    text-align: left;
-}
-
-.card-dl-title-row {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    min-width: 0;
-}
-
-.card-dl-title {
-    font-family: var(--font-heading);
-    font-size: 12px;
-    font-weight: 800;
-    color: #ffffff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    letter-spacing: 0.2px;
-}
-
-.card-dl-badge {
-    font-size: 9px;
-    font-weight: 800;
-    color: #0a0a1a;
-    background: #00f5a0;
-    padding: 1px 6px;
-    border-radius: 5px;
-    letter-spacing: 0.3px;
-    flex-shrink: 0;
-    line-height: 1.3;
-}
-
-.card-dl-sub {
-    font-size: 10.5px;
-    color: var(--text-secondary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.card-dl-btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: #00f5a0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-left: 8px;
-    transition: all 0.25s ease;
-}
-
-.auth-card-download-banner:hover .card-dl-btn {
-    background: #00f5a0;
-    color: #0a0a1a;
-    border-color: #00f5a0;
-    transform: scale(1.08);
-    box-shadow: 0 0 10px rgba(0, 245, 160, 0.4);
 }
 
 /* Quick link above footer */
