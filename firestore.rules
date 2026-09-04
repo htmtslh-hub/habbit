@@ -12,6 +12,7 @@ service cloud.firestore {
       // Protected fields: role, plan, disabled, planExpiresAt, trialExpiresAt,
       //                   upgradeApprovedAt, upgradeRejectedAt
       allow write: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.role != 'admin'
         && (!resource.data.keys().hasAny(['role']) || request.resource.data.role == resource.data.role)
         && (!resource.data.keys().hasAny(['plan']) || request.resource.data.plan == resource.data.plan)
         && (!resource.data.keys().hasAny(['disabled']) || request.resource.data.disabled == resource.data.disabled)
@@ -21,8 +22,13 @@ service cloud.firestore {
         && (!resource.data.keys().hasAny(['upgradeRejectedAt']) || request.resource.data.upgradeRejectedAt == resource.data.upgradeRejectedAt);
 
       // Users can CREATE their own document (first-time registration)
+      // Disallow self-assigning admin, active paid plans, or fake expiry dates
       allow create: if request.auth != null && request.auth.uid == userId
-        && request.resource.data.role != 'admin';
+        && request.resource.data.role != 'admin'
+        && (!request.resource.data.keys().hasAny(['plan']) || request.resource.data.plan in ['trial', 'free'])
+        && (!request.resource.data.keys().hasAny(['disabled']) || request.resource.data.disabled == false)
+        && (!request.resource.data.keys().hasAny(['planExpiresAt']) || request.resource.data.planExpiresAt == null)
+        && (!request.resource.data.keys().hasAny(['upgradeApprovedAt']) || request.resource.data.upgradeApprovedAt == null);
 
       // Admin can read/write ALL user data (no field restrictions)
       allow read, write: if request.auth != null && 
@@ -70,8 +76,20 @@ service cloud.firestore {
     match /community_posts/{postId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
-      allow update: if request.auth != null;
-      allow delete: if request.auth != null && (resource.data.uid == request.auth.uid || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+      // Author and Admin can update everything.
+      // Other users can only interact (likes/comments) without altering author or content.
+      allow update: if request.auth != null && (
+        resource.data.uid == request.auth.uid ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        (
+          request.resource.data.uid == resource.data.uid &&
+          request.resource.data.content == resource.data.content
+        )
+      );
+      allow delete: if request.auth != null && (
+        resource.data.uid == request.auth.uid || 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
     }
 
     // ===== LEADERBOARD COLLECTION =====

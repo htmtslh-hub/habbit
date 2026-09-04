@@ -23,6 +23,13 @@
         "skills/**",
         "traffice/**",
         "create_test_user.js",
+        "create_mock_accounts.js",
+        "verify_mock_users.js",
+        "update_mock_avatars.js",
+        "ideas.txt",
+        "serviceAccountKey.json",
+        "*.bat",
+        "*.sh",
         "*.exe",
         "*.zip",
         "*.tar.gz",
@@ -34,6 +41,15 @@
         "*.md"
       ],
       "headers": [
+        {
+          "source": "**",
+          "headers": [
+            { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+            { "key": "X-Content-Type-Options", "value": "nosniff" },
+            { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+            { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+          ]
+        },
         {
           "source": "**/*.@(js|css)",
           "headers": [
@@ -62,6 +78,13 @@
         "skills/**",
         "traffice/**",
         "create_test_user.js",
+        "create_mock_accounts.js",
+        "verify_mock_users.js",
+        "update_mock_avatars.js",
+        "ideas.txt",
+        "serviceAccountKey.json",
+        "*.bat",
+        "*.sh",
         "*.exe",
         "*.zip",
         "*.tar.gz",
@@ -73,6 +96,15 @@
         "*.md"
       ],
       "headers": [
+        {
+          "source": "**",
+          "headers": [
+            { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+            { "key": "X-Content-Type-Options", "value": "nosniff" },
+            { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+            { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+          ]
+        },
         {
           "source": "**/*.@(js|css)",
           "headers": [

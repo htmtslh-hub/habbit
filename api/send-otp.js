@@ -6,6 +6,7 @@
 
 const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 function getDb() {
   if (!admin.apps.length) {
@@ -44,12 +45,14 @@ function getTransporter() {
 }
 
 function generateOTP() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  return crypto.randomInt(100000, 1000000).toString();
 }
 
 module.exports = async function handler(req, res) {
-  // CORS
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  // CORS with origin restriction
+  const origin = req.headers.origin;
+  const allowed = !origin || origin.endsWith(".web.app") || origin.endsWith(".vercel.app") || origin.includes("localhost");
+  res.setHeader("Access-Control-Allow-Origin", allowed ? (origin || "https://habitmastery.web.app") : "https://habitmastery.web.app");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 

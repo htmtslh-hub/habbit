@@ -30,8 +30,10 @@ function getDb() {
 }
 
 module.exports = async function handler(req, res) {
-  // CORS
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  // CORS with origin restriction
+  const origin = req.headers.origin;
+  const allowed = !origin || origin.endsWith(".web.app") || origin.endsWith(".vercel.app") || origin.includes("localhost");
+  res.setHeader("Access-Control-Allow-Origin", allowed ? (origin || "https://habitmastery.web.app") : "https://habitmastery.web.app");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 

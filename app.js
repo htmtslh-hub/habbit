@@ -1629,7 +1629,11 @@ window._closePaymentSuccess = function(){
 window._openUpgrade = openUpgradeModal;
 window._requestUpgrade = window._manualConfirm;
 const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
-function escHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+function escHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+const escapeHtml = escHtml;
 function dim(m,y){return new Date(y,m+1,0).getDate()}
 function ck(id,d){return`${cY}-${cM}-${id}-${d}`}
 
