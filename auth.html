@@ -15,7 +15,7 @@
     <link rel="alternate icon" href="./icon-192.png">
     <link rel="apple-touch-icon" href="./icon-512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="auth.css?v=5.8.3">
+    <link rel="stylesheet" href="auth.css?v=5.8.4">
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -82,7 +82,7 @@
                 <!-- Desktop App Download Box -->
                 <div class="desktop-download-box" id="desktopDownloadBox">
                     <div class="desktop-download-header">
-                        <div class="desktop-download-badge" data-i18n="desktop_app_badge">💻 WINDOWS APP</div>
+                        <div class="desktop-download-badge" data-i18n="desktop_app_badge">💻 DESKTOP APP</div>
                     </div>
                     <div class="desktop-download-body">
                         <div class="desktop-download-icon-card">
@@ -93,12 +93,12 @@
                             </svg>
                         </div>
                         <div class="desktop-download-text">
-                            <div class="desktop-download-headline" data-i18n="desktop_app_headline">Tải ứng dụng cho Máy tính</div>
-                            <p class="desktop-download-subtext" data-i18n="desktop_app_desc">Khởi động cùng Windows, mượt mà & thông báo chuẩn xác không cần mở trình duyệt.</p>
+                            <div class="desktop-download-headline" data-i18n="desktop_app_headline">Tải ứng dụng Máy tính (Windows & Mac)</div>
+                            <p class="desktop-download-subtext" data-i18n="desktop_app_desc">Khởi động cùng máy tính, mượt mà & thông báo chuẩn xác không cần mở trình duyệt.</p>
                         </div>
                     </div>
                     <div class="desktop-download-actions">
-                        <a href="downloads/HabitMastery-Setup.zip" class="btn-desktop-download" download="HabitMastery-Setup.zip" title="Tải bản cài đặt (.zip)">
+                        <a href="downloads/HabitMastery-Setup.zip" class="btn-desktop-download" download="HabitMastery-Setup.zip" title="Tải bản cài đặt Windows (.zip)">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                 <polyline points="7 10 12 15 17 10"></polyline>
@@ -106,8 +106,8 @@
                             </svg>
                             <span data-i18n="btn_download_setup">Tải bản Cài đặt (.zip)</span>
                         </a>
-                        <button type="button" class="btn-desktop-guide" onclick="window.openDownloadModal()" title="Xem bản Portable & Hướng dẫn mở ứng dụng">
-                            <span data-i18n="btn_download_guide">Tùy chọn & Hướng dẫn</span>
+                        <button type="button" class="btn-desktop-guide" onclick="window.openDownloadModal()" title="Xem bản Portable & Bản dành cho Mac">
+                            <span data-i18n="btn_download_guide">Tùy chọn & Bản cho Mac</span>
                         </button>
                     </div>
                 </div>
@@ -587,66 +587,128 @@
                 <button type="button" class="download-modal-close" id="downloadModalClose" onclick="window.closeDownloadModal()" title="Đóng">✕</button>
             </div>
             <div class="download-modal-body">
-                <p class="download-modal-subtitle" data-i18n="modal_download_subtitle">Trải nghiệm rèn luyện kỷ luật độc lập, mượt mà và tập trung tối đa trên Windows.</p>
+                <p class="download-modal-subtitle" data-i18n="modal_download_subtitle">Trải nghiệm rèn luyện kỷ luật độc lập, mượt mà và tập trung tối đa trên Windows & macOS.</p>
 
-                <!-- Dual Download Options -->
-                <div class="download-grid">
-                    <!-- Setup Card -->
-                    <div class="download-choice-card recommended">
-                        <div class="download-choice-badge">⭐ KHUYÊN DÙNG</div>
-                        <div class="download-choice-icon">🚀</div>
-                        <h4 class="download-choice-title" data-i18n="card_installer_title">Bản Cài Đặt (Setup .zip)</h4>
-                        <p class="download-choice-desc" data-i18n="card_installer_desc">Tự động tạo biểu tượng trên Desktop, Start Menu & tích hợp thông báo hệ thống Windows.</p>
-                        <a href="downloads/HabitMastery-Setup.zip" class="btn-download-choice btn-primary-dl" download="HabitMastery-Setup.zip">
-                            <span data-i18n="card_installer_btn">⬇ Tải HabitMastery-Setup.zip (86 MB)</span>
-                        </a>
+                <!-- OS Filter Tabs -->
+                <div class="download-os-tabs">
+                    <button type="button" class="download-os-tab active" id="tabOsWin" onclick="window.switchDownloadOs('win')">
+                        <span data-i18n="tab_os_win">🪟 Windows</span>
+                    </button>
+                    <button type="button" class="download-os-tab" id="tabOsMac" onclick="window.switchDownloadOs('mac')">
+                        <span data-i18n="tab_os_mac">🍎 macOS (MacBook / iMac)</span>
+                    </button>
+                </div>
+
+                <!-- Windows Section -->
+                <div id="osWinSection">
+                    <!-- Dual Download Options -->
+                    <div class="download-grid">
+                        <!-- Setup Card -->
+                        <div class="download-choice-card recommended">
+                            <div class="download-choice-badge">⭐ KHUYÊN DÙNG</div>
+                            <div class="download-choice-icon">🚀</div>
+                            <h4 class="download-choice-title" data-i18n="card_installer_title">Bản Cài Đặt (Setup .zip)</h4>
+                            <p class="download-choice-desc" data-i18n="card_installer_desc">Tự động tạo biểu tượng trên Desktop, Start Menu & tích hợp thông báo hệ thống Windows.</p>
+                            <a href="downloads/HabitMastery-Setup.zip" class="btn-download-choice btn-primary-dl" download="HabitMastery-Setup.zip">
+                                <span data-i18n="card_installer_btn">⬇ Tải HabitMastery-Setup.zip (86 MB)</span>
+                            </a>
+                        </div>
+
+                        <!-- Portable Card -->
+                        <div class="download-choice-card">
+                            <div class="download-choice-badge portable-badge">⚡ KHÔNG CẦN CÀI ĐẶT</div>
+                            <div class="download-choice-icon">💼</div>
+                            <h4 class="download-choice-title" data-i18n="card_portable_title">Bản Di Động (Portable .zip)</h4>
+                            <p class="download-choice-desc" data-i18n="card_portable_desc">Không cần cài đặt, tải về bấm chạy ngay lập tức. Thích hợp lưu trữ USB mang đi mọi nơi.</p>
+                            <a href="downloads/HabitMastery-Portable.zip" class="btn-download-choice btn-secondary-dl" download="HabitMastery-Portable.zip">
+                                <span data-i18n="card_portable_btn">⬇ Tải HabitMastery-Portable.zip (78 MB)</span>
+                            </a>
+                        </div>
                     </div>
 
-                    <!-- Portable Card -->
-                    <div class="download-choice-card">
-                        <div class="download-choice-badge portable-badge">⚡ KHÔNG CẦN CÀI ĐẶT</div>
-                        <div class="download-choice-icon">💼</div>
-                        <h4 class="download-choice-title" data-i18n="card_portable_title">Bản Di Động (Portable .zip)</h4>
-                        <p class="download-choice-desc" data-i18n="card_portable_desc">Không cần cài đặt, tải về bấm chạy ngay lập tức. Thích hợp lưu trữ USB mang đi mọi nơi.</p>
-                        <a href="downloads/HabitMastery-Portable.zip" class="btn-download-choice btn-secondary-dl" download="HabitMastery-Portable.zip">
-                            <span data-i18n="card_portable_btn">⬇ Tải HabitMastery-Portable.zip (78 MB)</span>
-                        </a>
+                    <!-- 3-step Guide for Windows SmartScreen -->
+                    <div class="download-guide-box">
+                        <div class="guide-box-header">
+                            <span class="guide-box-icon">💡</span>
+                            <span class="guide-box-title" data-i18n="guide_sec_title">Hướng dẫn mở lần đầu nếu Windows cảnh báo:</span>
+                        </div>
+                        <div class="guide-steps-list">
+                            <div class="guide-step-row">
+                                <span class="step-num">1</span>
+                                <span class="step-text" data-i18n="guide_step1">Tải về mở file .zip và chạy file cài đặt. Nếu xuất hiện <em>"Windows protected your PC"</em>: Bấm <strong>"More info" (Thông tin thêm)</strong> → Chọn <strong>"Run anyway" (Vẫn chạy)</strong>.</span>
+                            </div>
+                            <div class="guide-step-row">
+                                <span class="step-num">2</span>
+                                <span class="step-text" data-i18n="guide_step2">Nếu file tải về bị chặn: Chuột phải vào file → chọn <strong>Properties</strong> → tick ô <strong>Unblock</strong> ở dưới cùng → bấm OK.</span>
+                            </div>
+                            <div class="guide-step-row">
+                                <span class="step-num">3</span>
+                                <span class="step-text" data-i18n="guide_step3">Đăng nhập tài khoản của bạn để đồng bộ ngay lập tức toàn bộ thói quen và dữ liệu từ web!</span>
+                            </div>
+                        </div>
+                        <div class="guide-file-link">
+                            <a href="downloads/Huong-Dan-Cai-Dat.txt" download="Huong-Dan-Cai-Dat.txt" class="btn-guide-txt">
+                                <span data-i18n="guide_txt_btn">📄 Tải file hướng dẫn chi tiết (.txt)</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 3-step Guide for Windows SmartScreen -->
-                <div class="download-guide-box">
-                    <div class="guide-box-header">
-                        <span class="guide-box-icon">💡</span>
-                        <span class="guide-box-title" data-i18n="guide_sec_title">Hướng dẫn mở lần đầu nếu Windows cảnh báo:</span>
+                <!-- macOS Section -->
+                <div id="osMacSection" style="display:none;">
+                    <div class="download-grid">
+                        <!-- PWA Add to Dock Card -->
+                        <div class="download-choice-card recommended">
+                            <div class="download-choice-badge">⭐ KHUYÊN DÙNG TRÊN MAC</div>
+                            <div class="download-choice-icon">🍎</div>
+                            <h4 class="download-choice-title" data-i18n="card_mac_pwa_title">Cài Đặt Nhanh Vào Dock (Khuyên dùng)</h4>
+                            <p class="download-choice-desc" data-i18n="card_mac_pwa_desc">Không cần tải file nặng. Safari: Menu File ➔ Add to Dock. Chrome/Edge: bấm biểu tượng Cài đặt trên thanh URL.</p>
+                            <button type="button" class="btn-download-choice btn-primary-dl" onclick="window.showMacPwaTip()">
+                                <span data-i18n="card_mac_pwa_btn">⭐ Xem cách cài vào Dock Mac (1 nhấp)</span>
+                            </button>
+                        </div>
+
+                        <!-- Packaged DMG Card -->
+                        <div class="download-choice-card">
+                            <div class="download-choice-badge portable-badge">⚡ FILE CÀI .DMG</div>
+                            <div class="download-choice-icon">📦</div>
+                            <h4 class="download-choice-title" data-i18n="card_mac_dmg_title">Bản Đóng Gói Cài Đặt (.dmg)</h4>
+                            <p class="download-choice-desc" data-i18n="card_mac_dmg_desc">Bản cài độc lập cho chip Apple Silicon (M1/M2/M3/M4) và chip Intel x64 thông qua GitHub Releases.</p>
+                            <a href="https://github.com/htmtslh-hub/habbit/releases" target="_blank" rel="noopener noreferrer" class="btn-download-choice btn-secondary-dl">
+                                <span data-i18n="card_mac_dmg_btn">⬇ Tải Bản .DMG (GitHub Releases)</span>
+                            </a>
+                        </div>
                     </div>
-                    <div class="guide-steps-list">
-                        <div class="guide-step-row">
-                            <span class="step-num">1</span>
-                            <span class="step-text" data-i18n="guide_step1">Nếu màn hình hiện <em>"Windows protected your PC"</em>: Bấm <strong>"More info" (Thông tin thêm)</strong> → Chọn <strong>"Run anyway" (Vẫn chạy)</strong>.</span>
+
+                    <!-- macOS 3-step Guide -->
+                    <div class="download-guide-box">
+                        <div class="guide-box-header">
+                            <span class="guide-box-icon">💡</span>
+                            <span class="guide-box-title" data-i18n="mac_guide_title">Hướng dẫn mở lần đầu nếu macOS chặn file .dmg:</span>
                         </div>
-                        <div class="guide-step-row">
-                            <span class="step-num">2</span>
-                            <span class="step-text" data-i18n="guide_step2">Nếu file tải về bị chặn: Chuột phải vào file → chọn <strong>Properties</strong> → tick ô <strong>Unblock</strong> ở dưới cùng → bấm OK.</span>
+                        <div class="guide-steps-list">
+                            <div class="guide-step-row">
+                                <span class="step-num">1</span>
+                                <span class="step-text" data-i18n="mac_guide_step1">Mở file .dmg và kéo biểu tượng Habit Mastery vào thư mục <strong>Applications</strong>.</span>
+                            </div>
+                            <div class="guide-step-row">
+                                <span class="step-num">2</span>
+                                <span class="step-text" data-i18n="mac_guide_step2">Nếu hiện cảnh báo nhà phát triển chưa xác định: Nhấn giữ phím <strong>Control</strong> + click vào app (hoặc chuột phải) ➔ Chọn <strong>Open</strong> ➔ Bấm <strong>Open</strong>.</span>
+                            </div>
+                            <div class="guide-step-row">
+                                <span class="step-num">3</span>
+                                <span class="step-text" data-i18n="mac_guide_step3">Hoặc vào <strong>Cài đặt hệ thống (System Settings)</strong> ➔ <strong>Quyền riêng tư & Bảo mật</strong> ➔ cuộn xuống chọn <strong>Open Anyway</strong>.</span>
+                            </div>
                         </div>
-                        <div class="guide-step-row">
-                            <span class="step-num">3</span>
-                            <span class="step-text" data-i18n="guide_step3">Đăng nhập tài khoản của bạn để đồng bộ ngay lập tức toàn bộ thói quen và dữ liệu từ web!</span>
-                        </div>
-                    </div>
-                    <div class="guide-file-link">
-                        <a href="downloads/Huong-Dan-Cai-Dat.txt" download="Huong-Dan-Cai-Dat.txt" class="btn-guide-txt">
-                            <span data-i18n="guide_txt_btn">📄 Tải file hướng dẫn chi tiết (.txt)</span>
-                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="i18n.js?v=5.8.3"></script>
+    <script src="i18n.js?v=5.8.4"></script>
     <script src="gotiengviet.js?v=5.0.8"></script>
-    <script src="auth.js?v=5.8.3"></script>
+    <script src="auth.js?v=5.8.4"></script>
     <script>
     (function(){
       if (!('serviceWorker' in navigator)) return;

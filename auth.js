@@ -967,9 +967,49 @@ window.closeQrModal = function() {
     if (modal) modal.style.display = 'none';
 };
 
+window.switchDownloadOs = function(os) {
+    const tabWin = document.getElementById('tabOsWin');
+    const tabMac = document.getElementById('tabOsMac');
+    const secWin = document.getElementById('osWinSection');
+    const secMac = document.getElementById('osMacSection');
+
+    if (os === 'mac') {
+        if (tabWin) tabWin.classList.remove('active');
+        if (tabMac) tabMac.classList.add('active');
+        if (secWin) secWin.style.display = 'none';
+        if (secMac) secMac.style.display = 'block';
+    } else {
+        if (tabMac) tabMac.classList.remove('active');
+        if (tabWin) tabWin.classList.add('active');
+        if (secMac) secMac.style.display = 'none';
+        if (secWin) secWin.style.display = 'block';
+    }
+};
+
+window.showMacPwaTip = function() {
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    let msg = '🍎 HƯỚNG DẪN CÀI ĐẶT VÀO DOCK MACOS:\n\n';
+    if (isSafari) {
+        msg += '1. Bấm vào menu "File" (Tệp) trên thanh công cụ trên cùng màn hình Mac.\n';
+        msg += '2. Chọn "Add to Dock" (Thêm vào Dock).\n';
+        msg += '3. Bấm "Add" là Habit Mastery đã nằm ngay trên thanh Dock của bạn!';
+    } else {
+        msg += '1. Nhìn lên góc phải thanh nhập URL, bấm biểu tượng "Cài đặt ứng dụng".\n';
+        msg += '2. Hoặc vào menu trình duyệt (3 chấm) ➔ "Lưu và chia sẻ" ➔ "Cài đặt Habit Mastery".\n';
+        msg += '3. Ứng dụng sẽ hoạt động độc lập như một Native Mac App!';
+    }
+    alert(msg);
+};
+
 window.openDownloadModal = function() {
     const modal = document.getElementById('downloadAppModalBg');
-    if (modal) modal.style.display = 'flex';
+    if (modal) {
+        modal.style.display = 'flex';
+        // Auto-detect Mac
+        if (navigator.userAgent && (navigator.userAgent.includes('Macintosh') || navigator.userAgent.includes('Mac OS'))) {
+            window.switchDownloadOs('mac');
+        }
+    }
 };
 
 window.closeDownloadModal = function() {
