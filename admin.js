@@ -109,6 +109,7 @@ function initAuth(){
             initQuestManagement();
             initAdminChatSystem();
             initUserSelectionSystem();
+            initEmailManagement();
 
             // Initialize Vietnamese Input Method Editor (default to Telex, active on admin management/search fields)
             if(typeof GoTiengViet !== 'undefined' && GoTiengViet.VietnameseInput){
@@ -251,6 +252,7 @@ function renderRecentUsers(){
             <td>${shortDate(u.createdAt)}</td>
             <td>
                 <button class="btn-sm chat" onclick="window._adminOpenChat('${u.uid}')" title="Nhắn tin hỗ trợ">💬</button>
+                <button class="btn-sm email" onclick="window._adminOpenEmailComposer('${u.uid}')" title="Gửi email (Resend)">📧</button>
                 <button class="btn-sm" onclick="window._adminViewUser('${u.uid}')" title="Chi tiết">👁️ Chi tiết</button>
             </td>
         </tr>`;
@@ -412,6 +414,7 @@ function renderUsers(filter, search, filterSource){
             <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
             <td>
                 <button class="btn-sm chat" onclick="window._adminOpenChat('${u.uid}')" title="Nhắn tin hỗ trợ">💬</button>
+                <button class="btn-sm email" onclick="window._adminOpenEmailComposer('${u.uid}')" title="Gửi email (Resend)">📧</button>
                 <button class="btn-sm" onclick="window._adminViewUser('${u.uid}')" title="Chi tiết">👁️</button>
                 ${plan !== 'premium' ? `<button class="btn-sm upgrade" onclick="window._adminQuickUpgrade('${u.uid}')" title="Upgrade Premium">👑</button>` : ''}
                 ${u.role !== 'admin' ? `<button class="btn-sm danger" onclick="window._adminDeleteUser('${u.uid}')" title="Xóa tài khoản">🗑️</button>` : ''}
@@ -514,7 +517,8 @@ function switchSection(section){
         users: 'Quản lý User', 
         pending: 'Chờ duyệt', 
         quests: 'Nhiệm vụ & Zalo Code', 
-        messages: 'Hộp Thư Chat & Hỗ Trợ User' 
+        messages: 'Hộp Thư Chat & Hỗ Trợ User',
+        emails: 'Gửi Email (Resend)'
     };
     const titleText = titles[section] || 'Dashboard';
     const pageTitle = document.getElementById('pageTitle');
@@ -524,6 +528,11 @@ function switchSection(section){
 
     if (section === 'quests') {
         loadZaloSecretCode();
+    }
+    if (section === 'emails') {
+        if (typeof window._adminOnSwitchToEmails === 'function') {
+            window._adminOnSwitchToEmails();
+        }
     }
 
     // Close mobile drawer if open
@@ -935,6 +944,21 @@ function initUserSelectionSystem() {
         }
     }
 
+    // 4b. Bulk Send Email (Resend)
+    const bulkEmailBtn = document.getElementById('bulkBtnEmail');
+    if (bulkEmailBtn) {
+        bulkEmailBtn.onclick = () => {
+            if (selectedUserUids.size === 0) {
+                alert('Vui lòng tích chọn ít nhất 1 người dùng để gửi email!');
+                return;
+            }
+            switchSection('emails');
+            if (typeof window._adminSelectEmailTargetMode === 'function') {
+                window._adminSelectEmailTargetMode('selected');
+            }
+        };
+    }
+
     // 5. Bulk Disable
     const bulkDisableBtn = document.getElementById('bulkBtnDisable');
     if (bulkDisableBtn) {
@@ -1251,6 +1275,14 @@ window._adminOpenChatFromModal = () => {
     const uid = currentModalUid;
     document.getElementById('userModal').style.display = 'none';
     window._adminOpenChat(uid);
+};
+window._adminOpenEmailFromModal = () => {
+    if(!currentModalUid) return;
+    const uid = currentModalUid;
+    document.getElementById('userModal').style.display = 'none';
+    if(typeof window._adminOpenEmailComposer === 'function') {
+        window._adminOpenEmailComposer(uid);
+    }
 };
 
 window._adminQuickUpgrade = async (uid) => {
@@ -2297,6 +2329,903 @@ window._saveZaloSecretCode = async function() {
         if (btn) btn.disabled = false;
     }
 };
+
+// ============================================================
+// ===== RESEND EMAIL MANAGEMENT SYSTEM =====
+// ============================================================
+function initEmailManagement() {
+    // --- State ---
+    let resendConfig = {
+        apiKey: '',
+        fromName: 'Habit Mastery',
+        fromEmail: 'onboarding@resend.dev',
+        replyTo: 'htmt.slh@gmail.com'
+    };
+    const EMAIL_API_BASE = (window.location.hostname.includes('vercel.app'))
+        ? '/api'
+        : 'https://habbit-opal.vercel.app/api';
+    let currentTargetMode = 'all'; // 'all' | 'filter' | 'custom' | 'selected'
+    let emailLogsUnsubscribe = null;
+    let cachedEmailLogs = [];
+
+    // --- Templates Catalog ---
+    const EMAIL_TEMPLATES = {
+        welcome: {
+            chipId: 'tplWelcome',
+            subject: 'Chào mừng bạn gia nhập hành trình Habit Mastery! ✨',
+            content: `Chào <strong>{name}</strong>,\n\nChào mừng bạn đã chính thức bước vào cộng đồng rèn luyện kỷ luật bản thân tại <strong>Habit Mastery</strong>!\n\nChúng tôi tin rằng: <em>"Mỗi thói quen nhỏ được kiên trì lặp lại mỗi ngày sẽ tạo nên sự thay đổi phi thường trong cuộc đời bạn."</em>\n\n<div class="highlight-box">💡 <strong>Mẹo khởi đầu thành công:</strong> Hãy bắt đầu với 1-3 thói quen đơn giản nhất mỗi ngày (như uống đủ nước, đọc sách 10 phút, tập thể dục nhẹ) để duy trì streak liên tục!</div>\n\nChúc bạn luôn giữ vững ngọn lửa nhiệt huyết và từng bước chinh phục các cảnh giới Tu Vi cao nhất!`,
+            ctaText: 'Bắt Đầu Rèn Luyện Ngay 🚀',
+            ctaUrl: 'https://habit-tracker-six-delta.vercel.app/'
+        },
+        vipGift: {
+            chipId: 'tplVipGift',
+            subject: '👑 Quà Tặng Đặc Quyền: Kích Hoạt VIP Premium Miễn Phí Cho Bạn!',
+            content: `Chào <strong>{name}</strong>,\n\nBan quản trị Habit Mastery xin gửi lời tri ân sâu sắc vì sự đồng hành kiên trì của bạn trong thời gian qua!\n\nĐể tiếp thêm động lực cho chặng đường rèn luyện sắp tới, chúng tôi xin dành tặng bạn <strong>Đặc Quyền VIP Premium</strong> hoàn toàn miễn phí.\n\n<div class="gold-box">👑 <strong>Đặc quyền mở khóa của bạn bao gồm:</strong>\n<ul>\n  <li>Không giới hạn số lượng thói quen theo dõi.</li>\n  <li>Mở khóa hệ thống Báo Cáo Phân Tích Chuyên Sâu & Ma Trận Eisenhower.</li>\n  <li>Nhân đôi Điểm Tu Vi (DP) khi hoàn thành thói quen.</li>\n  <li>Danh hiệu VIP Vàng hiển thị nổi bật trên Bảng Xếp Hạng.</li>\n</ul></div>\n\nHãy đăng nhập ngay hôm nay để tận hưởng trọn vẹn đặc quyền của bạn nhé!`,
+            ctaText: 'Nhận Đặc Quyền VIP Ngay 👑',
+            ctaUrl: 'https://habit-tracker-six-delta.vercel.app/'
+        },
+        feature: {
+            chipId: 'tplFeature',
+            subject: '⚡ Cập Nhật Mới: Khám phá các tính năng đột phá vừa ra mắt!',
+            content: `Chào <strong>{name}</strong>,\n\nĐội ngũ phát triển Habit Mastery vừa hoàn thành bản cập nhật mới với nhiều nâng cấp cực kỳ giá trị để nâng tầm trải nghiệm của bạn:\n\n<ul>\n  <li><strong>Ma Trận Thời Gian Eisenhower:</strong> Giúp bạn phân loại nhiệm vụ khẩn cấp & quan trọng chuẩn khoa học.</li>\n  <li><strong>Đồng bộ thời gian thực siêu tốc:</strong> Dữ liệu thói quen luôn được bảo toàn an toàn trên mọi thiết bị.</li>\n  <li><strong>Hộp thư hỗ trợ trực tuyến:</strong> Kết nối trực tiếp với ban quản trị để giải đáp mọi thắc mắc trong tích tắc.</li>\n</ul>\n\n<div class="highlight-box">Trải nghiệm ngay bản cập nhật mới nhất và chia sẻ cảm nhận cho chúng mình biết nhé!</div>`,
+            ctaText: 'Khám Phá Tính Năng Mới ⚡',
+            ctaUrl: 'https://habit-tracker-six-delta.vercel.app/'
+        },
+        weekly: {
+            chipId: 'tplWeekly',
+            subject: '🔥 Tuần mới đã bắt đầu! Đừng để chuỗi Streak rèn luyện bị gián đoạn',
+            content: `Chào <strong>{name}</strong>,\n\nMột tuần mới lại mở ra với muôn vàn cơ hội và khởi đầu mới. Đây chính là thời điểm tuyệt vời nhất để bạn củng cố lại các mục tiêu và thiết lập chuỗi thói quen kỷ luật!\n\nHiện tại tài khoản của bạn đang có <strong>{dp} Tu Vi</strong> và gói tài khoản <strong>{plan}</strong>.\n\n<div class="highlight-box">🎯 <strong>Mục tiêu tuần này:</strong> Hoàn thành 100% thói quen mỗi ngày và ghi lại nhật ký cảm xúc để nhìn thấy sự tiến bộ rõ rệt của bản thân.</div>\n\nHãy dành 2 phút mở ứng dụng và tích xanh cho các thói quen sáng nay bạn nhé!`,
+            ctaText: 'Đăng Nhập Rèn Luyện 🎯',
+            ctaUrl: 'https://habit-tracker-six-delta.vercel.app/'
+        },
+        custom: {
+            chipId: 'tplCustom',
+            subject: '',
+            content: `Chào <strong>{name}</strong>,\n\nNhập nội dung thông điệp của bạn tại đây...`,
+            ctaText: 'Truy Cập Ứng Dụng',
+            ctaUrl: 'https://habit-tracker-six-delta.vercel.app/'
+        }
+    };
+
+    // --- DOM Elements Cache ---
+    const resendStatusIndicator = document.getElementById('resendStatusIndicator');
+    const resendSenderDisplay = document.getElementById('resendSenderDisplay');
+    const btnOpenResendConfigModal = document.getElementById('btnOpenResendConfigModal');
+    const btnOpenResendConfigModal2 = document.getElementById('btnOpenResendConfigModal2');
+
+    // Config Modal
+    const resendConfigModal = document.getElementById('resendConfigModal');
+    const resendConfigClose = document.getElementById('resendConfigClose');
+    const resendConfigCancel = document.getElementById('resendConfigCancel');
+    const cfgResendApiKey = document.getElementById('cfgResendApiKey');
+    const btnToggleApiKeyVisibility = document.getElementById('btnToggleApiKeyVisibility');
+    const cfgResendFromName = document.getElementById('cfgResendFromName');
+    const cfgResendFromEmail = document.getElementById('cfgResendFromEmail');
+    const cfgResendReplyTo = document.getElementById('cfgResendReplyTo');
+    const cfgTestEmailAddress = document.getElementById('cfgTestEmailAddress');
+    const btnTestResendModal = document.getElementById('btnTestResendModal');
+    const cfgTestResultBox = document.getElementById('cfgTestResultBox');
+    const btnSaveResendConfig = document.getElementById('btnSaveResendConfig');
+
+    // Composer Targeting
+    const tabTargetAll = document.getElementById('tabTargetAll');
+    const tabTargetFilter = document.getElementById('tabTargetFilter');
+    const tabTargetCustom = document.getElementById('tabTargetCustom');
+    const tabTargetSelected = document.getElementById('tabTargetSelected');
+
+    const targetAllPanel = document.getElementById('targetAllPanel');
+    const targetFilterPanel = document.getElementById('targetFilterPanel');
+    const targetCustomPanel = document.getElementById('targetCustomPanel');
+    const targetSelectedPanel = document.getElementById('targetSelectedPanel');
+
+    const targetFilterPlan = document.getElementById('targetFilterPlan');
+    const targetFilterStatus = document.getElementById('targetFilterStatus');
+    const targetCustomEmails = document.getElementById('targetCustomEmails');
+    const composerRecipientCount = document.getElementById('composerRecipientCount');
+    const btnViewTargetList = document.getElementById('btnViewTargetList');
+    const selectedUsersSummaryCount = document.getElementById('selectedUsersSummaryCount');
+
+    // Composer Fields
+    const emailSubject = document.getElementById('emailSubject');
+    const emailContent = document.getElementById('emailContent');
+    const emailCtaText = document.getElementById('emailCtaText');
+    const emailCtaUrl = document.getElementById('emailCtaUrl');
+    const btnResetEmailForm = document.getElementById('btnResetEmailForm');
+    const btnSubmitSendEmail = document.getElementById('btnSubmitSendEmail');
+    const btnSendTestEmail = document.getElementById('btnSendTestEmail');
+    const emailSendStatusBox = document.getElementById('emailSendStatusBox');
+
+    // Preview Elements
+    const emailClientMockup = document.getElementById('emailClientMockup');
+    const btnPreviewDesktop = document.getElementById('btnPreviewDesktop');
+    const btnPreviewMobile = document.getElementById('btnPreviewMobile');
+    const previewSubjectTitle = document.getElementById('previewSubjectTitle');
+    const previewSubjectMeta = document.getElementById('previewSubjectMeta');
+    const previewFromMeta = document.getElementById('previewFromMeta');
+    const previewToMeta = document.getElementById('previewToMeta');
+    const previewGreeting = document.getElementById('previewGreeting');
+    const previewContent = document.getElementById('previewContent');
+    const previewCtaWrap = document.getElementById('previewCtaWrap');
+    const previewCtaBtn = document.getElementById('previewCtaBtn');
+
+    // Logs Table & Modal
+    const emailLogsTableBody = document.getElementById('emailLogsTableBody');
+    const emailLogDetailModal = document.getElementById('emailLogDetailModal');
+    const emailLogDetailClose = document.getElementById('emailLogDetailClose');
+    const emailLogDetailDismiss = document.getElementById('emailLogDetailDismiss');
+    const emailLogDetailContent = document.getElementById('emailLogDetailContent');
+
+    // ============================================================
+    // 1. CẤU HÌNH RESEND (LOAD / SAVE / TEST)
+    // ============================================================
+    async function loadResendConfig() {
+        try {
+            const doc = await db.collection('system_config').doc('resend_email').get();
+            if (doc.exists) {
+                const data = doc.data() || {};
+                resendConfig.apiKey = data.apiKey || '';
+                resendConfig.fromName = data.fromName || 'Habit Mastery';
+                resendConfig.fromEmail = data.fromEmail || 'onboarding@resend.dev';
+                resendConfig.replyTo = data.replyTo || 'htmt.slh@gmail.com';
+            }
+        } catch (e) {
+            console.warn('Load resend config warning:', e);
+        }
+        updateStatusBanner();
+        updateLivePreview();
+    }
+
+    function updateStatusBanner() {
+        if (!resendStatusIndicator || !resendSenderDisplay) return;
+        const hasKey = Boolean(resendConfig.apiKey && resendConfig.apiKey.trim().length > 5);
+
+        if (hasKey) {
+            resendStatusIndicator.className = 'resend-indicator';
+            resendStatusIndicator.innerHTML = '<span class="status-pulse-dot"></span> Đang Hoạt Động (Resend Ready)';
+            resendSenderDisplay.innerHTML = `<span class="sender-tag">SENDER:</span> <strong>${escHtml(resendConfig.fromName)}</strong> &lt;${escHtml(resendConfig.fromEmail)}&gt;`;
+        } else {
+            resendStatusIndicator.className = 'resend-indicator inactive';
+            resendStatusIndicator.innerHTML = '<span class="status-pulse-dot"></span> Chưa Cấu Hình API Key';
+            resendSenderDisplay.innerHTML = '<span class="sender-tag" style="color:var(--accent-red-bright);">CẢNH BÁO:</span> Bấm "Cấu Hình API Key" để kích hoạt gửi email';
+        }
+    }
+
+    function openConfigModal() {
+        if (!resendConfigModal) return;
+        if (cfgResendApiKey) cfgResendApiKey.value = resendConfig.apiKey || '';
+        if (cfgResendFromName) cfgResendFromName.value = resendConfig.fromName || 'Habit Mastery';
+        if (cfgResendFromEmail) cfgResendFromEmail.value = resendConfig.fromEmail || 'onboarding@resend.dev';
+        if (cfgResendReplyTo) cfgResendReplyTo.value = resendConfig.replyTo || 'htmt.slh@gmail.com';
+        if (cfgTestEmailAddress) cfgTestEmailAddress.value = currentAdmin?.email || '';
+        if (cfgTestResultBox) {
+            cfgTestResultBox.style.display = 'none';
+            cfgTestResultBox.innerHTML = '';
+        }
+        resendConfigModal.style.display = 'flex';
+    }
+
+    function closeConfigModal() {
+        if (resendConfigModal) resendConfigModal.style.display = 'none';
+    }
+
+    if (btnOpenResendConfigModal) btnOpenResendConfigModal.onclick = openConfigModal;
+    if (btnOpenResendConfigModal2) btnOpenResendConfigModal2.onclick = openConfigModal;
+    if (resendConfigClose) resendConfigClose.onclick = closeConfigModal;
+    if (resendConfigCancel) resendConfigCancel.onclick = closeConfigModal;
+    if (resendConfigModal) {
+        resendConfigModal.onclick = (e) => { if (e.target === resendConfigModal) closeConfigModal(); };
+    }
+
+    if (btnToggleApiKeyVisibility && cfgResendApiKey) {
+        btnToggleApiKeyVisibility.onclick = () => {
+            const isPassword = cfgResendApiKey.type === 'password';
+            cfgResendApiKey.type = isPassword ? 'text' : 'password';
+            btnToggleApiKeyVisibility.textContent = isPassword ? '🔒' : '👁️';
+        };
+    }
+
+    if (btnSaveResendConfig) {
+        btnSaveResendConfig.onclick = async () => {
+            const apiKey = (cfgResendApiKey ? cfgResendApiKey.value : '').trim();
+            const fromName = (cfgResendFromName ? cfgResendFromName.value : '').trim() || 'Habit Mastery';
+            const fromEmail = (cfgResendFromEmail ? cfgResendFromEmail.value : '').trim() || 'onboarding@resend.dev';
+            const replyTo = (cfgResendReplyTo ? cfgResendReplyTo.value : '').trim() || 'htmt.slh@gmail.com';
+
+            if (!apiKey) {
+                alert('Vui lòng nhập Resend API Key (dạng re_xxxx)!');
+                if (cfgResendApiKey) cfgResendApiKey.focus();
+                return;
+            }
+
+            btnSaveResendConfig.disabled = true;
+            btnSaveResendConfig.textContent = 'Đang lưu...';
+
+            try {
+                await db.collection('system_config').doc('resend_email').set({
+                    apiKey,
+                    fromName,
+                    fromEmail,
+                    replyTo,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedBy: currentAdmin?.email || currentAdmin?.uid || 'admin'
+                }, { merge: true });
+
+                resendConfig = { apiKey, fromName, fromEmail, replyTo };
+                updateStatusBanner();
+                updateLivePreview();
+                closeConfigModal();
+                alert('✓ Đã lưu cấu hình Resend Email thành công!');
+            } catch (err) {
+                alert('Lỗi lưu cấu hình: ' + err.message);
+            } finally {
+                btnSaveResendConfig.disabled = false;
+                btnSaveResendConfig.textContent = '💾 Lưu Cấu Hình';
+            }
+        };
+    }
+
+    if (btnTestResendModal) {
+        btnTestResendModal.onclick = async () => {
+            const apiKey = (cfgResendApiKey ? cfgResendApiKey.value : '').trim();
+            const fromName = (cfgResendFromName ? cfgResendFromName.value : '').trim() || 'Habit Mastery';
+            const fromEmail = (cfgResendFromEmail ? cfgResendFromEmail.value : '').trim() || 'onboarding@resend.dev';
+            const replyTo = (cfgResendReplyTo ? cfgResendReplyTo.value : '').trim() || 'htmt.slh@gmail.com';
+            const targetEmail = (cfgTestEmailAddress ? cfgTestEmailAddress.value : '').trim() || currentAdmin?.email;
+
+            if (!apiKey) {
+                alert('Vui lòng nhập Resend API Key trước khi thử!');
+                return;
+            }
+            if (!targetEmail || !targetEmail.includes('@')) {
+                alert('Vui lòng nhập một địa chỉ email nhận thử hợp lệ!');
+                return;
+            }
+
+            btnTestResendModal.disabled = true;
+            btnTestResendModal.textContent = 'Đang gửi...';
+            if (cfgTestResultBox) {
+                cfgTestResultBox.style.display = 'block';
+                cfgTestResultBox.style.color = '#94a3b8';
+                cfgTestResultBox.innerHTML = `⏳ Đang gửi email kiểm tra tới <strong>${escHtml(targetEmail)}</strong> qua Resend...`;
+            }
+
+            try {
+                const idToken = await auth.currentUser.getIdToken(true);
+                const resp = await fetch(`${EMAIL_API_BASE}/send-email`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${idToken}`
+                    },
+                    body: JSON.stringify({
+                        targetMode: 'custom',
+                        subject: '🧪 Kiểm Tra Kết Nối Resend - Habit Mastery',
+                        content: 'Xin chào Admin,\n\nĐây là email kiểm tra kết nối dịch vụ Resend tự động từ bảng điều khiển quản trị Habit Mastery.\n\nNếu bạn nhận được email này, cấu hình API Key và Sender của bạn đã hoàn toàn hợp lệ và sẵn sàng gửi chiến dịch!',
+                        ctaText: 'Đăng Nhập Quản Trị',
+                        ctaUrl: 'https://habit-tracker-six-delta.vercel.app/admin.html',
+                        recipients: [{
+                            email: targetEmail,
+                            name: currentAdmin?.displayName || 'Admin',
+                            plan: 'premium',
+                            dp: 9999
+                        }],
+                        sendOptions: { apiKey, fromName, fromEmail, replyTo }
+                    })
+                });
+
+                const data = await resp.json();
+                if (!resp.ok || !data.success) {
+                    throw new Error(data.message || data.error || 'Gửi thất bại');
+                }
+
+                if (cfgTestResultBox) {
+                    cfgTestResultBox.style.color = '#10b981';
+                    cfgTestResultBox.innerHTML = `✓ Kết nối thành công! Đã gửi email thử nghiệm tới <strong>${escHtml(targetEmail)}</strong>. Vui lòng kiểm tra Hộp thư đến (hoặc thư rác Spam).`;
+                }
+            } catch (err) {
+                if (cfgTestResultBox) {
+                    cfgTestResultBox.style.color = '#f43f5e';
+                    cfgTestResultBox.innerHTML = `✕ Thất bại: ${escHtml(err.message)}<br><small style="color:#cbd5e1;">Lưu ý: Nếu dùng domain mặc định <code>onboarding@resend.dev</code>, Resend chỉ cho phép gửi tới email mà bạn đã dùng để đăng ký tài khoản Resend.</small>`;
+                }
+            } finally {
+                btnTestResendModal.disabled = false;
+                btnTestResendModal.textContent = '⚡ Gửi thử';
+            }
+        };
+    }
+
+    // ============================================================
+    // 2. RECIPIENT RESOLUTION & TARGETING TABS
+    // ============================================================
+    function getResolvedRecipients() {
+        if (!Array.isArray(allUsers)) return [];
+
+        const validUsersWithEmail = allUsers.filter(u => u && u.email && u.email.includes('@'));
+
+        if (currentTargetMode === 'all') {
+            return validUsersWithEmail
+                .filter(u => !u.disabled)
+                .map(u => ({
+                    uid: u.uid,
+                    email: u.email.trim(),
+                    name: u.displayName || u.name || u.email.split('@')[0],
+                    plan: getEffectivePlan(u),
+                    dp: u.tuviPoints || u.dp || 0
+                }));
+        }
+
+        if (currentTargetMode === 'filter') {
+            const planVal = targetFilterPlan ? targetFilterPlan.value : 'all';
+            const statusVal = targetFilterStatus ? targetFilterStatus.value : 'all';
+
+            return validUsersWithEmail.filter(u => {
+                const effPlan = getEffectivePlan(u);
+                if (planVal !== 'all' && effPlan !== planVal) return false;
+
+                if (statusVal === 'active') {
+                    if (u.disabled || !isActive30d(u)) return false;
+                } else if (statusVal === 'inactive') {
+                    if (!u.disabled && isActive30d(u)) return false;
+                }
+                return true;
+            }).map(u => ({
+                uid: u.uid,
+                email: u.email.trim(),
+                name: u.displayName || u.name || u.email.split('@')[0],
+                plan: getEffectivePlan(u),
+                dp: u.tuviPoints || u.dp || 0
+            }));
+        }
+
+        if (currentTargetMode === 'custom') {
+            const raw = (targetCustomEmails ? targetCustomEmails.value : '').trim();
+            if (!raw) return [];
+            const rawTokens = raw.split(/[\n,; ]+/).map(t => t.trim()).filter(t => t.includes('@'));
+            const uniqueEmails = Array.from(new Set(rawTokens));
+
+            return uniqueEmails.map(email => {
+                const matchUser = validUsersWithEmail.find(u => (u.email || '').toLowerCase() === email.toLowerCase());
+                if (matchUser) {
+                    return {
+                        uid: matchUser.uid,
+                        email: matchUser.email.trim(),
+                        name: matchUser.displayName || matchUser.name || email.split('@')[0],
+                        plan: getEffectivePlan(matchUser),
+                        dp: matchUser.tuviPoints || matchUser.dp || 0
+                    };
+                }
+                return {
+                    uid: null,
+                    email,
+                    name: email.split('@')[0],
+                    plan: 'free',
+                    dp: 0
+                };
+            });
+        }
+
+        if (currentTargetMode === 'selected') {
+            if (!selectedUserUids || selectedUserUids.size === 0) return [];
+            const list = [];
+            selectedUserUids.forEach(uid => {
+                const match = validUsersWithEmail.find(u => u.uid === uid);
+                if (match) {
+                    list.push({
+                        uid: match.uid,
+                        email: match.email.trim(),
+                        name: match.displayName || match.name || match.email.split('@')[0],
+                        plan: getEffectivePlan(match),
+                        dp: match.tuviPoints || match.dp || 0
+                    });
+                }
+            });
+            return list;
+        }
+
+        return [];
+    }
+
+    function setTargetMode(mode) {
+        currentTargetMode = mode;
+        const tabs = [
+            { tab: tabTargetAll, panel: targetAllPanel, id: 'all' },
+            { tab: tabTargetFilter, panel: targetFilterPanel, id: 'filter' },
+            { tab: tabTargetCustom, panel: targetCustomPanel, id: 'custom' },
+            { tab: tabTargetSelected, panel: targetSelectedPanel, id: 'selected' }
+        ];
+
+        tabs.forEach(item => {
+            if (item.tab) {
+                if (item.id === mode) item.tab.classList.add('active');
+                else item.tab.classList.remove('active');
+            }
+            if (item.panel) {
+                item.panel.style.display = item.id === mode ? 'block' : 'none';
+            }
+        });
+
+        updateRecipientCountDisplay();
+        updateLivePreview();
+    }
+
+    function updateRecipientCountDisplay() {
+        const recipients = getResolvedRecipients();
+        const count = recipients.length;
+        if (composerRecipientCount) {
+            composerRecipientCount.textContent = `${count.toLocaleString('vi-VN')} người nhận`;
+        }
+        if (selectedUsersSummaryCount) {
+            selectedUsersSummaryCount.textContent = (selectedUserUids ? selectedUserUids.size : 0).toString();
+        }
+    }
+
+    if (tabTargetAll) tabTargetAll.onclick = () => setTargetMode('all');
+    if (tabTargetFilter) tabTargetFilter.onclick = () => setTargetMode('filter');
+    if (tabTargetCustom) tabTargetCustom.onclick = () => setTargetMode('custom');
+    if (tabTargetSelected) tabTargetSelected.onclick = () => setTargetMode('selected');
+
+    if (targetFilterPlan) targetFilterPlan.onchange = () => { updateRecipientCountDisplay(); updateLivePreview(); };
+    if (targetFilterStatus) targetFilterStatus.onchange = () => { updateRecipientCountDisplay(); updateLivePreview(); };
+    if (targetCustomEmails) targetCustomEmails.oninput = () => { updateRecipientCountDisplay(); updateLivePreview(); };
+
+    if (btnViewTargetList) {
+        btnViewTargetList.onclick = () => {
+            const list = getResolvedRecipients();
+            if (list.length === 0) {
+                alert('Hiện tại danh sách người nhận đang trống!');
+                return;
+            }
+            const previewText = list.slice(0, 30).map((r, i) => `${i+1}. ${r.name} (${r.email}) - Gói: ${r.plan}`).join('\n');
+            const more = list.length > 30 ? `\n... và còn ${list.length - 30} người nhận khác.` : '';
+            alert(`📋 Danh sách ${list.length} người nhận mục tiêu:\n\n${previewText}${more}`);
+        };
+    }
+
+    // ============================================================
+    // 3. TEMPLATES CHIPS & EDITOR TOOLBAR
+    // ============================================================
+    function applyTemplate(key) {
+        const tpl = EMAIL_TEMPLATES[key];
+        if (!tpl) return;
+
+        document.querySelectorAll('.template-chip').forEach(c => c.classList.remove('active'));
+        const chip = document.getElementById(tpl.chipId);
+        if (chip) chip.classList.add('active');
+
+        if (emailSubject) emailSubject.value = tpl.subject;
+        if (emailContent) emailContent.value = tpl.content;
+        if (emailCtaText) emailCtaText.value = tpl.ctaText;
+        if (emailCtaUrl) emailCtaUrl.value = tpl.ctaUrl;
+
+        updateLivePreview();
+    }
+
+    Object.keys(EMAIL_TEMPLATES).forEach(key => {
+        const tpl = EMAIL_TEMPLATES[key];
+        const el = document.getElementById(tpl.chipId);
+        if (el) {
+            el.onclick = () => applyTemplate(key);
+        }
+    });
+
+    // Merge Tags Insertion
+    document.querySelectorAll('.tag-chip[data-tag]').forEach(chip => {
+        chip.onclick = () => {
+            const tag = chip.getAttribute('data-tag');
+            if (!emailContent || !tag) return;
+
+            const start = emailContent.selectionStart || 0;
+            const end = emailContent.selectionEnd || 0;
+            const val = emailContent.value;
+            emailContent.value = val.substring(0, start) + tag + val.substring(end);
+            emailContent.selectionStart = emailContent.selectionEnd = start + tag.length;
+            emailContent.focus();
+            updateLivePreview();
+        };
+    });
+
+    // Editor Toolbar Formatting
+    document.querySelectorAll('.toolbar-btn[data-format]').forEach(btn => {
+        btn.onclick = () => {
+            const format = btn.getAttribute('data-format');
+            if (!emailContent) return;
+
+            const start = emailContent.selectionStart || 0;
+            const end = emailContent.selectionEnd || 0;
+            const selectedText = emailContent.value.substring(start, end);
+            let replacement = '';
+
+            switch (format) {
+                case 'bold':
+                    replacement = `<strong>${selectedText || 'Văn bản in đậm'}</strong>`;
+                    break;
+                case 'italic':
+                    replacement = `<em>${selectedText || 'Văn bản in nghiêng'}</em>`;
+                    break;
+                case 'h2':
+                    replacement = `<h2>${selectedText || 'Tiêu đề đề mục'}</h2>`;
+                    break;
+                case 'list':
+                    replacement = `<ul>\n  <li>${selectedText || 'Nội dung mục 1'}</li>\n  <li>Nội dung mục 2</li>\n</ul>`;
+                    break;
+                case 'box':
+                    replacement = `<div class="highlight-box">💡 <strong>Lưu ý:</strong> ${selectedText || 'Nội dung thông báo nổi bật...'}</div>`;
+                    break;
+                case 'gold':
+                    replacement = `<div class="gold-box">👑 <strong>Đặc quyền:</strong> ${selectedText || 'Nội dung thông báo VIP...'}</div>`;
+                    break;
+                default:
+                    return;
+            }
+
+            const val = emailContent.value;
+            emailContent.value = val.substring(0, start) + replacement + val.substring(end);
+            emailContent.selectionStart = emailContent.selectionEnd = start + replacement.length;
+            emailContent.focus();
+            updateLivePreview();
+        };
+    });
+
+    // Form Reset
+    if (btnResetEmailForm) {
+        btnResetEmailForm.onclick = () => {
+            if (confirm('Bạn có chắc chắn muốn làm mới và xóa nội dung soạn thảo hiện tại?')) {
+                applyTemplate('welcome');
+                if (emailSendStatusBox) emailSendStatusBox.style.display = 'none';
+            }
+        };
+    }
+
+    // ============================================================
+    // 4. LIVE EMAIL CLIENT PREVIEW MOCKUP
+    // ============================================================
+    function formatContentForEmail(content) {
+        if (!content) return '';
+        // If content already contains HTML block tags, don't over-process
+        if (/<(p|div|ul|ol|table|h1|h2|h3|h4)/i.test(content)) {
+            return content.replace(/\n\n/g, '<br><br>');
+        }
+        return content.split('\n\n').map(p => `<p style="margin:0 0 14px;line-height:1.68;">${p.replace(/\n/g, '<br>')}</p>`).join('');
+    }
+
+    function updateLivePreview() {
+        const recipients = getResolvedRecipients();
+        const sample = recipients[0] || {
+            name: currentAdmin?.displayName || 'Nguyễn Văn A',
+            email: currentAdmin?.email || 'nguyenvana@gmail.com',
+            plan: 'VIP Premium',
+            dp: '1.500'
+        };
+
+        const planLabel = sample.plan === 'premium' ? 'VIP Premium' : (sample.plan === 'trial' ? 'Dùng thử' : 'Thành viên Free');
+        const dpDisplay = Number(sample.dp || 0).toLocaleString('vi-VN');
+
+        const replaceVars = (str) => {
+            if (!str) return '';
+            return str
+                .replace(/{name}/g, sample.name || 'Bạn')
+                .replace(/{email}/g, sample.email || '')
+                .replace(/{plan}/g, planLabel)
+                .replace(/{dp}/g, dpDisplay);
+        };
+
+        const rawSubject = (emailSubject ? emailSubject.value : '').trim();
+        const rawContent = (emailContent ? emailContent.value : '').trim();
+        const rawCtaText = (emailCtaText ? emailCtaText.value : '').trim();
+        const rawCtaUrl = (emailCtaUrl ? emailCtaUrl.value : '').trim();
+
+        const renderedSubject = replaceVars(rawSubject) || '(Chưa có tiêu đề email)';
+        const renderedContent = formatContentForEmail(replaceVars(rawContent)) || '<p style="color:#94a3b8;font-style:italic;">Nội dung email sẽ hiển thị trực quan tại đây...</p>';
+
+        if (previewSubjectTitle) previewSubjectTitle.textContent = renderedSubject;
+        if (previewSubjectMeta) previewSubjectMeta.textContent = renderedSubject;
+        if (previewFromMeta) previewFromMeta.textContent = `${resendConfig.fromName || 'Habit Mastery'} <${resendConfig.fromEmail || 'onboarding@resend.dev'}>`;
+
+        if (previewToMeta) {
+            const moreCount = recipients.length > 1 ? ` (+ ${recipients.length - 1} người nhận khác)` : '';
+            previewToMeta.textContent = `${sample.name} <${sample.email}>${moreCount}`;
+        }
+
+        if (previewGreeting) {
+            previewGreeting.innerHTML = `Chào <strong>${escHtml(sample.name || 'Bạn')}</strong>,`;
+        }
+        if (previewContent) {
+            previewContent.innerHTML = renderedContent;
+        }
+
+        if (previewCtaWrap && previewCtaBtn) {
+            if (rawCtaText) {
+                previewCtaWrap.style.display = 'block';
+                previewCtaBtn.textContent = rawCtaText;
+                previewCtaBtn.href = rawCtaUrl || '#';
+            } else {
+                previewCtaWrap.style.display = 'none';
+            }
+        }
+    }
+
+    [emailSubject, emailContent, emailCtaText, emailCtaUrl].forEach(el => {
+        if (el) {
+            el.addEventListener('input', updateLivePreview);
+            el.addEventListener('change', updateLivePreview);
+        }
+    });
+
+    // Preview Device Toggle
+    if (btnPreviewDesktop && btnPreviewMobile && emailClientMockup) {
+        btnPreviewDesktop.onclick = () => {
+            btnPreviewDesktop.classList.add('active');
+            btnPreviewMobile.classList.remove('active');
+            emailClientMockup.classList.remove('mobile-mode');
+        };
+        btnPreviewMobile.onclick = () => {
+            btnPreviewMobile.classList.add('active');
+            btnPreviewDesktop.classList.remove('active');
+            emailClientMockup.classList.add('mobile-mode');
+        };
+    }
+
+    // ============================================================
+    // 5. GỬI EMAIL CHÍNH THỨC & GỬI THỬ NGHIỆM
+    // ============================================================
+    async function executeSendEmail({ isTestOnly = false } = {}) {
+        if (!resendConfig.apiKey || resendConfig.apiKey.trim().length < 5) {
+            alert('Bạn chưa cấu hình Resend API Key! Vui lòng bấm vào nút "Cấu Hình API Key" để kích hoạt.');
+            openConfigModal();
+            return;
+        }
+
+        const subject = (emailSubject ? emailSubject.value : '').trim();
+        const content = (emailContent ? emailContent.value : '').trim();
+        const ctaText = (emailCtaText ? emailCtaText.value : '').trim();
+        const ctaUrl = (emailCtaUrl ? emailCtaUrl.value : '').trim();
+
+        if (!subject) {
+            alert('Vui lòng nhập tiêu đề email!');
+            if (emailSubject) emailSubject.focus();
+            return;
+        }
+        if (!content) {
+            alert('Vui lòng nhập nội dung email!');
+            if (emailContent) emailContent.focus();
+            return;
+        }
+
+        let recipientsToSend = [];
+        if (isTestOnly) {
+            const adminEmail = currentAdmin?.email;
+            if (!adminEmail) {
+                alert('Không xác định được email của tài khoản admin hiện tại!');
+                return;
+            }
+            recipientsToSend = [{
+                uid: currentAdmin.uid,
+                email: adminEmail,
+                name: currentAdmin.displayName || 'Admin',
+                plan: 'premium',
+                dp: 9999
+            }];
+        } else {
+            recipientsToSend = getResolvedRecipients();
+            if (recipientsToSend.length === 0) {
+                alert('Danh sách người nhận mục tiêu đang trống! Vui lòng kiểm tra lại chế độ gửi.');
+                return;
+            }
+
+            const confirmMsg = `🚀 XÁC NHẬN GỬI CHIẾN DỊCH EMAIL:\n\n` +
+                `• Số lượng người nhận: ${recipientsToSend.length} thành viên\n` +
+                `• Tiêu đề: "${subject}"\n` +
+                `• Người gửi: ${resendConfig.fromName} <${resendConfig.fromEmail}>\n\n` +
+                `Bạn có chắc chắn muốn phát lệnh gửi hàng loạt ngay bây giờ?`;
+
+            if (!confirm(confirmMsg)) return;
+        }
+
+        const activeBtn = isTestOnly ? btnSendTestEmail : btnSubmitSendEmail;
+        if (activeBtn) {
+            activeBtn.disabled = true;
+            activeBtn.textContent = isTestOnly ? '⏳ Đang gửi thử...' : `🚀 Đang gửi (${recipientsToSend.length} email)...`;
+        }
+
+        if (emailSendStatusBox) {
+            emailSendStatusBox.style.display = 'block';
+            emailSendStatusBox.className = 'email-send-status';
+            emailSendStatusBox.style.color = '#94a3b8';
+            emailSendStatusBox.innerHTML = `⏳ Đang gửi chiến dịch email tới <strong>${recipientsToSend.length}</strong> người nhận qua Resend...`;
+        }
+
+        try {
+            const idToken = await auth.currentUser.getIdToken(true);
+            const resp = await fetch(`${EMAIL_API_BASE}/send-email`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
+                },
+                body: JSON.stringify({
+                    targetMode: isTestOnly ? 'test' : currentTargetMode,
+                    subject,
+                    content,
+                    ctaText,
+                    ctaUrl,
+                    recipients: recipientsToSend,
+                    sendOptions: {
+                        apiKey: resendConfig.apiKey,
+                        fromName: resendConfig.fromName,
+                        fromEmail: resendConfig.fromEmail,
+                        replyTo: resendConfig.replyTo
+                    }
+                })
+            });
+
+            const result = await resp.json();
+
+            if (!resp.ok || !result.success) {
+                throw new Error(result.message || result.error || 'Gửi thất bại qua Resend API');
+            }
+
+            const successCount = result.summary ? result.summary.successCount : recipientsToSend.length;
+            const failedCount = result.summary ? result.summary.failedCount : 0;
+
+            if (emailSendStatusBox) {
+                emailSendStatusBox.className = failedCount > 0 ? 'email-send-status status-error' : 'email-send-status status-success';
+                emailSendStatusBox.innerHTML = `🎉 <strong>Hoàn tất:</strong> Đã gửi thành công <strong>${successCount}</strong>/${recipientsToSend.length} email.` +
+                    (failedCount > 0 ? ` (Thất bại: ${failedCount} email - xem chi tiết tại bảng Lịch Sử bên dưới)` : '');
+            }
+
+            alert(isTestOnly
+                ? `✓ Đã gửi email thử nghiệm thành công tới ${recipientsToSend[0].email}!`
+                : `🎉 Chiến dịch đã gửi thành công tới ${successCount} người nhận!`);
+
+        } catch (err) {
+            console.error('Send email error:', err);
+            if (emailSendStatusBox) {
+                emailSendStatusBox.className = 'email-send-status status-error';
+                emailSendStatusBox.innerHTML = `✕ <strong>Lỗi gửi email:</strong> ${escHtml(err.message)}<br><small style="color:#cbd5e1;">Gợi ý: Kiểm tra lại Resend API Key hoặc Domain người gửi trong phần Cấu hình.</small>`;
+            }
+            alert('Lỗi gửi email: ' + err.message);
+        } finally {
+            if (activeBtn) {
+                activeBtn.disabled = false;
+                activeBtn.textContent = isTestOnly ? '📨 Gửi Thử Cho Tôi' : '🚀 Phát Lệnh Gửi Email';
+            }
+        }
+    }
+
+    if (btnSubmitSendEmail) {
+        btnSubmitSendEmail.onclick = () => executeSendEmail({ isTestOnly: false });
+    }
+    if (btnSendTestEmail) {
+        btnSendTestEmail.onclick = () => executeSendEmail({ isTestOnly: true });
+    }
+
+    // ============================================================
+    // 6. REALTIME EMAIL LOGS & DETAIL MODAL
+    // ============================================================
+    function startEmailLogsListener() {
+        if (emailLogsUnsubscribe) emailLogsUnsubscribe();
+
+        emailLogsUnsubscribe = db.collection('email_logs')
+            .orderBy('createdAt', 'desc')
+            .limit(20)
+            .onSnapshot((snapshot) => {
+                cachedEmailLogs = [];
+                snapshot.forEach(doc => {
+                    cachedEmailLogs.push({ id: doc.id, ...doc.data() });
+                });
+                renderEmailLogsTable(cachedEmailLogs);
+            }, (err) => {
+                console.warn('Email logs listener error:', err);
+            });
+    }
+
+    function renderEmailLogsTable(logs) {
+        if (!emailLogsTableBody) return;
+        if (!logs || logs.length === 0) {
+            emailLogsTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:30px;">Chưa có lịch sử gửi email nào.</td></tr>`;
+            return;
+        }
+
+        emailLogsTableBody.innerHTML = logs.map(log => {
+            const timeStr = formatDate(log.createdAt);
+            const total = log.totalRecipients || 0;
+            const success = log.successCount || 0;
+            const status = log.status || 'success';
+
+            let statusPill = `<span class="status-pill-log success">✓ Thành công (${success}/${total})</span>`;
+            if (status === 'failed') {
+                statusPill = `<span class="status-pill-log failed">✕ Thất bại</span>`;
+            } else if (status === 'partial') {
+                statusPill = `<span class="status-pill-log partial">⚠ Một phần (${success}/${total})</span>`;
+            }
+
+            const senderStr = `${escHtml(log.fromName || '')} &lt;${escHtml(log.fromEmail || '')}&gt;`;
+
+            return `<tr>
+                <td style="font-size:12px;color:var(--text-secondary);white-space:nowrap;">${timeStr}</td>
+                <td style="font-weight:700;color:#ffffff;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(log.subject||'')}">${escHtml(log.subject || '—')}</td>
+                <td style="font-size:12px;color:var(--text-muted);">${senderStr}</td>
+                <td style="font-weight:700;color:var(--accent-blue-bright);">${total.toLocaleString('vi-VN')}</td>
+                <td>${statusPill}</td>
+                <td>
+                    <button class="btn-sm" onclick="window._adminViewEmailLogDetail('${log.id}')" title="Xem chi tiết log">👁️ Chi tiết</button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    window._adminViewEmailLogDetail = (logId) => {
+        const log = cachedEmailLogs.find(l => l.id === logId);
+        if (!log || !emailLogDetailModal || !emailLogDetailContent) return;
+
+        const timeStr = formatDate(log.createdAt);
+        const total = log.totalRecipients || 0;
+        const success = log.successCount || 0;
+        const failed = log.failedCount || 0;
+
+        let sampleRecipientsHtml = '';
+        if (Array.isArray(log.results) && log.results.length > 0) {
+            sampleRecipientsHtml = `<div style="max-height:160px;overflow-y:auto;background:rgba(0,0,0,0.3);padding:10px;border-radius:8px;font-family:monospace;font-size:11.5px;margin-top:6px;">` +
+                log.results.map((r, i) => `<div style="margin-bottom:3px;color:${r.success ? '#34d399' : '#f43f5e'};">${i+1}. ${escHtml(r.email)} - ${r.success ? '✓ ID: ' + (r.id || 'OK') : '✕ ' + escHtml(r.error || '')}</div>`).join('') +
+                `</div>`;
+        }
+
+        emailLogDetailContent.innerHTML = `
+            <div style="display:flex;flex-direction:column;gap:12px;font-size:13px;">
+                <div><strong style="color:var(--text-secondary);">Tiêu đề:</strong> <span style="font-weight:700;color:#fff;">${escHtml(log.subject || '—')}</span></div>
+                <div><strong style="color:var(--text-secondary);">Thời gian:</strong> ${timeStr}</div>
+                <div><strong style="color:var(--text-secondary);">Admin gửi:</strong> ${escHtml(log.sentByEmail || log.sentBy || 'Admin')}</div>
+                <div><strong style="color:var(--text-secondary);">Người gửi:</strong> ${escHtml(log.fromName || '')} &lt;${escHtml(log.fromEmail || '')}&gt;</div>
+                <div><strong style="color:var(--text-secondary);">Kết quả:</strong> <span style="color:#10b981;font-weight:700;">${success} thành công</span> / <span style="color:#f43f5e;font-weight:700;">${failed} thất bại</span> (Tổng ${total})</div>
+                <div>
+                    <strong style="color:var(--text-secondary);">Chi tiết người nhận & Resend IDs:</strong>
+                    ${sampleRecipientsHtml || '<div style="color:var(--text-muted);font-style:italic;">Không có dữ liệu chi tiết</div>'}
+                </div>
+            </div>
+        `;
+
+        emailLogDetailModal.style.display = 'flex';
+    };
+
+    if (emailLogDetailClose) emailLogDetailClose.onclick = () => { if (emailLogDetailModal) emailLogDetailModal.style.display = 'none'; };
+    if (emailLogDetailDismiss) emailLogDetailDismiss.onclick = () => { if (emailLogDetailModal) emailLogDetailModal.style.display = 'none'; };
+    if (emailLogDetailModal) {
+        emailLogDetailModal.onclick = (e) => { if (e.target === emailLogDetailModal) emailLogDetailModal.style.display = 'none'; };
+    }
+
+    // ============================================================
+    // 7. GLOBAL HOOKS & COMPOSER SHORTCUTS
+    // ============================================================
+    window._adminOpenEmailComposer = (targetUid) => {
+        switchSection('emails');
+        if (targetUid && Array.isArray(allUsers)) {
+            const user = allUsers.find(u => u.uid === targetUid);
+            if (user && user.email) {
+                setTargetMode('custom');
+                if (targetCustomEmails) targetCustomEmails.value = user.email;
+                updateRecipientCountDisplay();
+                updateLivePreview();
+            }
+        }
+        const composerEl = document.getElementById('sectionEmails');
+        if (composerEl) composerEl.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window._adminSelectEmailTargetMode = (mode) => {
+        setTargetMode(mode);
+    };
+
+    window._adminOnSwitchToEmails = () => {
+        updateRecipientCountDisplay();
+        updateLivePreview();
+    };
+
+    // --- Init Sequence ---
+    loadResendConfig();
+    applyTemplate('welcome');
+    setTargetMode('all');
+    startEmailLogsListener();
+}
 
 // ===== INIT =====
 document.readyState === 'loading' 

@@ -116,6 +116,10 @@
                     <span>Hộp Thư Chat</span>
                     <span class="nav-badge" id="adminMsgBadge" style="display:none;">0</span>
                 </a>
+                <a href="#" class="nav-item" data-section="emails">
+                    <span class="nav-icon">📧</span>
+                    <span>Gửi Email (Resend)</span>
+                </a>
             </div>
             <div class="sidebar-footer">
                 <div class="admin-profile">
@@ -267,6 +271,7 @@
                         <button class="bulk-btn trial" id="bulkBtnExtendTrial" title="Gia hạn 14 ngày Trial">⏳ +14 Ngày Trial</button>
                         <button class="bulk-btn reward" id="bulkBtnGiftDP" title="Tặng điểm Tu Vi">🎁 Tặng DP</button>
                         <button class="bulk-btn broadcast" id="bulkBtnBroadcast" title="Gửi tin nhắn cho các user đã chọn">💬 Nhắn tin</button>
+                        <button class="bulk-btn email" id="bulkBtnEmail" title="Gửi email Resend cho các user đã chọn" style="background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;">📧 Gửi Email</button>
                         <button class="bulk-btn disable" id="bulkBtnDisable" title="Khóa tài khoản">🔒 Khóa</button>
                         <button class="bulk-btn enable" id="bulkBtnEnable" title="Mở khóa tài khoản">🔓 Mở khóa</button>
                         <button class="bulk-btn export" id="bulkBtnExport" title="Xuất CSV user đã chọn">📥 Xuất CSV</button>
@@ -460,6 +465,291 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Section: Email Campaigns & Resend Integration -->
+            <section class="section" id="sectionEmails" style="display:none;">
+                <!-- Topbar: Resend Status & Actions -->
+                <div class="email-status-banner">
+                    <div class="email-status-left">
+                        <div class="resend-indicator" id="resendStatusPill">
+                            <span class="status-pulse-dot" id="resendStatusDot"></span>
+                            <span id="resendStatusText">Đang kiểm tra kết nối Resend...</span>
+                        </div>
+                        <div class="sender-info-pill" id="resendSenderPill" title="Địa chỉ gửi mặc định">
+                            <span class="sender-tag">FROM:</span>
+                            <span id="resendSenderDisplay">Habit Mastery &lt;onboarding@resend.dev&gt;</span>
+                        </div>
+                    </div>
+                    <div class="email-status-right">
+                        <button type="button" class="btn-resend-action secondary" id="btnQuickTestEmail" title="Gửi email thử nghiệm đến địa chỉ Admin">
+                            <span>⚡ Gửi Thử (Admin)</span>
+                        </button>
+                        <button type="button" class="btn-resend-action primary" id="btnOpenResendConfigModal" title="Cấu hình API Key và Tên Người Gửi Resend">
+                            <span>⚙️ Cấu Hình Resend</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Grid: Composer (Left) & Live Preview (Right) -->
+                <div class="email-workspace-grid">
+                    <!-- Left: Composer Form -->
+                    <div class="email-card composer-card">
+                        <div class="card-header-clean">
+                            <div class="clean-header-title">
+                                <h3>📝 Soạn Thảo Email</h3>
+                                <p class="clean-header-subtitle">Gửi email tương tác, thông báo đặc quyền VIP hoặc kích hoạt qua Resend</p>
+                            </div>
+                            <button type="button" class="btn-reset-form" id="btnResetEmailForm" title="Xóa trắng và làm lại form">
+                                🔄 Làm mới
+                            </button>
+                        </div>
+
+                        <div class="composer-body">
+                            <!-- 1. Targeting -->
+                            <div class="composer-group">
+                                <label class="composer-label">
+                                    <span>1. Đối tượng người nhận:</span>
+                                    <span class="composer-badge" id="targetCountBadge">Sẽ gửi đến: 0 người nhận</span>
+                                </label>
+
+                                <div class="target-mode-tabs" id="targetModeTabs">
+                                    <button type="button" class="target-tab active" data-mode="single">👤 1 Người dùng</button>
+                                    <button type="button" class="target-tab" data-mode="segment">👥 Phân nhóm</button>
+                                    <button type="button" class="target-tab" data-mode="selected">🎯 User đã chọn (<span id="selectedUsersCountLabel">0</span>)</button>
+                                </div>
+
+                                <!-- Target Mode: Single -->
+                                <div class="target-panel" id="targetPanelSingle">
+                                    <div class="target-input-row">
+                                        <select id="emailUserDropdown" class="form-input custom-select">
+                                            <option value="">-- Chọn thành viên từ danh sách --</option>
+                                        </select>
+                                        <input type="email" id="emailDirectInput" class="form-input" placeholder="Hoặc nhập email trực tiếp: user@gmail.com">
+                                    </div>
+                                    <div class="target-hint" id="singleUserHint">💡 Bạn có thể chọn nhanh từ dropdown hoặc nhập email bất kỳ.</div>
+                                </div>
+
+                                <!-- Target Mode: Segment -->
+                                <div class="target-panel" id="targetPanelSegment" style="display:none;">
+                                    <select id="emailSegmentSelect" class="form-input custom-select">
+                                        <option value="all">🌐 Tất cả người dùng (All users)</option>
+                                        <option value="premium">👑 Thành viên VIP Premium / Pro</option>
+                                        <option value="trial">⏳ Thành viên đang dùng thử (Trial)</option>
+                                        <option value="trial_expired">⚠️ Thành viên đã hết hạn Trial (Cần re-engage)</option>
+                                        <option value="free">🌱 Thành viên Miễn phí (Free)</option>
+                                        <option value="active_30d">⚡ Thành viên tích cực (Hoạt động trong 30 ngày)</option>
+                                    </select>
+                                    <div class="target-hint" id="segmentInfoHint">📊 Số người nhận theo nhóm sẽ được tính tự động.</div>
+                                </div>
+
+                                <!-- Target Mode: Selected Users from Table -->
+                                <div class="target-panel" id="targetPanelSelected" style="display:none;">
+                                    <div class="selected-users-summary" id="selectedUsersSummaryBox">
+                                        <span>Chưa có user nào được chọn từ bảng quản lý. Hãy sang tab <strong>Users</strong> và tích chọn vào ô checkbox.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 2. Templates -->
+                            <div class="composer-group">
+                                <label class="composer-label">
+                                    <span>2. Mẫu email có sẵn:</span>
+                                    <span class="composer-sub">Chọn mẫu nhanh để tự động điền tiêu đề và nội dung chuẩn</span>
+                                </label>
+                                <div class="template-chips-wrap" id="templateChipsWrap">
+                                    <button type="button" class="template-chip active" data-template="vip">👑 Kích hoạt VIP</button>
+                                    <button type="button" class="template-chip" data-template="trial_ending">⏳ Sắp hết Trial</button>
+                                    <button type="button" class="template-chip" data-template="streak_restore">❄️ Cứu Chuỗi Streak</button>
+                                    <button type="button" class="template-chip" data-template="gift_dp">🎁 Tặng điểm DP</button>
+                                    <button type="button" class="template-chip" data-template="update">🚀 Tính năng mới</button>
+                                    <button type="button" class="template-chip" data-template="announcement">📢 Thông báo chung</button>
+                                    <button type="button" class="template-chip" data-template="custom">📝 Tùy chỉnh (Trống)</button>
+                                </div>
+                            </div>
+
+                            <!-- 3. Subject & Preheader -->
+                            <div class="composer-group">
+                                <label class="composer-label" for="emailSubject">
+                                    <span>3. Tiêu đề email (Subject):</span>
+                                </label>
+                                <input type="text" id="emailSubject" class="form-input subject-input" placeholder="Nhập tiêu đề email...">
+
+                                <label class="composer-label" for="emailPreheader" style="margin-top:12px;">
+                                    <span>Lời dẫn phụ (Preheader / Inbox preview text):</span>
+                                </label>
+                                <input type="text" id="emailPreheader" class="form-input" placeholder="Đoạn xem trước ngắn trong hộp thư đến...">
+                            </div>
+
+                            <!-- 4. Content & Merge Tags -->
+                            <div class="composer-group">
+                                <div class="composer-label-row">
+                                    <label class="composer-label" for="emailContentTextarea">
+                                        <span>4. Nội dung thư:</span>
+                                    </label>
+                                    <div class="merge-tags-label">Chèn biến cá nhân hóa:</div>
+                                </div>
+
+                                <!-- Merge Tag Chips -->
+                                <div class="merge-tags-chips">
+                                    <button type="button" class="tag-chip" data-tag="{{name}}" title="Họ tên người nhận">{{name}}</button>
+                                    <button type="button" class="tag-chip" data-tag="{{email}}" title="Email người nhận">{{email}}</button>
+                                    <button type="button" class="tag-chip" data-tag="{{plan}}" title="Gói tài khoản (VIP, Trial...)">{{plan}}</button>
+                                    <button type="button" class="tag-chip" data-tag="{{dp}}" title="Điểm Tu Vi">{{dp}}</button>
+                                    <button type="button" class="tag-chip" data-tag="{{streak}}" title="Chuỗi ngày kỷ luật">{{streak}}</button>
+                                    <button type="button" class="tag-chip" data-tag="{{app_url}}" title="Đường dẫn trang web">{{app_url}}</button>
+                                </div>
+
+                                <!-- Formatting Toolbar -->
+                                <div class="composer-toolbar">
+                                    <button type="button" class="toolbar-btn" data-action="bold" title="In đậm"><strong>B</strong></button>
+                                    <button type="button" class="toolbar-btn" data-action="italic" title="In nghiêng"><em>I</em></button>
+                                    <button type="button" class="toolbar-btn" data-action="h2" title="Tiêu đề mục (H2)">H2</button>
+                                    <button type="button" class="toolbar-btn" data-action="h3" title="Tiêu đề phụ (H3)">H3</button>
+                                    <button type="button" class="toolbar-btn" data-action="highlight" title="Khung thông báo xanh">💡 Khung Xanh</button>
+                                    <button type="button" class="toolbar-btn" data-action="gold" title="Khung nổi bật vàng">⭐ Khung Vàng</button>
+                                    <button type="button" class="toolbar-btn" data-action="list" title="Danh sách gạch đầu dòng">• Danh sách</button>
+                                </div>
+
+                                <textarea id="emailContentTextarea" class="form-input email-textarea" rows="8" placeholder="Nhập nội dung email..."></textarea>
+
+                                <!-- Call to Action Options -->
+                                <div class="cta-settings-card">
+                                    <div class="cta-header">
+                                        <span class="cta-icon">🔘</span>
+                                        <span>Nút Kêu Gọi Hành Động (CTA Button)</span>
+                                    </div>
+                                    <div class="cta-inputs-row">
+                                        <div class="cta-input-col">
+                                            <label for="emailCtaText">Chữ trên nút:</label>
+                                            <input type="text" id="emailCtaText" class="form-input small" value="Vào Ứng Dụng Ngay →">
+                                        </div>
+                                        <div class="cta-input-col">
+                                            <label for="emailCtaUrl">Đường dẫn liên kết (URL):</label>
+                                            <input type="url" id="emailCtaUrl" class="form-input small" value="https://habitmastery.web.app">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Actions / Submit -->
+                            <div class="composer-actions-bar">
+                                <button type="button" class="btn-email-send" id="btnSendCampaignEmail">
+                                    <span class="btn-icon">🚀</span>
+                                    <span>Gửi Email Ngay</span>
+                                </button>
+                                <button type="button" class="btn-email-preview-send" id="btnSendTestEmail" title="Gửi một bản xem trước đến email của Admin">
+                                    <span class="btn-icon">👁️</span>
+                                    <span>Gửi thử nghiệm</span>
+                                </button>
+                            </div>
+
+                            <div class="email-send-status" id="emailSendStatusBox" style="display:none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Live Inbox Preview Mockup -->
+                    <div class="email-card preview-card">
+                        <div class="card-header-clean">
+                            <div class="clean-header-title">
+                                <h3>👁️ Trình Xem Trước Trực Tiếp</h3>
+                                <p class="clean-header-subtitle">Giả lập hiển thị trong hộp thư đến (Inbox Mockup)</p>
+                            </div>
+                            <div class="preview-device-toggle">
+                                <button type="button" class="device-btn active" data-device="desktop" title="Xem dạng máy tính">💻</button>
+                                <button type="button" class="device-btn" data-device="mobile" title="Xem dạng điện thoại">📱</button>
+                            </div>
+                        </div>
+
+                        <!-- Simulated Email Client Frame -->
+                        <div class="email-client-mockup" id="emailClientMockup">
+                            <!-- Mockup Window Bar -->
+                            <div class="mockup-window-bar">
+                                <div class="window-dots">
+                                    <span class="dot dot-red"></span>
+                                    <span class="dot dot-yellow"></span>
+                                    <span class="dot dot-green"></span>
+                                </div>
+                                <div class="window-title-address">Inbox &bull; Habit Mastery Notification</div>
+                            </div>
+
+                            <!-- Mockup Header Details -->
+                            <div class="mockup-email-meta">
+                                <div class="meta-row">
+                                    <span class="meta-label">Người gửi:</span>
+                                    <span class="meta-value from-highlight" id="prevFromVal">Habit Mastery &lt;onboarding@resend.dev&gt;</span>
+                                </div>
+                                <div class="meta-row">
+                                    <span class="meta-label">Người nhận:</span>
+                                    <span class="meta-value" id="prevToVal">nguyen.van.a@gmail.com</span>
+                                </div>
+                                <div class="meta-row subject-row">
+                                    <span class="meta-label">Tiêu đề:</span>
+                                    <span class="meta-value meta-subject" id="prevSubjectVal">Tiêu đề email</span>
+                                </div>
+                            </div>
+
+                            <!-- Mockup Body (Branded Habit Mastery template preview) -->
+                            <div class="mockup-scroll-viewport">
+                                <div class="email-branded-template" id="emailBrandedPreview">
+                                    <div class="email-tpl-header">
+                                        <div class="email-tpl-badge">✦ HABIT MASTERY</div>
+                                        <h1 class="email-tpl-title" id="prevTemplateTitle">Tiêu đề email</h1>
+                                    </div>
+                                    <div class="email-tpl-body">
+                                        <div class="email-tpl-greeting">Xin chào <strong id="prevGreetingName">Nguyễn Văn A</strong>,</div>
+                                        <div class="email-tpl-content" id="prevRenderedContent">
+                                            Nội dung email sẽ hiển thị tại đây theo thời gian thực khi bạn nhập liệu bên trái...
+                                        </div>
+                                        <div class="email-tpl-cta-wrap">
+                                            <a href="#" class="email-tpl-btn" id="prevCtaBtn" onclick="return false;">Vào Ứng Dụng Ngay →</a>
+                                        </div>
+                                    </div>
+                                    <div class="email-tpl-footer">
+                                        <p>Email được gửi tự động từ <strong>Ban Quản Trị Habit Mastery</strong>.</p>
+                                        <p>Rèn luyện thói quen • Thắp sáng kỷ luật • Thăng cấp tâm thức</p>
+                                        <p class="email-tpl-links">habitmastery.web.app | Hỗ trợ: htmt.slh@gmail.com</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Logs Table -->
+                <div class="email-card logs-card" id="emailLogsCard">
+                    <div class="card-header-clean">
+                        <div class="clean-header-title">
+                            <h3>📜 Lịch Sử Gửi Email (Resend Logs)</h3>
+                            <p class="clean-header-subtitle">Nhật ký các đợt phát hành email và trạng thái giao thư</p>
+                        </div>
+                        <button type="button" class="btn-resend-action secondary" id="btnRefreshEmailLogs" title="Tải lại nhật ký gửi">
+                            <span>🔄 Làm mới lịch sử</span>
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="user-table email-logs-table" id="emailLogsTable">
+                            <thead>
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Tiêu đề Email</th>
+                                    <th>Người gửi</th>
+                                    <th>Đối tượng</th>
+                                    <th>Số lượng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Chi tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody id="emailLogsTableBody">
+                                <tr>
+                                    <td colspan="7" style="text-align:center;padding:24px;color:var(--text-muted);">
+                                        Đang tải lịch sử gửi email...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </main>
 
         <!-- Mobile Bottom Navigation Bar -->
@@ -486,6 +776,10 @@
                 <span class="bottom-nav-icon"><svg class="rune-icon" viewBox="0 0 48 48"><use href="#i-echo"></use></svg></span>
                 <span class="bottom-nav-label">Hộp thư</span>
                 <span class="bottom-nav-badge" id="bottomMsgBadge" style="display:none;">0</span>
+            </button>
+            <button type="button" class="bottom-nav-item" data-section="emails">
+                <span class="bottom-nav-icon">📧</span>
+                <span class="bottom-nav-label">Email</span>
             </button>
         </nav>
     </div>
@@ -560,6 +854,7 @@
                 </select>
                 <button class="btn-action save" id="modalSavePlan">💾 Lưu gói</button>
                 <button class="btn-action chat" id="modalOpenChatBtn" onclick="window._adminOpenChatFromModal()" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;">💬 Nhắn tin hỗ trợ</button>
+                <button class="btn-action email" id="modalOpenEmailBtn" onclick="window._adminOpenEmailFromModal()" style="background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;">📧 Gửi Email (Resend)</button>
                 <button class="btn-action toggle" id="modalToggleDisable">🔒 Vô hiệu hóa</button>
                 <div class="modal-actions-spacer"></div>
                 <div class="dp-grant-section">
@@ -634,6 +929,79 @@
             <div class="modal-actions">
                 <button class="btn-action cancel" id="bulkBroadcastCancel">Hủy bỏ</button>
                 <button class="btn-action save" id="bulkBroadcastSendBtn" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;">🚀 Gửi hàng loạt</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resend Configuration Modal -->
+    <div class="modal-overlay" id="resendConfigModal" style="display:none;">
+        <div class="modal-card" style="max-width:560px;">
+            <div class="modal-header">
+                <h3>⚙️ Cấu Hình Dịch Vụ Email (Resend)</h3>
+                <button class="modal-close" id="resendConfigClose">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="resend-config-guide-box">
+                    <div class="guide-title">💡 Hướng dẫn cấu hình Resend:</div>
+                    <p>1. Đăng ký tài khoản miễn phí tại <a href="https://resend.com" target="_blank" style="color:var(--accent-green-bright);font-weight:700;">resend.com</a> (miễn phí 3,000 emails/tháng).</p>
+                    <p>2. Vào <strong>API Keys</strong> &rarr; Bấm <strong>Create API Key</strong> &rarr; Sao chép mã có dạng <code>re_...</code> dán vào ô bên dưới.</p>
+                    <p>3. <em>Lưu ý quan trọng:</em> Nếu dùng địa chỉ mặc định <code>onboarding@resend.dev</code>, Resend chỉ cho phép gửi đến email đã dùng để đăng ký Resend. Khi bạn thêm Domain riêng (VD: <code>habit-mastery.com</code>), bạn có thể gửi tự do đến tất cả người dùng.</p>
+                </div>
+
+                <div class="form-group" style="margin-bottom:14px;">
+                    <label style="font-size:13px;font-weight:700;color:var(--text-secondary);display:block;margin-bottom:6px;">
+                        Resend API Key: <span style="color:var(--accent-red-bright);">*</span>
+                    </label>
+                    <div class="api-key-input-wrap">
+                        <input type="password" id="cfgResendApiKey" class="form-input" placeholder="re_12345678_xxxxxxxx" autocomplete="off">
+                        <button type="button" class="btn-toggle-eye" id="btnToggleApiKeyVisibility" title="Hiện/ẩn API Key">👁️</button>
+                    </div>
+                </div>
+
+                <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+                    <div class="form-group">
+                        <label style="font-size:13px;font-weight:700;color:var(--text-secondary);display:block;margin-bottom:6px;">Tên Người Gửi (From Name):</label>
+                        <input type="text" id="cfgResendFromName" class="form-input" placeholder="Habit Mastery" value="Habit Mastery">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:13px;font-weight:700;color:var(--text-secondary);display:block;margin-bottom:6px;">Email Người Gửi (From Email):</label>
+                        <input type="text" id="cfgResendFromEmail" class="form-input" placeholder="onboarding@resend.dev" value="onboarding@resend.dev">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom:16px;">
+                    <label style="font-size:13px;font-weight:700;color:var(--text-secondary);display:block;margin-bottom:6px;">Email Phản Hồi (Reply-To):</label>
+                    <input type="email" id="cfgResendReplyTo" class="form-input" placeholder="htmt.slh@gmail.com" value="htmt.slh@gmail.com">
+                </div>
+
+                <div class="test-email-box">
+                    <label style="font-size:12.5px;color:var(--text-secondary);display:block;margin-bottom:6px;">Gửi thử một email để kiểm tra kết nối:</label>
+                    <div style="display:flex;gap:8px;">
+                        <input type="email" id="cfgTestEmailAddress" class="form-input" placeholder="Email nhận thử (mặc định: email admin)">
+                        <button type="button" class="btn-action secondary" id="btnTestResendModal" style="white-space:nowrap;padding:10px 16px;">⚡ Gửi thử</button>
+                    </div>
+                    <div id="cfgTestResultBox" style="margin-top:8px;font-size:12.5px;display:none;"></div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-action cancel" id="resendConfigCancel">Đóng</button>
+                <button class="btn-action save" id="btnSaveResendConfig" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;">💾 Lưu Cấu Hình</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Log Detail Modal -->
+    <div class="modal-overlay" id="emailLogDetailModal" style="display:none;">
+        <div class="modal-card" style="max-width:600px;">
+            <div class="modal-header">
+                <h3>📄 Chi Tiết Lịch Sử Gửi Email</h3>
+                <button class="modal-close" id="emailLogDetailClose">✕</button>
+            </div>
+            <div class="modal-body" id="emailLogDetailContent">
+                <!-- Injected via JS -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn-action cancel" id="emailLogDetailDismiss">Đóng</button>
             </div>
         </div>
     </div>
