@@ -5,16 +5,17 @@
 // ============================================================
 
 const admin = require("firebase-admin");
+const { getFirestore, FieldValue, Timestamp } = require("firebase-admin/firestore");
 const crypto = require("crypto");
 
 // Initialize Firebase Admin SDK (chỉ khởi tạo 1 lần)
-if (!admin.apps.length) {
+if (!admin.getApps().length) {
   const privateKey = process.env.FIREBASE_PRIVATE_KEY
     ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n")
     : undefined;
 
   admin.initializeApp({
-    credential: admin.credential.cert({
+    credential: admin.cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
       privateKey: privateKey,
@@ -22,7 +23,7 @@ if (!admin.apps.length) {
   });
 }
 
-const db = admin.firestore();
+const db = getFirestore();
 
 // Helper to buffer the request body stream
 async function getRawBody(req) {
@@ -254,7 +255,7 @@ module.exports = async function handler(req, res) {
       transactionId: transactionId || null,
       transactionDate: transactionDate || null,
       gateway: gateway || null,
-      webhookReceivedAt: admin.firestore.FieldValue.serverTimestamp(),
+      webhookReceivedAt: FieldValue.serverTimestamp(),
     });
 
     return res.json({
@@ -268,7 +269,7 @@ module.exports = async function handler(req, res) {
   }
 
   // 6. Update payment status → paid
-  const now = admin.firestore.FieldValue.serverTimestamp();
+  const now = FieldValue.serverTimestamp();
   await paymentDoc.ref.update({
     status: "paid",
     receivedAmount: receivedAmount,
@@ -301,11 +302,11 @@ module.exports = async function handler(req, res) {
     if (plan === "monthly") {
       const expires = new Date(startDate);
       expires.setMonth(expires.getMonth() + 1);
-      planUpdates.planExpiresAt = admin.firestore.Timestamp.fromDate(expires);
+      planUpdates.planExpiresAt = Timestamp.fromDate(expires);
     } else if (plan === "yearly") {
       const expires = new Date(startDate);
       expires.setFullYear(expires.getFullYear() + 1);
-      planUpdates.planExpiresAt = admin.firestore.Timestamp.fromDate(expires);
+      planUpdates.planExpiresAt = Timestamp.fromDate(expires);
     }
 
     await userRef.update(planUpdates);

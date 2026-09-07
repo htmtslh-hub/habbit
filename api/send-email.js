@@ -5,10 +5,12 @@
 // ============================================================
 
 const admin = require("firebase-admin");
+const { getFirestore } = require("firebase-admin/firestore");
+const { getAuth } = require("firebase-admin/auth");
 const { Resend } = require("resend");
 
 function getFirebaseAdmin() {
-  if (!admin.apps.length) {
+  if (!admin.getApps().length) {
     const projectId = process.env.FIREBASE_PROJECT_ID;
     const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
     const rawKey = process.env.FIREBASE_PRIVATE_KEY;
@@ -20,14 +22,14 @@ function getFirebaseAdmin() {
     }
 
     admin.initializeApp({
-      credential: admin.credential.cert({
+      credential: admin.cert({
         projectId,
         clientEmail,
         privateKey,
       }),
     });
   }
-  return admin;
+  return { firestore: getFirestore, auth: getAuth };
 }
 
 // Wrap user content in Habit Mastery branded responsive HTML email template

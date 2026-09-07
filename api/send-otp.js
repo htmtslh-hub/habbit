@@ -5,11 +5,12 @@
 // ============================================================
 
 const admin = require("firebase-admin");
+const { getFirestore, Timestamp } = require("firebase-admin/firestore");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
 function getDb() {
-  if (!admin.apps.length) {
+  if (!admin.getApps().length) {
     const projectId = process.env.FIREBASE_PROJECT_ID;
     const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
     const rawKey = process.env.FIREBASE_PRIVATE_KEY;
@@ -21,14 +22,14 @@ function getDb() {
     }
 
     admin.initializeApp({
-      credential: admin.credential.cert({
+      credential: admin.cert({
         projectId,
         clientEmail,
         privateKey,
       }),
     });
   }
-  return admin.firestore();
+  return getFirestore();
 }
 
 function getTransporter() {
@@ -110,8 +111,8 @@ module.exports = async function handler(req, res) {
     await db.collection("otp_codes").add({
       email: normalizedEmail,
       otp: otp,
-      createdAt: admin.firestore.Timestamp.fromDate(now),
-      expiresAt: admin.firestore.Timestamp.fromDate(expiresAt),
+      createdAt: Timestamp.fromDate(now),
+      expiresAt: Timestamp.fromDate(expiresAt),
       verified: false,
       used: false,
     });

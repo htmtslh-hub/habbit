@@ -5,9 +5,10 @@
 // ============================================================
 
 const admin = require("firebase-admin");
+const { getFirestore, Timestamp } = require("firebase-admin/firestore");
 
 function getDb() {
-  if (!admin.apps.length) {
+  if (!admin.getApps().length) {
     const projectId = process.env.FIREBASE_PROJECT_ID;
     const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
     const rawKey = process.env.FIREBASE_PRIVATE_KEY;
@@ -19,14 +20,14 @@ function getDb() {
     }
 
     admin.initializeApp({
-      credential: admin.credential.cert({
+      credential: admin.cert({
         projectId,
         clientEmail,
         privateKey,
       }),
     });
   }
-  return admin.firestore();
+  return getFirestore();
 }
 
 module.exports = async function handler(req, res) {
@@ -107,7 +108,7 @@ module.exports = async function handler(req, res) {
       await db.collection("otp_attempts").add({
         email: normalizedEmail,
         success: false,
-        attemptedAt: admin.firestore.Timestamp.fromDate(now),
+        attemptedAt: Timestamp.fromDate(now),
       });
 
       return res.status(400).json({
@@ -136,7 +137,7 @@ module.exports = async function handler(req, res) {
       await db.collection("otp_attempts").add({
         email: normalizedEmail,
         success: false,
-        attemptedAt: admin.firestore.Timestamp.fromDate(now),
+        attemptedAt: Timestamp.fromDate(now),
       });
 
       return res.status(400).json({
@@ -150,14 +151,14 @@ module.exports = async function handler(req, res) {
     await otpDoc.ref.update({
       verified: true,
       used: true,
-      verifiedAt: admin.firestore.Timestamp.fromDate(now),
+      verifiedAt: Timestamp.fromDate(now),
     });
 
     // Log successful attempt
     await db.collection("otp_attempts").add({
       email: normalizedEmail,
       success: true,
-      attemptedAt: admin.firestore.Timestamp.fromDate(now),
+      attemptedAt: Timestamp.fromDate(now),
     });
 
     console.log(`OTP verified for ${normalizedEmail}`);

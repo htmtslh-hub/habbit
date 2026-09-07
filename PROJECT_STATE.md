@@ -6,9 +6,13 @@
 
 ## 📌 1. THÔNG TIN DỰ ÁN & TRIỂN KHAI
 - **Tên ứng dụng**: **Habit Mastery** (Ứng dụng Rèn luyện Thói quen & Game hóa Kỷ luật)
-- **Công nghệ cốt lõi**: HTML5, Vanilla CSS3 (Design System chuẩn Dark/Light Mode), Vanilla JavaScript (ES6+), Firebase (Authentication, Firestore, Hosting), PWA (Service Worker), Vercel Production.
-- **Phiên bản Cache / Scripts**: `v=5.3.3` (trong `index.html`) & Service Worker `5.3.3` (trong `sw.js`)
+- **Công nghệ cốt lõi**: HTML5, Vanilla CSS3 (Design System chuẩn Dark/Light Mode), Vanilla JavaScript (ES6+), Firebase (Authentication, Firestore, Hosting), PWA (Service Worker), Vercel Production, Electron (bản Desktop Windows/macOS), Vercel Serverless API (Node.js — SePay Webhook, OTP, Resend Email).
+- **Phiên bản Cache / Scripts hiện tại**: `app.js?v=5.8.2`, `style.css?v=5.8.1`, `i18n.js?v=5.8.0` (trong `index.html`) & Service Worker `CACHE_VERSION = '5.8.6'` (trong `sw.js`) — *cập nhật số phiên bản này mỗi khi thay đổi để buộc client tải lại cache mới.*
 - **Loại Bỏ 100% Mục Lục Rác & Dấu Chấm OCR Trong Nội Dung (v5.3.3)**: Đã bóc tách và xóa sạch toàn bộ các đoạn text mục lục thô bị sao chép nhầm từ bản scan PDF (các dòng chấm dài `........ 93 146. Thu hút...`) trong toàn bộ 14 cuốn sách, giữ lại giao diện trang đọc tinh khiết, sang trọng và chuẩn mực.
+- **Đa Ngôn Ngữ Toàn Hệ Thống (v5.8.0)**: Hỗ trợ đầy đủ **Tiếng Việt / English / 简体中文**, tự động phát hiện ngôn ngữ theo quốc gia (VN→vi, CN→zh, còn lại→en mặc định), bao gồm cả tên 21 Cảnh Giới, toàn bộ UI, `auth.html`, `auth.js`. Logic đặt tại [`i18n.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/i18n.js) (~1.600 dòng).
+- **Bảo Mật (Security Patch)**: Đã vá các lỗ hổng nghiêm trọng — XSS, siết chặt `firestore.rules`, thêm HTTP Security Headers trong `firebase.json`, chuyển sinh mã OTP sang CSPRNG (`crypto.randomInt`), loại các script mock ra khỏi build production.
+- **Bản Desktop đóng gói (Electron)**: Windows `.exe` (NSIS installer + Portable) và macOS `.dmg`/`.zip` (arm64 + x64) build tự động qua GitHub Actions ([`.github/workflows/build-mac.yml`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/.github/workflows/build-mac.yml)), có khu vực tải app riêng trên trang đăng nhập (`auth.html`) theo từng hệ điều hành.
+- **Admin — Gửi Email Hàng Loạt (Resend)**: Tích hợp [`api/send-email.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/api/send-email.js) qua Resend API, có sẵn 3+ mẫu email dựng sẵn (Chào mừng, Tặng VIP, Thông báo tính năng mới) để admin gửi trực tiếp từ `admin.html`.
 - **Kho mã nguồn (GitHub)**: `https://github.com/htmtslh-hub/habbit.git` (Nhánh `main`)
 - **Biểu tượng tiền tệ**: **Prism Nexus Coin** (Phương án 1) — Đồng xu tròn viền vàng hoàng kim công nghệ, lõi Lăng Kính Kim Cương Ngọc Bích (Emerald & Cyan Neon) tỏa sáng, thay thế hoàn toàn chữ text "DP" trên toàn hệ thống.
 - **Địa chỉ Production đang hoạt động**:
@@ -29,8 +33,15 @@
 | [`avatar_frames.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/avatar_frames.js) | Khung viền Avatar động 10 mốc đồ họa (Khung 1 đến Khung 10). |
 | [`auth.html`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/auth.html) / [`auth.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/auth.js) | Trang đăng nhập/đăng ký tài khoản, xác thực Email/Mật khẩu, OTP. |
 | [`admin.html`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/admin.html) / [`admin.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/admin.js) | Bảng điều khiển quản trị viên: Quản lý người dùng, phân cấp gói Free/Trial/Pro/Premium kèm thời hạn (30/90/365 ngày/Vĩnh viễn), cộng điểm DP bonus, duyệt nhiệm vụ đột xuất. |
-| [`ideas.txt`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/ideas.txt) | Tài liệu lưu trữ 5 Trụ cột chiến lược giữ chân người dùng (Retention Roadmap). |
-| [`sw.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/sw.js) | Service Worker phục vụ PWA và bộ nhớ đệm Offline. |
+| [`ideas.txt`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/ideas.txt) | Tài liệu lưu trữ 5 Trụ cột chiến lược giữ chân người dùng (Retention Roadmap) — **đã triển khai đầy đủ cả 5 trụ cột**. |
+| [`sw.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/sw.js) | Service Worker phục vụ PWA và bộ nhớ đệm Offline. Chứa `CACHE_VERSION` — bump số này ở mỗi lần deploy có thay đổi file tĩnh. |
+| [`i18n.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/i18n.js) | Hệ thống đa ngôn ngữ VI/EN/ZH toàn ứng dụng, tự phát hiện ngôn ngữ theo quốc gia, bản dịch tên 21 Cảnh Giới. |
+| [`api/send-email.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/api/send-email.js) | Serverless API (Vercel) gửi email hàng loạt qua Resend, phục vụ chức năng Admin gửi email. |
+| [`api/send-otp.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/api/send-otp.js) / [`api/verify-otp.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/api/verify-otp.js) | Sinh & xác thực mã OTP đăng ký/khôi phục tài khoản (CSPRNG). |
+| [`api/sepay-webhook.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/api/sepay-webhook.js) | Webhook nhận thông báo thanh toán từ SePay để tự động kích hoạt gói Pro/Premium. |
+| [`electron/`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/electron) | Cấu hình đóng gói bản Desktop (Electron + electron-builder) cho Windows (.exe NSIS/Portable) và macOS (.dmg/.zip arm64+x64). |
+| [`.github/workflows/build-mac.yml`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/.github/workflows/build-mac.yml) | GitHub Actions CI tự động build bản macOS (chạy trên runner macOS vì electron-builder không build .dmg trên Windows). |
+| [`firestore.rules`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/firestore.rules) | Luật bảo mật Firestore — đã siết chặt trong đợt vá bảo mật (commit `753c984`). |
 
 ---
 
@@ -169,13 +180,43 @@
 - **Bộ Phối Sẵn 1-Chạm (Quick Presets)**: *Cà Phê Mưa, Rừng Sâu, Deep Work 40Hz, Đêm Lửa Trại, Thiền Biển Đêm, Tắt Hết*.
 - **Thanh trượt âm lượng độc lập từng kênh (0-100%)**, hoạt họa cột sóng âm nhấp nhô (Animated Wave Bars) và tự động ghi nhớ cấu hình vào `localStorage`.
 - **Widget Trích Dẫn Khắc Kỷ & Động Lực Mỗi Ngày** trên Dashboard.
+- **Chế độ Pomodoro tùy chỉnh thời gian đếm ngược** (không cộng DP) cho người dùng muốn tự đặt thời lượng phiên tập trung riêng.
+
+### 11. Đa Ngôn Ngữ Toàn Hệ Thống (i18n — v5.8.0)
+- Hỗ trợ trọn vẹn **Tiếng Việt / English / 简体中文**, tự động phát hiện theo quốc gia người dùng (mặc định English cho các quốc gia còn lại).
+- Dịch toàn bộ giao diện, tên 21 Cảnh Giới, trang đăng nhập (`auth.html`/`auth.js`).
+- Bộ chọn ngôn ngữ dạng pill gọn trên thanh điều hướng.
+
+### 12. Bản Desktop Đóng Gói & Trang Tải App
+- **Windows**: Installer `.exe` (NSIS, có thể chọn thư mục cài) và bản Portable, build bằng `electron-builder`.
+- **macOS**: `.dmg` và `.zip` cho cả kiến trúc Apple Silicon (arm64) và Intel (x64), build tự động qua GitHub Actions (`build-mac.yml`) vì cần runner macOS.
+- Khu vực tải app riêng theo hệ điều hành hiển thị ngay trên trang đăng nhập (`auth.html`).
+
+### 13. Admin — Gửi Email Hàng Loạt (Resend Integration)
+- Tích hợp Resend API qua `api/send-email.js`, cho phép Admin gửi email trực tiếp từ `admin.html`.
+- 3 mẫu email dựng sẵn: Chào mừng thành viên mới, Tặng đặc quyền VIP miễn phí, Thông báo tính năng mới — hỗ trợ chèn biến `{name}` động.
+
+### 14. Bảo Mật (Security Hardening)
+- Vá lỗi XSS, siết chặt `firestore.rules`, thêm HTTP Security Headers trong `firebase.json`.
+- Chuyển sinh mã OTP sang CSPRNG (`crypto.randomInt`) thay vì `Math.random()`.
+- Loại bỏ các script mock/test ra khỏi build production.
 
 ---
 
 ## 🎯 5. KẾ HOẠCH BƯỚC TIẾP THEO
+
+### Tính năng
 1. **Tiếp nhận các file thiết kế HTML chi tiết** cho 6 quyển sách để nạp trực tiếp vào Reader.
 2. **Cấp bậc Tổ Đội (Squad Ranks)**: Thiết kế và triển khai hệ thống phân cấp tổ đội theo tổng điểm đóng góp của các thành viên.
 3. **Nâng cấp Hệ thống Thông báo Đẩy (Push Notifications)** & Lời nhắc nhở hàng ngày cho PWA/Mobile.
-4. **Triển khai đóng gói bản Desktop / Mobile** hoặc tối ưu theo yêu cầu cụ thể.
+4. **Tối ưu bản Desktop đã đóng gói**: bản macOS chưa ký chứng chỉ Apple (`hardenedRuntime: false`, `gatekeeperAssess: false`) nên máy người dùng sẽ cảnh báo "không xác định được nhà phát triển" khi mở — cần cân nhắc Apple Developer ID + notarize nếu phát hành rộng rãi. Bản Mobile (`habit-tracker-mobile`, Capacitor) hiện chưa được cập nhật song song với bản web.
+
+### Nợ kỹ thuật (phát hiện qua rà soát 07/09/2026)
+5. ✅ **[ĐÃ XONG 07/09/2026] Vá lỗ hổng dependency**: Nâng `firebase-admin` 12.7.0 → **14.3.0** và `nodemailer` 6.10.1 → **10.x**, thêm `overrides.uuid: ^11.1.1` trong `package.json` để chặn nốt lỗ hổng transitive của `@google-cloud/storage`. `npm audit` từ **10 lỗ hổng (8 moderate, 2 high) → 0 lỗ hổng**.
+   - ⚠️ **Breaking change đã xử lý**: `firebase-admin@13+` loại bỏ hoàn toàn API namespace cũ (`admin.apps`, `admin.credential.cert()`, `admin.firestore()`, `admin.firestore.Timestamp/FieldValue`, `admin.auth()`) khỏi entry point mặc định. Đã migrate toàn bộ 4 file `api/send-email.js`, `api/send-otp.js`, `api/verify-otp.js`, `api/sepay-webhook.js` sang API modular tương ứng (`admin.getApps()`, `admin.cert()`, `require("firebase-admin/firestore").getFirestore()/Timestamp/FieldValue`, `require("firebase-admin/auth").getAuth()`), đã test require() thành công với service account giả lập hợp lệ.
+   - **Chưa đụng tới**: `functions/package.json` (Firebase Cloud Functions) vẫn đang ở `firebase-admin@^12.0.0` — cây dependency **độc lập** với `api/` (Vercel), không bị ảnh hưởng bởi lần nâng cấp này nhưng cũng cần migrate tương tự khi nâng cấp riêng (xem mục 8 bên dưới).
+6. **Đồng bộ tài liệu PROJECT_STATE.md**: đã cập nhật lại 07/09/2026 cho khớp `v5.8.6` — cần duy trì thói quen cập nhật file này mỗi khi bump version để tránh lệch trạng thái ở các phiên làm việc sau.
+7. **Vị trí lưu Service Account Key**: file `sonnhai-2600f-firebase-adminsdk-fbsvc-95976c69d2.json` hiện nằm ở thư mục cha (ngoài git repo, an toàn nhưng trôi nổi) — nên chuyển vào trình quản lý secret/thư mục riêng có kiểm soát truy cập.
+8. **`functions/` (Firebase Cloud Functions) vẫn dùng `firebase-admin@^12.0.0`**: cây dependency riêng, chưa cài `node_modules` cục bộ. Khi nâng cấp, cần áp dụng lại đúng kiểu migrate API modular như mục 5 cho `functions/index.js` (đang dùng `admin.firestore()`, `admin.firestore.FieldValue/Timestamp`, `admin.auth()`).
 
 
