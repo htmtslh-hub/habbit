@@ -10903,8 +10903,55 @@ td.td-chk.frozen-day {
 .doc-reader-modal[data-theme="sepia"] .doc-reader-header,
 .doc-reader-modal[data-theme="sepia"] .doc-reader-footer,
 .doc-reader-modal[data-theme="sepia"] .dr-chapter-tabs-bar {
-    background: #15120e;
-    border-color: rgba(217, 119, 6, 0.2);
+    /* [v5.10.6] Theo yêu cầu người dùng: đổi header/footer sang cùng tông
+       nền be với trang sách (#EAE1CC) thay vì nền nâu tối như trước — đồng
+       bộ toàn bộ khung đọc thành 1 khối màu be liền mạch.
+       [v5.10.8] Nhạt thêm ~10% theo yêu cầu: #EAE1CC → #ECE4D1.
+       [v5.10.9] Nhạt thêm ~10% nữa: #ECE4D1 → #EEE7D6. */
+    background: #EEE7D6;
+    border-color: rgba(139, 94, 24, 0.25);
+}
+/* Chữ/nút trong header & footer trước đây cố định màu sáng (để luôn đọc
+   được trên nền tối) -- giờ nền đã đổi sang be sáng nên phải đổi ngược
+   lại sang màu nâu đậm, nếu không sẽ vô hình giống lỗi badge/tên chương
+   đã gặp ở v5.10.1. */
+.doc-reader-modal[data-theme="sepia"] .dr-book-title {
+    color: #2B2013;
+}
+.doc-reader-modal[data-theme="sepia"] .dr-book-category {
+    color: #6B4A16;
+}
+.doc-reader-modal[data-theme="sepia"] .dr-ctrl-btn {
+    color: #6B4A16;
+    background: rgba(139, 94, 24, 0.1);
+    border-color: rgba(139, 94, 24, 0.3);
+}
+.doc-reader-modal[data-theme="sepia"] .dr-ctrl-btn:hover {
+    background: rgba(139, 94, 24, 0.18);
+    color: #4A2E08;
+}
+.doc-reader-modal[data-theme="sepia"] .dr-toc-btn {
+    background: rgba(16, 133, 97, 0.14);
+    border-color: rgba(16, 133, 97, 0.4);
+    color: #0d7a56;
+}
+.doc-reader-modal[data-theme="sepia"] .dr-search-btn {
+    background: rgba(8, 126, 148, 0.14);
+    border-color: rgba(8, 126, 148, 0.4);
+    color: #0a7288;
+}
+.doc-reader-modal[data-theme="sepia"] .dr-close-btn {
+    color: #6B4A16;
+    background: rgba(139, 94, 24, 0.1);
+    border-color: rgba(139, 94, 24, 0.25);
+}
+.doc-reader-modal[data-theme="sepia"] .dr-close-btn:hover {
+    background: rgba(220, 38, 38, 0.14);
+    border-color: rgba(220, 38, 38, 0.4);
+    color: #b91c1c;
+}
+.doc-reader-modal[data-theme="sepia"] .dr-progress-text {
+    color: #6B4A16;
 }
 .doc-reader-modal[data-theme="sepia"] .dr-toc-drawer {
     background: #181410;
@@ -11934,8 +11981,10 @@ td.td-chk.frozen-day {
    OLED trong Reader — 2 trong 4 chế độ đọc coi như không hoạt động. */
 .doc-reader-modal[data-theme="sepia"] .doc-reader-body {
     /* [v5.9.8] #E4D4A8 (vàng nghệ đậm) bị chê gắt mắt — đổi sang tông be
-       nhẹ nhàng, ít vàng hơn nhưng vẫn đậm hơn hẳn bản #F6EED9 quá sáng ban đầu. */
-    background: #EAE1CC !important;
+       nhẹ nhàng, ít vàng hơn nhưng vẫn đậm hơn hẳn bản #F6EED9 quá sáng ban đầu.
+       [v5.10.8] Nhạt thêm ~10% theo yêu cầu: #EAE1CC → #ECE4D1.
+       [v5.10.9] Nhạt thêm ~10% nữa: #ECE4D1 → #EEE7D6. */
+    background: #EEE7D6 !important;
     color: #2B2013 !important;
 }
 .doc-reader-modal[data-theme="sepia"] .dr-p {
