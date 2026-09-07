@@ -10892,11 +10892,9 @@ td.td-chk.frozen-day {
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* READER THEMES */
-.doc-reader-modal[data-theme="dark"] {
-    background: #090d16;
-    color: #e2e8f0;
-}
+/* READER THEME — [v5.10.3] Chỉ giữ duy nhất Sepia "trang sách cổ điển" theo
+   yêu cầu người dùng; đã xoá hẳn Dark/Light/OLED (từng chọn qua nút 🎨, nay
+   không còn nút này nữa, `docReaderTheme` cố định = 'sepia' trong app.js). */
 .doc-reader-modal[data-theme="sepia"] {
     background: #1c1813;
     color: #eedcc5;
@@ -10922,104 +10920,6 @@ td.td-chk.frozen-day {
     color: #fbbf24;
     border-color: #d97706;
 }
-.doc-reader-modal[data-theme="light"] {
-    background: #f8fafc;
-    color: #0f172a;
-    border-color: #cbd5e1;
-}
-.doc-reader-modal[data-theme="light"] .doc-reader-header,
-.doc-reader-modal[data-theme="light"] .doc-reader-footer,
-.doc-reader-modal[data-theme="light"] .dr-chapter-tabs-bar {
-    background: #ffffff;
-    border-color: #e2e8f0;
-    color: #0f172a;
-}
-.doc-reader-modal[data-theme="light"] .dr-book-title {
-    color: #0f172a;
-}
-.doc-reader-modal[data-theme="light"] .dr-chapter-title {
-    color: #1e293b;
-}
-.doc-reader-modal[data-theme="light"] .dr-quote-box {
-    background: #f1f5f9;
-    color: #334155;
-    border-left-color: #0284c7;
-}
-.doc-reader-modal[data-theme="light"] .dr-toc-drawer {
-    background: #ffffff;
-    border-color: #cbd5e1;
-    color: #0f172a;
-}
-.doc-reader-modal[data-theme="light"] .dr-toc-header {
-    background: #f1f5f9;
-    border-color: #e2e8f0;
-}
-.doc-reader-modal[data-theme="light"] .dr-chap-tab {
-    background: #f1f5f9;
-    color: #475569;
-    border-color: #e2e8f0;
-}
-.doc-reader-modal[data-theme="light"] .dr-chap-tab.active {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.1));
-    color: #059669;
-    border-color: #10b981;
-}
-.doc-reader-modal[data-theme="light"] .dr-ctrl-btn {
-    color: #334155;
-}
-.doc-reader-modal[data-theme="light"] .dr-font-controls {
-    background: #f1f5f9;
-    border-color: #e2e8f0;
-}
-.doc-reader-modal[data-theme="light"] .dr-search-bar {
-    background: #f8fafc;
-    border-color: #e2e8f0;
-}
-.doc-reader-modal[data-theme="light"] .dr-search-bar input {
-    background: #ffffff;
-    color: #0f172a;
-    border-color: #cbd5e1;
-}
-.doc-reader-modal[data-theme="light"] .dr-search-results {
-    background: #ffffff;
-    border-color: #cbd5e1;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-}
-.doc-reader-modal[data-theme="light"] .dr-search-item-snippet {
-    color: #475569;
-}
-.doc-reader-modal[data-theme="light"] .dr-toc-search-wrap input {
-    background: #f1f5f9;
-    color: #0f172a;
-    border-color: #cbd5e1;
-}
-.doc-reader-modal[data-theme="light"] .dr-toc-chap-group {
-    border-color: #e2e8f0;
-    background: #fafafa;
-}
-.doc-reader-modal[data-theme="light"] .dr-toc-chap-title {
-    background: #f1f5f9;
-    color: #b45309;
-}
-.doc-reader-modal[data-theme="light"] .dr-toc-sec-item {
-    color: #475569;
-}
-.doc-reader-modal[data-theme="oled"] {
-    background: #000000;
-    color: #e5e7eb;
-    border-color: rgba(255, 255, 255, 0.15);
-}
-.doc-reader-modal[data-theme="oled"] .doc-reader-header,
-.doc-reader-modal[data-theme="oled"] .doc-reader-footer,
-.doc-reader-modal[data-theme="oled"] .dr-chapter-tabs-bar {
-    background: #050505;
-    border-color: rgba(255, 255, 255, 0.1);
-}
-.doc-reader-modal[data-theme="oled"] .dr-toc-drawer {
-    background: #000000;
-    border-color: rgba(255, 255, 255, 0.12);
-}
-
 /* READING PROGRESS BAR */
 .dr-progress-bar-wrap {
     width: 100%;
@@ -11083,6 +10983,9 @@ td.td-chk.frozen-day {
 .dr-book-category {
     font-size: 11px;
     color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .dr-header-actions {
@@ -11112,7 +11015,13 @@ td.td-chk.frozen-day {
 .dr-ctrl-btn {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-main);
+    /* Header của Reader luôn nền tối ở cả 3 theme Dark/Sepia/OLED (chỉ theme
+       Light đổi header sang trắng) nên màu chữ mặc định phải sáng cố định
+       -- KHÔNG dùng var(--text-main) vì biến đó đi theo Light/Dark Mode của
+       TOÀN BỘ site (không liên quan đến theme riêng của Reader), khiến chữ
+       A-/A+ gần như vô hình (chữ tối trên nền tối) khi site đang ở Light Mode
+       mà người đọc chuyển Reader sang Sepia hoặc OLED. */
+    color: #e2e8f0;
     font-family: var(--font-heading);
     font-size: 12px;
     font-weight: 800;
@@ -11402,6 +11311,13 @@ td.td-chk.frozen-day {
     background: rgba(5, 5, 10, 0.6);
     overflow: hidden;
     transition: all 0.2s ease;
+    /* [v5.10.4] Bug hiển thị: `.dr-toc-list` là flex column + overflow-y:auto,
+       nhưng thiếu flex-shrink:0 nên mặc định flex-shrink:1 khiến trình duyệt
+       ÉP CO các thẻ chương lại vừa khung nhìn thay vì cho tràn + cuộn -- kết
+       quả các mục con bị cắt cụt giữa chừng (bằng chứng: getBoundingClientRect
+       height < scrollHeight thực tế). Thêm flex-shrink:0 để giữ đúng chiều
+       cao tự nhiên theo nội dung. */
+    flex-shrink: 0;
 }
 .dr-toc-chap-group.active-chap {
     border-color: rgba(233, 197, 107, 0.5);
@@ -11835,7 +11751,9 @@ td.td-chk.frozen-day {
     padding-bottom: 12px;
 }
 
-/* Book Paragraphs */
+/* Book Paragraphs — thụt đầu dòng kiểu sách in truyền thống thay vì chỉ
+   dùng khoảng cách dòng để phân đoạn (kiểu web/blog trước đây trông thô,
+   thiếu cảm giác "quyển sách"). */
 .dr-p {
     margin: 0 0 22px 0;
     font-size: 1.06rem;
@@ -11843,6 +11761,13 @@ td.td-chk.frozen-day {
     color: #cbd5e1;
     text-align: justify;
     letter-spacing: 0.012em;
+    text-indent: 2em;
+}
+
+/* Đoạn mở đầu có chữ cái lớn (drop cap) đã tự làm điểm nhấn khởi đầu riêng —
+   thụt thêm đầu dòng nữa sẽ bị thừa/rối, nên bỏ text-indent ở đây. */
+.dr-p-lead {
+    text-indent: 0;
 }
 
 .dr-p-quote {
@@ -11857,6 +11782,137 @@ td.td-chk.frozen-day {
     line-height: 1.85;
 }
 
+/* Đoạn Mở Đầu Chương/Phần — chữ cái lớn kiểu sách in cổ điển, tạo điểm nhấn
+   thị giác ngay chỗ người đọc bắt đầu, tránh cảm giác "toàn bộ 218 trang chỉ
+   một mật độ chữ duy nhất" từ đầu đến cuối. */
+.dr-p-lead {
+    font-size: 1.08rem;
+}
+.dr-p-lead::first-letter {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 3.4em;
+    font-weight: 800;
+    float: left;
+    line-height: 0.78;
+    padding: 5px 10px 0 0;
+    color: #E9C56B;
+}
+
+/* Khối "Câu Hỏi Dồn Dập" — dành cho các đoạn dùng phép điệp cấu trúc kiểu
+   "X? Bởi vì Y! X2? Bởi vì Y!..." lặp cùng một câu trả lời nhiều lần. Thay vì
+   dồn thành văn xuôi đặc kín rất khó theo dõi, tách câu hỏi thành danh sách
+   dễ quét mắt và gom câu trả lời lặp lại thành MỘT điểm nhấn duy nhất ở cuối
+   — vừa dễ đọc hơn, vừa giữ được đúng hiệu ứng "dồn dập" mà đoạn văn góc muốn
+   tạo ra (không làm thay đổi nội dung/ý nghĩa gốc). */
+.dr-impact-block {
+    margin: 30px 0;
+}
+.dr-impact-lead {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0 0 14px 0;
+}
+.dr-impact-list {
+    list-style: none;
+    margin: 0 0 16px 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 10px 14px;
+}
+.dr-impact-list li {
+    position: relative;
+    padding: 10px 16px 10px 30px;
+    background: rgba(233, 197, 107, 0.07);
+    border-radius: 8px;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+.dr-impact-list li::before {
+    content: "✕";
+    position: absolute;
+    left: 11px;
+    top: 10px;
+    color: #E9C56B;
+    font-weight: 800;
+    font-size: 12px;
+}
+.dr-impact-answer {
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-align: center;
+    padding: 16px 20px;
+    margin: 0;
+    background: linear-gradient(135deg, rgba(233, 197, 107, 0.16), rgba(233, 197, 107, 0.05));
+    border: 1px solid rgba(233, 197, 107, 0.3);
+    border-radius: 12px;
+    color: #F7E7B4;
+}
+
+/* Nền content Sepia sáng (khác với Dark/OLED nền tối trước đây) nên chữ
+   vàng gold #E9C56B mặc định sẽ bị chìm, thiếu tương phản -- cần đổi sang
+   vàng hổ phách đậm hơn hẳn. */
+.doc-reader-modal[data-theme="sepia"] .dr-impact-list li {
+    background: rgba(180, 83, 9, 0.08);
+}
+.doc-reader-modal[data-theme="sepia"] .dr-impact-list li::before,
+.doc-reader-modal[data-theme="sepia"] .dr-p-lead::first-letter {
+    color: #B45309;
+}
+.doc-reader-modal[data-theme="sepia"] .dr-impact-answer {
+    background: linear-gradient(135deg, rgba(180, 83, 9, 0.14), rgba(180, 83, 9, 0.05));
+    border-color: rgba(180, 83, 9, 0.35);
+    color: #92400E;
+}
+
+/* Danh Sách Chân Lý Đánh Số — nhiều sách trong bộ 14 quyển vốn được viết theo
+   dạng "100 chân lý/châm ngôn đánh số" (VD: "141. ... 142. ... 143. ...")
+   nhưng khi đưa vào Reader, các mốc đánh số bị dồn chung thành MỘT khối văn
+   xuôi liền mạch dài hàng nghìn ký tự không ngắt câu -- mất hoàn toàn cấu
+   trúc gốc và cực kỳ khó theo dõi. Tách lại thành danh sách để mỗi chân lý
+   là một khối riêng biệt, số thứ tự gốc được giữ nguyên làm nhãn trực quan
+   (KHÔNG đổi/thêm bớt bất kỳ chữ nào trong nội dung — chỉ ngắt lại cấu trúc). */
+.dr-insight-list {
+    list-style: none;
+    margin: 24px 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.dr-insight-item {
+    padding: 14px 18px;
+    background: rgba(233, 197, 107, 0.045);
+    border: 1px solid rgba(233, 197, 107, 0.16);
+    border-radius: 10px;
+    font-size: 1.02rem;
+    line-height: 1.85;
+}
+.dr-insight-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 22px;
+    padding: 0 6px;
+    margin: 0 8px 2px 0;
+    border-radius: 6px;
+    background: rgba(233, 197, 107, 0.18);
+    color: #E9C56B;
+    font-family: 'Chakra Petch', sans-serif;
+    font-weight: 800;
+    font-size: 12.5px;
+    vertical-align: middle;
+}
+.doc-reader-modal[data-theme="sepia"] .dr-insight-item {
+    background: rgba(180, 83, 9, 0.05);
+    border-color: rgba(180, 83, 9, 0.18);
+}
+.doc-reader-modal[data-theme="sepia"] .dr-insight-num {
+    background: rgba(180, 83, 9, 0.14);
+    color: #92400E;
+}
+
 .dr-section-subtitle {
     font-family: 'Chakra Petch', sans-serif;
     font-size: 1.25rem;
@@ -11869,40 +11925,162 @@ td.td-chk.frozen-day {
     text-transform: uppercase;
 }
 
-/* Sepia Theme */
-[data-theme="sepia"] .doc-reader-body {
-    background: #F6EED9 !important;
-    color: #2B2114 !important;
+/* Sepia & Light Theme (Reader) — PHẢI khoanh vùng trong .doc-reader-modal.
+   Trước đây dùng bare [data-theme="sepia"/"light"] không gắn class này nên
+   vô tình khớp luôn với data-theme của TOÀN BỘ site (quy ước light/dark mode
+   chung, dùng ở hàng trăm chỗ khác trong file này) thay vì theme riêng của
+   Reader. Hậu quả: mỗi khi site đang ở Light Mode, khu vực đọc sách bị khóa
+   cứng giao diện sáng (nền trắng, chữ tối) DÙ người dùng đã chọn Dark hay
+   OLED trong Reader — 2 trong 4 chế độ đọc coi như không hoạt động. */
+.doc-reader-modal[data-theme="sepia"] .doc-reader-body {
+    /* [v5.9.8] #E4D4A8 (vàng nghệ đậm) bị chê gắt mắt — đổi sang tông be
+       nhẹ nhàng, ít vàng hơn nhưng vẫn đậm hơn hẳn bản #F6EED9 quá sáng ban đầu. */
+    background: #EAE1CC !important;
+    color: #2B2013 !important;
 }
-[data-theme="sepia"] .dr-p {
-    color: #2D2418 !important;
+.doc-reader-modal[data-theme="sepia"] .dr-p {
+    color: #2B2013 !important;
+    /* [v5.9.6] Cormorant Garamond ở weight 400/500 mặc định khá mảnh, tăng
+       lên 600 (semibold) để dễ đọc hơn, đỡ chói/mờ trên nền sáng. */
+    font-weight: 600 !important;
 }
-[data-theme="sepia"] .dr-p-quote {
+.doc-reader-modal[data-theme="sepia"] .dr-p-quote {
     background: rgba(180, 130, 60, 0.12) !important;
     border-left-color: #A06B20 !important;
     color: #5C3A0A !important;
 }
-[data-theme="sepia"] .dr-section-subtitle {
+.doc-reader-modal[data-theme="sepia"] .dr-section-subtitle {
     color: #8C5915 !important;
     border-bottom-color: rgba(140, 89, 21, 0.25) !important;
 }
 
-/* Light Theme */
-[data-theme="light"] .doc-reader-body {
-    background: #FFFFFF !important;
-    color: #0F172A !important;
+/* ===== SEPIA = "TRANG SÁCH CỔ ĐIỂN" (theo ảnh mẫu người dùng gửi) =====
+   Font chữ serif sang trọng (Merriweather weight 900 cho tiêu đề, cùng họ
+   Merriweather cho thân bài), khung viền kép quanh trang, dấu phân cách hình
+   thoi (tái dùng icon "i-sigil" có sẵn trong kho icon của app thay vì cần
+   thiết kế minh họa riêng), trích dẫn kiểu sách in căn giữa.
+   [v5.10.2] Font tiêu đề trước dùng Cinzel — không có bộ dấu tiếng Việt nên
+   trình duyệt phải ghép dấu từ font dự phòng khác, gây lỗi hiển thị dấu bị
+   lệch/vỡ. Đổi hẳn sang Merriweather (đã kiểm chứng hiển thị tiếng Việt
+   đúng ở phần thân bài) để tránh lặp lại lỗi tương tự. */
+.doc-reader-modal[data-theme="sepia"] .dr-page-main-heading,
+.doc-reader-modal[data-theme="sepia"] .dr-chap-main-title,
+.doc-reader-modal[data-theme="sepia"] .dr-banner-title {
+    font-family: 'Merriweather', 'Be Vietnam Pro', serif !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.02em;
 }
-[data-theme="light"] .dr-p {
-    color: #1E293B !important;
+.doc-reader-modal[data-theme="sepia"] .dr-page-main-heading {
+    text-align: center;
+    text-transform: none;
+    color: #6B4A16 !important;
 }
-[data-theme="light"] .dr-p-quote {
-    background: #F1F5F9 !important;
-    border-left-color: #0284C7 !important;
-    color: #0F172A !important;
+
+/* [v5.10.1] Badge "THẤU SUỐT", tên chương, badge "Mục X/Y" dùng màu vàng nhạt
+   mặc định (hợp nền tối) nhưng chìm mất trên nền be Sepia — đổi sang nâu đậm. */
+.doc-reader-modal[data-theme="sepia"] .dr-page-chap-name {
+    color: #6B4A16 !important;
 }
-[data-theme="light"] .dr-section-subtitle {
-    color: #0369A1 !important;
-    border-bottom-color: rgba(3, 105, 161, 0.25) !important;
+.doc-reader-modal[data-theme="sepia"] .dr-chap-badge-pill,
+.doc-reader-modal[data-theme="sepia"] .dr-page-counter-pill {
+    color: #6B4A16 !important;
+    background: rgba(139, 94, 24, 0.14) !important;
+    border-color: rgba(139, 94, 24, 0.4) !important;
+}
+.doc-reader-modal[data-theme="sepia"] .dr-page-top-header {
+    border-bottom-color: rgba(139, 94, 24, 0.25) !important;
+}
+
+/* Dấu phân cách hình thoi giữa tiêu đề và nội dung — tái dùng icon i-sigil
+   sẵn có trong app (kho rune icon), chỉ đổi màu cho hợp tông giấy cổ. */
+.dr-title-divider {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0 22px;
+    opacity: 0.7;
+}
+.dr-title-divider .rune-inline {
+    width: 22px;
+    height: 22px;
+    filter: none;
+}
+.doc-reader-modal:not([data-theme="sepia"]) .dr-title-divider {
+    display: none; /* chỉ hiện trong theme Sepia — các theme khác giữ nguyên phong cách hiện có */
+}
+.doc-reader-modal[data-theme="sepia"] .dr-title-divider .rune-inline {
+    color: #8C5915;
+}
+
+.doc-reader-modal[data-theme="sepia"] .dr-p,
+.doc-reader-modal[data-theme="sepia"] .dr-p-lead,
+.doc-reader-modal[data-theme="sepia"] .dr-impact-lead,
+.doc-reader-modal[data-theme="sepia"] .dr-insight-item {
+    /* [v5.10.0] Cormorant Garamond bị chê khó nhìn (font trang trí, nét mảnh)
+       — đổi sang Merriweather, font serif thiết kế riêng để đọc dài trên
+       màn hình, nét dày sẵn ở weight 400 nên không cần ép weight cao nữa. */
+    font-family: 'Merriweather', 'Be Vietnam Pro', serif !important;
+    font-size: 1.4rem !important; /* [v5.9.9] +15% theo phản hồi "chữ hơi nhỏ" (từ 1.22rem) */
+    line-height: 1.85 !important;
+    font-weight: 400 !important;
+}
+.doc-reader-modal[data-theme="sepia"] .dr-p-lead::first-letter {
+    /* [v5.10.2] Đổi từ Cinzel (lỗi dấu tiếng Việt) sang Merriweather 900 */
+    font-family: 'Merriweather', serif !important;
+    font-weight: 900 !important;
+}
+
+/* Trích dẫn kiểu sách in: căn giữa, chữ nghiêng, có 2 gạch mảnh trên/dưới
+   thay vì viền trái như các theme khác — giống hệt bố cục pull-quote trong
+   ảnh mẫu. */
+.doc-reader-modal[data-theme="sepia"] .dr-quote-box {
+    background: transparent !important;
+    border-left: none !important;
+    border-top: 1px solid rgba(140, 89, 21, 0.35);
+    border-bottom: 1px solid rgba(140, 89, 21, 0.35);
+    border-radius: 0 !important;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 18px 30px;
+    gap: 4px;
+}
+.doc-reader-modal[data-theme="sepia"] .dr-quote-symbol {
+    display: none;
+}
+.doc-reader-modal[data-theme="sepia"] .dr-quote-body {
+    font-family: 'Merriweather', serif !important;
+    font-size: 23px !important; /* [v5.9.9] +15% theo phản hồi "chữ hơi nhỏ" (từ 20px) */
+    font-weight: 400 !important;
+    color: #4A2E08 !important;
+}
+
+/* Khung viền trang kiểu sách cổ: viền kép + 4 góc trang trí (dùng lại chính
+   icon i-sigil, nhúng dưới dạng SVG nền vì đây là 1 pseudo-element thuần
+   CSS, không phải phần tử DOM sống). Chỉ bật trên desktop vì cần layout
+   container đủ rộng để khung không bị chật. */
+@media (min-width: 900px) {
+    .doc-reader-modal[data-theme="sepia"] .dr-content-container {
+        position: relative;
+        padding: 44px 52px;
+        border: 1.5px solid rgba(139, 94, 24, 0.45);
+        outline: 1px solid rgba(139, 94, 24, 0.25);
+        outline-offset: -10px;
+    }
+    .doc-reader-modal[data-theme="sepia"] .dr-content-container::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M24 4l16 20-16 20L8 24z' fill='none' stroke='%238B5E18' stroke-width='2'/%3E%3Ccircle cx='24' cy='24' r='2' fill='%238B5E18'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M24 4l16 20-16 20L8 24z' fill='none' stroke='%238B5E18' stroke-width='2'/%3E%3Ccircle cx='24' cy='24' r='2' fill='%238B5E18'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M24 4l16 20-16 20L8 24z' fill='none' stroke='%238B5E18' stroke-width='2'/%3E%3Ccircle cx='24' cy='24' r='2' fill='%238B5E18'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M24 4l16 20-16 20L8 24z' fill='none' stroke='%238B5E18' stroke-width='2'/%3E%3Ccircle cx='24' cy='24' r='2' fill='%238B5E18'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-size: 16px 16px;
+        background-position: top 6px left 6px, top 6px right 6px, bottom 6px left 6px, bottom 6px right 6px;
+        opacity: 0.55;
+    }
 }
 
 .dr-callout {
@@ -11993,9 +12171,23 @@ td.td-chk.frozen-day {
     background: rgba(15, 23, 42, 0.7);
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     flex-shrink: 0;
+    gap: 12px;
+}
+
+.dr-footer-left {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.dr-footer-right {
+    flex-shrink: 0;
 }
 
 .dr-progress-text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: 12px;
     color: var(--text-muted);
     font-family: var(--font-heading);
@@ -12033,18 +12225,56 @@ td.td-chk.frozen-day {
         text-align: center;
         padding: 20px 16px;
     }
+    /* Header quá chật để nhét vừa: badge + tiêu đề + 6 nút điều khiển trên 1
+       hàng (từng khiến phụ đề thể loại sách bị vỡ dòng theo từng từ do bị
+       bóp gần về 0px). Cho xuống dòng thành 2 hàng thay vì bóp/ẩn -> vừa hết
+       chữ, vừa giữ lại được nút chỉnh cỡ chữ (trước đây bị ẩn hẳn trên mobile,
+       khiến người đọc trên điện thoại không có cách nào phóng to chữ). */
     .doc-reader-header {
         padding: 10px 14px;
+        flex-wrap: wrap;
+        row-gap: 8px;
+    }
+    .dr-header-left {
+        flex: 1 1 100%;
+    }
+    .dr-book-category {
+        display: none;
+    }
+    .dr-header-actions {
+        flex: 1 1 100%;
+        justify-content: space-between;
     }
     .dr-font-controls {
-        display: none;
+        display: flex;
     }
     .dr-btn-text {
         display: none;
     }
+    /* [v5.10.5] Các nút bấm icon-only (Mục Lục, Tìm, A-/A+, Toàn màn hình, Đóng)
+       chỉ cao ~25-32px trên mobile -- dưới mức khuyến nghị 44px cho ngón tay
+       chạm, dễ bấm nhầm. Tăng vùng chạm mà không đổi kích thước icon bên trong. */
+    .dr-ctrl-btn {
+        padding: 9px 11px;
+        min-height: 40px;
+    }
+    .dr-fullscreen-btn,
+    .dr-close-btn {
+        width: 40px;
+        height: 40px;
+    }
     .dr-toc-drawer {
         width: 100%;
         max-width: 100vw;
+    }
+    .doc-reader-footer {
+        padding: 10px 14px;
+    }
+    .dr-mark-read-btn {
+        font-size: 11.5px;
+        padding: 10px 14px;
+        min-height: 40px;
+        white-space: nowrap;
     }
 }
 

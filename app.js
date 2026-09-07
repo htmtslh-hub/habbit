@@ -7402,9 +7402,6 @@ function initShopModal() {
     const fontInc = document.getElementById('drFontInc');
     if (fontInc) fontInc.onclick = () => adjustDocFontSize(10);
 
-    const themeToggle = document.getElementById('drThemeToggle');
-    if (themeToggle) themeToggle.onclick = toggleDocReaderTheme;
-
     const fsBtn = document.getElementById('drFullscreenBtn');
     if (fsBtn) fsBtn.onclick = toggleDocFullscreen;
 
@@ -7609,7 +7606,7 @@ const DOC_CONTENT_MAP = {
 let currentReadingDocId = null;
 let currentReadingPageIdx = 0;
 let docReaderFontSize = parseInt(localStorage.getItem('hg_doc_font_size') || '100', 10);
-let docReaderTheme = localStorage.getItem('hg_doc_theme') || 'dark'; // 'dark' | 'sepia' | 'light' | 'oled'
+let docReaderTheme = 'sepia'; // [v5.10.3] Chỉ còn 1 giao diện đọc duy nhất (Sepia "trang sách cổ điển") theo yêu cầu người dùng — bỏ Dark/Light/OLED.
 
 function getDocData(docId) {
     if (typeof window !== 'undefined' && window.ALL_BOOKS_DATA && window.ALL_BOOKS_DATA[docId]) {
@@ -7814,21 +7811,19 @@ function renderDocTocDrawer(docData, pages) {
     (docData.chapters || []).forEach((chap, cIdx) => {
         const chapTitle = chap.title || `Chương ${cIdx + 1}`;
         const sections = Array.isArray(chap.sections) ? chap.sections : [];
-        const chapRange = (chap.startPage && chap.endPage) ? `Trang ${chap.startPage} - ${chap.endPage}` : (chap.startPage ? `Trang ${chap.startPage}` : '');
 
         let secItemsHtml = '';
         sections.forEach((sec) => {
             const pageObj = (pages || []).find(p => p.type === 'section' && p.secId === sec.id);
             const targetPageIdx = pageObj ? pageObj.pageIndex : 1;
             const isActive = targetPageIdx === currentReadingPageIdx;
-            const pRange = (sec.startPage && sec.endPage) ? `Trang ${sec.startPage} - ${sec.endPage}` : (sec.startPage ? `Trang ${sec.startPage}` : '');
             secItemsHtml += `
                 <div class="dr-toc-sec-item ${isActive ? 'active' : ''}" onclick="window._navigateDocPage(${targetPageIdx})">
                     <div class="dr-toc-sec-title-wrap">
                         <span class="dr-toc-bullet">✦</span>
                         <span class="dr-toc-sec-name">${sec.title}</span>
                     </div>
-                    ${pRange ? `<span class="dr-toc-page-badge">${pRange}</span>` : ''}
+                    <span class="dr-toc-page-badge">Mục ${targetPageIdx}</span>
                 </div>
             `;
         });
@@ -7844,7 +7839,7 @@ function renderDocTocDrawer(docData, pages) {
                         <span class="dr-toc-chap-badge">${chap.badge || `CHƯƠNG ${cIdx}`}</span>
                         <span class="dr-toc-chap-name">${chap.shortTitle || chapTitle}</span>
                     </div>
-                    ${chapRange ? `<span class="dr-toc-chap-range">${chapRange}</span>` : `<span style="font-size:11px; opacity:0.75;">${sections.length} phần ▾</span>`}
+                    <span class="dr-toc-chap-range">${sections.length} phần</span>
                 </div>
                 <div class="dr-toc-sec-wrap">
                     ${secItemsHtml}
@@ -7923,6 +7918,7 @@ function renderDocPage(pageIndex) {
 
                 <div class="dr-page-title-banner">
                     <h2 class="dr-page-main-heading">${p.title}</h2>
+                    <div class="dr-title-divider"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></div>
                 </div>
 
                 ${p.quote ? `
@@ -7970,13 +7966,17 @@ function renderDocPage(pageIndex) {
     }
 
     // Update footer progress text
+    // [v5.10.5] Trên mobile, khung chữ này quá hẹp (chung hàng với nút "Đã Đọc
+    // Xong") nên chuỗi đầy đủ kèm tên bài bị ellipsis cắt gần hết, chỉ còn thấy
+    // "📖 Đang đọc:..." -- rút gọn còn mỗi số Mục cho mobile, đủ đọc trong khung hẹp.
     const progressEl = document.getElementById('drProgressText');
     if (progressEl) {
         const curPage = pages[validPageIdx];
+        const isMobileFooter = window.innerWidth <= 768;
         if (validPageIdx === 0) {
-            progressEl.textContent = `📖 Bìa Sách & Mục Lục (${totalContentPages} Mục)`;
+            progressEl.textContent = isMobileFooter ? `📖 ${totalContentPages} Mục` : `📖 Bìa Sách & Mục Lục (${totalContentPages} Mục)`;
         } else {
-            progressEl.textContent = `📖 Đang đọc: ${curPage.title} (Mục ${validPageIdx}/${totalContentPages})`;
+            progressEl.textContent = isMobileFooter ? `📖 Mục ${validPageIdx}/${totalContentPages}` : `📖 Đang đọc: ${curPage.title} (Mục ${validPageIdx}/${totalContentPages})`;
         }
     }
 
@@ -8213,15 +8213,6 @@ function adjustDocFontSize(delta) {
     const labelEl = document.getElementById('drFontSizeLabel');
     if (modalEl) modalEl.style.fontSize = `${docReaderFontSize}%`;
     if (labelEl) labelEl.textContent = `${docReaderFontSize}%`;
-}
-
-function toggleDocReaderTheme() {
-    const themes = ['dark', 'sepia', 'light', 'oled'];
-    const nextIdx = (themes.indexOf(docReaderTheme) + 1) % themes.length;
-    docReaderTheme = themes[nextIdx];
-    localStorage.setItem('hg_doc_theme', docReaderTheme);
-    const modalEl = document.getElementById('docReaderModal');
-    if (modalEl) modalEl.dataset.theme = docReaderTheme;
 }
 
 function toggleDocFullscreen() {

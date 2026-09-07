@@ -5,7 +5,7 @@
 // ============================================================
 
 const admin = require("firebase-admin");
-const { getFirestore } = require("firebase-admin/firestore");
+const { getFirestore, FieldValue } = require("firebase-admin/firestore");
 const { getAuth } = require("firebase-admin/auth");
 const { Resend } = require("resend");
 
@@ -275,7 +275,7 @@ module.exports = async function handler(req, res) {
         resendId: sendResult.data?.id || null,
         sentBy: adminEmail,
         adminUid,
-        createdAt: fb.firestore.FieldValue.serverTimestamp(),
+        createdAt: FieldValue.serverTimestamp(),
       });
 
       return res.json({
@@ -429,7 +429,7 @@ module.exports = async function handler(req, res) {
       sentBy: adminEmail,
       sentByEmail: adminEmail,
       adminUid,
-      createdAt: fb.firestore.FieldValue.serverTimestamp(),
+      createdAt: FieldValue.serverTimestamp(),
     });
   } catch (logErr) {
     console.error("Could not record email log to Firestore:", logErr.message);
