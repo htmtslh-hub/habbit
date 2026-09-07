@@ -138,6 +138,67 @@ service cloud.firestore {
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
+    // ===== SQUADS COLLECTION (Trụ Cột 3: Tổ Đội Rèn Luyện) =====
+    // KHÔNG có rule nào cho collection này trước đây -> Firestore mac dinh
+    // deny-by-default nen toan bo tinh nang tao/gia nhap/dong bo Squad da
+    // bi tu choi am tham (boc trong try/catch) doi voi nguoi dung that.
+    match /squads/{squadId} {
+      allow read: if request.auth != null;
+
+      // Chi cho tao khi nguoi tao (createdBy) la chinh minh
+      allow create: if request.auth != null && request.resource.data.createdBy == request.auth.uid;
+
+      // Bat ky thanh vien nao (tao/tham gia/roi doi/nudge/check-in dong bo/len bac)
+      // deu can ghi vao cung 1 document. Khong the kiem tra "co phai la thanh
+      // vien" bang Rules thuan tuy vi `members` la array-of-map (khong ho tro
+      // loc theo truong con). De bao ve, chi khoa cac truong dinh danh cot loi:
+      // chu so huu (createdBy), ma moi (code) va ten doi khong the bi doi boi
+      // nguoi ngoai doi truong.
+      allow update: if request.auth != null && (
+        resource.data.createdBy == request.auth.uid ||
+        (
+          request.resource.data.createdBy == resource.data.createdBy &&
+          request.resource.data.code == resource.data.code &&
+          request.resource.data.name == resource.data.name
+        )
+      );
+
+      allow delete: if request.auth != null && resource.data.createdBy == request.auth.uid;
+
+      // Tin nhan trong kenh chat cua To Doi
+      match /messages/{messageId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null && request.resource.data.senderId == request.auth.uid;
+      }
+    }
+
+    // ===== DUELS COLLECTION (Trụ Cột 3: Đấu Trường Thách Đấu 1v1) =====
+    // Cung khong co rule truoc day -> bi deny-by-default tuong tu squads.
+    match /duels/{duelId} {
+      allow read: if request.auth != null;
+
+      // Chi nguoi thach dau (challenger) moi duoc tao phong
+      allow create: if request.auth != null && request.resource.data.challenger.uid == request.auth.uid;
+
+      // Challenger hoac Opponent duoc cap nhat tien do hang ngay. Nguoi thu 3
+      // nhan keo mo (accept) duoc phep ghi opponent, nhung khong duoc doi
+      // challenger hay so DP dat cuoc (betDP) cua tran dau.
+      allow update: if request.auth != null && (
+        resource.data.challenger.uid == request.auth.uid ||
+        (resource.data.opponent != null && resource.data.opponent.uid == request.auth.uid) ||
+        (
+          request.resource.data.challenger == resource.data.challenger &&
+          request.resource.data.betDP == resource.data.betDP
+        )
+      );
+
+      // Chi challenger hoac opponent duoc huy/xoa phong dau
+      allow delete: if request.auth != null && (
+        resource.data.challenger.uid == request.auth.uid ||
+        (resource.data.opponent != null && resource.data.opponent.uid == request.auth.uid)
+      );
+    }
+
     // ===== DIRECT CONVERSATIONS (INBOX) =====
     match /conversations/{convId} {
       allow read: if request.auth != null && (
