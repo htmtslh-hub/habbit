@@ -8270,14 +8270,85 @@ let squadHubActiveTab = 'squads';
 let localSquadCache = null;
 let localDuelCache = null;
 
+// 5 Bậc Đồng Đội (Squad Ranks) — tính theo TỔNG DP đóng góp bởi toàn bộ thành viên.
+// Đặt tên riêng biệt với hệ thống "7 Bước Lớn & 21 Cảnh Giới Nhỏ" của cá nhân
+// (không dùng lại các danh xưng đã bị loại bỏ như Tân Binh/Huyền Thoại, không
+// hiển thị "Lv.X") — mang màu sắc "tập thể/liên minh" thay vì "tu vi cá nhân".
+const SQUAD_RANKS = [
+    { level: 1, name: 'Liên Minh Mới Lập',   icon: '🌱', min: 0 },
+    { level: 2, name: 'Đội Hình Gắn Kết',    icon: '🤝', min: 500 },
+    { level: 3, name: 'Tập Thể Kỷ Luật',     icon: '⚔️', min: 1500 },
+    { level: 4, name: 'Quân Đoàn Tinh Nhuệ', icon: '🛡️', min: 3500 },
+    { level: 5, name: 'Bang Hội Bất Diệt',   icon: '👑', min: 7000 }
+];
+window.SQUAD_RANKS = SQUAD_RANKS;
+
 function getSquadLevelInfo(totalDP = 0) {
-    if (totalDP >= 7000) return { level: 5, name: 'Huyền Thoại (Lv.5)', max: 10000, current: totalDP, pct: 100 };
-    if (totalDP >= 3500) return { level: 4, name: 'Bậc Thầy (Lv.4)', max: 7000, current: totalDP, pct: Math.round((totalDP - 3500) / 3500 * 100) };
-    if (totalDP >= 1500) return { level: 3, name: 'Chiến Tinh (Lv.3)', max: 3500, current: totalDP, pct: Math.round((totalDP - 1500) / 2000 * 100) };
-    if (totalDP >= 500) return { level: 2, name: 'Tiên Phong (Lv.2)', max: 1500, current: totalDP, pct: Math.round((totalDP - 500) / 1000 * 100) };
-    return { level: 1, name: 'Tân Binh (Lv.1)', max: 500, current: totalDP, pct: Math.round(totalDP / 500 * 100) };
+    const dp = Math.max(0, Number(totalDP) || 0);
+    let idx = 0;
+    for (let i = 0; i < SQUAD_RANKS.length; i++) {
+        if (dp >= SQUAD_RANKS[i].min) idx = i;
+    }
+    const tier = SQUAD_RANKS[idx];
+    const next = SQUAD_RANKS[idx + 1] || null;
+    const isMax = !next;
+    const span = isMax ? 1 : (next.min - tier.min);
+    const pct = isMax ? 100 : Math.min(100, Math.max(0, Math.round((dp - tier.min) / span * 100)));
+
+    return {
+        level: tier.level,
+        name: tier.name,
+        icon: tier.icon,
+        current: dp,
+        min: tier.min,
+        max: isMax ? dp : next.min,
+        pct,
+        isMax,
+        nextName: next ? next.name : null,
+        dpToNext: isMax ? 0 : Math.max(0, next.min - dp)
+    };
 }
 window.getSquadLevelInfo = getSquadLevelInfo;
+
+// Mỗi thành viên tự "nhận" (claim) thưởng lên bậc cho CHÍNH MÌNH khi phát hiện
+// tổng DP của Tổ Đội vừa vượt một mốc bậc mới mà mình chưa được thưởng.
+// Thiết kế theo kiểu "lazy-claim per-member" vì Firestore Rules chỉ cho phép
+// mỗi client tự ghi vào document DP/Coins của chính mình (users/{uid},
+// leaderboard/{uid}) — không thể ghi hộ cho các thành viên khác trong đội.
+async function claimSquadRankRewardIfEligible(squadData) {
+    if (!currentUser || !db || !squadData || !Array.isArray(squadData.members)) return null;
+    const myUid = currentUser.uid;
+    const meIndex = squadData.members.findIndex(m => m.uid === myUid);
+    if (meIndex === -1) return null;
+
+    const currentLevel = getSquadLevelInfo(squadData.totalDP || 0).level;
+    const claimedLevel = squadData.members[meIndex].claimedRankLevel || 0;
+    if (currentLevel <= claimedLevel) return null;
+
+    const rewardDP = currentLevel * 50; // Bậc 2->100, Bậc 3->150, Bậc 4->200, Bậc 5->250
+    const rankInfo = SQUAD_RANKS.find(r => r.level === currentLevel);
+
+    try {
+        userBonusDP = (userBonusDP || 0) + rewardDP;
+        if (typeof userDocRef !== 'undefined' && userDocRef) {
+            await userDocRef.update({ bonusDP: userBonusDP });
+        }
+        await db.collection('leaderboard').doc(myUid).set({ bonusDP: userBonusDP }, { merge: true });
+
+        const updatedMembers = squadData.members.map(m =>
+            m.uid === myUid ? { ...m, claimedRankLevel: currentLevel } : m
+        );
+        await db.collection('squads').doc(squadData.id).update({ members: updatedMembers });
+        squadData.members = updatedMembers; // cập nhật cache cục bộ để render ngay
+
+        if (typeof updateUserDPState === 'function') updateUserDPState(true);
+        return { level: currentLevel, name: rankInfo ? rankInfo.name : '', rewardDP };
+    } catch (e) {
+        console.warn('Claim squad rank reward error:', e);
+        return null;
+    }
+}
+window.claimSquadRankRewardIfEligible = claimSquadRankRewardIfEligible;
 
 function openSquadModal(tab = 'squads') {
     const modal = document.getElementById('squadModalBg');
@@ -8315,6 +8386,18 @@ async function renderSquadHubUI(targetTab = null) {
         }
 
         if (squadData) {
+            const rankUp = await claimSquadRankRewardIfEligible(squadData);
+            if (rankUp) {
+                if (typeof playResurrectSound === 'function') playResurrectSound();
+                if (typeof fireConfetti === 'function') fireConfetti();
+                const rankToast = document.createElement('div');
+                rankToast.className = 'quest-toast';
+                rankToast.innerHTML = `<span>${rankUp.name ? (SQUAD_RANKS.find(r=>r.level===rankUp.level)||{}).icon || '🎉' : '🎉'}</span> Tổ đội đã lên bậc <strong>${escHtml(rankUp.name)}</strong>! Bạn nhận thưởng <strong>+${rankUp.rewardDP} DP</strong>!`;
+                document.body.appendChild(rankToast);
+                setTimeout(() => rankToast.classList.add('show'), 10);
+                setTimeout(() => { rankToast.classList.remove('show'); setTimeout(() => rankToast.remove(), 400); }, 3800);
+            }
+
             const members = Array.isArray(squadData.members) ? squadData.members : [];
             const checkedCount = members.filter(m => m.todayChecked || m.lastCheckedDate === todayKey).length;
             const completionPct = members.length ? Math.round((checkedCount / members.length) * 100) : 0;
@@ -8377,7 +8460,7 @@ async function renderSquadHubUI(targetTab = null) {
                             <div>
                                 <div class="squad-hero-name">
                                     ${escHtml(squadData.name || 'Tổ Đội Kỷ Luật')}
-                                    <span class="squad-level-badge">${lvlInfo.name}</span>
+                                    <span class="squad-level-badge">${lvlInfo.icon} ${lvlInfo.name}</span>
                                 </div>
                                 <div class="squad-hero-desc">${escHtml(squadData.description || 'Cùng nhau rèn luyện thói quen mỗi ngày!')}</div>
                             </div>
@@ -8390,6 +8473,16 @@ async function renderSquadHubUI(targetTab = null) {
                                 <span>🔑 MÃ: ${squadData.code}</span>
                                 <span>📋</span>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="squad-rank-section">
+                        <div class="squad-progress-header">
+                            <span>${lvlInfo.icon} Bậc Đồng Đội: <strong>${lvlInfo.name}</strong></span>
+                            <span>${(squadData.totalDP || 0).toLocaleString()} DP ${lvlInfo.isMax ? '(Bậc cao nhất)' : `· còn ${lvlInfo.dpToNext.toLocaleString()} DP → ${lvlInfo.nextName}`}</span>
+                        </div>
+                        <div class="squad-rank-track">
+                            <div class="squad-rank-fill" style="width:${lvlInfo.pct}%;"></div>
                         </div>
                     </div>
 

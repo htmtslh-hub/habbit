@@ -7,7 +7,7 @@
 ## 📌 1. THÔNG TIN DỰ ÁN & TRIỂN KHAI
 - **Tên ứng dụng**: **Habit Mastery** (Ứng dụng Rèn luyện Thói quen & Game hóa Kỷ luật)
 - **Công nghệ cốt lõi**: HTML5, Vanilla CSS3 (Design System chuẩn Dark/Light Mode), Vanilla JavaScript (ES6+), Firebase (Authentication, Firestore, Hosting), PWA (Service Worker), Vercel Production, Electron (bản Desktop Windows/macOS), Vercel Serverless API (Node.js — SePay Webhook, OTP, Resend Email).
-- **Phiên bản Cache / Scripts hiện tại**: `app.js?v=5.8.2`, `style.css?v=5.8.1`, `i18n.js?v=5.8.0` (trong `index.html`) & Service Worker `CACHE_VERSION = '5.8.6'` (trong `sw.js`) — *cập nhật số phiên bản này mỗi khi thay đổi để buộc client tải lại cache mới.*
+- **Phiên bản Cache / Scripts hiện tại**: `app.js?v=5.9.0`, `style.css?v=5.9.0`, `i18n.js?v=5.8.0` (trong `index.html`) & Service Worker `CACHE_VERSION = '5.9.0'` (trong `sw.js`) — *cập nhật số phiên bản này mỗi khi thay đổi để buộc client tải lại cache mới.*
 - **Loại Bỏ 100% Mục Lục Rác & Dấu Chấm OCR Trong Nội Dung (v5.3.3)**: Đã bóc tách và xóa sạch toàn bộ các đoạn text mục lục thô bị sao chép nhầm từ bản scan PDF (các dòng chấm dài `........ 93 146. Thu hút...`) trong toàn bộ 14 cuốn sách, giữ lại giao diện trang đọc tinh khiết, sang trọng và chuẩn mực.
 - **Đa Ngôn Ngữ Toàn Hệ Thống (v5.8.0)**: Hỗ trợ đầy đủ **Tiếng Việt / English / 简体中文**, tự động phát hiện ngôn ngữ theo quốc gia (VN→vi, CN→zh, còn lại→en mặc định), bao gồm cả tên 21 Cảnh Giới, toàn bộ UI, `auth.html`, `auth.js`. Logic đặt tại [`i18n.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/i18n.js) (~1.600 dòng).
 - **Bảo Mật (Security Patch)**: Đã vá các lỗ hổng nghiêm trọng — XSS, siết chặt `firestore.rules`, thêm HTTP Security Headers trong `firebase.json`, chuyển sinh mã OTP sang CSPRNG (`crypto.randomInt`), loại các script mock ra khỏi build production.
@@ -201,15 +201,29 @@
 - Chuyển sinh mã OTP sang CSPRNG (`crypto.randomInt`) thay vì `Math.random()`.
 - Loại bỏ các script mock/test ra khỏi build production.
 
+### 15. Cấp Bậc Tổ Đội (Squad Ranks) — v5.9.0
+- **5 Bậc Đồng Đội** tính theo TỔNG DP đóng góp bởi toàn bộ thành viên (mảng `SQUAD_RANKS` trong `app.js`), đặt tên riêng biệt hoàn toàn với hệ "7 Bước 21 Cảnh Giới" cá nhân (không tái dùng danh xưng đã bị loại bỏ, không hiển thị "Lv.X"):
+  | Bậc | Tên | Ngưỡng DP |
+  |:---:|:---|:---|
+  | 1 | 🌱 Liên Minh Mới Lập | 0 – 499 |
+  | 2 | 🤝 Đội Hình Gắn Kết | 500 – 1.499 |
+  | 3 | ⚔️ Tập Thể Kỷ Luật | 1.500 – 3.499 |
+  | 4 | 🛡️ Quân Đoàn Tinh Nhuệ | 3.500 – 6.999 |
+  | 5 | 👑 Bang Hội Bất Diệt | 7.000+ |
+- **Thanh tiến độ lên bậc riêng biệt** (`squad-rank-section`, tông vàng/hổ phách) trong màn hình Tổ Đội, tách bạch với thanh "hoàn thành check-in hôm nay" (tông xanh lá/cyan) để tránh gây nhầm lẫn hai loại tiến độ khác nhau.
+- **Thưởng lên bậc kiểu "lazy-claim per-member"**: mỗi thành viên tự nhận thưởng (+50 DP × số bậc) cho chính mình ngay khi phát hiện đội đã vượt mốc bậc mới mà mình chưa nhận — thiết kế bắt buộc vì Firestore Rules chỉ cho phép mỗi client ghi vào tài liệu DP/Coins của chính mình, không thể ghi hộ thành viên khác. Trạng thái đã nhận lưu tại `members[].claimedRankLevel` trong document `squads/{id}`.
+- Hiệu ứng ăn mừng: confetti + âm thanh + toast thông báo khi lên bậc mới.
+- **Yêu cầu nền tảng**: chỉ hoạt động được sau khi vá lỗ hổng `firestore.rules` ở mục nợ kỹ thuật #9 (trước đó `squads`/`duels` bị Firestore từ chối hoàn toàn).
+
 ---
 
 ## 🎯 5. KẾ HOẠCH BƯỚC TIẾP THEO
 
 ### Tính năng
 1. **Tiếp nhận các file thiết kế HTML chi tiết** cho 6 quyển sách để nạp trực tiếp vào Reader.
-2. **Cấp bậc Tổ Đội (Squad Ranks)**: Thiết kế và triển khai hệ thống phân cấp tổ đội theo tổng điểm đóng góp của các thành viên.
+2. ✅ **[ĐÃ XONG 07/09/2026] Cấp bậc Tổ Đội (Squad Ranks)** — xem chi tiết ở mục 4.15 và mục nợ kỹ thuật #9 (lỗi nền tảng đã phát hiện & sửa cùng lúc).
 3. **Nâng cấp Hệ thống Thông báo Đẩy (Push Notifications)** & Lời nhắc nhở hàng ngày cho PWA/Mobile.
-4. **Tối ưu bản Desktop đã đóng gói**: bản macOS chưa ký chứng chỉ Apple (`hardenedRuntime: false`, `gatekeeperAssess: false`) nên máy người dùng sẽ cảnh báo "không xác định được nhà phát triển" khi mở — cần cân nhắc Apple Developer ID + notarize nếu phát hành rộng rãi. Bản Mobile (`habit-tracker-mobile`, Capacitor) hiện chưa được cập nhật song song với bản web.
+4. **Tối ưu bản Desktop đã đóng gói**: bản macOS chưa ký chứng chỉ Apple (`hardenedRuntime: false`, `gatekeeperAssess: false`) nên máy người dùng sẽ cảnh báo "không xác định được nhà phát triển" khi mở — cần cân nhắc Apple Developer ID + notarize nếu phát hành rộng rãi (cần tài khoản Apple Developer trả phí của chủ dự án, không thể tự thực hiện). Bản Mobile (`habit-tracker-mobile`, Capacitor) hiện chưa được cập nhật song song với bản web.
 
 ### Nợ kỹ thuật (phát hiện qua rà soát 07/09/2026)
 5. ✅ **[ĐÃ XONG 07/09/2026] Vá lỗ hổng dependency**: Nâng `firebase-admin` 12.7.0 → **14.3.0** và `nodemailer` 6.10.1 → **10.x**, thêm `overrides.uuid: ^11.1.1` trong `package.json` để chặn nốt lỗ hổng transitive của `@google-cloud/storage`. `npm audit` từ **10 lỗ hổng (8 moderate, 2 high) → 0 lỗ hổng**.
@@ -218,5 +232,9 @@
 6. **Đồng bộ tài liệu PROJECT_STATE.md**: đã cập nhật lại 07/09/2026 cho khớp `v5.8.6` — cần duy trì thói quen cập nhật file này mỗi khi bump version để tránh lệch trạng thái ở các phiên làm việc sau.
 7. **Vị trí lưu Service Account Key**: file `sonnhai-2600f-firebase-adminsdk-fbsvc-95976c69d2.json` hiện nằm ở thư mục cha (ngoài git repo, an toàn nhưng trôi nổi) — nên chuyển vào trình quản lý secret/thư mục riêng có kiểm soát truy cập.
 8. **`functions/` (Firebase Cloud Functions) vẫn dùng `firebase-admin@^12.0.0`**: cây dependency riêng, chưa cài `node_modules` cục bộ. Khi nâng cấp, cần áp dụng lại đúng kiểu migrate API modular như mục 5 cho `functions/index.js` (đang dùng `admin.firestore()`, `admin.firestore.FieldValue/Timestamp`, `admin.auth()`).
+9. ✅ **[ĐÃ XONG 07/09/2026 — PHÁT HIỆN NGHIÊM TRỌNG] `firestore.rules` chưa từng có rule cho `squads` và `duels`**: Xác nhận bằng `git log -p` toàn bộ lịch sử file — **không một commit nào** từng thêm rule cho 2 collection này. Vì Firestore mặc định **deny-by-default** với path không khớp rule nào, toàn bộ **Trụ Cột 3 (Tổ Đội Rèn Luyện & Đấu Trường 1v1)** — dù đã được ghi "hoàn thiện" ở mục 4.8 — **thực chất luôn bị Firestore từ chối âm thầm** mỗi khi người dùng thật (không phải qua Admin SDK) thử tạo/tham gia/đồng bộ tổ đội hoặc thách đấu (lỗi bị nuốt trong `try/catch console.warn`, không hiển thị cho người dùng nên không bị phát hiện qua test thủ công thông thường).
+   - **Đã thêm rule đầy đủ** cho `squads/{squadId}` (+ subcollection `messages`) và `duels/{duelId}`: cho phép đọc khi đã đăng nhập; chỉ người tạo (`createdBy`/`challenger.uid`) được tạo mới; mọi thành viên được cập nhật (join/rời/nudge/check-in đồng bộ/lên bậc) nhưng **không ai ngoài chủ sở hữu được đổi các trường định danh cốt lõi** (`createdBy`, `code`, `name` của squad; `challenger`, `betDP` của duel) — chặn giả mạo/chiếm đoạt nhưng không cần lưu thêm mảng `memberUids` phụ trợ.
+   - **Đã verify bằng Firebase Emulator thật** (cài JRE + `@firebase/rules-unit-testing`, không chỉ đọc code suông): **22/22 test case pass** — bao gồm cả các ca "phải bị từ chối" (giả mạo `createdBy`, đổi tên đội bởi người ngoài, đổi mã mời, tráo đối thủ/tiền cược trong duel, xóa đội/trận đấu không phải của mình) và các ca "phải được phép" (tạo, đọc, tham gia, đổi tên bởi chủ đội, chấp nhận thách đấu, cập nhật tiến độ, xóa bởi đúng chủ sở hữu, gửi tin nhắn đúng danh tính).
+10. ✅ **[ĐÃ XONG 07/09/2026] Cấp bậc Tổ Đội (Squad Ranks)** triển khai trên nền `firestore.rules` vừa được sửa ở mục 9 — chi tiết đầy đủ ở mục 4.15.
 
 

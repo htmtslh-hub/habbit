@@ -8455,6 +8455,32 @@ td.td-chk.frozen-day {
     box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
 }
 
+/* Squad Rank (Bậc Đồng Đội) — tách biệt với thanh "hoàn thành hôm nay" ở trên,
+   dùng tông vàng/hổ phách để phân biệt rõ đây là tiến độ LÊN BẬC theo tổng DP. */
+.squad-rank-section {
+    margin-top: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 12px 14px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(245, 158, 11, 0.15);
+}
+
+.squad-rank-track {
+    height: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.squad-rank-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f59e0b, #f97316, #eab308);
+    border-radius: 6px;
+    transition: width 0.5s ease-out;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
 /* --- SQUAD MEMBERS GRID --- */
 .squad-members-title {
     font-family: var(--font-heading);
