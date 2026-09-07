@@ -1,11 +1,13 @@
 const admin = require('firebase-admin');
+const { getFirestore, Timestamp } = require('firebase-admin/firestore');
+const { getAuth } = require('firebase-admin/auth');
 const path = require('path');
 
 const serviceAccountPath = path.join(__dirname, '../sonnhai-2600f-firebase-adminsdk-fbsvc-95976c69d2.json');
 const serviceAccount = require(serviceAccountPath);
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.cert(serviceAccount)
 });
 
 async function main() {
@@ -15,9 +17,9 @@ async function main() {
 
   let user;
   try {
-    user = await admin.auth().getUserByEmail(email);
+    user = await getAuth().getUserByEmail(email);
     console.log(`User ${email} already exists (UID: ${user.uid}). Updating password and profile...`);
-    await admin.auth().updateUser(user.uid, {
+    await getAuth().updateUser(user.uid, {
       password: password,
       displayName: displayName,
       emailVerified: true,
@@ -26,7 +28,7 @@ async function main() {
   } catch (error) {
     if (error.code === 'auth/user-not-found') {
       console.log(`Creating new user ${email}...`);
-      user = await admin.auth().createUser({
+      user = await getAuth().createUser({
         email: email,
         password: password,
         displayName: displayName,
@@ -38,7 +40,7 @@ async function main() {
     }
   }
 
-  const db = admin.firestore();
+  const db = getFirestore();
   const now = new Date();
   const futureDate = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000); // 1 year
 
@@ -49,12 +51,12 @@ async function main() {
     photoURL: '',
     plan: 'vip',
     role: 'customer',
-    trialStartedAt: admin.firestore.Timestamp.fromDate(now),
-    trialExpiresAt: admin.firestore.Timestamp.fromDate(futureDate),
-    planUpdatedAt: admin.firestore.Timestamp.fromDate(now),
-    planExpiresAt: admin.firestore.Timestamp.fromDate(futureDate),
-    createdAt: admin.firestore.Timestamp.fromDate(now),
-    lastLoginAt: admin.firestore.Timestamp.fromDate(now),
+    trialStartedAt: Timestamp.fromDate(now),
+    trialExpiresAt: Timestamp.fromDate(futureDate),
+    planUpdatedAt: Timestamp.fromDate(now),
+    planExpiresAt: Timestamp.fromDate(futureDate),
+    createdAt: Timestamp.fromDate(now),
+    lastLoginAt: Timestamp.fromDate(now),
     disabled: false,
   };
 

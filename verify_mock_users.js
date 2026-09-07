@@ -1,11 +1,12 @@
 const admin = require('firebase-admin');
+const { getFirestore } = require('firebase-admin/firestore');
 const path = require('path');
 const serviceAccount = require('../sonnhai-2600f-firebase-adminsdk-fbsvc-95976c69d2.json');
 
-if (!admin.apps.length) admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+if (!admin.getApps().length) admin.initializeApp({ credential: admin.cert(serviceAccount) });
 
 async function verify() {
-  const db = admin.firestore();
+  const db = getFirestore();
   console.log('=== TOP 5 LEADERBOARD ===');
   const lbSnap = await db.collection('leaderboard').orderBy('totalDP', 'desc').limit(5).get();
   lbSnap.forEach((d, i) => {

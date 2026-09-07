@@ -1,17 +1,19 @@
 const admin = require('firebase-admin');
+const { getFirestore } = require('firebase-admin/firestore');
+const { getAuth } = require('firebase-admin/auth');
 const path = require('path');
 
 const serviceAccountPath = path.join(__dirname, '../sonnhai-2600f-firebase-adminsdk-fbsvc-95976c69d2.json');
 const serviceAccount = require(serviceAccountPath);
 
-if (!admin.apps.length) {
+if (!admin.getApps().length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.cert(serviceAccount)
   });
 }
 
-const auth = admin.auth();
-const db = admin.firestore();
+const auth = getAuth();
+const db = getFirestore();
 
 const updatedMockUsers = [
   {

@@ -1,17 +1,19 @@
 const admin = require('firebase-admin');
+const { getFirestore, Timestamp } = require('firebase-admin/firestore');
+const { getAuth } = require('firebase-admin/auth');
 const path = require('path');
 
 const serviceAccountPath = path.join(__dirname, '../sonnhai-2600f-firebase-adminsdk-fbsvc-95976c69d2.json');
 const serviceAccount = require(serviceAccountPath);
 
-if (!admin.apps.length) {
+if (!admin.getApps().length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.cert(serviceAccount)
   });
 }
 
-const auth = admin.auth();
-const db = admin.firestore();
+const auth = getAuth();
+const db = getFirestore();
 
 const mockAccounts = [
   {
@@ -107,12 +109,12 @@ async function createOrUpdateUser(acc) {
     role: 'customer',
     equippedTitle: acc.equippedTitle,
     bonusDP: acc.totalDP,
-    trialStartedAt: admin.firestore.Timestamp.fromDate(createdAt),
-    trialExpiresAt: admin.firestore.Timestamp.fromDate(futureYear),
-    planUpdatedAt: admin.firestore.Timestamp.fromDate(createdAt),
-    planExpiresAt: admin.firestore.Timestamp.fromDate(futureYear),
-    createdAt: admin.firestore.Timestamp.fromDate(createdAt),
-    lastLoginAt: admin.firestore.Timestamp.fromDate(now),
+    trialStartedAt: Timestamp.fromDate(createdAt),
+    trialExpiresAt: Timestamp.fromDate(futureYear),
+    planUpdatedAt: Timestamp.fromDate(createdAt),
+    planExpiresAt: Timestamp.fromDate(futureYear),
+    createdAt: Timestamp.fromDate(createdAt),
+    lastLoginAt: Timestamp.fromDate(now),
     disabled: false,
   };
   await userRef.set(profileData, { merge: true });
@@ -133,7 +135,7 @@ async function createOrUpdateUser(acc) {
     totalChecks: acc.totalChecks,
     perfectDays: acc.perfectDays,
     isAdmin: false,
-    updatedAt: admin.firestore.Timestamp.fromDate(now)
+    updatedAt: Timestamp.fromDate(now)
   };
   await lbRef.set(lbData, { merge: true });
   console.log(`Saved Firestore leaderboard/${uid}`);
@@ -182,7 +184,7 @@ async function createCommunityInteraction(createdUsers) {
         createdAt: new Date(now - 60000).toISOString()
       }
     ],
-    createdAt: admin.firestore.Timestamp.fromDate(new Date(now - 3 * 3600 * 1000))
+    createdAt: Timestamp.fromDate(new Date(now - 3 * 3600 * 1000))
   });
 
   // Post 2 by Yen Nhi (Level 3)
@@ -220,7 +222,7 @@ async function createCommunityInteraction(createdUsers) {
         createdAt: new Date(now - 90000).toISOString()
       }
     ],
-    createdAt: admin.firestore.Timestamp.fromDate(new Date(now - 6 * 3600 * 1000))
+    createdAt: Timestamp.fromDate(new Date(now - 6 * 3600 * 1000))
   });
 
   // Post 3 by Quoc Bao (Level 5)
@@ -258,7 +260,7 @@ async function createCommunityInteraction(createdUsers) {
         createdAt: new Date(now - 240000).toISOString()
       }
     ],
-    createdAt: admin.firestore.Timestamp.fromDate(new Date(now - 10 * 3600 * 1000))
+    createdAt: Timestamp.fromDate(new Date(now - 10 * 3600 * 1000))
   });
 
   console.log('Created 3 interactive community posts successfully!');
