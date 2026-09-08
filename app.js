@@ -819,13 +819,16 @@ const SHOP_CATALOG = {
     themes: [
         { id: 'dark', name: 'Dark Mode', desc: 'Giao diện tối cổ điển huyền bí.', price: 0, free: true, bg: '#0f172a', accent: '#10b981' },
         { id: 'light', name: 'Light Mode', desc: 'Giao diện sáng sủa tươi mới.', price: 0, free: true, bg: '#f8fafc', accent: '#059669' },
-        { id: 'cyberpunk', name: 'Cyberpunk Neon', desc: 'Thế giới tương lai rực rỡ tím & hồng cyan.', price: 600, bg: '#0d0221', accent: '#ff007f' },
+        { id: 'cyberpunk', name: 'Cyberpunk Neon', desc: 'Hồng neon & lam ngọc rực rỡ trên nền chàm tương lai.', price: 600, bg: '#0a0616', accent: '#f0399c' },
         { id: 'luxury', name: 'Gold Luxury', desc: 'Vàng kim hoàng gia quý phái obsidian.', price: 800, bg: '#0b0b0e', accent: '#d4af37' },
         { id: 'sakura', name: 'Minimalist Sakura', desc: 'Hồng hoa anh đào thanh tao Nhật Bản.', price: 500, bg: '#fcf5f8', accent: '#ec4899' },
-        { id: 'matrix', name: 'Midnight Matrix', desc: 'Xanh terminal hacker thế giới ma trận.', price: 600, bg: '#000c04', accent: '#00ff66' },
-        { id: 'forest', name: 'Forest Zen', desc: 'Rừng ngọc bích thiên nhiên dịu mát an lành.', price: 500, bg: '#081711', accent: '#10b981' },
-        { id: 'cosmic', name: 'Cosmic Nexus', desc: 'Vũ trụ không gian sao đêm huyền ảo với ánh sáng tím dạ quang & lam ngọc.', price: 700, bg: '#050716', accent: '#00f5a0' },
-        { id: 'volcano', name: 'Crimson Volcano', desc: 'Dung nham hỏa diệm sơn obsidian rực lửa vàng kim.', price: 700, bg: '#160505', accent: '#ff4d4d' }
+        { id: 'matrix', name: 'Midnight Matrix', desc: 'Xanh terminal hacker trên nền đêm ma trận.', price: 600, bg: '#030a06', accent: '#22e07a' },
+        { id: 'forest', name: 'Forest Zen', desc: 'Rừng thông sâu ngọc bích, dịu mát an lành.', price: 500, bg: '#06140f', accent: '#34d399' },
+        { id: 'cosmic', name: 'Cosmic Nexus', desc: 'Tím dạ quang & lam sao băng giữa vũ trụ đêm.', price: 700, bg: '#05061a', accent: '#a78bfa' },
+        { id: 'volcano', name: 'Crimson Volcano', desc: 'Dung nham cam rực & than hồng trên đá obsidian.', price: 700, bg: '#120806', accent: '#f97316' },
+        { id: 'nordic', name: 'Nordic Frost', desc: 'Xanh băng Bắc Âu tĩnh lặng trên nền đá phiến đêm.', price: 650, bg: '#0b1220', accent: '#38bdf8' },
+        { id: 'abyss', name: 'Deep Abyss', desc: 'Vực sâu đại dương với ánh lân quang xanh ngọc.', price: 700, bg: '#04121a', accent: '#2dd4bf' },
+        { id: 'mocha', name: 'Mocha Cream', desc: 'Kem sữa & cà phê ấm áp, dịu mắt để đọc lâu.', price: 550, bg: '#f5efe6', accent: '#9c6434' }
     ],
     soundFx: [
         { id: 'default', name: 'Chime Mặc Định', desc: 'Âm thanh trong trẻo êm tai.', price: 0, free: true },

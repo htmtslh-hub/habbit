@@ -8,6 +8,7 @@ body.modal-open { overflow: hidden !important; }
     --bg-header: #fffdf9;
     --border-color: #e2ddd3;
     --border-grid: #dcd5c9;
+    --row-stripe: #e2ddd3;
     --text-main: #1f242e;
     --text-muted: #645f56;
     --accent: #10b981;
@@ -41,6 +42,7 @@ body.modal-open { overflow: hidden !important; }
     --bg-header: #0d0e14;
     --border-color: rgba(255, 255, 255, 0.1);
     --border-grid: rgba(255, 255, 255, 0.08);
+    --row-stripe: rgba(255, 255, 255, 0.1);
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
     --accent: #00f5a0;
@@ -816,8 +818,11 @@ body {
     transition: background 0.15s;
 }
 
+/* Sọc xen kẽ dùng token riêng: trước đây tái dùng --border-color nên theme nào
+   đặt viền màu bão hoà cao (hồng neon, đỏ, xanh lá) sẽ biến cả hàng thành mảng
+   màu chói. --row-stripe tách riêng để viền vẫn nổi mà nền hàng luôn dịu. */
 .htable tr:nth-child(even) td.td-chk {
-    background: var(--border-color);
+    background: var(--row-stripe, var(--border-color));
     opacity: 0.9;
 }
 
@@ -7304,32 +7309,46 @@ td.td-chk.frozen-day {
    TRỤ CỘT 2: CỬA HÀNG KỶ LUẬT & NỀN KINH TẾ DP (DISCIPLINE POINT SHOP)
    ========================================================================== */
 
-/* 5 THEME SKINS */
+/* ==========================================================================
+   THEME SKINS
+   Nguyên tắc phối màu chung (áp dụng khi thiết kế lại v5.11.0):
+   - Nền đi theo 3 bậc: --bg-app (tối nhất) < --bg-header < --bg-card, mỗi bậc
+     pha nhẹ sắc chủ đạo để cả giao diện liền mạch nhưng vẫn đủ tương phản chữ.
+   - --text-main LUÔN là màu gần trắng (pha nhẹ sắc nền), không bao giờ dùng
+     màu bão hoà cao — chữ thân bài đọc cả ngày phải dễ chịu.
+   - --accent là màu chữ ký (nút, viền active); --accent-neon là màu bổ trợ
+     sáng hơn dùng cho glow/logo để tạo chiều sâu thay vì 1 màu phẳng.
+   - --accent-light alpha thấp (~0.12) vì vừa làm nền mảng vừa làm glow.
+   - --row-stripe alpha rất thấp (~0.06) vì tô nguyên hàng lịch.
+   - --progress-low luôn giữ họ đỏ và KHÁC màu accent, để tín hiệu "chưa đạt"
+     không bị lẫn với màu thương hiệu của theme.
+   ========================================================================== */
 [data-theme="cyberpunk"] {
-    --bg-app: #0d0221;
-    --bg-card: #190a34;
-    --bg-header: #120329;
-    --border-color: rgba(255, 0, 127, 0.35);
-    --border-grid: rgba(0, 240, 255, 0.15);
-    --text-main: #ffffff;
-    --text-muted: #d8b4fe;
-    --accent: #ff007f;
-    --accent-hover: #e60073;
-    --accent-light: rgba(255, 0, 127, 0.15);
-    --accent-solid: #ff007f;
-    --accent-neon: #00f0ff;
-    --progress-low: #f43f5e;
-    --progress-mid: #f59e0b;
-    --progress-high: #00f0ff;
-    --today-bg: rgba(0, 240, 255, 0.12);
-    --today-border: #00f0ff;
-    --selected-day-bg: rgba(255, 0, 127, 0.18);
-    --checkbox-bg: #260d4e;
-    --checkbox-checked: #ff007f;
-    --header-card-bg: #120329;
-    --header-card-text: #ffffff;
-    --logo-star: #00f0ff;
-    --logo-text: #ff007f;
+    --bg-app: #0a0616;
+    --bg-card: #17102e;
+    --bg-header: #120a25;
+    --border-color: rgba(244, 114, 182, 0.28);
+    --border-grid: rgba(34, 211, 238, 0.14);
+    --row-stripe: rgba(217, 70, 239, 0.07);
+    --text-main: #f5eeff;
+    --text-muted: #b9a6d9;
+    --accent: #f0399c;
+    --accent-hover: #d81f83;
+    --accent-light: rgba(240, 57, 156, 0.13);
+    --accent-solid: #f0399c;
+    --accent-neon: #22d3ee;
+    --progress-low: #fb7185;
+    --progress-mid: #fbbf24;
+    --progress-high: #22d3ee;
+    --today-bg: rgba(34, 211, 238, 0.12);
+    --today-border: #22d3ee;
+    --selected-day-bg: rgba(240, 57, 156, 0.16);
+    --checkbox-bg: #241640;
+    --checkbox-checked: #f0399c;
+    --header-card-bg: #120a25;
+    --header-card-text: #f5eeff;
+    --logo-star: #22d3ee;
+    --logo-text: #f0399c;
 }
 
 [data-theme="luxury"] {
@@ -7338,6 +7357,7 @@ td.td-chk.frozen-day {
     --bg-header: #101017;
     --border-color: rgba(212, 175, 55, 0.35);
     --border-grid: rgba(212, 175, 55, 0.12);
+    --row-stripe: rgba(212, 175, 55, 0.35);
     --text-main: #fbf7ee;
     --text-muted: #c5b89a;
     --accent: #d4af37;
@@ -7365,6 +7385,7 @@ td.td-chk.frozen-day {
     --bg-header: #fff0f5;
     --border-color: #fbcfe8;
     --border-grid: #fce7f3;
+    --row-stripe: #fbcfe8;
     --text-main: #372534;
     --text-muted: #86607d;
     --accent: #ec4899;
@@ -7386,112 +7407,215 @@ td.td-chk.frozen-day {
     --logo-text: #372534;
 }
 
+/* Matrix: giữ chất "terminal xanh" ở accent, nhưng chữ thân bài đổi sang trắng
+   ngả bạc hà — bản cũ đặt --text-main: #00ff66 khiến TOÀN BỘ chữ màu xanh chói,
+   đọc lâu rất mỏi mắt và mất hẳn phân cấp thông tin. */
 [data-theme="matrix"] {
-    --bg-app: #000c04;
-    --bg-card: #041a0b;
-    --bg-header: #021107;
-    --border-color: rgba(0, 255, 102, 0.3);
-    --border-grid: rgba(0, 255, 102, 0.1);
-    --text-main: #00ff66;
-    --text-muted: #4ade80;
-    --accent: #00ff66;
-    --accent-hover: #00cc52;
-    --accent-light: rgba(0, 255, 102, 0.12);
-    --accent-solid: #00ff66;
-    --accent-neon: #00ff66;
+    --bg-app: #030a06;
+    --bg-card: #08170d;
+    --bg-header: #061109;
+    --border-color: rgba(34, 197, 94, 0.26);
+    --border-grid: rgba(34, 197, 94, 0.1);
+    --row-stripe: rgba(34, 197, 94, 0.06);
+    --text-main: #dcfce7;
+    --text-muted: #86c9a1;
+    --accent: #22e07a;
+    --accent-hover: #16b862;
+    --accent-light: rgba(34, 224, 122, 0.12);
+    --accent-solid: #22e07a;
+    --accent-neon: #4ade80;
     --progress-low: #f87171;
-    --progress-mid: #facc15;
-    --progress-high: #00ff66;
-    --today-bg: rgba(0, 255, 102, 0.1);
-    --today-border: #00ff66;
-    --selected-day-bg: rgba(0, 255, 102, 0.18);
-    --checkbox-bg: #072a12;
-    --checkbox-checked: #00ff66;
-    --header-card-bg: #021107;
-    --header-card-text: #00ff66;
-    --logo-star: #00ff66;
-    --logo-text: #00ff66;
+    --progress-mid: #fbbf24;
+    --progress-high: #22e07a;
+    --today-bg: rgba(34, 224, 122, 0.11);
+    --today-border: #22e07a;
+    --selected-day-bg: rgba(34, 224, 122, 0.16);
+    --checkbox-bg: #0d2417;
+    --checkbox-checked: #22e07a;
+    --header-card-bg: #061109;
+    --header-card-text: #dcfce7;
+    --logo-star: #4ade80;
+    --logo-text: #dcfce7;
 }
 
 [data-theme="forest"] {
-    --bg-app: #081711;
-    --bg-card: #0f291e;
-    --bg-header: #0a1f17;
-    --border-color: rgba(52, 211, 153, 0.3);
+    --bg-app: #06140f;
+    --bg-card: #0e2a1f;
+    --bg-header: #0a1e16;
+    --border-color: rgba(110, 231, 183, 0.22);
     --border-grid: rgba(52, 211, 153, 0.1);
-    --text-main: #ecfdf5;
-    --text-muted: #6ee7b7;
-    --accent: #10b981;
-    --accent-hover: #059669;
-    --accent-light: rgba(16, 185, 129, 0.12);
-    --accent-solid: #10b981;
-    --accent-neon: #34d399;
+    --row-stripe: rgba(52, 211, 153, 0.06);
+    --text-main: #eafaf2;
+    --text-muted: #93bfab;
+    --accent: #34d399;
+    --accent-hover: #10b981;
+    --accent-light: rgba(52, 211, 153, 0.12);
+    --accent-solid: #34d399;
+    --accent-neon: #a7f3d0;
     --progress-low: #fb7185;
     --progress-mid: #fbbf24;
-    --progress-high: #10b981;
-    --today-bg: rgba(16, 185, 129, 0.1);
-    --today-border: #10b981;
-    --selected-day-bg: rgba(16, 185, 129, 0.18);
-    --checkbox-bg: #133829;
-    --checkbox-checked: #10b981;
-    --header-card-bg: #0a1f17;
-    --header-card-text: #ecfdf5;
-    --logo-star: #34d399;
-    --logo-text: #ecfdf5;
+    --progress-high: #34d399;
+    --today-bg: rgba(52, 211, 153, 0.1);
+    --today-border: #34d399;
+    --selected-day-bg: rgba(52, 211, 153, 0.16);
+    --checkbox-bg: #12362a;
+    --checkbox-checked: #34d399;
+    --header-card-bg: #0a1e16;
+    --header-card-text: #eafaf2;
+    --logo-star: #a7f3d0;
+    --logo-text: #eafaf2;
 }
 
 [data-theme="cosmic"] {
-    --bg-app: #070913;
-    --bg-card: #0e1224;
-    --bg-header: #0a0d1c;
-    --border-color: rgba(139, 92, 246, 0.35);
-    --border-grid: rgba(6, 182, 212, 0.15);
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent: #8b5cf6;
-    --accent-hover: #7c3aed;
-    --accent-light: rgba(139, 92, 246, 0.15);
-    --accent-solid: #8b5cf6;
-    --accent-neon: #06b6d4;
-    --progress-low: #f43f5e;
-    --progress-mid: #eab308;
-    --progress-high: #8b5cf6;
-    --today-bg: rgba(6, 182, 212, 0.12);
-    --today-border: #06b6d4;
-    --selected-day-bg: rgba(139, 92, 246, 0.18);
-    --checkbox-bg: #141b33;
-    --checkbox-checked: #8b5cf6;
-    --header-card-bg: #0a0d1c;
-    --header-card-text: #f8fafc;
-    --logo-star: #06b6d4;
-    --logo-text: #c084fc;
+    --bg-app: #05061a;
+    --bg-card: #101331;
+    --bg-header: #0a0c26;
+    --border-color: rgba(167, 139, 250, 0.26);
+    --border-grid: rgba(56, 189, 248, 0.14);
+    --row-stripe: rgba(139, 92, 246, 0.07);
+    --text-main: #eef0ff;
+    --text-muted: #a5a8d4;
+    --accent: #a78bfa;
+    --accent-hover: #8b5cf6;
+    --accent-light: rgba(167, 139, 250, 0.13);
+    --accent-solid: #a78bfa;
+    --accent-neon: #38bdf8;
+    --progress-low: #fb7185;
+    --progress-mid: #fbbf24;
+    --progress-high: #a78bfa;
+    --today-bg: rgba(56, 189, 248, 0.12);
+    --today-border: #38bdf8;
+    --selected-day-bg: rgba(167, 139, 250, 0.16);
+    --checkbox-bg: #1a1e45;
+    --checkbox-checked: #a78bfa;
+    --header-card-bg: #0a0c26;
+    --header-card-text: #eef0ff;
+    --logo-star: #38bdf8;
+    --logo-text: #c4b5fd;
 }
 
+/* Volcano: đổi màu chủ đạo từ ĐỎ sang CAM dung nham. Bản cũ lấy #ef4444 làm
+   accent, trùng luôn họ màu với --progress-low (tín hiệu "chưa đạt") nên nhìn
+   đâu cũng thấy đỏ báo lỗi. Nay đỏ chỉ còn dành riêng cho progress-low. */
 [data-theme="volcano"] {
-    --bg-app: #100606;
-    --bg-card: #1f0b0b;
-    --bg-header: #170707;
-    --border-color: rgba(239, 68, 68, 0.38);
-    --border-grid: rgba(249, 115, 22, 0.16);
-    --text-main: #fef2f2;
-    --text-muted: #fca5a5;
-    --accent: #ef4444;
-    --accent-hover: #dc2626;
-    --accent-light: rgba(239, 68, 68, 0.15);
-    --accent-solid: #ef4444;
-    --accent-neon: #f97316;
-    --progress-low: #f43f5e;
-    --progress-mid: #fb923c;
-    --progress-high: #ef4444;
-    --today-bg: rgba(249, 115, 22, 0.15);
-    --today-border: #f97316;
-    --selected-day-bg: rgba(239, 68, 68, 0.2);
-    --checkbox-bg: #2d1010;
-    --checkbox-checked: #ef4444;
-    --header-card-bg: #170707;
-    --header-card-text: #fef2f2;
-    --logo-star: #f97316;
-    --logo-text: #ef4444;
+    --bg-app: #120806;
+    --bg-card: #24110d;
+    --bg-header: #1b0c09;
+    --border-color: rgba(251, 146, 60, 0.26);
+    --border-grid: rgba(249, 115, 22, 0.14);
+    --row-stripe: rgba(249, 115, 22, 0.07);
+    --text-main: #fff1e8;
+    --text-muted: #d9a892;
+    --accent: #f97316;
+    --accent-hover: #ea580c;
+    --accent-light: rgba(249, 115, 22, 0.13);
+    --accent-solid: #f97316;
+    --accent-neon: #fbbf24;
+    --progress-low: #ef4444;
+    --progress-mid: #fbbf24;
+    --progress-high: #f97316;
+    --today-bg: rgba(251, 191, 36, 0.13);
+    --today-border: #fbbf24;
+    --selected-day-bg: rgba(249, 115, 22, 0.17);
+    --checkbox-bg: #35180f;
+    --checkbox-checked: #f97316;
+    --header-card-bg: #1b0c09;
+    --header-card-text: #fff1e8;
+    --logo-star: #fbbf24;
+    --logo-text: #f97316;
+}
+
+/* ---- 3 THEME MỚI (v5.11.0) ---- */
+
+/* Nordic Frost — xanh băng Bắc Âu trên nền đá phiến. Lấp chỗ trống lớn nhất
+   của bộ sưu tập: trước đó không hề có theme họ xanh dương. */
+[data-theme="nordic"] {
+    --bg-app: #0b1220;
+    --bg-card: #16223a;
+    --bg-header: #111a2b;
+    --border-color: rgba(125, 211, 252, 0.22);
+    --border-grid: rgba(125, 211, 252, 0.1);
+    --row-stripe: rgba(125, 211, 252, 0.06);
+    --text-main: #eaf2fb;
+    --text-muted: #9db4cf;
+    --accent: #38bdf8;
+    --accent-hover: #0ea5e9;
+    --accent-light: rgba(56, 189, 248, 0.12);
+    --accent-solid: #38bdf8;
+    --accent-neon: #a5f3fc;
+    --progress-low: #fb7185;
+    --progress-mid: #fbbf24;
+    --progress-high: #38bdf8;
+    --today-bg: rgba(56, 189, 248, 0.11);
+    --today-border: #38bdf8;
+    --selected-day-bg: rgba(56, 189, 248, 0.16);
+    --checkbox-bg: #1d2c48;
+    --checkbox-checked: #38bdf8;
+    --header-card-bg: #111a2b;
+    --header-card-text: #eaf2fb;
+    --logo-star: #a5f3fc;
+    --logo-text: #eaf2fb;
+}
+
+/* Deep Abyss — vực sâu đại dương, nền gần đen ngả lam lục, accent lân quang
+   như sinh vật phát sáng. Khác Nordic ở chỗ tối và bão hoà hơn hẳn. */
+[data-theme="abyss"] {
+    --bg-app: #04121a;
+    --bg-card: #0a2532;
+    --bg-header: #071c27;
+    --border-color: rgba(45, 212, 191, 0.24);
+    --border-grid: rgba(45, 212, 191, 0.1);
+    --row-stripe: rgba(45, 212, 191, 0.06);
+    --text-main: #e6f7fa;
+    --text-muted: #8fb8c2;
+    --accent: #2dd4bf;
+    --accent-hover: #14b8a6;
+    --accent-light: rgba(45, 212, 191, 0.12);
+    --accent-solid: #2dd4bf;
+    --accent-neon: #67e8f9;
+    --progress-low: #fb7185;
+    --progress-mid: #fbbf24;
+    --progress-high: #2dd4bf;
+    --today-bg: rgba(103, 232, 249, 0.12);
+    --today-border: #67e8f9;
+    --selected-day-bg: rgba(45, 212, 191, 0.16);
+    --checkbox-bg: #0f3341;
+    --checkbox-checked: #2dd4bf;
+    --header-card-bg: #071c27;
+    --header-card-text: #e6f7fa;
+    --logo-star: #67e8f9;
+    --logo-text: #e6f7fa;
+}
+
+/* Mocha Cream — theme SÁNG tông kem/cà phê ấm. Bộ sưu tập đang lệch hẳn về
+   tối (7 tối / 2 sáng) và cả 2 theme sáng đều tông lạnh, nên bổ sung một
+   lựa chọn ấm áp, hợp với thói quen đọc sách trong app. */
+[data-theme="mocha"] {
+    --bg-app: #f5efe6;
+    --bg-card: #fffaf3;
+    --bg-header: #fffaf3;
+    --border-color: #e3d7c6;
+    --border-grid: #ded0bc;
+    --row-stripe: #efe6d8;
+    --text-main: #2f2519;
+    --text-muted: #6d5b47;
+    --accent: #9c6434;
+    --accent-hover: #7f4f26;
+    --accent-light: rgba(156, 100, 52, 0.09);
+    --accent-solid: #9c6434;
+    --accent-neon: #c98b4b;
+    --progress-low: #d9534f;
+    --progress-mid: #d99a2b;
+    --progress-high: #9c6434;
+    --today-bg: rgba(156, 100, 52, 0.09);
+    --today-border: #9c6434;
+    --selected-day-bg: rgba(156, 100, 52, 0.16);
+    --checkbox-bg: #e8dccc;
+    --checkbox-checked: #9c6434;
+    --header-card-bg: #3b2b1c;
+    --header-card-text: #fff8ef;
+    --logo-star: #9c6434;
+    --logo-text: #2f2519;
 }
 
 /* NAVBAR SHOP & 2X DP BUTTONS */
@@ -7515,7 +7639,9 @@ td.td-chk.frozen-day {
 [data-theme="matrix"] .shop-btn,
 [data-theme="forest"] .shop-btn,
 [data-theme="cosmic"] .shop-btn,
-[data-theme="volcano"] .shop-btn {
+[data-theme="volcano"] .shop-btn,
+[data-theme="nordic"] .shop-btn,
+[data-theme="abyss"] .shop-btn {
     color: #fbbf24 !important;
     background: rgba(245, 158, 11, 0.16) !important;
     border-color: rgba(245, 158, 11, 0.6) !important;
@@ -7582,7 +7708,9 @@ td.td-chk.frozen-day {
 [data-theme="matrix"] .user-title-badge,
 [data-theme="forest"] .user-title-badge,
 [data-theme="cosmic"] .user-title-badge,
-[data-theme="volcano"] .user-title-badge {
+[data-theme="volcano"] .user-title-badge,
+[data-theme="nordic"] .user-title-badge,
+[data-theme="abyss"] .user-title-badge {
     color: #fbbf24;
     background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(239, 68, 68, 0.2));
     border-color: rgba(245, 158, 11, 0.7);
@@ -7643,7 +7771,9 @@ td.td-chk.frozen-day {
 [data-theme="matrix"] .shop-wallet-banner,
 [data-theme="forest"] .shop-wallet-banner,
 [data-theme="cosmic"] .shop-wallet-banner,
-[data-theme="volcano"] .shop-wallet-banner {
+[data-theme="volcano"] .shop-wallet-banner,
+[data-theme="nordic"] .shop-wallet-banner,
+[data-theme="abyss"] .shop-wallet-banner {
     background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(239, 68, 68, 0.12));
 }
 
@@ -7805,7 +7935,9 @@ td.td-chk.frozen-day {
 [data-theme="matrix"] .shop-card-art,
 [data-theme="forest"] .shop-card-art,
 [data-theme="cosmic"] .shop-card-art,
-[data-theme="volcano"] .shop-card-art {
+[data-theme="volcano"] .shop-card-art,
+[data-theme="nordic"] .shop-card-art,
+[data-theme="abyss"] .shop-card-art {
     background: rgba(255, 255, 255, 0.06);
 }
 
@@ -7893,7 +8025,9 @@ td.td-chk.frozen-day {
 [data-theme="matrix"] .shop-action-btn.btn-equip,
 [data-theme="forest"] .shop-action-btn.btn-equip,
 [data-theme="cosmic"] .shop-action-btn.btn-equip,
-[data-theme="volcano"] .shop-action-btn.btn-equip {
+[data-theme="volcano"] .shop-action-btn.btn-equip,
+[data-theme="nordic"] .shop-action-btn.btn-equip,
+[data-theme="abyss"] .shop-action-btn.btn-equip {
     background: rgba(255, 255, 255, 0.08);
 }
 
