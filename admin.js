@@ -2349,41 +2349,61 @@ function initEmailManagement() {
     let cachedEmailLogs = [];
 
     // --- Templates Catalog ---
+    /* [v5.10.10] Khoá của object này PHẢI khớp đúng thuộc tính data-template
+       trên các nút .template-chip trong admin.html (7 nút: vip, trial_ending,
+       streak_restore, gift_dp, update, announcement, custom) -- trước đây bộ
+       khoá ở đây (welcome/vipGift/feature/weekly/custom) hoàn toàn không khớp
+       với HTML nên applyTemplate() không bao giờ tìm thấy nút để gắn onclick,
+       khiến các mẫu email "có tồn tại" nhưng bấm vào không có phản ứng gì. */
     const EMAIL_TEMPLATES = {
-        welcome: {
-            chipId: 'tplWelcome',
-            subject: 'Chào mừng bạn gia nhập hành trình Habit Mastery! ✨',
-            content: `Chào <strong>{name}</strong>,\n\nChào mừng bạn đã chính thức bước vào cộng đồng rèn luyện kỷ luật bản thân tại <strong>Habit Mastery</strong>!\n\nChúng tôi tin rằng: <em>"Mỗi thói quen nhỏ được kiên trì lặp lại mỗi ngày sẽ tạo nên sự thay đổi phi thường trong cuộc đời bạn."</em>\n\n<div class="highlight-box">💡 <strong>Mẹo khởi đầu thành công:</strong> Hãy bắt đầu với 1-3 thói quen đơn giản nhất mỗi ngày (như uống đủ nước, đọc sách 10 phút, tập thể dục nhẹ) để duy trì streak liên tục!</div>\n\nChúc bạn luôn giữ vững ngọn lửa nhiệt huyết và từng bước chinh phục các cảnh giới Tu Vi cao nhất!`,
-            ctaText: 'Bắt Đầu Rèn Luyện Ngay 🚀',
-            ctaUrl: 'https://habit-tracker-six-delta.vercel.app/'
-        },
-        vipGift: {
-            chipId: 'tplVipGift',
+        vip: {
             subject: '👑 Quà Tặng Đặc Quyền: Kích Hoạt VIP Premium Miễn Phí Cho Bạn!',
+            preheader: 'Ban quản trị Habit Mastery xin gửi tặng bạn đặc quyền VIP Premium hoàn toàn miễn phí!',
             content: `Chào <strong>{name}</strong>,\n\nBan quản trị Habit Mastery xin gửi lời tri ân sâu sắc vì sự đồng hành kiên trì của bạn trong thời gian qua!\n\nĐể tiếp thêm động lực cho chặng đường rèn luyện sắp tới, chúng tôi xin dành tặng bạn <strong>Đặc Quyền VIP Premium</strong> hoàn toàn miễn phí.\n\n<div class="gold-box">👑 <strong>Đặc quyền mở khóa của bạn bao gồm:</strong>\n<ul>\n  <li>Không giới hạn số lượng thói quen theo dõi.</li>\n  <li>Mở khóa hệ thống Báo Cáo Phân Tích Chuyên Sâu & Ma Trận Eisenhower.</li>\n  <li>Nhân đôi Điểm Tu Vi (DP) khi hoàn thành thói quen.</li>\n  <li>Danh hiệu VIP Vàng hiển thị nổi bật trên Bảng Xếp Hạng.</li>\n</ul></div>\n\nHãy đăng nhập ngay hôm nay để tận hưởng trọn vẹn đặc quyền của bạn nhé!`,
             ctaText: 'Nhận Đặc Quyền VIP Ngay 👑',
-            ctaUrl: 'https://habit-tracker-six-delta.vercel.app/'
+            ctaUrl: 'https://habitmastery.web.app'
         },
-        feature: {
-            chipId: 'tplFeature',
+        trial_ending: {
+            subject: '⏳ Gói Dùng Thử của bạn sắp kết thúc — đừng bỏ lỡ đặc quyền Premium!',
+            preheader: 'Chỉ còn ít ngày trải nghiệm Premium miễn phí, nâng cấp ngay để không bị gián đoạn.',
+            content: `Chào <strong>{name}</strong>,\n\nGói <strong>Dùng Thử Premium</strong> của bạn sắp hết hạn! Đây là lúc để quyết định giữ lại toàn bộ đặc quyền đã giúp bạn duy trì kỷ luật suốt thời gian qua.\n\n<div class="highlight-box">⏳ <strong>Nếu không nâng cấp</strong>, tài khoản của bạn sẽ tự động chuyển về gói Free và mất quyền truy cập các tính năng Premium (Báo Cáo Chuyên Sâu, Ma Trận Eisenhower, nhân đôi Tu Vi...).</div>\n\nNâng cấp ngay hôm nay để tiếp tục hành trình rèn luyện không gián đoạn!`,
+            ctaText: 'Nâng Cấp Premium Ngay ⏳',
+            ctaUrl: 'https://habitmastery.web.app'
+        },
+        streak_restore: {
+            subject: '❄️ Chuỗi Streak của bạn đang gặp nguy hiểm — quay lại ngay!',
+            preheader: 'Chuỗi ngày kỷ luật bạn dày công xây dựng sắp bị đứt gãy, đừng để công sức đổ sông đổ bể.',
+            content: `Chào <strong>{name}</strong>,\n\nChúng tôi nhận thấy bạn đã vắng bóng vài ngày qua, và <strong>chuỗi Streak {streak} ngày</strong> bạn dày công xây dựng đang có nguy cơ bị đứt gãy!\n\n<div class="highlight-box">❄️ <strong>Đừng để công sức đổ sông đổ bể!</strong> Chỉ cần quay lại hoàn thành 1 thói quen bất kỳ hôm nay là đủ để cứu vãn chuỗi ngày kỷ luật của bạn.</div>\n\nMọi hành trình vĩ đại đều bắt đầu từ một bước chân nhỏ — hãy quay lại ngay hôm nay nhé!`,
+            ctaText: 'Cứu Chuỗi Streak Ngay ❄️',
+            ctaUrl: 'https://habitmastery.web.app'
+        },
+        gift_dp: {
+            subject: '🎁 Bạn vừa nhận được một món quà Tu Vi (DP) đặc biệt!',
+            preheader: 'Ban quản trị vừa gửi tặng bạn một lượng Tu Vi (DP) đặc biệt, đăng nhập để nhận ngay.',
+            content: `Chào <strong>{name}</strong>,\n\nĐể tri ân sự đồng hành của bạn, Ban quản trị Habit Mastery xin gửi tặng bạn một món quà nhỏ!\n\n<div class="gold-box">🎁 <strong>Phần quà của bạn:</strong> Một lượng <strong>Điểm Tu Vi (DP)</strong> đặc biệt đã được cộng thẳng vào tài khoản. Số dư hiện tại của bạn là <strong>{dp} Tu Vi</strong>.</div>\n\nHãy đăng nhập để kiểm tra và tiếp tục dùng số Tu Vi này để thăng cấp Cảnh Giới của mình nhé!`,
+            ctaText: 'Kiểm Tra Quà Tặng Ngay 🎁',
+            ctaUrl: 'https://habitmastery.web.app'
+        },
+        update: {
             subject: '⚡ Cập Nhật Mới: Khám phá các tính năng đột phá vừa ra mắt!',
+            preheader: 'Nhiều nâng cấp giá trị vừa ra mắt để nâng tầm trải nghiệm rèn luyện của bạn.',
             content: `Chào <strong>{name}</strong>,\n\nĐội ngũ phát triển Habit Mastery vừa hoàn thành bản cập nhật mới với nhiều nâng cấp cực kỳ giá trị để nâng tầm trải nghiệm của bạn:\n\n<ul>\n  <li><strong>Ma Trận Thời Gian Eisenhower:</strong> Giúp bạn phân loại nhiệm vụ khẩn cấp & quan trọng chuẩn khoa học.</li>\n  <li><strong>Đồng bộ thời gian thực siêu tốc:</strong> Dữ liệu thói quen luôn được bảo toàn an toàn trên mọi thiết bị.</li>\n  <li><strong>Hộp thư hỗ trợ trực tuyến:</strong> Kết nối trực tiếp với ban quản trị để giải đáp mọi thắc mắc trong tích tắc.</li>\n</ul>\n\n<div class="highlight-box">Trải nghiệm ngay bản cập nhật mới nhất và chia sẻ cảm nhận cho chúng mình biết nhé!</div>`,
             ctaText: 'Khám Phá Tính Năng Mới ⚡',
-            ctaUrl: 'https://habit-tracker-six-delta.vercel.app/'
+            ctaUrl: 'https://habitmastery.web.app'
         },
-        weekly: {
-            chipId: 'tplWeekly',
-            subject: '🔥 Tuần mới đã bắt đầu! Đừng để chuỗi Streak rèn luyện bị gián đoạn',
-            content: `Chào <strong>{name}</strong>,\n\nMột tuần mới lại mở ra với muôn vàn cơ hội và khởi đầu mới. Đây chính là thời điểm tuyệt vời nhất để bạn củng cố lại các mục tiêu và thiết lập chuỗi thói quen kỷ luật!\n\nHiện tại tài khoản của bạn đang có <strong>{dp} Tu Vi</strong> và gói tài khoản <strong>{plan}</strong>.\n\n<div class="highlight-box">🎯 <strong>Mục tiêu tuần này:</strong> Hoàn thành 100% thói quen mỗi ngày và ghi lại nhật ký cảm xúc để nhìn thấy sự tiến bộ rõ rệt của bản thân.</div>\n\nHãy dành 2 phút mở ứng dụng và tích xanh cho các thói quen sáng nay bạn nhé!`,
-            ctaText: 'Đăng Nhập Rèn Luyện 🎯',
-            ctaUrl: 'https://habit-tracker-six-delta.vercel.app/'
+        announcement: {
+            subject: '📢 Thông báo từ Ban Quản Trị Habit Mastery',
+            preheader: 'Một thông báo quan trọng từ Ban Quản Trị Habit Mastery.',
+            content: `Chào <strong>{name}</strong>,\n\nBan Quản Trị Habit Mastery xin gửi đến bạn một thông báo quan trọng:\n\n<div class="highlight-box">📢 <strong>Nội dung thông báo:</strong> Nhập nội dung chi tiết cần thông báo tới người dùng tại đây...</div>\n\nCảm ơn bạn đã luôn đồng hành cùng chúng tôi trên hành trình rèn luyện kỷ luật bản thân!`,
+            ctaText: 'Vào Ứng Dụng Ngay →',
+            ctaUrl: 'https://habitmastery.web.app'
         },
         custom: {
-            chipId: 'tplCustom',
             subject: '',
+            preheader: '',
             content: `Chào <strong>{name}</strong>,\n\nNhập nội dung thông điệp của bạn tại đây...`,
             ctaText: 'Truy Cập Ứng Dụng',
-            ctaUrl: 'https://habit-tracker-six-delta.vercel.app/'
+            ctaUrl: 'https://habitmastery.web.app'
         }
     };
 
@@ -2427,7 +2447,11 @@ function initEmailManagement() {
 
     // Composer Fields
     const emailSubject = document.getElementById('emailSubject');
-    const emailContent = document.getElementById('emailContent');
+    // [v5.10.10] ID thật trong admin.html là "emailContentTextarea", không phải
+    // "emailContent" -- sai ID này khiến toàn bộ composer (mẫu email, chèn
+    // biến, toolbar định dạng, xem trước, gửi thật) đọc/ghi vào `null`.
+    const emailContent = document.getElementById('emailContentTextarea');
+    const emailPreheader = document.getElementById('emailPreheader');
     const emailCtaText = document.getElementById('emailCtaText');
     const emailCtaUrl = document.getElementById('emailCtaUrl');
     const btnResetEmailForm = document.getElementById('btnResetEmailForm');
@@ -2789,10 +2813,11 @@ function initEmailManagement() {
         if (!tpl) return;
 
         document.querySelectorAll('.template-chip').forEach(c => c.classList.remove('active'));
-        const chip = document.getElementById(tpl.chipId);
+        const chip = document.querySelector(`.template-chip[data-template="${key}"]`);
         if (chip) chip.classList.add('active');
 
         if (emailSubject) emailSubject.value = tpl.subject;
+        if (emailPreheader) emailPreheader.value = tpl.preheader || '';
         if (emailContent) emailContent.value = tpl.content;
         if (emailCtaText) emailCtaText.value = tpl.ctaText;
         if (emailCtaUrl) emailCtaUrl.value = tpl.ctaUrl;
@@ -2800,12 +2825,9 @@ function initEmailManagement() {
         updateLivePreview();
     }
 
-    Object.keys(EMAIL_TEMPLATES).forEach(key => {
-        const tpl = EMAIL_TEMPLATES[key];
-        const el = document.getElementById(tpl.chipId);
-        if (el) {
-            el.onclick = () => applyTemplate(key);
-        }
+    document.querySelectorAll('.template-chip[data-template]').forEach(el => {
+        const key = el.getAttribute('data-template');
+        el.onclick = () => applyTemplate(key);
     });
 
     // Merge Tags Insertion
@@ -2825,9 +2847,12 @@ function initEmailManagement() {
     });
 
     // Editor Toolbar Formatting
-    document.querySelectorAll('.toolbar-btn[data-format]').forEach(btn => {
+    // [v5.10.10] HTML dùng thuộc tính "data-action" (bold/italic/h2/h3/highlight/
+    // gold/list) chứ không phải "data-format" -- selector cũ không khớp nút nào
+    // nên toàn bộ toolbar định dạng trước đây không có phản ứng khi bấm.
+    document.querySelectorAll('.toolbar-btn[data-action]').forEach(btn => {
         btn.onclick = () => {
-            const format = btn.getAttribute('data-format');
+            const format = btn.getAttribute('data-action');
             if (!emailContent) return;
 
             const start = emailContent.selectionStart || 0;
@@ -2845,10 +2870,13 @@ function initEmailManagement() {
                 case 'h2':
                     replacement = `<h2>${selectedText || 'Tiêu đề đề mục'}</h2>`;
                     break;
+                case 'h3':
+                    replacement = `<h3>${selectedText || 'Tiêu đề phụ'}</h3>`;
+                    break;
                 case 'list':
                     replacement = `<ul>\n  <li>${selectedText || 'Nội dung mục 1'}</li>\n  <li>Nội dung mục 2</li>\n</ul>`;
                     break;
-                case 'box':
+                case 'highlight':
                     replacement = `<div class="highlight-box">💡 <strong>Lưu ý:</strong> ${selectedText || 'Nội dung thông báo nổi bật...'}</div>`;
                     break;
                 case 'gold':
@@ -2870,7 +2898,7 @@ function initEmailManagement() {
     if (btnResetEmailForm) {
         btnResetEmailForm.onclick = () => {
             if (confirm('Bạn có chắc chắn muốn làm mới và xóa nội dung soạn thảo hiện tại?')) {
-                applyTemplate('welcome');
+                applyTemplate('custom');
                 if (emailSendStatusBox) emailSendStatusBox.style.display = 'none';
             }
         };
@@ -2944,7 +2972,7 @@ function initEmailManagement() {
         }
     }
 
-    [emailSubject, emailContent, emailCtaText, emailCtaUrl].forEach(el => {
+    [emailSubject, emailPreheader, emailContent, emailCtaText, emailCtaUrl].forEach(el => {
         if (el) {
             el.addEventListener('input', updateLivePreview);
             el.addEventListener('change', updateLivePreview);
@@ -2976,6 +3004,7 @@ function initEmailManagement() {
         }
 
         const subject = (emailSubject ? emailSubject.value : '').trim();
+        const preheader = (emailPreheader ? emailPreheader.value : '').trim();
         const content = (emailContent ? emailContent.value : '').trim();
         const ctaText = (emailCtaText ? emailCtaText.value : '').trim();
         const ctaUrl = (emailCtaUrl ? emailCtaUrl.value : '').trim();
@@ -3045,6 +3074,7 @@ function initEmailManagement() {
                 body: JSON.stringify({
                     targetMode: isTestOnly ? 'test' : currentTargetMode,
                     subject,
+                    preheader,
                     content,
                     ctaText,
                     ctaUrl,
@@ -3222,7 +3252,7 @@ function initEmailManagement() {
 
     // --- Init Sequence ---
     loadResendConfig();
-    applyTemplate('welcome');
+    applyTemplate('vip');
     setTargetMode('all');
     startEmailLogsListener();
 }
