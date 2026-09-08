@@ -2408,8 +2408,14 @@ function initEmailManagement() {
     };
 
     // --- DOM Elements Cache ---
-    const resendStatusIndicator = document.getElementById('resendStatusIndicator');
+    // [v5.10.11] HTML tách 1 khối "resendStatusIndicator" cũ thành 2 phần tử
+    // riêng: pill bao ngoài (resendStatusPill) và đoạn chữ trạng thái
+    // (resendStatusText) -- id cũ không tồn tại nên banner luôn kẹt ở
+    // "Đang kiểm tra kết nối..." tĩnh.
+    const resendStatusPill = document.getElementById('resendStatusPill');
+    const resendStatusText = document.getElementById('resendStatusText');
     const resendSenderDisplay = document.getElementById('resendSenderDisplay');
+    const btnQuickTestEmail = document.getElementById('btnQuickTestEmail');
     const btnOpenResendConfigModal = document.getElementById('btnOpenResendConfigModal');
     const btnOpenResendConfigModal2 = document.getElementById('btnOpenResendConfigModal2');
 
@@ -2428,22 +2434,23 @@ function initEmailManagement() {
     const btnSaveResendConfig = document.getElementById('btnSaveResendConfig');
 
     // Composer Targeting
-    const tabTargetAll = document.getElementById('tabTargetAll');
-    const tabTargetFilter = document.getElementById('tabTargetFilter');
-    const tabTargetCustom = document.getElementById('tabTargetCustom');
-    const tabTargetSelected = document.getElementById('tabTargetSelected');
+    // [v5.10.11] admin.html dùng mô hình 3 chế độ (single/segment/selected)
+    // qua các nút .target-tab[data-mode] -- bộ ID cũ (tabTargetAll/Filter/
+    // Custom/Selected, targetAllPanel/FilterPanel/CustomPanel/SelectedPanel,
+    // targetFilterPlan/Status, targetCustomEmails, composerRecipientCount,
+    // btnViewTargetList, selectedUsersSummaryCount) không còn tồn tại trong
+    // HTML, khiến toàn bộ khối "Đối tượng người nhận" không bấm được gì.
+    const targetPanelSingle = document.getElementById('targetPanelSingle');
+    const targetPanelSegment = document.getElementById('targetPanelSegment');
+    const targetPanelSelected = document.getElementById('targetPanelSelected');
 
-    const targetAllPanel = document.getElementById('targetAllPanel');
-    const targetFilterPanel = document.getElementById('targetFilterPanel');
-    const targetCustomPanel = document.getElementById('targetCustomPanel');
-    const targetSelectedPanel = document.getElementById('targetSelectedPanel');
+    const emailUserDropdown = document.getElementById('emailUserDropdown');
+    const emailDirectInput = document.getElementById('emailDirectInput');
+    const emailSegmentSelect = document.getElementById('emailSegmentSelect');
 
-    const targetFilterPlan = document.getElementById('targetFilterPlan');
-    const targetFilterStatus = document.getElementById('targetFilterStatus');
-    const targetCustomEmails = document.getElementById('targetCustomEmails');
-    const composerRecipientCount = document.getElementById('composerRecipientCount');
-    const btnViewTargetList = document.getElementById('btnViewTargetList');
-    const selectedUsersSummaryCount = document.getElementById('selectedUsersSummaryCount');
+    const targetCountBadge = document.getElementById('targetCountBadge');
+    const selectedUsersCountLabel = document.getElementById('selectedUsersCountLabel');
+    const selectedUsersSummaryBox = document.getElementById('selectedUsersSummaryBox');
 
     // Composer Fields
     const emailSubject = document.getElementById('emailSubject');
@@ -2455,22 +2462,24 @@ function initEmailManagement() {
     const emailCtaText = document.getElementById('emailCtaText');
     const emailCtaUrl = document.getElementById('emailCtaUrl');
     const btnResetEmailForm = document.getElementById('btnResetEmailForm');
-    const btnSubmitSendEmail = document.getElementById('btnSubmitSendEmail');
+    // [v5.10.11] Nút gửi thật có id "btnSendCampaignEmail" trong HTML, không
+    // phải "btnSubmitSendEmail" -- sai id nay khien nut Gui Email Ngay khong
+    // co phan ung khi bam.
+    const btnSubmitSendEmail = document.getElementById('btnSendCampaignEmail');
     const btnSendTestEmail = document.getElementById('btnSendTestEmail');
     const emailSendStatusBox = document.getElementById('emailSendStatusBox');
 
     // Preview Elements
+    // [v5.10.11] Khung xem trước thật dùng bộ id khác hẳn (không còn
+    // btnPreviewDesktop/Mobile -- tính năng đó đã bị bỏ khỏi giao diện mới).
     const emailClientMockup = document.getElementById('emailClientMockup');
-    const btnPreviewDesktop = document.getElementById('btnPreviewDesktop');
-    const btnPreviewMobile = document.getElementById('btnPreviewMobile');
-    const previewSubjectTitle = document.getElementById('previewSubjectTitle');
-    const previewSubjectMeta = document.getElementById('previewSubjectMeta');
-    const previewFromMeta = document.getElementById('previewFromMeta');
-    const previewToMeta = document.getElementById('previewToMeta');
-    const previewGreeting = document.getElementById('previewGreeting');
-    const previewContent = document.getElementById('previewContent');
-    const previewCtaWrap = document.getElementById('previewCtaWrap');
-    const previewCtaBtn = document.getElementById('previewCtaBtn');
+    const previewSubjectTitle = document.getElementById('prevTemplateTitle');
+    const previewSubjectMeta = document.getElementById('prevSubjectVal');
+    const previewFromMeta = document.getElementById('prevFromVal');
+    const previewToMeta = document.getElementById('prevToVal');
+    const previewGreetingName = document.getElementById('prevGreetingName');
+    const previewContent = document.getElementById('prevRenderedContent');
+    const previewCtaBtn = document.getElementById('prevCtaBtn');
 
     // Logs Table & Modal
     const emailLogsTableBody = document.getElementById('emailLogsTableBody');
@@ -2500,17 +2509,17 @@ function initEmailManagement() {
     }
 
     function updateStatusBanner() {
-        if (!resendStatusIndicator || !resendSenderDisplay) return;
+        if (!resendStatusPill || !resendStatusText || !resendSenderDisplay) return;
         const hasKey = Boolean(resendConfig.apiKey && resendConfig.apiKey.trim().length > 5);
 
         if (hasKey) {
-            resendStatusIndicator.className = 'resend-indicator';
-            resendStatusIndicator.innerHTML = '<span class="status-pulse-dot"></span> Đang Hoạt Động (Resend Ready)';
-            resendSenderDisplay.innerHTML = `<span class="sender-tag">SENDER:</span> <strong>${escHtml(resendConfig.fromName)}</strong> &lt;${escHtml(resendConfig.fromEmail)}&gt;`;
+            resendStatusPill.className = 'resend-indicator';
+            resendStatusText.textContent = 'Đang Hoạt Động (Resend Ready)';
+            resendSenderDisplay.innerHTML = `<strong>${escHtml(resendConfig.fromName)}</strong> &lt;${escHtml(resendConfig.fromEmail)}&gt;`;
         } else {
-            resendStatusIndicator.className = 'resend-indicator inactive';
-            resendStatusIndicator.innerHTML = '<span class="status-pulse-dot"></span> Chưa Cấu Hình API Key';
-            resendSenderDisplay.innerHTML = '<span class="sender-tag" style="color:var(--accent-red-bright);">CẢNH BÁO:</span> Bấm "Cấu Hình API Key" để kích hoạt gửi email';
+            resendStatusPill.className = 'resend-indicator inactive';
+            resendStatusText.textContent = 'Chưa Cấu Hình API Key';
+            resendSenderDisplay.innerHTML = '<span style="color:var(--accent-red-bright);">CẢNH BÁO:</span> Bấm "Cấu Hình API Key" để kích hoạt gửi email';
         }
     }
 
@@ -2661,71 +2670,63 @@ function initEmailManagement() {
     // ============================================================
     // 2. RECIPIENT RESOLUTION & TARGETING TABS
     // ============================================================
+    // [v5.10.11] HTML dùng 3 chế độ single/segment/selected (không phải
+    // all/filter/custom/selected như trước) -- viết lại toàn bộ cho khớp.
+    function toRecipient(u) {
+        return {
+            uid: u.uid,
+            email: u.email.trim(),
+            name: u.displayName || u.name || u.email.split('@')[0],
+            plan: getEffectivePlan(u),
+            dp: u.tuviPoints || u.dp || 0
+        };
+    }
+
+    function populateSingleUserDropdown() {
+        if (!emailUserDropdown || !Array.isArray(allUsers)) return;
+        const currentVal = emailUserDropdown.value;
+        const options = allUsers
+            .filter(u => u && u.email && u.email.includes('@'))
+            .slice()
+            .sort((a, b) => (a.displayName || a.email).localeCompare(b.displayName || b.email))
+            .map(u => `<option value="${u.uid}">${escHtml(u.displayName || u.name || u.email)} — ${escHtml(u.email)}</option>`)
+            .join('');
+        emailUserDropdown.innerHTML = '<option value="">-- Chọn thành viên từ danh sách --</option>' + options;
+        if (currentVal) emailUserDropdown.value = currentVal;
+    }
+
     function getResolvedRecipients() {
         if (!Array.isArray(allUsers)) return [];
 
         const validUsersWithEmail = allUsers.filter(u => u && u.email && u.email.includes('@'));
 
-        if (currentTargetMode === 'all') {
-            return validUsersWithEmail
-                .filter(u => !u.disabled)
-                .map(u => ({
-                    uid: u.uid,
-                    email: u.email.trim(),
-                    name: u.displayName || u.name || u.email.split('@')[0],
-                    plan: getEffectivePlan(u),
-                    dp: u.tuviPoints || u.dp || 0
-                }));
+        if (currentTargetMode === 'single') {
+            const directEmail = (emailDirectInput ? emailDirectInput.value : '').trim();
+            if (directEmail && directEmail.includes('@')) {
+                const match = validUsersWithEmail.find(u => (u.email || '').toLowerCase() === directEmail.toLowerCase());
+                if (match) return [toRecipient(match)];
+                return [{ uid: null, email: directEmail, name: directEmail.split('@')[0], plan: 'free', dp: 0 }];
+            }
+            const selectedUid = emailUserDropdown ? emailUserDropdown.value : '';
+            if (!selectedUid) return [];
+            const match = validUsersWithEmail.find(u => u.uid === selectedUid);
+            return match ? [toRecipient(match)] : [];
         }
 
-        if (currentTargetMode === 'filter') {
-            const planVal = targetFilterPlan ? targetFilterPlan.value : 'all';
-            const statusVal = targetFilterStatus ? targetFilterStatus.value : 'all';
-
+        if (currentTargetMode === 'segment') {
+            const segVal = emailSegmentSelect ? emailSegmentSelect.value : 'all';
             return validUsersWithEmail.filter(u => {
-                const effPlan = getEffectivePlan(u);
-                if (planVal !== 'all' && effPlan !== planVal) return false;
-
-                if (statusVal === 'active') {
-                    if (u.disabled || !isActive30d(u)) return false;
-                } else if (statusVal === 'inactive') {
-                    if (!u.disabled && isActive30d(u)) return false;
+                if (u.disabled) return false;
+                switch (segVal) {
+                    case 'premium': return ['premium', 'pro'].includes(getEffectivePlan(u));
+                    case 'trial': return getEffectivePlan(u) === 'trial';
+                    case 'trial_expired': return isTrialExpired(u);
+                    case 'free': return getEffectivePlan(u) === 'free';
+                    case 'active_30d': return isActive30d(u);
+                    case 'all':
+                    default: return true;
                 }
-                return true;
-            }).map(u => ({
-                uid: u.uid,
-                email: u.email.trim(),
-                name: u.displayName || u.name || u.email.split('@')[0],
-                plan: getEffectivePlan(u),
-                dp: u.tuviPoints || u.dp || 0
-            }));
-        }
-
-        if (currentTargetMode === 'custom') {
-            const raw = (targetCustomEmails ? targetCustomEmails.value : '').trim();
-            if (!raw) return [];
-            const rawTokens = raw.split(/[\n,; ]+/).map(t => t.trim()).filter(t => t.includes('@'));
-            const uniqueEmails = Array.from(new Set(rawTokens));
-
-            return uniqueEmails.map(email => {
-                const matchUser = validUsersWithEmail.find(u => (u.email || '').toLowerCase() === email.toLowerCase());
-                if (matchUser) {
-                    return {
-                        uid: matchUser.uid,
-                        email: matchUser.email.trim(),
-                        name: matchUser.displayName || matchUser.name || email.split('@')[0],
-                        plan: getEffectivePlan(matchUser),
-                        dp: matchUser.tuviPoints || matchUser.dp || 0
-                    };
-                }
-                return {
-                    uid: null,
-                    email,
-                    name: email.split('@')[0],
-                    plan: 'free',
-                    dp: 0
-                };
-            });
+            }).map(toRecipient);
         }
 
         if (currentTargetMode === 'selected') {
@@ -2733,15 +2734,7 @@ function initEmailManagement() {
             const list = [];
             selectedUserUids.forEach(uid => {
                 const match = validUsersWithEmail.find(u => u.uid === uid);
-                if (match) {
-                    list.push({
-                        uid: match.uid,
-                        email: match.email.trim(),
-                        name: match.displayName || match.name || match.email.split('@')[0],
-                        plan: getEffectivePlan(match),
-                        dp: match.tuviPoints || match.dp || 0
-                    });
-                }
+                if (match) list.push(toRecipient(match));
             });
             return list;
         }
@@ -2751,22 +2744,15 @@ function initEmailManagement() {
 
     function setTargetMode(mode) {
         currentTargetMode = mode;
-        const tabs = [
-            { tab: tabTargetAll, panel: targetAllPanel, id: 'all' },
-            { tab: tabTargetFilter, panel: targetFilterPanel, id: 'filter' },
-            { tab: tabTargetCustom, panel: targetCustomPanel, id: 'custom' },
-            { tab: tabTargetSelected, panel: targetSelectedPanel, id: 'selected' }
-        ];
 
-        tabs.forEach(item => {
-            if (item.tab) {
-                if (item.id === mode) item.tab.classList.add('active');
-                else item.tab.classList.remove('active');
-            }
-            if (item.panel) {
-                item.panel.style.display = item.id === mode ? 'block' : 'none';
-            }
+        document.querySelectorAll('.target-tab[data-mode]').forEach(tab => {
+            tab.classList.toggle('active', tab.getAttribute('data-mode') === mode);
         });
+        if (targetPanelSingle) targetPanelSingle.style.display = mode === 'single' ? 'block' : 'none';
+        if (targetPanelSegment) targetPanelSegment.style.display = mode === 'segment' ? 'block' : 'none';
+        if (targetPanelSelected) targetPanelSelected.style.display = mode === 'selected' ? 'block' : 'none';
+
+        if (mode === 'single') populateSingleUserDropdown();
 
         updateRecipientCountDisplay();
         updateLivePreview();
@@ -2775,35 +2761,27 @@ function initEmailManagement() {
     function updateRecipientCountDisplay() {
         const recipients = getResolvedRecipients();
         const count = recipients.length;
-        if (composerRecipientCount) {
-            composerRecipientCount.textContent = `${count.toLocaleString('vi-VN')} người nhận`;
+        if (targetCountBadge) {
+            targetCountBadge.textContent = `Sẽ gửi đến: ${count.toLocaleString('vi-VN')} người nhận`;
         }
-        if (selectedUsersSummaryCount) {
-            selectedUsersSummaryCount.textContent = (selectedUserUids ? selectedUserUids.size : 0).toString();
+        if (selectedUsersCountLabel) {
+            selectedUsersCountLabel.textContent = (selectedUserUids ? selectedUserUids.size : 0).toString();
+        }
+        if (selectedUsersSummaryBox) {
+            const n = selectedUserUids ? selectedUserUids.size : 0;
+            selectedUsersSummaryBox.innerHTML = n > 0
+                ? `<span>✅ Đã chọn <strong>${n}</strong> user từ bảng quản lý. Chuyển sang tab <strong>Users</strong> để thay đổi lựa chọn.</span>`
+                : `<span>Chưa có user nào được chọn từ bảng quản lý. Hãy sang tab <strong>Users</strong> và tích chọn vào ô checkbox.</span>`;
         }
     }
 
-    if (tabTargetAll) tabTargetAll.onclick = () => setTargetMode('all');
-    if (tabTargetFilter) tabTargetFilter.onclick = () => setTargetMode('filter');
-    if (tabTargetCustom) tabTargetCustom.onclick = () => setTargetMode('custom');
-    if (tabTargetSelected) tabTargetSelected.onclick = () => setTargetMode('selected');
+    document.querySelectorAll('.target-tab[data-mode]').forEach(tab => {
+        tab.onclick = () => setTargetMode(tab.getAttribute('data-mode'));
+    });
 
-    if (targetFilterPlan) targetFilterPlan.onchange = () => { updateRecipientCountDisplay(); updateLivePreview(); };
-    if (targetFilterStatus) targetFilterStatus.onchange = () => { updateRecipientCountDisplay(); updateLivePreview(); };
-    if (targetCustomEmails) targetCustomEmails.oninput = () => { updateRecipientCountDisplay(); updateLivePreview(); };
-
-    if (btnViewTargetList) {
-        btnViewTargetList.onclick = () => {
-            const list = getResolvedRecipients();
-            if (list.length === 0) {
-                alert('Hiện tại danh sách người nhận đang trống!');
-                return;
-            }
-            const previewText = list.slice(0, 30).map((r, i) => `${i+1}. ${r.name} (${r.email}) - Gói: ${r.plan}`).join('\n');
-            const more = list.length > 30 ? `\n... và còn ${list.length - 30} người nhận khác.` : '';
-            alert(`📋 Danh sách ${list.length} người nhận mục tiêu:\n\n${previewText}${more}`);
-        };
-    }
+    if (emailUserDropdown) emailUserDropdown.onchange = () => { updateRecipientCountDisplay(); updateLivePreview(); };
+    if (emailDirectInput) emailDirectInput.oninput = () => { updateRecipientCountDisplay(); updateLivePreview(); };
+    if (emailSegmentSelect) emailSegmentSelect.onchange = () => { updateRecipientCountDisplay(); updateLivePreview(); };
 
     // ============================================================
     // 3. TEMPLATES CHIPS & EDITOR TOOLBAR
@@ -2954,20 +2932,21 @@ function initEmailManagement() {
             previewToMeta.textContent = `${sample.name} <${sample.email}>${moreCount}`;
         }
 
-        if (previewGreeting) {
-            previewGreeting.innerHTML = `Chào <strong>${escHtml(sample.name || 'Bạn')}</strong>,`;
+        if (previewGreetingName) {
+            previewGreetingName.textContent = sample.name || 'Bạn';
         }
         if (previewContent) {
             previewContent.innerHTML = renderedContent;
         }
 
-        if (previewCtaWrap && previewCtaBtn) {
+        if (previewCtaBtn) {
+            const ctaWrap = previewCtaBtn.closest('.email-tpl-cta-wrap');
             if (rawCtaText) {
-                previewCtaWrap.style.display = 'block';
+                if (ctaWrap) ctaWrap.style.display = '';
                 previewCtaBtn.textContent = rawCtaText;
                 previewCtaBtn.href = rawCtaUrl || '#';
-            } else {
-                previewCtaWrap.style.display = 'none';
+            } else if (ctaWrap) {
+                ctaWrap.style.display = 'none';
             }
         }
     }
@@ -2978,20 +2957,6 @@ function initEmailManagement() {
             el.addEventListener('change', updateLivePreview);
         }
     });
-
-    // Preview Device Toggle
-    if (btnPreviewDesktop && btnPreviewMobile && emailClientMockup) {
-        btnPreviewDesktop.onclick = () => {
-            btnPreviewDesktop.classList.add('active');
-            btnPreviewMobile.classList.remove('active');
-            emailClientMockup.classList.remove('mobile-mode');
-        };
-        btnPreviewMobile.onclick = () => {
-            btnPreviewMobile.classList.add('active');
-            btnPreviewDesktop.classList.remove('active');
-            emailClientMockup.classList.add('mobile-mode');
-        };
-    }
 
     // ============================================================
     // 5. GỬI EMAIL CHÍNH THỨC & GỬI THỬ NGHIỆM
@@ -3128,6 +3093,11 @@ function initEmailManagement() {
     if (btnSendTestEmail) {
         btnSendTestEmail.onclick = () => executeSendEmail({ isTestOnly: true });
     }
+    // [v5.10.11] Nút "⚡ Gửi Thử (Admin)" ở banner trên cùng chưa từng được
+    // gắn sự kiện -- dùng lại đúng luồng gửi thử như btnSendTestEmail.
+    if (btnQuickTestEmail) {
+        btnQuickTestEmail.onclick = () => executeSendEmail({ isTestOnly: true });
+    }
 
     // ============================================================
     // 6. REALTIME EMAIL LOGS & DETAIL MODAL
@@ -3231,8 +3201,9 @@ function initEmailManagement() {
         if (targetUid && Array.isArray(allUsers)) {
             const user = allUsers.find(u => u.uid === targetUid);
             if (user && user.email) {
-                setTargetMode('custom');
-                if (targetCustomEmails) targetCustomEmails.value = user.email;
+                setTargetMode('single');
+                if (emailDirectInput) emailDirectInput.value = user.email;
+                if (emailUserDropdown) emailUserDropdown.value = '';
                 updateRecipientCountDisplay();
                 updateLivePreview();
             }
@@ -3253,7 +3224,7 @@ function initEmailManagement() {
     // --- Init Sequence ---
     loadResendConfig();
     applyTemplate('vip');
-    setTargetMode('all');
+    setTargetMode('single');
     startEmailLogsListener();
 }
 
