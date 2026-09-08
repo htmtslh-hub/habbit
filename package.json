@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "SePay webhook API for Habit Mastery",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "firebase-admin": "^14.3.0",
     "gotiengviet": "^1.1.1",
