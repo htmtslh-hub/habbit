@@ -28,7 +28,14 @@ function getFirebaseAdmin() {
   return { firestore: getFirestore, auth: getAuth };
 }
 
-// Bọc nội dung email trong template thương hiệu Habit Mastery (giống hệt api/send-email.js)
+// Bọc nội dung người dùng trong template thương hiệu Habit Mastery.
+//
+// [v5.11.1] Thiết kế lại từ NỀN TỐI sang NỀN SÁNG. Bản cũ dùng nền #060912 với
+// chữ #cbd5e1: đọc trong hộp thư rất mỏi mắt, và nhiều client (Gmail, Outlook)
+// xử lý email nền tối rất tệ — Outlook bỏ qua gradient/rgba nên chữ nhạt rơi
+// xuống nền trắng mặc định thành gần như vô hình. Nền sáng là chuẩn chung của
+// email marketing vì lý do đó. Giữ NGUYÊN tên các class (.highlight-box,
+// .gold-box...) vì thanh công cụ soạn thảo trong admin chèn đúng các class này.
 function wrapEmailTemplate({ title, preheader, contentHtml, ctaText, ctaUrl }) {
   const safeTitle = title || "Thông báo từ Habit Mastery";
   const safePreheader = preheader || safeTitle;
@@ -40,32 +47,39 @@ function wrapEmailTemplate({ title, preheader, contentHtml, ctaText, ctaUrl }) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
   <title>${safeTitle}</title>
   <style>
-    body { margin: 0; padding: 0; background-color: #060912; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #e2e8f0; }
-    .wrapper { width: 100%; max-width: 620px; margin: 0 auto; padding: 32px 16px; box-sizing: border-box; }
-    .card { background: linear-gradient(180deg, #162033 0%, #0d1527 100%); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 16px; overflow: hidden; box-shadow: 0 16px 40px rgba(0,0,0,0.6); }
-    .header { padding: 32px 28px 24px; text-align: center; border-bottom: 1px solid rgba(148, 163, 184, 0.12); background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15) 0%, transparent 70%); }
-    .logo-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); padding: 8px 18px; border-radius: 999px; color: #34d399; font-weight: 700; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; }
-    .title { margin: 20px 0 0; font-size: 22px; font-weight: 800; color: #ffffff; line-height: 1.35; letter-spacing: -0.5px; }
-    .body-content { padding: 28px 30px; font-size: 15px; line-height: 1.7; color: #cbd5e1; }
+    body { margin: 0; padding: 0; background-color: #eef1f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1f2937; -webkit-font-smoothing: antialiased; }
+    .wrapper { width: 100%; max-width: 620px; margin: 0 auto; padding: 28px 16px; box-sizing: border-box; }
+    .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08); }
+    .accent-bar { height: 4px; background: #10b981; font-size: 0; line-height: 0; }
+    .header { padding: 30px 28px 22px; text-align: center; border-bottom: 1px solid #edf1f6; background: #f7fdfb; }
+    .logo-badge { display: inline-block; background: #e7f8f1; border: 1px solid #a7e3cd; padding: 7px 18px; border-radius: 999px; color: #047857; font-weight: 700; font-size: 12.5px; letter-spacing: 1.4px; text-transform: uppercase; }
+    .title { margin: 18px 0 0; font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1.35; letter-spacing: -0.4px; }
+    .body-content { padding: 28px 30px; font-size: 15.5px; line-height: 1.75; color: #374151; }
     .body-content p { margin: 0 0 16px; }
-    .body-content h2, .body-content h3 { color: #ffffff; margin: 22px 0 10px; }
+    .body-content strong { color: #0f172a; }
+    .body-content a { color: #047857; }
+    .body-content h2, .body-content h3 { color: #0f172a; margin: 22px 0 10px; }
     .body-content ul { padding-left: 20px; margin: 0 0 18px; }
     .body-content li { margin-bottom: 8px; }
-    .highlight-box { background: rgba(59, 130, 246, 0.08); border-left: 4px solid #3b82f6; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 20px 0; font-size: 14px; color: #93c5fd; }
-    .gold-box { background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 20px 0; font-size: 14px; color: #fcd34d; }
-    .btn-container { text-align: center; margin: 30px 0 16px; }
-    .btn { display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff !important; text-decoration: none; font-weight: 700; font-size: 15px; padding: 14px 32px; border-radius: 12px; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); text-align: center; }
-    .footer { padding: 24px 28px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid rgba(148, 163, 184, 0.1); }
-    .footer a { color: #94a3b8; text-decoration: underline; }
-    .preheader-hidden { display: none !important; visibility: hidden; opacity: 0; color: transparent; height: 0; width: 0; }
+    .highlight-box { background: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 20px 0; font-size: 14.5px; color: #1e40af; }
+    .gold-box { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 20px 0; font-size: 14.5px; color: #92400e; }
+    .btn-container { text-align: center; margin: 30px 0 8px; }
+    /* #047857 chứ không phải #059669: chữ trắng trên #059669 chỉ đạt 3.77:1, dưới chuẩn AA 4.5:1 */
+    .btn { display: inline-block; background: #047857; color: #ffffff !important; text-decoration: none; font-weight: 700; font-size: 15px; padding: 14px 32px; border-radius: 10px; text-align: center; }
+    .footer { padding: 22px 28px; text-align: center; font-size: 12px; line-height: 1.6; color: #6b7280; border-top: 1px solid #edf1f6; background: #fafbfc; }
+    .footer a { color: #047857; text-decoration: underline; }
+    .preheader-hidden { display: none !important; visibility: hidden; opacity: 0; color: transparent; height: 0; width: 0; overflow: hidden; }
   </style>
 </head>
 <body>
   <span class="preheader-hidden">${safePreheader}</span>
   <div class="wrapper">
     <div class="card">
+      <div class="accent-bar">&nbsp;</div>
       <div class="header">
         <div class="logo-badge">✦ HABIT MASTERY</div>
         <h1 class="title">${safeTitle}</h1>
@@ -77,7 +91,7 @@ function wrapEmailTemplate({ title, preheader, contentHtml, ctaText, ctaUrl }) {
         </div>
       </div>
       <div class="footer">
-        <p style="margin:0 0 6px;">Email được gửi tự động từ <strong>Ban Quản Trị Habit Mastery</strong>.</p>
+        <p style="margin:0 0 6px;">Email được gửi tự động từ <strong style="color:#374151;">Ban Quản Trị Habit Mastery</strong>.</p>
         <p style="margin:0;">Rèn luyện thói quen • Thắp sáng kỷ luật • Thăng cấp tâm thức</p>
         <p style="margin:12px 0 0;"><a href="https://habitmastery.web.app">habitmastery.web.app</a> | Hỗ trợ: htmt.slh@gmail.com</p>
       </div>

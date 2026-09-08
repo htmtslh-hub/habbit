@@ -3523,36 +3523,37 @@ textarea.form-input {
     padding: 22px 18px;
     max-height: 540px;
     overflow-y: auto;
-    background: #060912;
+    background: #eef1f5;
 }
 
 /* Template Render inside Preview */
 .email-branded-template {
-    background: linear-gradient(180deg, #162033 0%, #0d1527 100%);
-    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 14px;
     overflow: hidden;
-    color: #cbd5e1;
+    color: #374151;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+    border-top: 4px solid #10b981;
 }
 
 .email-tpl-header {
     padding: 26px 20px 20px;
     text-align: center;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
-    background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+    border-bottom: 1px solid #edf1f6;
+    background: #f7fdfb;
 }
 
 .email-tpl-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.35);
+    background: #e7f8f1;
+    border: 1px solid #a7e3cd;
     padding: 5px 14px;
     border-radius: 999px;
-    color: #34d399;
+    color: #047857;
     font-weight: 800;
     font-size: 11px;
     letter-spacing: 1.5px;
@@ -3563,7 +3564,7 @@ textarea.form-input {
     margin: 16px 0 0;
     font-size: 19px;
     font-weight: 800;
-    color: #ffffff;
+    color: #0f172a;
     line-height: 1.35;
     letter-spacing: -0.4px;
 }
@@ -3577,7 +3578,7 @@ textarea.form-input {
 .email-tpl-greeting {
     font-size: 14.5px;
     margin-bottom: 14px;
-    color: #ffffff;
+    color: #0f172a;
 }
 
 .email-tpl-content {
@@ -3589,7 +3590,7 @@ textarea.form-input {
 }
 
 .email-tpl-content h2, .email-tpl-content h3 {
-    color: #ffffff;
+    color: #0f172a;
     margin: 18px 0 8px;
 }
 
@@ -3609,14 +3610,13 @@ textarea.form-input {
 
 .email-tpl-btn {
     display: inline-block;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: #047857;
     color: #ffffff !important;
     text-decoration: none;
     font-weight: 700;
     font-size: 14px;
     padding: 12px 28px;
     border-radius: 10px;
-    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
     text-align: center;
 }
 
@@ -3624,8 +3624,9 @@ textarea.form-input {
     padding: 20px 22px;
     text-align: center;
     font-size: 11.5px;
-    color: #64748b;
-    border-top: 1px solid rgba(148, 163, 184, 0.1);
+    color: #6b7280;
+    border-top: 1px solid #edf1f6;
+    background: #fafbfc;
     line-height: 1.6;
 }
 
@@ -3635,29 +3636,29 @@ textarea.form-input {
 
 .email-tpl-links {
     margin-top: 8px !important;
-    color: #94a3b8;
+    color: #047857;
 }
 
 /* Callout Boxes */
 .highlight-box {
-    background: rgba(59, 130, 246, 0.08);
+    background: #eff6ff;
     border-left: 4px solid #3b82f6;
     border-radius: 0 8px 8px 0;
     padding: 12px 16px;
     margin: 16px 0;
     font-size: 13px;
-    color: #93c5fd;
+    color: #1e40af;
     line-height: 1.5;
 }
 
 .gold-box {
-    background: rgba(245, 158, 11, 0.1);
+    background: #fffbeb;
     border-left: 4px solid #f59e0b;
     border-radius: 0 8px 8px 0;
     padding: 12px 16px;
     margin: 16px 0;
     font-size: 13px;
-    color: #fcd34d;
+    color: #92400e;
     line-height: 1.5;
 }
 

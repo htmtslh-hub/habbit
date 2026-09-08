@@ -359,6 +359,9 @@ window.addEventListener('hmLanguageChanged', (e) => {
         applyI18n();
         if (typeof renderAll === 'function') renderAll();
         if (window._updateProfileModalUI) window._updateProfileModalUI();
+        // Khung trích dẫn không nằm trong renderAll() và chỉ render 1 lần lúc khởi
+        // động — thời điểm đó việc dò ngôn ngữ thường chưa xong nên nó kẹt ở 'en'.
+        if (typeof renderDailyQuoteWidget === 'function') renderDailyQuoteWidget();
     }
 });
 
@@ -1803,6 +1806,7 @@ function switchLang(lang) {
     } else {
         applyI18n();
         renderAll();
+        if (typeof renderDailyQuoteWidget === 'function') renderDailyQuoteWidget();
     }
     if (window._updateProfileModalUI) window._updateProfileModalUI();
 }

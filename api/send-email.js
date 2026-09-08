@@ -32,64 +32,9 @@ function getFirebaseAdmin() {
   return { firestore: getFirestore, auth: getAuth };
 }
 
-// Wrap user content in Habit Mastery branded responsive HTML email template
-function wrapEmailTemplate({ title, preheader, contentHtml, ctaText, ctaUrl }) {
-  const safeTitle = title || "Thông báo từ Habit Mastery";
-  const safePreheader = preheader || safeTitle;
-  const appUrl = ctaUrl || "https://habitmastery.web.app";
-  const btnText = ctaText || "Vào Ứng Dụng Ngay →";
-
-  return `<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${safeTitle}</title>
-  <style>
-    body { margin: 0; padding: 0; background-color: #060912; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #e2e8f0; }
-    .wrapper { width: 100%; max-width: 620px; margin: 0 auto; padding: 32px 16px; box-sizing: border-box; }
-    .card { background: linear-gradient(180deg, #162033 0%, #0d1527 100%); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 16px; overflow: hidden; box-shadow: 0 16px 40px rgba(0,0,0,0.6); }
-    .header { padding: 32px 28px 24px; text-align: center; border-bottom: 1px solid rgba(148, 163, 184, 0.12); background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15) 0%, transparent 70%); }
-    .logo-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); padding: 8px 18px; border-radius: 999px; color: #34d399; font-weight: 700; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; }
-    .title { margin: 20px 0 0; font-size: 22px; font-weight: 800; color: #ffffff; line-height: 1.35; letter-spacing: -0.5px; }
-    .body-content { padding: 28px 30px; font-size: 15px; line-height: 1.7; color: #cbd5e1; }
-    .body-content p { margin: 0 0 16px; }
-    .body-content h2, .body-content h3 { color: #ffffff; margin: 22px 0 10px; }
-    .body-content ul { padding-left: 20px; margin: 0 0 18px; }
-    .body-content li { margin-bottom: 8px; }
-    .highlight-box { background: rgba(59, 130, 246, 0.08); border-left: 4px solid #3b82f6; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 20px 0; font-size: 14px; color: #93c5fd; }
-    .gold-box { background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 20px 0; font-size: 14px; color: #fcd34d; }
-    .btn-container { text-align: center; margin: 30px 0 16px; }
-    .btn { display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff !important; text-decoration: none; font-weight: 700; font-size: 15px; padding: 14px 32px; border-radius: 12px; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); text-align: center; }
-    .footer { padding: 24px 28px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid rgba(148, 163, 184, 0.1); }
-    .footer a { color: #94a3b8; text-decoration: underline; }
-    .preheader-hidden { display: none !important; visibility: hidden; opacity: 0; color: transparent; height: 0; width: 0; }
-  </style>
-</head>
-<body>
-  <span class="preheader-hidden">${safePreheader}</span>
-  <div class="wrapper">
-    <div class="card">
-      <div class="header">
-        <div class="logo-badge">✦ HABIT MASTERY</div>
-        <h1 class="title">${safeTitle}</h1>
-      </div>
-      <div class="body-content">
-        ${contentHtml}
-        <div class="btn-container">
-          <a href="${appUrl}" target="_blank" class="btn">${btnText}</a>
-        </div>
-      </div>
-      <div class="footer">
-        <p style="margin:0 0 6px;">Email được gửi tự động từ <strong>Ban Quản Trị Habit Mastery</strong>.</p>
-        <p style="margin:0;">Rèn luyện thói quen • Thắp sáng kỷ luật • Thăng cấp tâm thức</p>
-        <p style="margin:12px 0 0;"><a href="https://habitmastery.web.app">habitmastery.web.app</a> | Hỗ trợ: htmt.slh@gmail.com</p>
-      </div>
-    </div>
-  </div>
-</body>
-</html>`;
-}
+// Template email dùng chung với cron nhắc nhở & webhook VIP — định nghĩa duy
+// nhất ở api/_lib/emailCore.js để 2 nơi không bị lệch thiết kế theo thời gian.
+const { wrapEmailTemplate } = require("./_lib/emailCore");
 
 // Replace template variables - supports both {var} and {{var}}
 function interpolateVariables(text, vars = {}) {
