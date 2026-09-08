@@ -7,6 +7,8 @@
 const admin = require("firebase-admin");
 const { getFirestore, FieldValue, Timestamp } = require("firebase-admin/firestore");
 const crypto = require("crypto");
+const { resolveResendConfig, sendBrandedEmail } = require("./_lib/emailCore");
+const { sendSystemMessage } = require("./_lib/systemMessage");
 
 // Initialize Firebase Admin SDK (chỉ khởi tạo 1 lần)
 if (!admin.getApps().length) {
@@ -313,6 +315,45 @@ module.exports = async function handler(req, res) {
     console.log(
       `User ${uid} upgraded to Premium (${plan}) via payment ${orderNumber}`
     );
+
+    // 7b. Gửi chúc mừng kích hoạt VIP (email + tin nhắn trong app) — không
+    // để lỗi ở bước này làm hỏng phản hồi xác nhận thanh toán cho SePay.
+    try {
+      const uData = userDoc.data() || {};
+      const name = uData.displayName || (uData.email || "").split("@")[0] || "Chiến binh kỷ luật";
+      const planLabel = plan === "yearly" ? "Premium (1 năm)" : "Premium (1 tháng)";
+      const expiresStr = planUpdates.planExpiresAt
+        ? planUpdates.planExpiresAt.toDate().toLocaleDateString("vi-VN")
+        : "Vĩnh viễn";
+
+      const subject = "🎉 Chúc mừng! Tài khoản của bạn đã được kích hoạt Premium";
+      const contentHtml = `<p>Xin chào <strong>${name}</strong>,</p>
+        <p>Thanh toán của bạn đã được xác nhận thành công! Tài khoản Habit Mastery của bạn vừa được nâng cấp lên <strong>${planLabel}</strong>.</p>
+        <div class="highlight-box">
+          👑 <strong>Gói:</strong> ${planLabel}<br>
+          📅 <strong>Hiệu lực đến:</strong> ${expiresStr}<br>
+          🧾 <strong>Mã đơn hàng:</strong> ${orderNumber}
+        </div>
+        <p>Giờ đây bạn đã có toàn bộ đặc quyền Premium: thống kê nâng cao, huy hiệu độc quyền, Bình Đóng Băng streak và nhiều hơn nữa. Chúc bạn rèn luyện thật kỷ luật!</p>`;
+      const inAppText = `🎉 Chúc mừng! Tài khoản của bạn đã được kích hoạt ${planLabel} thành công.`;
+
+      if (uData.email && uData.email.includes("@")) {
+        const emailCfg = await resolveResendConfig(db);
+        if (emailCfg) {
+          await sendBrandedEmail(emailCfg, {
+            to: uData.email,
+            subject,
+            preheader: inAppText,
+            contentHtml,
+            ctaText: "Mở Ứng Dụng Ngay →",
+            ctaUrl: "https://habitmastery.web.app",
+          });
+        }
+      }
+      await sendSystemMessage(db, FieldValue, uid, uData, inAppText);
+    } catch (notifyErr) {
+      console.error("Could not send VIP activation notification:", notifyErr.message);
+    }
   } else {
     console.error("User document not found:", uid);
   }
