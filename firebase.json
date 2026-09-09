@@ -69,6 +69,11 @@
             { "key": "Cache-Control", "value": "max-age=86400" }
           ]
         }
+      ],
+      "rewrites": [
+        { "source": "/terms", "destination": "/terms.html" },
+        { "source": "/privacy", "destination": "/privacy.html" },
+        { "source": "/refund", "destination": "/refund.html" }
       ]
     },
     {
@@ -131,6 +136,11 @@
             { "key": "Cache-Control", "value": "max-age=86400" }
           ]
         }
+      ],
+      "rewrites": [
+        { "source": "/terms", "destination": "/terms.html" },
+        { "source": "/privacy", "destination": "/privacy.html" },
+        { "source": "/refund", "destination": "/refund.html" }
       ]
     }
   ],

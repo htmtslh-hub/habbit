@@ -118,7 +118,7 @@ module.exports = async function handler(req, res) {
   const preheader = body.preheader || "";
   const contentHtml = body.contentHtml || body.content || "";
   const ctaText = body.ctaText || "Mở Ứng Dụng Ngay →";
-  const ctaUrl = body.ctaUrl || "https://habitmastery.web.app";
+  const ctaUrl = body.ctaUrl || "https://habit-mastery.com";
   const templateId = body.templateId || "custom";
   const rawHtml = Boolean(body.rawHtml);
 
@@ -189,7 +189,7 @@ module.exports = async function handler(req, res) {
           <p>Giờ đây bạn có thể gửi email thông báo, kích hoạt VIP, và chăm sóc người dùng một cách chuyên nghiệp.</p>
         `,
         ctaText: "Vào Bảng Quản Trị →",
-        ctaUrl: "https://habitmastery.web.app/admin.html",
+        ctaUrl: "https://habit-mastery.com/admin.html",
       });
 
       const sendResult = await resend.emails.send({
@@ -296,7 +296,7 @@ module.exports = async function handler(req, res) {
         plan: rcp.plan === "premium" ? "👑 Premium" : rcp.plan === "trial" ? "⏳ Trial" : "🌱 Free",
         dp: rcp.dp || 0,
         streak: rcp.streak || 0,
-        app_url: ctaUrl || "https://habitmastery.web.app",
+        app_url: ctaUrl || "https://habit-mastery.com",
       };
 
       const personalizedSubject = interpolateVariables(subject, vars);

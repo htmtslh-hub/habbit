@@ -39,7 +39,7 @@ function getFirebaseAdmin() {
 function wrapEmailTemplate({ title, preheader, contentHtml, ctaText, ctaUrl }) {
   const safeTitle = title || "Thông báo từ Habit Mastery";
   const safePreheader = preheader || safeTitle;
-  const appUrl = ctaUrl || "https://habitmastery.web.app";
+  const appUrl = ctaUrl || "https://habit-mastery.com";
   const btnText = ctaText || "Vào Ứng Dụng Ngay →";
 
   return `<!DOCTYPE html>
@@ -93,7 +93,7 @@ function wrapEmailTemplate({ title, preheader, contentHtml, ctaText, ctaUrl }) {
       <div class="footer">
         <p style="margin:0 0 6px;">Email được gửi tự động từ <strong style="color:#374151;">Ban Quản Trị Habit Mastery</strong>.</p>
         <p style="margin:0;">Rèn luyện thói quen • Thắp sáng kỷ luật • Thăng cấp tâm thức</p>
-        <p style="margin:12px 0 0;"><a href="https://habitmastery.web.app">habitmastery.web.app</a> | Hỗ trợ: htmt.slh@gmail.com</p>
+        <p style="margin:12px 0 0;"><a href="https://habit-mastery.com">habit-mastery.com</a> | Hỗ trợ: htmt.slh@gmail.com</p>
       </div>
     </div>
   </div>

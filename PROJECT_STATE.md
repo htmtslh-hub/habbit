@@ -5,9 +5,11 @@
 ---
 
 ## 📌 1. THÔNG TIN DỰ ÁN & TRIỂN KHAI
+- **TÊN MIỀN CHUẨN**: **`https://habit-mastery.com`** (kèm `www.`) — đã trỏ về Firebase Hosting.
+  `habitmastery.web.app` và `sonnhai-2600f.web.app` vẫn chạy nhưng chỉ là URL phụ. Mọi link mới (email, CTA, trang pháp lý, đăng nhập desktop) phải dùng tên miền chuẩn.
 - **Tên ứng dụng**: **Habit Mastery** (Ứng dụng Rèn luyện Thói quen & Game hóa Kỷ luật)
 - **Công nghệ cốt lõi**: HTML5, Vanilla CSS3 (Design System chuẩn Dark/Light Mode), Vanilla JavaScript (ES6+), Firebase (Authentication, Firestore, Hosting), PWA (Service Worker), Vercel Production, Electron (bản Desktop Windows/macOS), Vercel Serverless API (Node.js — SePay Webhook, OTP, Resend Email).
-- **Phiên bản Cache / Scripts hiện tại**: `app.js?v=5.11.1`, `style.css?v=5.11.0`, `all_books_data.js?v=5.9.6`, `i18n.js?v=5.11.0` (trong `index.html`), `admin.js?v=5.8.4`, `admin.css?v=5.11.1` (trong `admin.html`) & Service Worker `CACHE_VERSION = '5.11.1'` (trong `sw.js`) — *cập nhật số phiên bản này mỗi khi thay đổi để buộc client tải lại cache mới.*
+- **Phiên bản Cache / Scripts hiện tại**: `app.js?v=5.11.1`, `style.css?v=5.11.0`, `all_books_data.js?v=5.9.6`, `i18n.js?v=5.12.0` (trong `index.html`), `auth.css?v=5.12.0` (trong `auth.html`), `legal.css/legal.js?v=5.12.0` (3 trang pháp lý), `admin.js?v=5.8.4`, `admin.css?v=5.11.1` (trong `admin.html`) & Service Worker `CACHE_VERSION = '5.12.0'` (trong `sw.js`) — *cập nhật số phiên bản này mỗi khi thay đổi để buộc client tải lại cache mới.*
 - **Loại Bỏ 100% Mục Lục Rác & Dấu Chấm OCR Trong Nội Dung (v5.3.3)**: Đã bóc tách và xóa sạch toàn bộ các đoạn text mục lục thô bị sao chép nhầm từ bản scan PDF (các dòng chấm dài `........ 93 146. Thu hút...`) trong toàn bộ 14 cuốn sách, giữ lại giao diện trang đọc tinh khiết, sang trọng và chuẩn mực.
 - **Đa Ngôn Ngữ Toàn Hệ Thống (v5.8.0)**: Hỗ trợ đầy đủ **Tiếng Việt / English / 简体中文**, tự động phát hiện ngôn ngữ theo quốc gia (VN→vi, CN→zh, còn lại→en mặc định), bao gồm cả tên 21 Cảnh Giới, toàn bộ UI, `auth.html`, `auth.js`. Logic đặt tại [`i18n.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/i18n.js) (~1.600 dòng).
 - **Bảo Mật (Security Patch)**: Đã vá các lỗ hổng nghiêm trọng — XSS, siết chặt `firestore.rules`, thêm HTTP Security Headers trong `firebase.json`, chuyển sinh mã OTP sang CSPRNG (`crypto.randomInt`), loại các script mock ra khỏi build production.
@@ -231,6 +233,38 @@
 - **Thưởng lên bậc kiểu "lazy-claim per-member"**: mỗi thành viên tự nhận thưởng (+50 DP × số bậc) cho chính mình ngay khi phát hiện đội đã vượt mốc bậc mới mà mình chưa nhận — thiết kế bắt buộc vì Firestore Rules chỉ cho phép mỗi client ghi vào tài liệu DP/Coins của chính mình, không thể ghi hộ thành viên khác. Trạng thái đã nhận lưu tại `members[].claimedRankLevel` trong document `squads/{id}`.
 - Hiệu ứng ăn mừng: confetti + âm thanh + toast thông báo khi lên bậc mới.
 - **Yêu cầu nền tảng**: chỉ hoạt động được sau khi vá lỗ hổng `firestore.rules` ở mục nợ kỹ thuật #9 (trước đó `squads`/`duels` bị Firestore từ chối hoàn toàn).
+
+### 16. Thanh Toán Quốc Tế — Nền Móng (v5.12.0, 09/09/2026)
+
+**Bối cảnh**: thanh toán hiện chỉ chạy được ở Việt Nam (QR VietQR + đối soát nội dung chuyển khoản `HBT<13 số>`). Stripe **không nhận** doanh nghiệp đăng ký tại Việt Nam, nên hướng đi là dùng **Merchant of Record**: Paddle đứng tên người bán, tự lo VAT/GST toàn cầu, rồi trả tiền về cho chủ dự án.
+
+**Đã xác minh (đừng tra lại)**:
+- Paddle **nhận người bán ở Việt Nam** — VN không nằm trong danh sách 28 nước bị chặn, và ô Country trong Payout Settings hiện đúng "Vietnam".
+- Payout chỉ có **2 lựa chọn**: `Payoneer` và `Wire transfer`. **Không có WorldFirst** như một mục riêng (nhưng có thể dùng qua Wire transfer vì WorldFirst cấp thông tin SWIFT).
+- **Wise KHÔNG dùng được**: Việt Nam không nằm trong danh sách quốc gia được phép giữ số dư ở Wise, nên không lấy được số tài khoản USD nhận tiền.
+- Điểm hoà vốn Payoneer vs Wire→WorldFirst ≈ **$1.000/lần nhận**: dưới mức đó Payoneer rẻ hơn (không phí $15 SWIFT), trên mức đó WorldFirst rẻ hơn (phí đổi tiền ~0,5% so với ~2%).
+- **6 phương thức chỉ dùng được cho thanh toán một lần**, không dùng cho gói thuê bao: Bancontact, BLIK, iDEAL, MB WAY, Pix, UPI. → Giữ mô hình **mua theo thời hạn** như hiện tại thì được dùng cả 6, lại khớp sẵn với logic `planExpiresAt`.
+
+**Đã làm ở v5.12.0**:
+- **3 trang pháp lý độc lập** — điều kiện bắt buộc để Paddle duyệt domain: `terms.html`, `privacy.html`, `refund.html` + `legal.css`, `legal.js`. Mỗi trang có đủ **3 ngôn ngữ vi/en/zh** trong HTML tĩnh, mặc định hiện **tiếng Anh** cho bên duyệt hồ sơ, tự đổi theo `hm_app_lang` của app. Có rewrite trong `firebase.json` để truy cập bằng `/terms`, `/privacy`, `/refund`.
+  - ⚠️ Nội dung pháp lý cũ nằm trong **modal** ở `auth.html` — bot và người duyệt KHÔNG đọc được. Bốn nút modal vẫn giữ, nhưng đã thêm một hàng thẻ `<a>` thật ở footer trỏ sang 3 trang mới.
+  - Link trong các trang này dùng **đường dẫn tương đối** (`terms.html`) chứ không phải `/terms`, vì server nội bộ của Electron không có rewrite.
+- **`api/_lib/grantPremium.js`** — gom toàn bộ việc cấp gói Premium về một chỗ (tính hạn + ghi Firestore + gửi email/tin nhắn). `sepay-webhook.js` đã chuyển sang gọi hàm này; webhook Paddle sắp tới dùng chung, tránh hai nơi tính hạn lệch nhau.
+  - **Sửa luôn một lỗi thật**: bản cũ luôn tính hạn từ `new Date()`, nên ai còn 20 ngày mà gia hạn sớm là **mất trắng 20 ngày**. Nay mốc bắt đầu là thời điểm muộn hơn giữa "bây giờ" và "hạn hiện tại". Đã kiểm thử 7/7 trường hợp.
+  - Thêm trường `lastPaymentProvider` (`"sepay"` | `"paddle"`) để đối soát.
+  - ⚠️ `admin.js` chạy trên trình duyệt nên **không require() được** module này — trang admin vẫn cấp gói theo cách riêng. Muốn gom nốt phải cho admin gọi qua một API route.
+
+**Lỗi production phát hiện & đã sửa khi gắn tên miền chuẩn (09/09/2026)**:
+- **Xác thực 2 lớp OTP HỎNG HOÀN TOÀN trên `habit-mastery.com`**. `send-otp.js` và `verify-otp.js` dò origin bằng `origin.endsWith(".web.app")`, mà tên miền riêng không khớp mẫu nào → trả về `Access-Control-Allow-Origin: https://habitmastery.web.app` không khớp origin gửi đi → trình duyệt chặn. Server vẫn trả 200 nên **log không hề báo lỗi**; chỉ phát hiện được bằng cách gửi request kèm header `Origin` rồi đọc header trả về.
+- Đã gom danh sách origin về **`api/_lib/cors.js`** (một chỗ duy nhất) và siết luôn lỗ hổng cũ: `.endsWith(".web.app")` vốn cho phép **bất kỳ site Firebase nào trên thế giới** gọi endpoint gửi OTP. Nay liệt kê đích danh. Đã kiểm thử 15/15 trường hợp (gồm các mẫu giả mạo như `habit-mastery.com.evil.net`).
+- ⚠️ **Bài học**: mỗi lần gắn tên miền mới phải rà lại toàn bộ chỗ hard-code origin/URL, không chỉ đổi DNS.
+
+**Còn phải làm**:
+1. Chủ dự án: đăng ký **Payoneer** → điền `Payoneer Email` vào Payout Settings; chọn `Account Type` là cá nhân (không phải Company).
+2. Chủ dự án: nộp **Business + Identity verification** (CCCD gắn chip, KHÔNG dùng hộ chiếu — từ 01/01/2026 ngân hàng VN ngừng phục vụ khách dùng hộ chiếu làm giấy tờ định danh).
+3. Chủ dự án: nộp **domain approval** (giờ đã đủ điều kiện vì có 3 trang pháp lý). Cân nhắc mua tên miền riêng thay cho `.web.app` để đỡ bị đẩy sang duyệt tay.
+4. Bật **Google Pay** trong Checkout → Payment methods (đang tắt, mất khách Android/Chrome). Cân nhắc bật WeChat Pay vì app có sẵn giao diện tiếng Trung. Chuyển dashboard sang tiếng Anh — bản dịch tiếng Việt của Paddle dịch sai tên riêng ("iDEAL"→"lý tưởng", "Pix"→"Ảnh", "MB WAY"→"Đường MB").
+5. Code: `api/create-checkout.js`, `api/paddle-webhook.js` (gọi `grantPremium`), bảng giá USD, dịch modal thanh toán sang en/zh (hiện **hardcode 100% tiếng Việt**, không có key i18n nào).
 
 ---
 

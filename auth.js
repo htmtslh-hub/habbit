@@ -701,7 +701,7 @@ function initGoogle(){
             console.log('[Electron Auth] Falling back to system browser gateway...');
             showElectronWaiting();
             const port = window.location.port || '17532';
-            const webAuthUrl = `https://habitmastery.web.app/auth.html?mode=desktop&port=${port}`;
+            const webAuthUrl = `https://habit-mastery.com/auth.html?mode=desktop&port=${port}`;
             
             if (window.electronAPI && window.electronAPI.openExternal) {
                 window.electronAPI.openExternal(webAuthUrl);

@@ -61,7 +61,12 @@
           "assets/**",
           "manifest.json",
           "404.html",
-          "sw.js"
+          "sw.js",
+          "terms.html",
+          "privacy.html",
+          "refund.html",
+          "legal.css",
+          "legal.js"
         ]
       }
     ],

@@ -49,13 +49,13 @@ function generateOTP() {
   return crypto.randomInt(100000, 1000000).toString();
 }
 
+const { applyCors } = require("./_lib/cors");
+
 module.exports = async function handler(req, res) {
-  // CORS with origin restriction
-  const origin = req.headers.origin;
-  const allowed = !origin || origin.endsWith(".web.app") || origin.endsWith(".vercel.app") || origin.includes("localhost");
-  res.setHeader("Access-Control-Allow-Origin", allowed ? (origin || "https://habitmastery.web.app") : "https://habitmastery.web.app");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  // CORS — danh sách origin khai báo tập trung ở _lib/cors.js.
+  // Trước đây mỗi file tự dò bằng .endsWith(".web.app") nên tên miền
+  // riêng habit-mastery.com bị chặn, làm hỏng OTP trên tên miền chính.
+  applyCors(req, res);
 
   if (req.method === "OPTIONS") return res.status(204).end();
   if (req.method !== "POST") {

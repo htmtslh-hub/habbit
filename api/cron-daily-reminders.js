@@ -19,7 +19,7 @@ const { getEffectivePlan, getTrialDaysLeft, getVietnamDateParts, hasCheckedInTod
 const { FieldValue } = require("firebase-admin/firestore");
 
 const CHUNK_SIZE = 6;
-const APP_URL = "https://habitmastery.web.app";
+const APP_URL = "https://habit-mastery.com";
 
 function chunk(arr, size) {
   const out = [];
