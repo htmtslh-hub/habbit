@@ -765,7 +765,7 @@ function initUserSelectionSystem() {
         bulkUpgradeBtn.onclick = async () => {
             if (selectedUserUids.size === 0) return;
             const count = selectedUserUids.size;
-            if (!confirm(`Xác nhận nâng cấp gói 👑 PREMIUM (1 Năm) cho ${count} user đã chọn?`)) return;
+            if (!await hmConfirm(`Xác nhận nâng cấp gói 👑 PREMIUM (1 Năm) cho ${count} user đã chọn?`)) return;
 
             try {
                 const batch = db.batch();
@@ -796,7 +796,7 @@ function initUserSelectionSystem() {
         bulkTrialBtn.onclick = async () => {
             if (selectedUserUids.size === 0) return;
             const count = selectedUserUids.size;
-            if (!confirm(`Gia hạn thêm 14 ngày dùng thử (Trial) cho ${count} user đã chọn?`)) return;
+            if (!await hmConfirm(`Gia hạn thêm 14 ngày dùng thử (Trial) cho ${count} user đã chọn?`)) return;
 
             try {
                 const batch = db.batch();
@@ -824,7 +824,7 @@ function initUserSelectionSystem() {
         bulkGiftDPBtn.onclick = async () => {
             if (selectedUserUids.size === 0) return;
             const count = selectedUserUids.size;
-            const val = prompt(`Nhập số điểm Tu Vi DP muốn tặng cho ${count} user đã chọn:`, "100");
+            const val = await hmPrompt(`Nhập số điểm Tu Vi DP muốn tặng cho ${count} user đã chọn:`, "100");
             if (!val) return;
             const amount = parseInt(val);
             if (isNaN(amount) || amount <= 0) {
@@ -965,7 +965,7 @@ function initUserSelectionSystem() {
         bulkDisableBtn.onclick = async () => {
             if (selectedUserUids.size === 0) return;
             const count = selectedUserUids.size;
-            if (!confirm(`Xác nhận KHÓA tài khoản của ${count} user đã chọn?`)) return;
+            if (!await hmConfirm(`Xác nhận KHÓA tài khoản của ${count} user đã chọn?`)) return;
             try {
                 const batch = db.batch();
                 selectedUserUids.forEach(uid => {
@@ -985,7 +985,7 @@ function initUserSelectionSystem() {
         bulkEnableBtn.onclick = async () => {
             if (selectedUserUids.size === 0) return;
             const count = selectedUserUids.size;
-            if (!confirm(`Xác nhận MỞ KHÓA tài khoản cho ${count} user đã chọn?`)) return;
+            if (!await hmConfirm(`Xác nhận MỞ KHÓA tài khoản cho ${count} user đã chọn?`)) return;
             try {
                 const batch = db.batch();
                 selectedUserUids.forEach(uid => {
@@ -1039,7 +1039,7 @@ function initUserSelectionSystem() {
         bulkDeleteBtn.onclick = async () => {
             if (selectedUserUids.size === 0) return;
             const count = selectedUserUids.size;
-            const promptVal = prompt(`⚠️ CẢNH BÁO NGUY HIỂM:\nBạn sắp XÓA VĨNH VIỄN ${count} tài khoản đã chọn khỏi hệ thống.\nNhập "XÓA HẾT" để xác nhận:`);
+            const promptVal = await hmPrompt(`⚠️ CẢNH BÁO NGUY HIỂM:\nBạn sắp XÓA VĨNH VIỄN ${count} tài khoản đã chọn khỏi hệ thống.\nNhập "XÓA HẾT" để xác nhận:`);
             if (promptVal !== 'XÓA HẾT') {
                 alert('Hủy thao tác xóa hàng loạt.');
                 return;
@@ -1106,7 +1106,7 @@ function initModal(){
         if(!user) return;
         
         const newState = !user.disabled;
-        const confirm2 = confirm(newState ? 'Vô hiệu hóa tài khoản này?' : 'Kích hoạt lại tài khoản này?');
+        const confirm2 = await hmConfirm(newState ? 'Vô hiệu hóa tài khoản này?' : 'Kích hoạt lại tài khoản này?');
         if(!confirm2) return;
 
         try {
@@ -1286,7 +1286,7 @@ window._adminOpenEmailFromModal = () => {
 };
 
 window._adminQuickUpgrade = async (uid) => {
-    if(!confirm('Nâng cấp user này lên Premium?')) return;
+    if(!await hmConfirm('Nâng cấp user này lên Premium?')) return;
     try {
         await db.collection('users').doc(uid).update({
             plan: 'premium',
@@ -1301,7 +1301,7 @@ window._adminQuickUpgrade = async (uid) => {
 };
 
 window._adminApprovePending = async (uid) => {
-    if(!confirm('Duyệt yêu cầu Premium cho user này?')) return;
+    if(!await hmConfirm('Duyệt yêu cầu Premium cho user này?')) return;
     try {
         await db.collection('users').doc(uid).update({
             plan: 'premium',
@@ -1317,7 +1317,7 @@ window._adminApprovePending = async (uid) => {
 };
 
 window._adminRejectPending = async (uid) => {
-    if(!confirm('Từ chối yêu cầu này?')) return;
+    if(!await hmConfirm('Từ chối yêu cầu này?')) return;
     try {
         await db.collection('users').doc(uid).update({
             upgradeRequested: false,
@@ -1556,7 +1556,7 @@ async function loadAdminQuests() {
 }
 
 window._deactivateQuest = async (questId) => {
-    if (!confirm('Đóng nhiệm vụ này?')) return;
+    if (!await hmConfirm('Đóng nhiệm vụ này?')) return;
     try {
         await db.collection('surprise_quests').doc(questId).update({ status: 'closed' });
         loadAdminQuests();
@@ -2179,7 +2179,7 @@ window._adminSendPresetMessage = function(text) {
 
 window._adminChatQuickVIP = async function() {
     if (!activeAdminTargetUid) return;
-    if (!confirm('Nâng cấp gói Premium (1 Năm) cho người dùng này?')) return;
+    if (!await hmConfirm('Nâng cấp gói Premium (1 Năm) cho người dùng này?')) return;
     try {
         const expires = new Date();
         expires.setDate(expires.getDate() + 365);
@@ -2874,8 +2874,8 @@ function initEmailManagement() {
 
     // Form Reset
     if (btnResetEmailForm) {
-        btnResetEmailForm.onclick = () => {
-            if (confirm('Bạn có chắc chắn muốn làm mới và xóa nội dung soạn thảo hiện tại?')) {
+        btnResetEmailForm.onclick = async () => {
+            if (await hmConfirm('Bạn có chắc chắn muốn làm mới và xóa nội dung soạn thảo hiện tại?')) {
                 applyTemplate('custom');
                 if (emailSendStatusBox) emailSendStatusBox.style.display = 'none';
             }
@@ -3012,7 +3012,7 @@ function initEmailManagement() {
                 `• Người gửi: ${resendConfig.fromName} <${resendConfig.fromEmail}>\n\n` +
                 `Bạn có chắc chắn muốn phát lệnh gửi hàng loạt ngay bây giờ?`;
 
-            if (!confirm(confirmMsg)) return;
+            if (!await hmConfirm(confirmMsg)) return;
         }
 
         const activeBtn = isTestOnly ? btnSendTestEmail : btnSubmitSendEmail;

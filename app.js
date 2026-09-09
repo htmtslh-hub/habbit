@@ -1776,9 +1776,9 @@ function openEditModal(id){
     const delBtn = $('#mDeleteHabit');
     if(delBtn){
         delBtn.style.display = 'inline-flex';
-        delBtn.onclick = (e) => {
+        delBtn.onclick = async (e) => {
             e.stopPropagation();
-            if(confirm(`Bạn có chắc chắn muốn xóa thói quen "${h.emoji} ${h.name}" không?\n\n(Thao tác này sẽ xóa dữ liệu thói quen và giải phóng vị trí để bạn có thể thêm thói quen mới)`)){
+            if(await hmConfirm(`Bạn có chắc chắn muốn xóa thói quen "${h.emoji} ${h.name}" không?\n\n(Thao tác này sẽ xóa dữ liệu thói quen và giải phóng vị trí để bạn có thể thêm thói quen mới)`)){
                 S.h = S.h.filter(x => x.id !== id);
                 sv();
                 bg.classList.remove('show');
@@ -2231,9 +2231,9 @@ function initSleep(){
 
 function initModal(){
     const bg=$('#modalBg');
-    $('#btnAdd').onclick=()=>{
+    $('#btnAdd').onclick=async ()=>{
         if(!canAddHabit()){
-            if(confirm(`🌱 Tài khoản của bạn đang ở gói Free (giới hạn tối đa 3 thói quen).\n\nBạn có muốn XÓA bớt thói quen cũ để thêm thói quen mới không?\n\n- Bấm "OK": Để xem danh sách và xóa bớt thói quen cũ.\n- Bấm "Hủy": Để nâng cấp Pro hoặc Premium sử dụng không giới hạn.`)){
+            if(await hmConfirm(`🌱 Tài khoản của bạn đang ở gói Free (giới hạn tối đa 3 thói quen).\n\nBạn có muốn XÓA bớt thói quen cũ để thêm thói quen mới không?\n\n- Bấm "OK": Để xem danh sách và xóa bớt thói quen cũ.\n- Bấm "Hủy": Để nâng cấp Pro hoặc Premium sử dụng không giới hạn.`)){
                 return;
             }
             openUpgradeModal();
@@ -4084,7 +4084,7 @@ window._submitComment = async function(postId) {
 };
 
 window._deleteComment = async function(postId, commentId) {
-    if (!confirm('Bạn có chắc chắn muốn xóa bình luận này?')) return;
+    if (!await hmConfirm('Bạn có chắc chắn muốn xóa bình luận này?')) return;
     try {
         const postRef = db.collection('community_posts').doc(postId);
         const postDoc = await postRef.get();
@@ -4246,7 +4246,7 @@ window._likeCmPost = async (postId) => {
 };
 
 window._deleteCmPost = async (postId) => {
-    if (!confirm('Bạn có chắc chắn muốn xóa bài viết này?')) return;
+    if (!await hmConfirm('Bạn có chắc chắn muốn xóa bài viết này?')) return;
     try {
         await db.collection('community_posts').doc(postId).delete();
         renderCommunity(true);
@@ -5679,7 +5679,7 @@ function initProfileModal() {
             { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: 'Tải ảnh từ máy', desc: 'Chọn tệp hình ảnh', action: () => { const fileInput = document.getElementById('avatarFileInput'); if (fileInput) fileInput.click(); } },
             { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: 'Chọn khung Rank', desc: 'Đổi khung cấp bậc', action: () => { openAvatarStudio(); } },
             { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Xóa ảnh đại diện', desc: 'Về avatar mặc định', danger: true, action: async () => {
-                if (!confirm('Bạn có chắc muốn xóa ảnh đại diện?')) return;
+                if (!await hmConfirm('Bạn có chắc muốn xóa ảnh đại diện?')) return;
                 await saveUserAvatar('');
             }},
         ]);
@@ -5816,8 +5816,8 @@ function initProfileModal() {
                 closeOrbitalPopup();
                 if (window._openUpgrade) window._openUpgrade();
             }},
-            { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Đăng xuất', danger: true, action: () => {
-                if (confirm('Bạn có chắc chắn muốn đăng xuất tài khoản không?')) {
+            { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Đăng xuất', danger: true, action: async () => {
+                if (await hmConfirm('Bạn có chắc chắn muốn đăng xuất tài khoản không?')) {
                     performSignOut();
                 }
             }},
@@ -5827,8 +5827,8 @@ function initProfileModal() {
     // Profile Logout Handler (keep existing button in settings panel)
     const profileLogoutBtn = document.getElementById('profileLogoutBtn');
     if (profileLogoutBtn) {
-        profileLogoutBtn.onclick = () => {
-            if (confirm('Bạn có chắc chắn muốn đăng xuất tài khoản không?')) {
+        profileLogoutBtn.onclick = async () => {
+            if (await hmConfirm('Bạn có chắc chắn muốn đăng xuất tài khoản không?')) {
                 performSignOut();
             }
         };
@@ -6214,7 +6214,7 @@ function openAvatarStudio() {
         const removeBtn = body.querySelector('#ocpAvRemoveBtn');
         if (removeBtn) {
             removeBtn.onclick = async () => {
-                if (!confirm('Bạn có chắc muốn xóa ảnh đại diện về mặc định?')) return;
+                if (!await hmConfirm('Bạn có chắc muốn xóa ảnh đại diện về mặc định?')) return;
                 await saveUserAvatar('');
                 closeOrbitalContentPopup();
             };
@@ -6438,7 +6438,7 @@ async function buyStreakFreeze(cost = 200) {
         return;
     }
 
-    if (!confirm(`Xác nhận dùng ${cost} DP để mua 1 Bình Đóng Băng Chuỗi?`)) return;
+    if (!await hmConfirm(`Xác nhận dùng ${cost} DP để mua 1 Bình Đóng Băng Chuỗi?`)) return;
 
     if (!isAdmin) {
         userBonusDP = (userBonusDP || 0) - cost;
@@ -6489,7 +6489,7 @@ async function repairStreakWithDP(cost = 150) {
         return;
     }
 
-    if (!confirm(`Xác nhận dùng ${cost} DP để Hồi sinh chuỗi ngày ${targetDate}?`)) return;
+    if (!await hmConfirm(`Xác nhận dùng ${cost} DP để Hồi sinh chuỗi ngày ${targetDate}?`)) return;
 
     if (!isAdmin) {
         userBonusDP = (userBonusDP || 0) - cost;
@@ -7188,7 +7188,7 @@ async function buyShopItem(type, itemId, cost) {
             return;
         }
 
-        if (!confirm(`Xác nhận dùng ${cost.toLocaleString()} Coins để mở khóa / mua vật phẩm này?`)) return;
+        if (!await hmConfirm(`Xác nhận dùng ${cost.toLocaleString()} Coins để mở khóa / mua vật phẩm này?`)) return;
 
         if (!isAdmin) {
             userBonusDP = (userBonusDP || 0) - cost;
@@ -8856,7 +8856,7 @@ async function joinSquadByCode(directCode = null) {
 window._joinSquadByCode = joinSquadByCode;
 
 async function leaveSquad() {
-    if (!confirm('Bạn có chắc chắn muốn rời tổ đội này?')) return;
+    if (!await hmConfirm('Bạn có chắc chắn muốn rời tổ đội này?')) return;
     if (!S.squadId || !currentUser) { S.squadId = ''; sv(); renderSquadHubUI('squads'); return; }
 
     try {
@@ -8933,10 +8933,10 @@ function copySquadInviteToClipboard(inviteUrl, code) {
             document.body.appendChild(toast);
             setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3500);
         }).catch(() => {
-            prompt('Sao chép đường link mời này gửi cho bạn bè:', inviteUrl);
+            hmPrompt('Sao chép đường link mời này gửi cho bạn bè:', inviteUrl);
         });
     } else {
-        prompt('Sao chép đường link mời này gửi cho bạn bè:', inviteUrl);
+        hmPrompt('Sao chép đường link mời này gửi cho bạn bè:', inviteUrl);
     }
 }
 
@@ -8953,7 +8953,7 @@ async function createDuel() {
         return;
     }
 
-    if (!confirm(`Xác nhận đặt cược ${cost} DP vào Hũ thưởng để tạo phòng thách đấu 7 ngày?`)) return;
+    if (!await hmConfirm(`Xác nhận đặt cược ${cost} DP vào Hũ thưởng để tạo phòng thách đấu 7 ngày?`)) return;
 
     if (!isAdmin) {
         userBonusDP = (userBonusDP || 0) - cost;
@@ -9009,7 +9009,7 @@ async function acceptDuel(duelId, cost) {
         return;
     }
 
-    if (!confirm(`Xác nhận đặt cược ${cost} DP để tham gia trận đấu 1v1 7 ngày?`)) return;
+    if (!await hmConfirm(`Xác nhận đặt cược ${cost} DP để tham gia trận đấu 1v1 7 ngày?`)) return;
 
     if (!isAdmin) {
         userBonusDP = (userBonusDP || 0) - cost;
@@ -9053,7 +9053,7 @@ async function acceptDuel(duelId, cost) {
 window._acceptDuel = acceptDuel;
 
 async function cancelDuel(duelId, cost) {
-    if (!confirm(`Xác nhận hủy thách đấu và nhận lại ${cost} DP?`)) return;
+    if (!await hmConfirm(`Xác nhận hủy thách đấu và nhận lại ${cost} DP?`)) return;
     try {
         await db.collection('duels').doc(duelId).delete();
     } catch(e) {}

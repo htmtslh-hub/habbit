@@ -62,6 +62,7 @@
           "manifest.json",
           "404.html",
           "sw.js",
+          "hm-dialog.js",
           "terms.html",
           "privacy.html",
           "refund.html",
