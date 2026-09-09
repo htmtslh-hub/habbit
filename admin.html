@@ -11,22 +11,6 @@
     <link rel="alternate icon" href="./icon-192.png">
     <link rel="stylesheet" href="admin.css?v=5.11.1">
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCctQ_86VvAlZPTQDQPyGeYjV9zMHLv_Sc",
-            authDomain: "sonnhai-2600f.firebaseapp.com",
-            projectId: "sonnhai-2600f",
-            storageBucket: "sonnhai-2600f.firebasestorage.app",
-            messagingSenderId: "907935883175",
-            appId: "1:907935883175:web:0f356a63e28a45a196a082",
-            measurementId: "G-JXP5V9W6GN"
-        };
-        firebase.initializeApp(firebaseConfig);
-    </script>
 </head>
 <body>
     <!-- RUNE ICON SPRITE (Bộ Icon Thần Thoại) -->
@@ -1007,6 +991,28 @@
     </div>
 
     <script src="gotiengviet.js?v=5.8.0"></script>
+        <!-- Firebase SDK — ĐẶT Ở CUỐI BODY CÓ CHỦ Ý.
+         Trước đây nằm trong <head> không kèm defer, nên trình duyệt
+         phải tải xong 147 KB SDK mới vẽ được trang. Chuyển xuống đây
+         thì HTML hiện trước. KHÔNG dùng defer vì các script bên dưới
+         không defer sẽ chạy trước, làm app.js gọi firebase khi SDK
+         chưa nạp xong. -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCctQ_86VvAlZPTQDQPyGeYjV9zMHLv_Sc",
+            authDomain: "sonnhai-2600f.firebaseapp.com",
+            projectId: "sonnhai-2600f",
+            storageBucket: "sonnhai-2600f.firebasestorage.app",
+            messagingSenderId: "907935883175",
+            appId: "1:907935883175:web:0f356a63e28a45a196a082",
+            measurementId: "G-JXP5V9W6GN"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
     <script src="hm-dialog.js?v=5.12.2"></script>
     <script src="admin.js?v=5.12.2"></script>
 </body>

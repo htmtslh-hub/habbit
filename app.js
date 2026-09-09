@@ -7615,6 +7615,37 @@ let currentReadingPageIdx = 0;
 let docReaderFontSize = parseInt(localStorage.getItem('hg_doc_font_size') || '100', 10);
 let docReaderTheme = 'sepia'; // [v5.10.3] Chỉ còn 1 giao diện đọc duy nhất (Sepia "trang sách cổ điển") theo yêu cầu người dùng — bỏ Dark/Light/OLED.
 
+// Kho nội dung 14 quyển sách nặng 1,35 MB sau khi nén (7,3 MB gốc) —
+// chiếm 82% toàn bộ lượng tải của ứng dụng, trong khi CHỈ được dùng đúng
+// một chỗ: getDocData() bên dưới, tức là chỉ khi người dùng mở sách ra đọc.
+//
+// Trước đây nó là thẻ <script> tĩnh trong index.html, đứng ngay trước
+// app.js, nên mọi người dùng đều phải tải xong toàn văn 14 quyển thì ứng
+// dụng mới khởi động được — kể cả người chỉ vào điểm danh rồi thoát.
+//
+// Nay nạp theo yêu cầu. Nhờ header cache 1 năm + service worker
+// cache-first nên mỗi người chỉ tải đúng một lần duy nhất.
+let _allBooksPromise = null;
+
+function ensureBooksLoaded() {
+    if (window.ALL_BOOKS_DATA) return Promise.resolve();
+    if (_allBooksPromise) return _allBooksPromise;
+
+    _allBooksPromise = new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'all_books_data.js?v=5.9.6';
+        s.async = true;
+        s.onload = () => resolve();
+        s.onerror = () => {
+            // Xoá promise đã hỏng để lần mở sách sau còn thử lại được.
+            _allBooksPromise = null;
+            reject(new Error('Không tải được kho sách'));
+        };
+        document.head.appendChild(s);
+    });
+    return _allBooksPromise;
+}
+
 function getDocData(docId) {
     if (typeof window !== 'undefined' && window.ALL_BOOKS_DATA && window.ALL_BOOKS_DATA[docId]) {
         return window.ALL_BOOKS_DATA[docId];
@@ -7663,7 +7694,7 @@ function getDocReadingPages(docData) {
     return pages;
 }
 
-function openDocReader(docId, targetChapterIdx = null, targetSecId = null) {
+async function openDocReader(docId, targetChapterIdx = null, targetSecId = null) {
     currentReadingDocId = docId;
     const docObj = (SHOP_CATALOG.docs || []).find(d => d.id === docId);
     if (!docObj) return;
@@ -7697,6 +7728,39 @@ function openDocReader(docId, targetChapterIdx = null, targetSecId = null) {
     modalEl.style.fontSize = `${docReaderFontSize}%`;
     const labelEl = document.getElementById('drFontSizeLabel');
     if (labelEl) labelEl.textContent = `${docReaderFontSize}%`;
+
+    // Lần đầu mở sách trong phiên: kho nội dung chưa có, phải nạp. Hiện
+    // modal kèm trạng thái đang tải NGAY để người dùng thấy phản hồi,
+    // thay vì tưởng bấm hụt rồi bấm lại nhiều lần.
+    if (!window.ALL_BOOKS_DATA) {
+        const loadingEl = document.getElementById('docReaderBody');
+        if (loadingEl) {
+            loadingEl.innerHTML = `
+                <div class="dr-placeholder-wrap" style="text-align:center; padding:56px 20px;">
+                    <div style="font-size:46px; margin-bottom:14px;">${docObj.icon}</div>
+                    <h2>${docObj.name}</h2>
+                    <p style="color:var(--text-muted); margin-top:10px;">Đang mở sách…</p>
+                </div>`;
+        }
+        modal.classList.add('show');
+
+        try {
+            await ensureBooksLoaded();
+        } catch (err) {
+            if (loadingEl) {
+                loadingEl.innerHTML = `
+                    <div class="dr-placeholder-wrap" style="text-align:center; padding:56px 20px;">
+                        <div style="font-size:46px; margin-bottom:14px;">📡</div>
+                        <h2>Không tải được nội dung sách</h2>
+                        <p style="color:var(--text-muted); margin-top:10px;">Vui lòng kiểm tra kết nối mạng rồi mở lại.</p>
+                    </div>`;
+            }
+            return;
+        }
+
+        // Người dùng có thể đã đóng sách hoặc mở quyển khác trong lúc chờ.
+        if (currentReadingDocId !== docId) return;
+    }
 
     const docData = getDocData(docId);
 

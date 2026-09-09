@@ -1,44 +1,45 @@
 // ===== HABIT MASTERY - SERVICE WORKER =====
-// Change CACHE_VERSION when deploying updates
-const CACHE_VERSION = '5.12.2';
+// Đổi CACHE_VERSION mỗi khi deploy để buộc trình duyệt lấy bản mới.
+const CACHE_VERSION = '5.12.3';
 const CACHE_NAME = `habit-game-v${CACHE_VERSION}`;
 
+// ===== PRECACHE: CHỈ phần vỏ ứng dụng =====
+//
+// [v5.12.3] Danh sách này trước đây liệt kê cả app.js, style.css,
+// all_books_data.js... — tức là mỗi lần cài Service Worker, trình duyệt
+// tải lại TOÀN BỘ các file đó MỘT LẦN NỮA ở dạng URL không có ?v=.
+// Đo thực tế: trang tải 1,66 MB, SW tải thêm 1,73 MB => lần đầu vào app
+// mất ~3,39 MB cho cùng một bộ file.
+//
+// Nay chỉ precache phần vỏ (nhẹ, cần cho offline). Các file js/css thật
+// đều được yêu cầu kèm ?v= và sẽ tự vào cache ở lần dùng đầu tiên theo
+// chiến lược cache-first bên dưới — không tốn thêm lần tải nào.
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
   '/auth.html',
-  '/admin.html',
-  '/style.css',
-  '/app.js',
-  '/auth.css',
-  '/auth.js',
-  '/admin.css',
-  '/admin.js',
-  '/i18n.js',
-  '/hm-dialog.js',
-  '/gotiengviet.js',
-  '/nameplate_templates.js',
-  '/avatar_frames.js',
-  '/book_covers.js',
-  '/doc_nhan_tinh_data.js',
-  '/all_books_data.js',
   '/icon-192.png',
   '/icon-512.png',
-  '/zalo-qr.png',
   '/manifest.json'
 ];
 
-// ===== INSTALL: Cache core assets and skip waiting =====
+// ===== INSTALL =====
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      // Dùng addAll thì chỉ cần 1 file lỗi là hỏng cả lần cài. Thêm từng
+      // file riêng để một file thiếu không chặn Service Worker khởi động.
+      return Promise.all(
+        ASSETS_TO_CACHE.map(url =>
+          cache.add(url).catch(err => console.warn('[SW] Bỏ qua', url, err.message))
+        )
+      );
     })
   );
 });
 
-// ===== ACTIVATE: Clean old caches =====
+// ===== ACTIVATE: dọn cache cũ =====
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
@@ -49,7 +50,6 @@ self.addEventListener('activate', event => {
   );
   self.clients.claim();
 
-  // Notify all clients that the update is now active
   self.clients.matchAll().then(clients => {
     clients.forEach(client => {
       client.postMessage({ type: 'SW_UPDATED', version: CACHE_VERSION });
@@ -57,18 +57,18 @@ self.addEventListener('activate', event => {
   });
 });
 
-// ===== MESSAGE: Handle skip-waiting from client =====
+// ===== MESSAGE =====
 self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
 });
 
-// ===== FETCH: Network-first for app, cache-first for fonts =====
+// ===== FETCH =====
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  // Skip non-GET and external API requests
+  // Bỏ qua request không phải GET và các API bên ngoài
   if (event.request.method !== 'GET') return;
   if (url.pathname.startsWith('/downloads/') || url.pathname.endsWith('.exe')) return;
   if (url.hostname.includes('googleapis.com') && !url.hostname.includes('fonts')) return;
@@ -81,26 +81,54 @@ self.addEventListener('fetch', event => {
 
   // Google Fonts: cache-first
   if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
-    event.respondWith(
-      caches.match(event.request).then(cached => {
-        return cached || fetch(event.request).then(resp => {
-          const clone = resp.clone();
-          caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
-          return resp;
-        });
-      })
-    );
+    event.respondWith(cacheFirst(event.request));
     return;
   }
 
-  // App assets: network-first with cache fallback
+  // ----- js/css CÓ ĐÁNH SỐ PHIÊN BẢN: cache-first -----
+  //
+  // [v5.12.3] Trước đây MỌI thứ đều network-first, nghĩa là lần mở app
+  // nào cũng phải chờ mạng trả lời rồi mới hiện được — cache chỉ có tác
+  // dụng khi mất mạng, không hề làm app nhanh hơn.
+  //
+  // Với file mang ?v= thì cache-first là an toàn tuyệt đối: sửa file là
+  // phải nâng ?v=, mà đổi ?v= thì URL khác đi nên thành một mục cache
+  // khác hẳn — không có đường nào phục vụ nhầm bản cũ.
+  const isVersionedAsset =
+    /\.(js|css)$/i.test(url.pathname) &&
+    /(^|[?&])v=/.test(url.search) &&
+    url.origin === self.location.origin;
+
+  if (isVersionedAsset) {
+    event.respondWith(cacheFirst(event.request));
+    return;
+  }
+
+  // ----- Còn lại (HTML, ảnh, sw.js...): network-first -----
+  // HTML phải ưu tiên mạng để bản deploy mới tới được người dùng ngay.
   event.respondWith(
     fetch(event.request)
       .then(resp => {
-        const clone = resp.clone();
-        caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
+        if (resp && resp.ok) {
+          const clone = resp.clone();
+          caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
+        }
         return resp;
       })
       .catch(() => caches.match(event.request))
   );
 });
+
+// Trả ngay từ cache nếu có; chưa có thì lấy mạng rồi lưu lại.
+function cacheFirst(request) {
+  return caches.match(request).then(cached => {
+    if (cached) return cached;
+    return fetch(request).then(resp => {
+      if (resp && resp.ok) {
+        const clone = resp.clone();
+        caches.open(CACHE_NAME).then(c => c.put(request, clone));
+      }
+      return resp;
+    });
+  });
+}
