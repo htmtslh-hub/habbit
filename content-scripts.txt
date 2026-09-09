@@ -1,0 +1,366 @@
+================================================================================
+10 KỊCH BẢN TIKTOK / REELS — HABIT MASTERY
+Soạn ngày: 09/09/2026
+Tài liệu NỘI BỘ — đã loại trừ khỏi deploy trong firebase.json.
+Chiến lược tổng thể xem: content-type.txt
+================================================================================
+
+
+CÁCH DÙNG TÀI LIỆU NÀY
+--------------------------------------------------------------------------------
+  Mỗi kịch bản gồm: MÓC CÂU (2 giây đầu) → CẢNH QUAY → LỜI/CHỮ → CHỐT.
+  Quay dọc 9:16. Điện thoại + phần mềm quay màn hình là đủ, không cần gì thêm.
+
+  BA NGUYÊN TẮC KHÔNG ĐƯỢC QUÊN:
+  1. Hai giây đầu quyết định tất cả. Không chào hỏi, không logo, không
+     "xin chào các bạn". Vào thẳng.
+  2. Hoạt ảnh trong app CHÍNH LÀ quảng cáo. Quay màn hình thật, đừng dựng lại.
+  3. Mỗi video chỉ một ý. Tham hai ý là mất cả hai.
+
+  Thứ tự nên quay: 1 → 5 → 8 → 2 → 6 (mạnh nhất trước, để còn học từ số liệu).
+
+
+================================================================================
+TRỤ 1 — TU LUYỆN KỶ LUẬT  (kịch bản 1-4)
+================================================================================
+
+--------------------------------------------------------------------------------
+KỊCH BẢN 1 — "21 CẢNH GIỚI. BẠN ĐANG Ở ĐÂU?"          ★ QUAY ĐẦU TIÊN
+Thời lượng: 20-25 giây
+--------------------------------------------------------------------------------
+
+  VÌ SAO ĐÂY LÀ SỐ 1:
+  Bậc thang cảnh giới của app KHÔNG bắt đầu bằng thứ đẹp đẽ. Nó bắt đầu
+  bằng: Vô minh → Mê muội → Thỏa hiệp → Sụp đổ → Overthinking.
+  Người xem sẽ tự nhận ra mình ở một trong số đó — và cảm giác "bị nói trúng"
+  là thứ khiến người ta bình luận và chia sẻ. Đây là lợi thế không app nước
+  ngoài nào có.
+
+  MÓC CÂU (0-2s) — chữ to giữa màn hình, đọc luôn:
+      "Đa số người lớn mắc kẹt ở cảnh giới thứ 3."
+
+  CẢNH QUAY:
+      0-2s    Chữ móc câu trên nền tối.
+      2-14s   Quay màn hình cuộn CHẬM qua danh sách 21 cảnh giới trong app.
+              Dừng lại 1 nhịp ở "Thỏa hiệp" và "Overthinking".
+      14-20s  Cuộn nhanh xuống cuối: Tự tại → Siêu thoát → Niết bàn.
+      20-25s  Về màn hình chính, hiện cảnh giới hiện tại của bạn.
+
+  LỜI ĐỌC:
+      "Vô minh. Mê muội. Thỏa hiệp.
+       Ba cảnh giới đầu tiên — và đa số người ta dừng ở đây cả đời.
+       Rồi tới Sụp đổ. Overthinking. Nghe quen không?
+       Phải đi qua hết chỗ đó mới tới được Kỷ luật.
+       Còn đây là nơi con đường kết thúc."
+
+  CHỮ TRÊN MÀN HÌNH (cuối):
+      "Bạn đang ở cảnh giới nào? Trả lời ở bình luận."
+
+  CHỐT: Câu hỏi ở bình luận, KHÔNG chèn link. Video đầu tiên để lấy tương
+        tác, không phải để bán.
+
+
+--------------------------------------------------------------------------------
+KỊCH BẢN 2 — "56 NGÀY KHÔNG BỎ MỘT BUỔI"
+Thời lượng: 15-20 giây
+--------------------------------------------------------------------------------
+
+  MÓC CÂU (0-2s):
+      Quay cận con số chuỗi ngày đang cháy 🔥, chưa nói gì.
+      Chữ: "56 ngày. Không sót một buổi nào."
+
+  CẢNH QUAY:
+      0-3s    Cận cảnh con số chuỗi + ngọn lửa.
+      3-8s    Cuộn qua bản đồ nhiệt cả năm (heatmap) — các ô xanh dày đặc.
+      8-14s   Bấm nút "Khoe thành tích" → thẻ ảnh hiện ra.
+      14-20s  Cận cảnh tấm thẻ: cảnh giới, danh hiệu, số ngày.
+
+  LỜI ĐỌC:
+      "Không phải vì tôi kỷ luật hơn ai.
+       Mà vì mỗi sáng tôi chỉ phải làm đúng một việc: bấm một nút.
+       Và vì bỏ một ngày thì con số này về không —
+       tự nhiên thấy tiếc, thế là làm."
+
+  CHỐT: "Habit Mastery. Miễn phí."
+
+  MẸO: Chờ tới khi chuỗi của bạn đủ dài mới quay. Con số càng lớn càng
+       thuyết phục. 56 mạnh hơn 12 rất nhiều.
+
+
+--------------------------------------------------------------------------------
+KỊCH BẢN 3 — "CHUỖI ĐỨT RỒI THÌ SAO?"
+Thời lượng: 20-25 giây
+--------------------------------------------------------------------------------
+
+  VÌ SAO CẦN VIDEO NÀY:
+  Đây là lý do số một khiến người ta bỏ app theo dõi thói quen. Nói thẳng
+  vào nỗi sợ đó và cho thấy sản phẩm đã nghĩ tới nó.
+
+  MÓC CÂU (0-2s):
+      Màn hình đỏ "Chuỗi đã bị đứt hôm qua".
+      Chữ: "Khoảnh khắc đa số người bỏ cuộc."
+
+  CẢNH QUAY:
+      0-4s    Màn hình báo đứt chuỗi. Im lặng một nhịp cho thấm.
+      4-10s   Mở kho: Bình Đóng Băng, Hồi Sinh Chuỗi.
+      10-16s  Bấm Hồi Sinh → chuỗi 45 ngày quay trở lại.
+      16-22s  Cận cảnh con số đã phục hồi.
+
+  LỜI ĐỌC:
+      "45 ngày. Lỡ một buổi vì đi công tác.
+       Bình thường tới đây là tôi xoá app.
+       Nhưng lỡ một ngày không nên xoá sổ cả tháng.
+       Nên có Bình Đóng Băng — và một lần cứu chuỗi."
+
+  CHỮ CUỐI:
+      "Lỡ một ngày là bình thường. Lỡ hai ngày mới là bỏ cuộc."
+
+  CHỐT: Câu chữ cuối chính là chốt. Không cần thêm.
+
+
+--------------------------------------------------------------------------------
+KỊCH BẢN 4 — "TÔI CÁ 500 COINS VỚI THẰNG BẠN"
+Thời lượng: 20-25 giây
+--------------------------------------------------------------------------------
+
+  MÓC CÂU (0-2s):
+      "Tôi với thằng bạn cá nhau xem đứa nào dậy sớm được 7 ngày."
+
+  CẢNH QUAY:
+      0-3s    Chữ móc câu.
+      3-9s    Màn hình tạo phòng thách đấu, đặt cược.
+      9-16s   Bảng đối đầu: hai bên, số ngày đã điểm danh.
+      16-22s  Kết quả — người thắng ăn cả cược.
+
+  LỜI ĐỌC:
+      "Cá độ bằng điểm trong app, không phải tiền thật.
+       Nhưng lạ lắm — thua thì vẫn cay.
+       Và cái cay đó khiến tôi dậy sớm được 7 ngày liền,
+       cái mà ba tháng trước tôi không làm nổi."
+
+  CHỐT: "Rủ một đứa bạn. Thi xem đứa nào trụ lâu hơn."
+
+  MẸO: Cần một người bạn cùng quay để có cảnh đối đầu thật.
+
+
+================================================================================
+TRỤ 2 — TÂM LÝ HỌC HÀNH VI  (kịch bản 5-7)
+================================================================================
+
+--------------------------------------------------------------------------------
+KỊCH BẢN 5 — "VÌ SAO BẠN BỎ CUỘC VÀO NGÀY THỨ 4"     ★ QUAY THỨ HAI
+Thời lượng: 30-35 giây
+--------------------------------------------------------------------------------
+
+  VÌ SAO MẠNH:
+  Không quảng cáo gì cả, chỉ cho đi kiến thức. Loại video này được lưu lại
+  và chia sẻ nhiều nhất — và người lưu là người sẽ quay lại tìm bạn.
+
+  MÓC CÂU (0-3s):
+      "Ngày 1 hào hứng. Ngày 2 vẫn ổn. Ngày 3 hơi đuối. Ngày 4 — bỏ.
+       Con số 4 không phải ngẫu nhiên."
+
+  CẢNH QUAY:
+      Quay mặt nói thẳng vào máy, hoặc chữ chạy trên nền tối.
+      Chèn 2-3 giây màn hình app ở đoạn nói về giải pháp.
+
+  LỜI ĐỌC:
+      "Có ba lý do, và không lý do nào là 'bạn lười'.
+
+       Một: động lực ngày đầu không phải năng lượng bền. Nó là phản ứng
+       với cái mới. Mà cái mới thì chỉ mới được vài ngày.
+       Sai lầm là lên kế hoạch bằng năng lượng của ngày đầu tiên.
+
+       Hai: bẫy được ăn cả ngã về không. Lỡ một ngày, trong đầu vang lên
+       'hỏng rồi, tuần sau làm lại'. Nhưng 6 trên 7 ngày vẫn tốt hơn 0 trên 7.
+
+       Ba: phần thưởng đến quá muộn. Chạy bộ thì mệt ngay hôm nay, còn khoẻ
+       thì ba tháng nữa. Não bạn làm phép so sánh đó mỗi sáng, và nó chọn
+       cái chăn ấm.
+
+       Cả ba đều không liên quan tới ý chí. Đều là lỗi thiết kế.
+       Mà sửa hệ thống thì dễ hơn sửa bản thân."
+
+  CHỐT: "Bài đầy đủ ở habit-mastery.com/blog"
+
+  LƯU Ý: Bài blog đã có sẵn. Video này chỉ là bản rút gọn.
+
+
+--------------------------------------------------------------------------------
+KỊCH BẢN 6 — "BẪY ĐƯỢC ĂN CẢ NGÃ VỀ KHÔNG"
+Thời lượng: 20-25 giây
+--------------------------------------------------------------------------------
+
+  MÓC CÂU (0-3s):
+      "Thứ giết chết thói quen của bạn không phải sự lười biếng.
+       Mà là sự cầu toàn."
+
+  CẢNH QUAY:
+      Chữ trên nền tối, nhịp chậm. Chèn heatmap ở đoạn cuối.
+
+  LỜI ĐỌC:
+      "Bạn tập được 20 ngày liên tục. Ngày 21 bận, bỏ một buổi.
+       Và bạn nghĩ: 'thôi hỏng rồi, để tháng sau làm lại từ đầu'.
+
+       Để ý xem — chính vì bạn nghiêm túc nên bạn mới bỏ.
+       Người hời hợt thì lỡ một ngày cũng chả sao, hôm sau tập tiếp.
+
+       Quy tắc duy nhất cần nhớ: đừng bao giờ lỡ hai lần liên tiếp.
+       Lỡ một ngày là chuyện bình thường.
+       Lỡ hai ngày mới là bắt đầu một thói quen mới — thói quen bỏ cuộc."
+
+  CHỐT: Không chèn quảng cáo. Video này để xây lòng tin.
+
+
+--------------------------------------------------------------------------------
+KỊCH BẢN 7 — "NGƯỜI NGHÈO TÍNH BẰNG TIỀN, NGƯỜI GIÀU TÍNH BẰNG THỜI GIAN"
+Thời lượng: 25-30 giây
+--------------------------------------------------------------------------------
+
+  NGUỒN: rút từ quyển "Logic Người Nghèo" có sẵn trong app.
+  Loạt bài này có thể kéo dài vô tận — 14 quyển sách là 14 mỏ nội dung.
+
+  MÓC CÂU (0-3s):
+      "Hai người cùng đứng xếp hàng 40 phút để tiết kiệm 50 nghìn."
+
+  LỜI ĐỌC:
+      "Người thứ nhất nghĩ: tiết kiệm được 50 nghìn.
+       Người thứ hai nghĩ: 40 phút của tôi có đáng 50 nghìn không?
+
+       Khác biệt không nằm ở số tiền trong túi.
+       Nó nằm ở đơn vị họ dùng để đo.
+
+       Người đo bằng tiền sẽ luôn đổi thời gian lấy tiền.
+       Người đo bằng thời gian sẽ đổi tiền lấy thời gian.
+       Mà tiền thì kiếm lại được."
+
+  CHỮ CUỐI:
+      "Trích 'Logic Người Nghèo' — một trong 14 quyển trong Habit Mastery."
+
+  MẸO: Làm thành loạt. Mỗi tuần một quy luật. Đánh số "Quy luật #1, #2…"
+       để người xem có lý do quay lại.
+
+
+================================================================================
+TRỤ 3 — LÀM SẢN PHẨM CÔNG KHAI  (kịch bản 8-9)
+================================================================================
+
+--------------------------------------------------------------------------------
+KỊCH BẢN 8 — "MỘT FILE CHIẾM 82% DUNG LƯỢNG APP CỦA TÔI"   ★ QUAY THỨ BA
+Thời lượng: 30-35 giây
+--------------------------------------------------------------------------------
+
+  VÌ SAO ĐÁNG QUAY:
+  Chuyện thật, có số liệu thật, và người làm kỹ thuật rất thích loại này.
+  Nó cũng cho thấy người đứng sau sản phẩm là người thật, làm việc tử tế.
+
+  MÓC CÂU (0-3s):
+      "Người dùng bảo app tôi mở hơi lâu.
+       Tôi đo thử. Và tôi hơi choáng."
+
+  CẢNH QUAY:
+      0-3s    Chữ móc câu.
+      3-12s   Quay màn hình bảng số liệu đo được (dựng lại bằng chữ cũng được).
+      12-22s  Chỉ vào dòng all_books_data.js — 1.355 KB.
+      22-32s  Con số cuối: 3,39 MB → 0,69 MB.
+
+  LỜI ĐỌC:
+      "Một file duy nhất chiếm 82% mọi thứ người dùng phải tải.
+       Nó chứa toàn văn 14 quyển sách trong app.
+
+       Điều tệ hơn: file đó chỉ dùng ở đúng một chỗ — khi người ta mở sách ra đọc.
+       Nghĩa là ai vào chỉ để điểm danh rồi thoát vẫn phải tải đủ 14 quyển.
+
+       Bài học không phải 'file quá to'.
+       Bài học là: một thứ chỉ 5% người dùng cần, nhưng 100% phải trả giá.
+
+       Sửa xong: từ 3,39 megabyte xuống 0,69."
+
+  CHỐT: "Tôi viết lại chi tiết ở habit-mastery.com/blog"
+
+
+--------------------------------------------------------------------------------
+KỊCH BẢN 9 — "TÍNH NĂNG BẢO MẬT CỦA TÔI HỎNG SUỐT MÀ KHÔNG AI BIẾT"
+Thời lượng: 25-30 giây
+--------------------------------------------------------------------------------
+
+  MÓC CÂU (0-3s):
+      "Máy chủ trả về mã 200. Log sạch bong. Không một dòng lỗi.
+       Mà tính năng thì hỏng hoàn toàn."
+
+  LỜI ĐỌC:
+      "Xác thực hai lớp của tôi không hoạt động trên tên miền chính.
+       Không ai báo, vì người dùng chỉ thấy 'không gửi được mã' rồi bỏ đi.
+
+       Nguyên nhân: đoạn kiểm tra tên miền viết theo kiểu 'kết thúc bằng
+       .web.app'. Khi tôi gắn tên miền riêng, nó không khớp mẫu nào,
+       nên trình duyệt âm thầm chặn phản hồi.
+
+       Server vẫn trả 200. Log vẫn sạch. Chỉ có trình duyệt là biết.
+
+       Bài học: log sạch không có nghĩa là không có lỗi.
+       Có những lỗi chỉ hiện ra khi bạn thử đúng cách người dùng thật dùng."
+
+  CHỐT: "Làm sản phẩm một mình. Ghi lại mọi thứ hỏng."
+
+  MẸO: Loại nội dung này hợp Threads hơn TikTok. Đăng cả hai, xem chỗ nào
+       ăn hơn rồi dồn về đó.
+
+
+================================================================================
+TRỤ 4 — BẰNG CHỨNG NGƯỜI DÙNG  (kịch bản 10)
+================================================================================
+
+--------------------------------------------------------------------------------
+KỊCH BẢN 10 — "BẢNG XẾP HẠNG"
+Thời lượng: 15-20 giây
+--------------------------------------------------------------------------------
+
+  ĐỂ DÀNH: chỉ quay khi bảng xếp hạng đã có đủ người và chuỗi đủ dài.
+  Quay lúc còn thưa sẽ phản tác dụng — người xem thấy app vắng.
+
+  MÓC CÂU (0-2s):
+      "Người đứng đầu bảng đã điểm danh 56 ngày liên tiếp."
+
+  CẢNH QUAY:
+      0-3s    Cận cảnh vị trí số 1.
+      3-10s   Cuộn xuống top 10.
+      10-16s  Cắt sang vị trí của bạn, thấp hơn nhiều.
+
+  LỜI ĐỌC:
+      "Tôi làm ra app này. Và tôi đang đứng thứ mười bốn.
+       Có người lạ trên mạng kỷ luật hơn tôi nhiều.
+       Thành thật mà nói thì hơi cay."
+
+  CHỐT: "Vào xem bạn đứng thứ mấy."
+
+  VÌ SAO HIỆU QUẢ: người làm ra sản phẩm mà tự nhận thua — vừa thật thà,
+  vừa khiến người ta muốn thử xem mình xếp đâu.
+
+
+================================================================================
+GHI CHÚ CHUNG
+================================================================================
+
+  ĐĂNG BAO NHIÊU: 3 video/tuần là đủ và bền. Đăng 1 video/ngày rồi tắt sau
+  hai tuần thì tệ hơn nhiều.
+
+  GIỜ ĐĂNG: 20h-22h các ngày trong tuần — trùng lúc người ta nhìn lại một
+  ngày của mình, đúng tâm trạng để nghĩ về kỷ luật.
+
+  ĐO CÁI GÌ: đừng nhìn lượt xem. Nhìn tỉ lệ XEM HẾT và LƯU LẠI. Hai chỉ số
+  đó mới nói video có thật sự chạm hay không.
+
+  ÂM THANH: dùng nhạc đang thịnh hành, để nhỏ. Giọng đọc phải rõ hơn nhạc.
+
+  KHÔNG LÀM:
+  - Không chào hỏi mở đầu.
+  - Không chèn link vào caption ở 3 video đầu (thuật toán ghét).
+    Để link ở tiểu sử trang cá nhân.
+  - Không hứa "thay đổi cuộc đời bạn". Nói đúng thứ sản phẩm làm được.
+
+  BƯỚC TIẾP THEO SAU KHI CÓ SỐ LIỆU:
+  Video nào giữ chân tốt nhất thì quay 3 biến thể của chính nó, đừng vội
+  làm ý tưởng mới.
+
+================================================================================
