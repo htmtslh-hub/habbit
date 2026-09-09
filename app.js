@@ -888,6 +888,194 @@ function getUserTitleBadgeHTML(titleId = null) {
 }
 window.getUserTitleBadgeHTML = getUserTitleBadgeHTML;
 
+// ============================================================
+// MỜI BẠN BÈ
+// Việc thưởng Coins BẮT BUỘC phải qua máy chủ (api/referral.js):
+// firestore.rules chỉ cho ghi vào tài liệu của chính mình, mà thưởng cho
+// người mời là ghi vào tài liệu người khác. Nới rule ra thì ai cũng tự
+// cộng Coins cho mình được.
+// ============================================================
+
+// Giống auth.js: API nằm trên Vercel, không nằm trên Firebase Hosting.
+const HM_API_BASE = window.location.hostname.endsWith('.vercel.app')
+    ? '/api'
+    : 'https://habbit-opal.vercel.app/api';
+
+async function callReferralApi(payload) {
+    if (!currentUser) throw new Error('chưa đăng nhập');
+    const token = await currentUser.getIdToken();
+    const resp = await fetch(`${HM_API_BASE}/referral`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify(payload),
+    });
+    return resp.json();
+}
+
+window._openInviteModal = async function () {
+    if (!currentUser) return;
+
+    let bg = document.getElementById('inviteModalBg');
+    if (!bg) {
+        bg = document.createElement('div');
+        bg.id = 'inviteModalBg';
+        bg.className = 'modal-bg';
+        bg.innerHTML = `<div class="modal-box" style="width:430px;"><div id="inviteModalBody"></div></div>`;
+        document.body.appendChild(bg);
+        bg.onclick = (e) => { if (e.target === bg) bg.classList.remove('show'); };
+    }
+    const body = document.getElementById('inviteModalBody');
+    body.innerHTML = `<div style="text-align:center;padding:26px 0;color:var(--text-muted);">Đang tải…</div>`;
+    bg.classList.add('show');
+
+    let info;
+    try {
+        info = await callReferralApi({ action: 'code' });
+    } catch (e) {
+        body.innerHTML = `<div style="text-align:center;padding:24px 0;">
+            <div style="font-size:38px;">📡</div>
+            <p style="color:var(--text-muted);margin-top:10px;">Không kết nối được máy chủ. Vui lòng thử lại.</p>
+            <button class="btn-pay-next" onclick="document.getElementById('inviteModalBg').classList.remove('show')">Đóng</button>
+        </div>`;
+        return;
+    }
+    if (!info || !info.success) {
+        body.innerHTML = `<div style="text-align:center;padding:24px 0;">
+            <p style="color:var(--text-muted);">${escHtml((info && info.message) || 'Có lỗi xảy ra.')}</p>
+            <button class="btn-pay-next" onclick="document.getElementById('inviteModalBg').classList.remove('show')">Đóng</button>
+        </div>`;
+        return;
+    }
+
+    const link = `https://habit-mastery.com/auth.html?invite=${info.code}`;
+
+    // Ô nhập mã chỉ hiện khi người dùng CHƯA từng nhập — tránh cho bấm
+    // rồi mới báo "đã nhập rồi".
+    const claimBlock = info.alreadyClaimed ? `
+        <div class="inv-note done">✓ Bạn đã nhập mã mời của một người bạn.</div>
+    ` : `
+        <div class="inv-divider"></div>
+        <div class="inv-label">Có mã mời của bạn bè?</div>
+        <div class="inv-claim-row">
+            <input id="invClaimInput" class="inv-input" maxlength="6" placeholder="VD: K7M2QP"
+                   value="${escHtml((() => { try { return localStorage.getItem('hm_pending_invite') || ''; } catch (e) { return ''; } })())}"
+                   oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
+            <button class="inv-btn primary" onclick="window._claimInvite()">Nhận</button>
+        </div>
+        <div class="inv-hint">Cần điểm danh đủ ${info.minCheckins} lượt mới nhận được
+            (bạn đang có ${info.checkins}). Nhận ngay +${info.rewardInvitee} Coins.</div>
+    `;
+
+    body.innerHTML = `
+        <div class="modal-title" style="text-align:center;">🎁 Mời bạn bè</div>
+        <p style="text-align:center;color:var(--text-muted);font-size:13.5px;margin:2px 0 18px;">
+            Bạn bè dùng mã của bạn: bạn nhận <b style="color:var(--accent)">+${info.rewardReferrer}</b> Coins,
+            họ nhận <b style="color:var(--accent)">+${info.rewardInvitee}</b> Coins.
+        </p>
+
+        <div class="inv-label">Mã mời của bạn</div>
+        <div class="inv-code" onclick="window._copyInvite('${info.code}', this)" title="Bấm để chép">${info.code}</div>
+
+        <div class="inv-label" style="margin-top:14px;">Đường dẫn mời</div>
+        <div class="inv-link" onclick="window._copyInvite('${link}', this)" title="Bấm để chép">${escHtml(link)}</div>
+
+        <div class="inv-stats">
+            <div><span>${info.invitedCount}</span>Đã mời</div>
+            <div><span>${info.earnedFromInvites}</span>Coins nhận được</div>
+        </div>
+
+        ${claimBlock}
+
+        <button class="inv-btn ghost" style="width:100%;margin-top:16px;"
+                onclick="document.getElementById('inviteModalBg').classList.remove('show')">Đóng</button>
+    `;
+};
+
+window._copyInvite = async function (text, el) {
+    try {
+        await navigator.clipboard.writeText(text);
+        const old = el.textContent;
+        el.textContent = '✓ Đã chép';
+        setTimeout(() => { el.textContent = old; }, 1400);
+    } catch (e) {
+        hmAlert('Không chép được. Bạn hãy chọn và sao chép thủ công nhé.');
+    }
+};
+
+window._claimInvite = async function () {
+    const input = document.getElementById('invClaimInput');
+    if (!input) return;
+    const code = (input.value || '').trim().toUpperCase();
+    if (code.length !== 6) { hmAlert('Mã mời gồm 6 ký tự.'); return; }
+
+    let r;
+    try {
+        r = await callReferralApi({ action: 'claim', code });
+    } catch (e) {
+        hmAlert('Không kết nối được máy chủ. Vui lòng thử lại.');
+        return;
+    }
+
+    if (!r || !r.success) {
+        hmAlert((r && r.message) || 'Không nhận được mã mời này.');
+        return;
+    }
+
+    // Máy chủ vừa cộng Coins bằng increment — đọc lại từ Firestore thay vì
+    // tự cộng ở client, để con số luôn khớp với máy chủ.
+    try {
+        const snap = await db.collection('users').doc(currentUser.uid).get();
+        if (snap.exists && typeof snap.data().bonusDP === 'number') {
+            userBonusDP = snap.data().bonusDP;
+            if (typeof renderAll === 'function') renderAll();
+        }
+    } catch (e) {}
+
+    document.getElementById('inviteModalBg').classList.remove('show');
+    hmAlert(r.message);
+};
+
+// Gom dữ liệu thành tích rồi giao cho hm-share.js vẽ thẻ ảnh.
+// Tách làm hai phần như vậy để hm-share.js không phải biết gì về cấu
+// trúc dữ liệu của app — nó chỉ nhận vào một object phẳng.
+window._shareMyAchievement = function () {
+    if (typeof window.hmShareAchievement !== 'function') return;
+
+    const computed = (typeof calculateUserDPAndStreak === 'function')
+        ? calculateUserDPAndStreak(S)
+        : { totalDP: 0, currentStreak: 0, maxStreak: 0, totalChecks: 0 };
+
+    const dp = (S && typeof S.dp === 'number')
+        ? S.dp
+        : (computed.totalDP + (typeof userBonusDP !== 'undefined' ? (userBonusDP || 0) : 0));
+
+    const rank = getRankLevel(dp);
+
+    // Danh hiệu đang đeo — lấy tên đã dịch, không lấy id.
+    let titleName = '';
+    const titleId = S && S.inventory && S.inventory.equippedTitle;
+    if (titleId && typeof SHOP_CATALOG !== 'undefined' && Array.isArray(SHOP_CATALOG.titles)) {
+        const tObj = SHOP_CATALOG.titles.find(x => x.id === titleId);
+        if (tObj) {
+            titleName = curLang === 'en' ? (tObj.nameEn || tObj.name)
+                      : curLang === 'zh' ? (tObj.nameZh || tObj.name)
+                      : tObj.name;
+        }
+    }
+
+    window.hmShareAchievement({
+        displayName: (currentUser && (currentUser.displayName || (currentUser.email || '').split('@')[0])) || 'Habit Master',
+        avatarUrl: (typeof getUserAvatar === 'function') ? getUserAvatar(currentUser) : null,
+        realmName: rank.realmName || '',
+        stepName: rank.stepName || '',
+        title: titleName,
+        streak: computed.currentStreak || 0,
+        maxStreak: computed.maxStreak || 0,
+        totalDp: dp,
+        totalChecks: computed.totalChecks || 0,
+    });
+};
+
 window.getCoinIconHTML = function(size = 'sm', extraStyle = '') {
     const sizeMap = {
         xs: '13px',
@@ -5816,6 +6004,11 @@ function initProfileModal() {
                 closeOrbitalPopup();
                 if (window._openUpgrade) window._openUpgrade();
             }},
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: 'Mời bạn bè', desc: 'Cả hai cùng nhận Coins', action: () => {
+                closeOrbitalPopup();
+                if (typeof closeProfile === 'function') closeProfile();
+                if (window._openInviteModal) window._openInviteModal();
+            }},
             { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Đăng xuất', danger: true, action: async () => {
                 if (await hmConfirm('Bạn có chắc chắn muốn đăng xuất tài khoản không?')) {
                     performSignOut();
@@ -6343,6 +6536,13 @@ function renderStreakProtectionUI() {
             </div>
         </div>
         <div style="font-size:12.5px; color:var(--text-muted); margin-top:-6px; text-align:center;">${statusDescText}</div>
+
+        <!-- Khoe thành tích: đặt ngay dưới con số chuỗi ngày, đúng lúc
+             người dùng đang nhìn thành quả của mình. -->
+        <button class="sm-share-btn" onclick="window._shareMyAchievement()">
+            <span>📤</span>
+            <span>${typeof window.hmShareButtonLabel === 'function' ? window.hmShareButtonLabel() : 'Khoe thành tích'}</span>
+        </button>
 
         <!-- FLASKS INVENTORY -->
         <div>

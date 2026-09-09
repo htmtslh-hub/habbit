@@ -5,15 +5,40 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 // ===== API BASE URL =====
-const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:')
-    ? 'https://habbit-opal.vercel.app/api'
-    : '/api';
+// API nằm trên Vercel, KHÔNG nằm trên Firebase Hosting. Firebase Hosting
+// cũng không thể rewrite sang một tên miền ngoài (chỉ trỏ được vào Cloud
+// Functions / Cloud Run), nên đường dẫn tương đối '/api' KHÔNG BAO GIỜ
+// tồn tại trên habit-mastery.com hay habitmastery.web.app.
+//
+// [SỬA 09/09/2026] Điều kiện cũ bị ngược: chỉ dùng URL Vercel khi chạy
+// localhost/file, còn trên tên miền thật lại gọi '/api' -> **404**, tức
+// xác thực 2 lớp OTP hỏng trên web suốt thời gian qua. Đây là lỗi thứ
+// hai của cùng luồng OTP, độc lập với lỗi CORS đã sửa trước đó: request
+// thậm chí chưa bao giờ tới được máy chủ để mà bị CORS chặn.
+//
+// admin.js vốn làm đúng theo hướng này (chỉ dùng '/api' khi CHÍNH TRANG
+// đang chạy trên vercel.app) — nay thống nhất lại cho giống.
+const API_BASE = window.location.hostname.endsWith('.vercel.app')
+    ? '/api'
+    : 'https://habbit-opal.vercel.app/api';
 
 
 // Flag to prevent redirect during OTP credential-check
 let _otpInProgress = false;
 
 // ===== TRAFFIC & REGISTRATION SOURCE TRACKING =====
+// Mã mời bạn bè đi qua tham số ?invite= — CỐ Ý không dùng ?ref= vì tham
+// số đó đã được detectAndSaveTrafficSource() dùng để đo nguồn quảng cáo
+// (tiktok, facebook, kol_...). Dùng chung sẽ làm hỏng cả hai.
+(function captureInviteCode(){
+    try {
+        const c = new URLSearchParams(window.location.search).get('invite');
+        if (c && /^[A-Z0-9]{6}$/i.test(c.trim())) {
+            localStorage.setItem('hm_pending_invite', c.trim().toUpperCase());
+        }
+    } catch (e) {}
+})();
+
 function detectAndSaveTrafficSource(){
     try {
         const urlParams = new URLSearchParams(window.location.search);

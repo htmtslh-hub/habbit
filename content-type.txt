@@ -1,0 +1,172 @@
+================================================================================
+CONTENT TYPE — CHIẾN LƯỢC NỘI DUNG HABIT MASTERY
+Soạn ngày: 09/09/2026
+Tài liệu NỘI BỘ — đã thêm vào danh sách loại trừ trong firebase.json,
+không bị deploy lên web.
+================================================================================
+
+
+--------------------------------------------------------------------------------
+PHẦN 0. SỐ LIỆU NỀN (đo ngày 09/09/2026 — cập nhật lại khi đọc lại)
+--------------------------------------------------------------------------------
+
+  Tổng tài khoản ................ 23   (tài khoản cũ nhất 123 ngày)
+  Đăng ký trong 30 ngày qua ..... 16
+  Hoạt động trong 7 ngày ........ 10/23
+  Hoạt động trong 1 ngày ........ 3/23
+  Chuỗi ngày = 0 ................ 14/22  (64%)
+  Chuỗi >= 7 ngày ............... 3
+  Chuỗi cao nhất ................ 56, 28, 14, 5, 2
+
+  ĐỌC RA GÌ:
+  Nút thắt KHÔNG phải ít người biết, mà là người vào rồi không ở lại.
+  64% có chuỗi bằng 0, trong khi chuỗi ngày là toàn bộ giá trị cốt lõi.
+  Đổ content lên tình trạng này = đổ nước vào xô thủng.
+
+  VIỆC NÊN LÀM TRƯỚC KHI ĐẨY MẠNH CONTENT:
+  Nhắn trực tiếp 5–10 người đã bỏ, hỏi đúng một câu:
+      "Bạn dừng dùng ở bước nào?"
+  Một buổi chiều nhắn tin cho nhiều thông tin hơn ba tháng chạy quảng cáo.
+
+  LƯU Ý: 23 người là mẫu rất nhỏ, một số có thể là tài khoản thử
+  (repo có create_mock_accounts.js). Chuỗi = 0 cũng có thể chỉ là
+  "hôm nay chưa điểm danh". Cần tự xác minh lại.
+
+
+--------------------------------------------------------------------------------
+PHẦN 1. GÓC ĐẶT CƯỢC — THÔNG ĐIỆP CHÍNH
+--------------------------------------------------------------------------------
+
+  ĐỪNG quảng cáo "app theo dõi thói quen".
+  Thị trường đó đã có Habitica, Streaks, Notion — không thắng nổi.
+
+  Habit Mastery có một thứ không app nước ngoài nào có:
+  hệ thống 7 CẤP BẬC TÂM THỨC / 21 CẢNH GIỚI.
+  Đây là ngôn ngữ tu tiên — thứ độc giả Việt Nam cực kỳ quen và có cảm xúc mạnh.
+
+  THÔNG ĐIỆP CHÍNH:
+
+      "Biến việc rèn kỷ luật thành hành trình tu luyện.
+       Mỗi ngày điểm danh là một bước lên cảnh giới."
+
+  Đó là thứ khiến người ta dừng ngón tay lại khi đang lướt.
+
+
+--------------------------------------------------------------------------------
+PHẦN 2. BỐN TRỤ NỘI DUNG
+--------------------------------------------------------------------------------
+
+TRỤ 1 — TU LUYỆN KỶ LUẬT                                        (chủ lực, 40%)
+..............................................................................
+  Quay màn hình: điểm danh -> hiệu ứng -> lên cảnh giới.
+  Hoạt ảnh trong app ĐÃ LÀ quảng cáo. Không cần dựng gì thêm.
+
+  Ví dụ tiêu đề:
+    - "Ngày 56 không bỏ một buổi. Đây là cảnh giới tôi đang ở."
+    - "Tôi đổi 'to-do list' thành 'bảng tu luyện' — lần đầu trụ được 3 tuần."
+    - "Chuỗi 45 ngày bị đứt. Tôi đã dùng Bình Đóng Băng thế nào."
+
+
+TRỤ 2 — TÂM LÝ HỌC HÀNH VI                                              (30%)
+..............................................................................
+  ĐÂY LÀ MỎ VÀNG ĐANG NGỒI LÊN MÀ CHƯA KHAI THÁC.
+  14 quyển sách đã nằm sẵn trong app:
+    Tuyệt Mật Nhân Tính · Thức Tỉnh Nhận Thức · Tình Cảm Bí Tịch
+    Logic Người Nghèo · Hệ Thống Mạnh Mẽ · Tư Duy Cường Giả
+    Xuyên Thấu Nhân Tính · Nhân Tính Đen Trắng · Tư Duy Sâu Sắc
+    Thương Chiến · Mưu Lược Tuổi Trẻ · Ẩn Chứa Huyền Cơ
+    Luật Ngầm Tài Chính · Mưu Lược Tài Chính
+
+  Mỗi bài rút MỘT ý từ sách -> nội dung có chiều sâu, gần như vô tận,
+  và dẫn thẳng về app.
+
+  Ví dụ:
+    - "Vì sao bạn bỏ cuộc vào ngày thứ 4? — Bẫy chi phí chìm."
+    - Loạt bài: "30 ngày, 30 quy luật nhân tính"
+    - "Người nghèo tư duy theo chi phí. Người giàu tư duy theo thời gian."
+
+
+TRỤ 3 — LÀM SẢN PHẨM CÔNG KHAI (build in public)                        (20%)
+..............................................................................
+  Một người Việt tự viết app, tự lo thanh toán quốc tế.
+  Người ta thích theo dõi chuyện này, và nó MIỄN PHÍ.
+
+  Kho chuyện có sẵn (đều là việc thật đã xảy ra):
+    - "App của tôi tải chậm. Tôi tìm ra 1 file chiếm 82% dung lượng."
+      (3,39 MB -> 0,69 MB, giảm 80%)
+    - "Tôi phát hiện xác thực 2 lớp hỏng suốt mà log không báo gì."
+    - "Bản cài desktop của tôi lệch 4 ngày so với web mà không ai biết."
+    - "Firebase Hosting đầy quota, tôi phải xoá 266 bản deploy cũ."
+    - "Vì sao tôi không dùng Stripe: Việt Nam không được nhận."
+
+
+TRỤ 4 — BẰNG CHỨNG TỪ NGƯỜI DÙNG                                        (10%)
+..............................................................................
+  Ảnh chuỗi 56 ngày, bảng xếp hạng, tổ đội thách đấu.
+  Hiện còn ít người -> để dành, đẩy mạnh khi đã có đủ.
+
+
+--------------------------------------------------------------------------------
+PHẦN 3. KÊNH — THỨ TỰ ƯU TIÊN
+--------------------------------------------------------------------------------
+
+  1. TIKTOK / REELS  ......................................... ưu tiên cao nhất
+     Gamification là nội dung NHÌN. Quay màn hình 15 giây là xong.
+     Kênh duy nhất có thể bùng mà không tốn tiền.
+
+  2. NHÓM FACEBOOK  (tự học / freelancer / sinh viên / phát triển bản thân)
+     Đúng tệp, miễn phí.
+     ĐỪNG spam link — đăng bài giá trị từ Trụ 2, để link ở bình luận.
+
+  3. THREADS
+     Đang lên ở Việt Nam, hợp với Trụ 3 (làm sản phẩm công khai).
+
+  4. BLOG TRÊN habit-mastery.com
+     Chậm nhưng bền. Có lợi phụ: website nhiều nội dung thật giúp hồ sơ
+     Paddle trông chính danh hơn khi họ duyệt domain.
+
+  CHƯA CHẠY QUẢNG CÁO TRẢ TIỀN.
+  Với tỉ lệ giữ chân hiện tại, tiền quảng cáo sẽ đổ vào xô thủng.
+  Chờ tới khi tỉ lệ "chuỗi >= 7 ngày" cải thiện rõ rệt.
+
+
+--------------------------------------------------------------------------------
+PHẦN 4. TỆP ĐỐI TƯỢNG
+--------------------------------------------------------------------------------
+
+  Chính:  Người Việt 18–35, quan tâm kỷ luật bản thân / phát triển bản thân.
+  Giao thoa mạnh với:
+    - Độc giả truyện tu tiên, tu luyện  (ngôn ngữ cảnh giới cực kỳ ăn)
+    - Sinh viên, người ôn thi
+    - Freelancer, người làm tự do
+    - Người tập gym, chạy bộ
+    - Nhóm chơi game (ngôn ngữ nhiệm vụ / cấp bậc / vật phẩm quen thuộc)
+
+  Phụ (sau khi xong thanh toán quốc tế): người dùng nói tiếng Anh, tiếng Trung.
+  App đã có sẵn giao diện 3 thứ tiếng.
+
+
+--------------------------------------------------------------------------------
+PHẦN 5. TÍNH NĂNG GIÚP SẢN PHẨM TỰ LAN TRUYỀN
+--------------------------------------------------------------------------------
+
+  Content hiệu quả hơn nhiều nếu bản thân sản phẩm biết tự lan truyền.
+
+  [1] THẺ KHOE THÀNH TÍCH   — biến người dùng có chuỗi dài thành người quảng cáo
+  [2] MÃ MỜI BẠN BÈ         — cả hai bên nhận Coins
+  [3] BLOG TRÊN WEBSITE     — chỗ đăng Trụ 2 và Trụ 3, phục vụ SEO + hồ sơ Paddle
+
+  (Trạng thái triển khai xem PROJECT_STATE.md)
+
+
+--------------------------------------------------------------------------------
+PHẦN 6. NHỮNG ĐIỀU CẦN NHỚ
+--------------------------------------------------------------------------------
+
+  - Bán CẢNH GIỚI, không bán "tính năng theo dõi thói quen".
+  - Hoạt ảnh trong app là tài sản quảng cáo tốt nhất — dùng nó, đừng dựng lại.
+  - 14 quyển sách = nguồn nội dung gần như vô tận, đã trả tiền rồi, chưa dùng.
+  - Giữ chân trước, tăng trưởng sau. Xô thủng thì đổ bao nhiêu cũng hết.
+  - Mỗi bài phải đứng vững một mình, không phụ thuộc việc người đọc đã biết app.
+
+================================================================================
