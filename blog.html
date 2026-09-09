@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Habit Mastery</title>
+<meta name="description" content="Bài viết về kỷ luật bản thân, tâm lý học hành vi và chuyện làm sản phẩm — từ đội ngũ Habit Mastery.">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="legal.css?v=5.12.4">
+<style>
+  .bl-hero { padding: 8px 0 30px; }
+  .bl-hero h1 { font-size: 34px; margin-bottom: 8px; }
+  .bl-hero p { color: var(--lg-muted); font-size: 16px; margin: 0; }
+  .bl-list { display: grid; gap: 16px; }
+  .bl-card {
+      display: block; text-decoration: none; color: inherit;
+      background: var(--lg-card); border: 1px solid var(--lg-border);
+      border-radius: 14px; padding: 22px 24px;
+      transition: border-color .18s ease, transform .18s ease;
+  }
+  .bl-card:hover { border-color: var(--lg-accent); transform: translateY(-2px); }
+  .bl-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+      font-size: 12.5px; color: var(--lg-muted); margin-bottom: 9px; }
+  .bl-tag { background: var(--lg-accent-soft); color: var(--lg-accent);
+      padding: 3px 10px; border-radius: 999px; font-weight: 700; }
+  .bl-card h2 { font-size: 20px; margin: 0 0 8px; border: none; padding: 0; color: var(--lg-heading); }
+  .bl-card p { margin: 0; color: var(--lg-muted); font-size: 15px; line-height: 1.65; }
+  .bl-cta { margin-top: 40px; padding: 26px; text-align: center;
+      border: 1px solid var(--lg-border); border-radius: 14px; background: var(--lg-accent-soft); }
+  .bl-cta a { font-weight: 700; }
+  .bl-empty { color: var(--lg-muted); padding: 30px 0; }
+</style>
+</head>
+<body>
+
+<div class="lg-topbar">
+  <div class="lg-topbar-inner">
+    <a class="lg-brand" href="index.html">✦ HABIT <span>MASTERY</span></a>
+    <nav class="lg-nav">
+      <a href="blog.html" class="active">Blog</a>
+      <a href="terms.html">Điều khoản</a>
+      <a href="privacy.html">Quyền riêng tư</a>
+      <a href="refund.html">Hoàn tiền</a>
+    </nav>
+  </div>
+</div>
+
+<div class="lg-wrap">
+  <div class="bl-hero">
+    <h1>Blog</h1>
+    <p>Kỷ luật bản thân, tâm lý học hành vi, và chuyện làm sản phẩm.</p>
+  </div>
+
+  <div class="bl-list" id="blList"><div class="bl-empty">Đang tải…</div></div>
+
+  <div class="bl-cta">
+    <p style="margin:0 0 10px;"><strong>Biến việc rèn kỷ luật thành hành trình tu luyện.</strong></p>
+    <p style="margin:0 0 16px; color:var(--lg-muted); font-size:14.5px;">
+      Mỗi ngày điểm danh là một bước lên cảnh giới.</p>
+    <a href="auth.html">Bắt đầu miễn phí →</a>
+  </div>
+
+  <div class="lg-footer">
+    © 2026 Habit Mastery ·
+    <a href="terms.html">Điều khoản</a> ·
+    <a href="privacy.html">Quyền riêng tư</a> ·
+    <a href="index.html">Về ứng dụng</a>
+  </div>
+</div>
+
+<script src="blog-posts.js?v=5.12.4"></script>
+<script>
+(function () {
+    const list = document.getElementById('blList');
+    const posts = window.BLOG_POSTS || [];
+    if (!posts.length) {
+        list.innerHTML = '<div class="bl-empty">Chưa có bài viết nào.</div>';
+        return;
+    }
+    const esc = s => String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const fmt = d => {
+        const p = String(d).split('-');
+        return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : d;
+    };
+    list.innerHTML = posts.map(p => `
+        <a class="bl-card" href="blog-post.html?p=${encodeURIComponent(p.slug)}">
+          <div class="bl-meta">
+            <span class="bl-tag">${esc(p.tag)}</span>
+            <span>${esc(fmt(p.date))}</span>
+            <span>· ${esc(p.readMin)} phút đọc</span>
+          </div>
+          <h2>${esc(p.title)}</h2>
+          <p>${esc(p.excerpt)}</p>
+        </a>`).join('');
+})();
+</script>
+</body>
+</html>

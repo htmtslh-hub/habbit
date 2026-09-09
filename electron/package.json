@@ -63,6 +63,7 @@
           "404.html",
           "sw.js",
           "hm-dialog.js",
+          "hm-share.js",
           "terms.html",
           "privacy.html",
           "refund.html",

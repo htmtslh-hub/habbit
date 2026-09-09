@@ -1,0 +1,58 @@
+<p>Có người dùng nhắn cho tôi một câu ngắn gọn: <em>"App mở hơi lâu."</em></p>
+
+<p>Phản xạ đầu tiên của phần lớn lập trình viên — kể cả tôi — là đoán. Chắc do mạng. Chắc do Firebase. Chắc do máy người dùng yếu. Nhưng đoán thì sửa nhầm chỗ. Nên tôi ngồi đo.</p>
+
+<h2>Đo trước, đoán sau</h2>
+
+<p>Tôi tải từng file của ứng dụng từ máy chủ thật, ghi lại dung lượng sau khi nén. Kết quả xếp theo thứ tự lớn dần khiến tôi hơi choáng:</p>
+
+<pre>all_books_data.js    1.355 KB   &lt;- 82% toàn bộ
+app.js                 107 KB
+doc_nhan_tinh_data     116 KB
+style.css               50 KB
+tất cả phần còn lại     ~30 KB</pre>
+
+<p>Một file duy nhất chiếm <strong>82%</strong> mọi thứ người dùng phải tải về. Nó chứa toàn văn 14 quyển sách trong ứng dụng — 7,3 MB trước khi nén.</p>
+
+<h2>Điều tệ hơn con số</h2>
+
+<p>Tôi tìm xem file đó được dùng ở đâu. Đúng <strong>một chỗ</strong>: hàm lấy nội dung sách khi người dùng bấm mở một quyển.</p>
+
+<p>Nghĩa là: một người vào ứng dụng chỉ để điểm danh buổi sáng rồi thoát — người không bao giờ mở sách — vẫn phải tải đủ toàn văn 14 quyển. Và vì thẻ nạp file đó đứng ngay trước mã chính, ứng dụng <em>không thể khởi động</em> cho tới khi tải xong.</p>
+
+<blockquote>
+<p>Bài học không phải "file quá to". Bài học là: <strong>một thứ chỉ 5% người dùng cần, nhưng 100% người dùng phải trả giá.</strong></p>
+</blockquote>
+
+<h2>Còn một nửa nữa tôi chưa thấy</h2>
+
+<p>Trong lúc sửa, tôi mở service worker ra xem. Danh sách file nó lưu sẵn có cả <code>app.js</code>, <code>style.css</code>, và <code>all_books_data.js</code> — nhưng ở dạng đường dẫn <em>không kèm số phiên bản</em>.</p>
+
+<p>Trình duyệt coi đó là những địa chỉ khác hẳn. Nên mỗi lần cài service worker, nó <strong>tải lại toàn bộ một lần nữa</strong>. Đo ra: thêm 1,73 MB.</p>
+
+<p>Tổng thực tế cho lần đầu vào ứng dụng không phải 1,66 MB như tôi tưởng, mà là <strong>3,39 MB</strong>.</p>
+
+<h2>Bốn thay đổi</h2>
+
+<ol>
+<li><strong>Nạp kho sách theo yêu cầu.</strong> Chỉ tải khi người dùng thực sự mở một quyển, kèm trạng thái "Đang mở sách…".</li>
+<li><strong>Bỏ file dữ liệu lớn khỏi danh sách lưu sẵn</strong> của service worker. Chỉ giữ phần vỏ.</li>
+<li><strong>Đổi chiến lược lưu đệm.</strong> Trước đây mọi thứ đều "hỏi mạng trước" — tức bộ nhớ đệm chỉ có tác dụng khi mất mạng, không hề làm ứng dụng nhanh hơn lần nào.</li>
+<li><strong>Kéo dài thời gian lưu đệm</strong> từ 1 giờ lên 1 năm cho các file đã đánh số phiên bản.</li>
+</ol>
+
+<h2>Một cái bẫy suýt sập</h2>
+
+<p>Thay đổi thứ 4 có một cạm bẫy tôi suýt không thấy: <code>sw.js</code> — chính file service worker — cũng là một file <code>.js</code>.</p>
+
+<p>Nếu để nó được lưu đệm một năm, trình duyệt sẽ <strong>không bao giờ nhìn thấy phiên bản mới</strong>. Ứng dụng sẽ kẹt ở bản cũ vĩnh viễn, và tôi sẽ không hiểu vì sao mọi bản cập nhật đều không tới được người dùng.</p>
+
+<p>Phải đặt riêng file đó — cùng với các trang HTML — thành "luôn kiểm tra lại".</p>
+
+<h2>Kết quả</h2>
+
+<pre>Lần đầu vào ứng dụng:  3,39 MB  ->  0,69 MB   (giảm 79,6%)</pre>
+
+<p>Chi phí phân tích cú pháp, thứ tôi từng nghi là thủ phạm, đo ra chỉ 53 mili-giây. Hoàn toàn không phải vấn đề.</p>
+
+<p>Nếu tôi đoán thay vì đo, có lẽ tôi đã dành cả tuần tối ưu sai chỗ.</p>

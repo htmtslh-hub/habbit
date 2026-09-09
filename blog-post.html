@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Habit Mastery</title>
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="legal.css?v=5.12.4">
+<style>
+  .bp-meta { display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+      font-size:13px; color:var(--lg-muted); margin:0 0 26px; }
+  .bp-tag { background:var(--lg-accent-soft); color:var(--lg-accent);
+      padding:3px 10px; border-radius:999px; font-weight:700; }
+  .bp-back { display:inline-block; margin-bottom:22px; font-size:14px;
+      font-weight:600; color:var(--lg-muted); text-decoration:none; }
+  .bp-back:hover { color:var(--lg-accent); }
+  .bp-body h2 { font-size:21px; }
+  .bp-body pre { background:rgba(127,140,160,.12); border:1px solid var(--lg-border);
+      border-radius:10px; padding:14px 16px; overflow-x:auto; font-size:13.5px; line-height:1.6; }
+  .bp-body blockquote { margin:20px 0; padding:12px 18px; border-left:4px solid var(--lg-accent);
+      background:var(--lg-accent-soft); border-radius:0 10px 10px 0; }
+  .bp-body blockquote p:last-child { margin-bottom:0; }
+  .bp-cta { margin-top:44px; padding:26px; text-align:center;
+      border:1px solid var(--lg-border); border-radius:14px; background:var(--lg-accent-soft); }
+</style>
+</head>
+<body>
+
+<div class="lg-topbar">
+  <div class="lg-topbar-inner">
+    <a class="lg-brand" href="index.html">✦ HABIT <span>MASTERY</span></a>
+    <nav class="lg-nav">
+      <a href="blog.html" class="active">Blog</a>
+      <a href="terms.html">Điều khoản</a>
+      <a href="privacy.html">Quyền riêng tư</a>
+      <a href="refund.html">Hoàn tiền</a>
+    </nav>
+  </div>
+</div>
+
+<div class="lg-wrap">
+  <a class="bp-back" href="blog.html">← Tất cả bài viết</a>
+  <h1 id="bpTitle">Đang tải…</h1>
+  <div class="bp-meta" id="bpMeta"></div>
+  <div class="bp-body" id="bpBody"></div>
+
+  <div class="bp-cta">
+    <p style="margin:0 0 10px;"><strong>Biến việc rèn kỷ luật thành hành trình tu luyện.</strong></p>
+    <a href="auth.html">Bắt đầu miễn phí →</a>
+  </div>
+
+  <div class="lg-footer">
+    © 2026 Habit Mastery ·
+    <a href="blog.html">Blog</a> ·
+    <a href="terms.html">Điều khoản</a> ·
+    <a href="index.html">Về ứng dụng</a>
+  </div>
+</div>
+
+<script src="blog-posts.js?v=5.12.4"></script>
+<script>
+(function () {
+    const slug = new URLSearchParams(location.search).get('p') || '';
+    const posts = window.BLOG_POSTS || [];
+
+    // Chỉ nhận slug nằm trong danh mục. Nếu lấy thẳng slug từ URL đi ghép
+    // đường dẫn thì người ta có thể nhồi ../ để đọc file khác trên site.
+    const post = posts.find(p => p.slug === slug);
+
+    const titleEl = document.getElementById('bpTitle');
+    const bodyEl = document.getElementById('bpBody');
+
+    if (!post) {
+        titleEl.textContent = 'Không tìm thấy bài viết';
+        bodyEl.innerHTML = '<p>Bài viết này không tồn tại hoặc đã được gỡ. ' +
+            '<a href="blog.html">Xem tất cả bài viết</a>.</p>';
+        return;
+    }
+
+    document.title = post.title + ' — Habit Mastery';
+    titleEl.textContent = post.title;
+
+    const d = String(post.date).split('-');
+    document.getElementById('bpMeta').innerHTML =
+        '<span class="bp-tag"></span><span class="bp-date"></span><span class="bp-read"></span>';
+    const meta = document.getElementById('bpMeta');
+    meta.querySelector('.bp-tag').textContent = post.tag;
+    meta.querySelector('.bp-date').textContent = d.length === 3 ? `${d[2]}/${d[1]}/${d[0]}` : post.date;
+    meta.querySelector('.bp-read').textContent = '· ' + post.readMin + ' phút đọc';
+
+    fetch('blog/' + post.slug + '.html')
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+        .then(html => { bodyEl.innerHTML = html; })
+        .catch(() => {
+            bodyEl.innerHTML = '<p>Không tải được nội dung bài viết. Vui lòng thử lại sau.</p>';
+        });
+})();
+</script>
+</body>
+</html>
