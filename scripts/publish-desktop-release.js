@@ -87,16 +87,30 @@ async function main() {
     console.log(`Đã tạo release '${TAG}' (id ${release.id}).`);
   }
 
-  for (const rel of ASSETS) {
+  // ---------------------------------------------------------------
+  // TẢI LÊN TRƯỚC — XOÁ SAU. Thứ tự này rất quan trọng.
+  //
+  // Bản cũ xoá asset trước rồi mới tải lên. Ngày 09/09/2026 việc tải lên
+  // HabitMastery-Portable.zip đứt giữa chừng SAU khi asset cũ đã bị xoá,
+  // nên release chỉ còn mỗi bản Setup và nút tải bản Portable trên trang
+  // đăng nhập trả về 404 — không có cảnh báo nào.
+  //
+  // Nay tải lên dưới tên tạm trước; xong xuôi mới xoá bản cũ rồi đổi tên
+  // tạm thành tên thật. Tải lên hỏng thì chỉ có tên tạm bị bỏ đi, còn
+  // bản cũ vẫn nguyên vẹn và người dùng vẫn tải được.
+  // ---------------------------------------------------------------
+  const uploadOne = async (rel) => {
     const name = path.basename(rel);
-    const existing = (release.assets || []).find(a => a.name === name);
-    if (existing) {
-      await gh(token, `${api}/releases/assets/${existing.id}`, { method: "DELETE" });
-      console.log(`  xoá asset cũ: ${name}`);
+    const tmpName = `${name}.uploading`;
+    const buf = fs.readFileSync(path.join(ROOT, rel));
+
+    // Dọn tên tạm còn sót lại từ lần chạy hỏng trước đó.
+    const staleTmp = (release.assets || []).find(a => a.name === tmpName);
+    if (staleTmp) {
+      await gh(token, `${api}/releases/assets/${staleTmp.id}`, { method: "DELETE" });
     }
 
-    const buf = fs.readFileSync(path.join(ROOT, rel));
-    const up = `https://uploads.github.com/repos/${OWNER}/${REPO}/releases/${release.id}/assets?name=${encodeURIComponent(name)}`;
+    const up = `https://uploads.github.com/repos/${OWNER}/${REPO}/releases/${release.id}/assets?name=${encodeURIComponent(tmpName)}`;
     const res = await fetch(up, {
       method: "POST",
       headers: {
@@ -106,9 +120,64 @@ async function main() {
       },
       body: buf,
     });
-    if (!res.ok) throw new Error(`Upload ${name} lỗi: ${res.status} ${(await res.text()).slice(0, 200)}`);
-    const data = await res.json();
-    console.log(`  tải lên xong: ${name} (${(data.size / 1e6).toFixed(1)} MB)`);
+    if (!res.ok) {
+      throw new Error(`Tải lên ${name} lỗi: ${res.status} ${(await res.text()).slice(0, 200)}`);
+    }
+    const uploaded = await res.json();
+
+    // GitHub báo state 'starter' nếu file chưa nhận đủ. Chỉ 'uploaded'
+    // mới là hoàn tất — kiểm tra cả kích thước cho chắc.
+    if (uploaded.state !== "uploaded" || uploaded.size !== buf.length) {
+      await gh(token, `${api}/releases/assets/${uploaded.id}`, { method: "DELETE" }).catch(() => {});
+      throw new Error(
+        `Tải lên ${name} không trọn vẹn (state=${uploaded.state}, ` +
+        `nhận ${uploaded.size}/${buf.length} byte) — đã bỏ tên tạm, bản cũ giữ nguyên.`
+      );
+    }
+    console.log(`  tải lên xong: ${name} (${(uploaded.size / 1e6).toFixed(1)} MB)`);
+
+    // Tới đây bản mới đã nằm an toàn trên GitHub -> mới được phép xoá bản cũ.
+    const existing = (release.assets || []).find(a => a.name === name);
+    if (existing) {
+      await gh(token, `${api}/releases/assets/${existing.id}`, { method: "DELETE" });
+      console.log(`  xoá bản cũ:   ${name}`);
+    }
+
+    await gh(token, `${api}/releases/assets/${uploaded.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ name }),
+    });
+    return { name, size: buf.length };
+  };
+
+  const published = [];
+  for (const rel of ASSETS) {
+    published.push(await uploadOne(rel));
+  }
+
+  // ---- Kiểm tra lại sau cùng ----
+  // Sự cố lần trước không ai phát hiện ra vì script chỉ in log rồi kết
+  // thúc. Nay hỏi lại GitHub xem thực tế còn những gì trên release.
+  const finalRel = await gh(token, `${api}/releases/tags/${TAG}`);
+  const finalAssets = finalRel.assets || [];
+  let bad = 0;
+  console.log(`\nKiểm tra lại trên GitHub:`);
+  for (const { name, size } of published) {
+    const found = finalAssets.find(a => a.name === name);
+    if (!found) {
+      console.error(`  THIẾU: ${name}`);
+      bad++;
+    } else if (found.size !== size) {
+      console.error(`  SAI KÍCH THƯỚC: ${name} (${found.size} ≠ ${size})`);
+      bad++;
+    } else {
+      console.log(`  OK: ${name} (${(found.size / 1e6).toFixed(1)} MB)`);
+    }
+  }
+  const leftover = finalAssets.filter(a => a.name.endsWith(".uploading"));
+  for (const a of leftover) console.error(`  CÒN TÊN TẠM: ${a.name}`);
+  if (bad || leftover.length) {
+    throw new Error("Release không đúng như mong đợi — xem log bên trên.");
   }
 
   console.log(`\nLink tải công khai:`);
