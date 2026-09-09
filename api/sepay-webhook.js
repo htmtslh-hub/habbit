@@ -7,8 +7,10 @@
 const admin = require("firebase-admin");
 const { getFirestore, FieldValue, Timestamp } = require("firebase-admin/firestore");
 const crypto = require("crypto");
-const { resolveResendConfig, sendBrandedEmail } = require("./_lib/emailCore");
-const { sendSystemMessage } = require("./_lib/systemMessage");
+// Việc cấp gói Premium (tính hạn + cập nhật Firestore + gửi email/tin nhắn)
+// nằm ở _lib/grantPremium.js để webhook của cổng thanh toán quốc tế dùng
+// chung, tránh hai nơi tính hạn dùng khác nhau.
+const { grantPremium } = require("./_lib/grantPremium");
 
 // Initialize Firebase Admin SDK (chỉ khởi tạo 1 lần)
 if (!admin.getApps().length) {
@@ -283,79 +285,22 @@ module.exports = async function handler(req, res) {
     webhookReceivedAt: now,
   });
 
-  // 7. Upgrade user to Premium
+  // 7. Nâng cấp tài khoản lên Premium.
+  // Toàn bộ phần việc (tính hạn dùng, cập nhật Firestore, gửi email chúc
+  // mừng + tin nhắn trong app) nằm ở _lib/grantPremium.js. Lỗi thông báo
+  // đã được nuốt bên trong hàm đó nên không làm hỏng phản hồi cho SePay.
   const uid = paymentData.uid;
-  const plan = paymentData.plan; // "monthly" or "yearly"
+  const plan = paymentData.plan; // "monthly" hoặc "yearly"
 
-  const userRef = db.collection("users").doc(uid);
-  const userDoc = await userRef.get();
+  const grantResult = await grantPremium(db, FieldValue, Timestamp, {
+    uid,
+    plan,
+    orderNumber,
+    provider: "sepay",
+  });
 
-  if (userDoc.exists) {
-    const planUpdates = {
-      plan: "premium",
-      planUpdatedAt: now,
-      upgradeRequested: false,
-      upgradeApprovedAt: now,
-      lastPaymentOrderNumber: orderNumber,
-    };
-
-    // Set plan expiration
-    const startDate = new Date();
-    if (plan === "monthly") {
-      const expires = new Date(startDate);
-      expires.setMonth(expires.getMonth() + 1);
-      planUpdates.planExpiresAt = Timestamp.fromDate(expires);
-    } else if (plan === "yearly") {
-      const expires = new Date(startDate);
-      expires.setFullYear(expires.getFullYear() + 1);
-      planUpdates.planExpiresAt = Timestamp.fromDate(expires);
-    }
-
-    await userRef.update(planUpdates);
-    console.log(
-      `User ${uid} upgraded to Premium (${plan}) via payment ${orderNumber}`
-    );
-
-    // 7b. Gửi chúc mừng kích hoạt VIP (email + tin nhắn trong app) — không
-    // để lỗi ở bước này làm hỏng phản hồi xác nhận thanh toán cho SePay.
-    try {
-      const uData = userDoc.data() || {};
-      const name = uData.displayName || (uData.email || "").split("@")[0] || "Chiến binh kỷ luật";
-      const planLabel = plan === "yearly" ? "Premium (1 năm)" : "Premium (1 tháng)";
-      const expiresStr = planUpdates.planExpiresAt
-        ? planUpdates.planExpiresAt.toDate().toLocaleDateString("vi-VN")
-        : "Vĩnh viễn";
-
-      const subject = "🎉 Chúc mừng! Tài khoản của bạn đã được kích hoạt Premium";
-      const contentHtml = `<p>Xin chào <strong>${name}</strong>,</p>
-        <p>Thanh toán của bạn đã được xác nhận thành công! Tài khoản Habit Mastery của bạn vừa được nâng cấp lên <strong>${planLabel}</strong>.</p>
-        <div class="highlight-box">
-          👑 <strong>Gói:</strong> ${planLabel}<br>
-          📅 <strong>Hiệu lực đến:</strong> ${expiresStr}<br>
-          🧾 <strong>Mã đơn hàng:</strong> ${orderNumber}
-        </div>
-        <p>Giờ đây bạn đã có toàn bộ đặc quyền Premium: thống kê nâng cao, huy hiệu độc quyền, Bình Đóng Băng streak và nhiều hơn nữa. Chúc bạn rèn luyện thật kỷ luật!</p>`;
-      const inAppText = `🎉 Chúc mừng! Tài khoản của bạn đã được kích hoạt ${planLabel} thành công.`;
-
-      if (uData.email && uData.email.includes("@")) {
-        const emailCfg = await resolveResendConfig(db);
-        if (emailCfg) {
-          await sendBrandedEmail(emailCfg, {
-            to: uData.email,
-            subject,
-            preheader: inAppText,
-            contentHtml,
-            ctaText: "Mở Ứng Dụng Ngay →",
-            ctaUrl: "https://habitmastery.web.app",
-          });
-        }
-      }
-      await sendSystemMessage(db, FieldValue, uid, uData, inAppText);
-    } catch (notifyErr) {
-      console.error("Could not send VIP activation notification:", notifyErr.message);
-    }
-  } else {
-    console.error("User document not found:", uid);
+  if (!grantResult.ok) {
+    console.error("Could not grant premium:", grantResult.reason, "order:", orderNumber);
   }
 
   // 8. Success response to SePay
