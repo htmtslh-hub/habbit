@@ -3569,6 +3569,40 @@ function getRankProgressInfo(dp) {
 let userBonusDP = 0;
 let _hasShownAutoFreezeToast = false;
 
+/**
+ * NƠI DUY NHẤT được phép thay đổi số Coins.
+ *
+ * VÌ SAO PHẢI CÓ HÀM NÀY: trước đây mỗi chỗ mua/thưởng đều làm kiểu
+ *      userBonusDP = (userBonusDP || 0) - cost;
+ *      await userDocRef.update({ bonusDP: userBonusDP });
+ * tức GHI ĐÈ bằng giá trị đang giữ trong bộ nhớ. Nếu số Coins trên máy
+ * chủ thay đổi mà tab này chưa biết — ví dụ bạn bè vừa nhập mã mời nên
+ * server cộng +200 qua api/referral.js — thì lần mua kế tiếp sẽ ghi đè
+ * mất khoản đó. Người dùng "bốc hơi" Coins mà không ai biết vì sao.
+ *
+ * FieldValue.increment() để chính Firestore cộng/trừ trên giá trị hiện
+ * hành, nên hai nguồn thay đổi cùng lúc vẫn cộng dồn đúng, không đè nhau.
+ *
+ * @param {number} delta  số Coins thay đổi: dương là cộng, âm là trừ
+ */
+async function applyCoinDelta(delta) {
+    const d = Number(delta) || 0;
+    if (!d) return;
+
+    // Cập nhật ngay bản trong bộ nhớ để giao diện phản hồi tức thì,
+    // không phải chờ máy chủ trả lời.
+    userBonusDP = (userBonusDP || 0) + d;
+
+    if (!currentUser || !db) return;
+    try {
+        const inc = firebase.firestore.FieldValue.increment(d);
+        if (userDocRef) await userDocRef.update({ bonusDP: inc });
+        await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: inc }, { merge: true });
+    } catch (e) {
+        console.warn('applyCoinDelta:', e);
+    }
+}
+
 function calculateUserDPAndStreak(sData = S) {
     let totalChecks = 0;
     let weeklyChecks = 0;
@@ -3861,7 +3895,9 @@ async function syncUserLeaderboard() {
             photoURL: photoURL,
             equippedTitle: (S.inventory && S.inventory.equippedTitle) || '',
             totalDP: finalDP,
-            bonusDP: userBonusDP,
+            // bonusDP CO Y khong ghi o day: no chi duoc thay doi bang
+            // FieldValue.increment (applyCoinDelta + api/referral.js).
+            // Ghi de bang gia tri cuc bo se lam mat khoan may chu vua cong.
             weeklyDP: finalWeekly,
             streak: stats.currentStreak,
             maxStreak: stats.maxStreak,
@@ -6641,13 +6677,7 @@ async function buyStreakFreeze(cost = 200) {
     if (!await hmConfirm(`Xác nhận dùng ${cost} DP để mua 1 Bình Đóng Băng Chuỗi?`)) return;
 
     if (!isAdmin) {
-        userBonusDP = (userBonusDP || 0) - cost;
-        if (currentUser && db) {
-            try {
-                await userDocRef.update({ bonusDP: userBonusDP });
-                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
-            } catch(e) { console.warn(e); }
-        }
+        await applyCoinDelta(-(cost));
     }
 
     S.freezes = Math.min(3, (S.freezes || 0) + 1);
@@ -6692,13 +6722,7 @@ async function repairStreakWithDP(cost = 150) {
     if (!await hmConfirm(`Xác nhận dùng ${cost} DP để Hồi sinh chuỗi ngày ${targetDate}?`)) return;
 
     if (!isAdmin) {
-        userBonusDP = (userBonusDP || 0) - cost;
-        if (currentUser && db) {
-            try {
-                await userDocRef.update({ bonusDP: userBonusDP });
-                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
-            } catch(e) { console.warn(e); }
-        }
+        await applyCoinDelta(-(cost));
     }
 
     if (!Array.isArray(S.repairedDays)) S.repairedDays = [];
@@ -6828,6 +6852,7 @@ async function openMysteryChest() {
     // Step 2: Reveal reward after 1.2s
     setTimeout(async () => {
         const roll = Math.random() * 100;
+        let chestCoinDelta = 0;   // 0 neu phan thuong khong phai Coins
         let rewardTitle = '';
         let rewardDesc = '';
         let rewardIcon = '';
@@ -6870,17 +6895,13 @@ async function openMysteryChest() {
             rewardIcon = '💰';
             rewardTitle = `+${coinsWon} COINS THƯỞNG!`;
             rewardDesc = `Bạn nhận được hoàn trả <strong>${coinsWon.toLocaleString()} Coins</strong> từ Rương Bí Ẩn!`;
-            userBonusDP = (userBonusDP || 0) + coinsWon;
+            chestCoinDelta = coinsWon;
         }
 
+        // Chi nhanh trung Coins moi doi so du; cac nhanh khac tra vat pham.
+        await applyCoinDelta(chestCoinDelta);
         sv();
         updateUserDPState(true);
-        if (currentUser && db) {
-            try {
-                await userDocRef.update({ bonusDP: userBonusDP });
-                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
-            } catch(e) {}
-        }
 
         if (typeof fireConfetti === 'function') fireConfetti();
         if (typeof playResurrectSound === 'function') playResurrectSound();
@@ -7391,13 +7412,7 @@ async function buyShopItem(type, itemId, cost) {
         if (!await hmConfirm(`Xác nhận dùng ${cost.toLocaleString()} Coins để mở khóa / mua vật phẩm này?`)) return;
 
         if (!isAdmin) {
-            userBonusDP = (userBonusDP || 0) - cost;
-            if (currentUser && db) {
-                try {
-                    await userDocRef.update({ bonusDP: userBonusDP });
-                    await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
-                } catch(e) { console.warn(e); }
-            }
+            await applyCoinDelta(-(cost));
         }
     }
 
@@ -7500,11 +7515,9 @@ async function useBackpackItem(itemId) {
         toastMsg = '🛡️ Khiên Bất Hoại đã kích hoạt! Chuỗi ngày của bạn được bảo vệ tuyệt đối trong 7 ngày!';
         if (typeof playResurrectSound === 'function') playResurrectSound();
     } else if (itemId === 'squad_energy') {
-        userBonusDP = (userBonusDP || 0) + 50;
+        await applyCoinDelta(50);
         if (currentUser && db) {
             try {
-                await userDocRef.update({ bonusDP: userBonusDP });
-                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
                 if (S.squadId) {
                     await db.collection('squads').doc(S.squadId).collection('messages').add({
                         senderId: currentUser.uid,
@@ -8499,15 +8512,8 @@ function toggleDocFullscreen() {
 async function markDocCompleted() {
     if (!currentReadingDocId) return;
     const bonus = 20;
-    userBonusDP = (userBonusDP || 0) + bonus;
+    await applyCoinDelta(bonus);
     localStorage.setItem('hg_bonus_dp', userBonusDP);
-
-    if (currentUser && db) {
-        try {
-            await userDocRef.update({ bonusDP: userBonusDP });
-            await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
-        } catch(e) {}
-    }
 
     if (typeof fireConfetti === 'function') fireConfetti();
     if (typeof playResurrectSound === 'function') playResurrectSound();
@@ -8591,11 +8597,7 @@ async function claimSquadRankRewardIfEligible(squadData) {
     const rankInfo = SQUAD_RANKS.find(r => r.level === currentLevel);
 
     try {
-        userBonusDP = (userBonusDP || 0) + rewardDP;
-        if (typeof userDocRef !== 'undefined' && userDocRef) {
-            await userDocRef.update({ bonusDP: userBonusDP });
-        }
-        await db.collection('leaderboard').doc(myUid).set({ bonusDP: userBonusDP }, { merge: true });
+        await applyCoinDelta(rewardDP);
 
         const updatedMembers = squadData.members.map(m =>
             m.uid === myUid ? { ...m, claimedRankLevel: currentLevel } : m
@@ -9220,13 +9222,7 @@ async function createDuel() {
     if (!await hmConfirm(`Xác nhận đặt cược ${cost} DP vào Hũ thưởng để tạo phòng thách đấu 7 ngày?`)) return;
 
     if (!isAdmin) {
-        userBonusDP = (userBonusDP || 0) - cost;
-        if (currentUser && db) {
-            try {
-                await userDocRef.update({ bonusDP: userBonusDP });
-                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
-            } catch(e) {}
-        }
+        await applyCoinDelta(-(cost));
     }
 
     const myName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
@@ -9276,13 +9272,7 @@ async function acceptDuel(duelId, cost) {
     if (!await hmConfirm(`Xác nhận đặt cược ${cost} DP để tham gia trận đấu 1v1 7 ngày?`)) return;
 
     if (!isAdmin) {
-        userBonusDP = (userBonusDP || 0) - cost;
-        if (currentUser && db) {
-            try {
-                await userDocRef.update({ bonusDP: userBonusDP });
-                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
-            } catch(e) {}
-        }
+        await applyCoinDelta(-(cost));
     }
 
     const myName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
@@ -9322,13 +9312,7 @@ async function cancelDuel(duelId, cost) {
         await db.collection('duels').doc(duelId).delete();
     } catch(e) {}
 
-    userBonusDP = (userBonusDP || 0) + cost;
-    if (currentUser && db) {
-        try {
-            await userDocRef.update({ bonusDP: userBonusDP });
-            await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
-        } catch(e) {}
-    }
+    await applyCoinDelta(cost);
 
     S.activeDuelId = '';
     sv();
@@ -9350,21 +9334,19 @@ async function claimDuelReward(duelId) {
             const p1Score = p1.daysChecked || 0;
             const p2Score = p2.daysChecked || 0;
 
+            // Thua thi delta = 0 (tien cuoc da tru luc tham gia).
+            let duelCoinDelta = 0;
             if (p1Score === p2Score) {
                 // Draw -> Refund bet
-                userBonusDP = (userBonusDP || 0) + (data.betDP || 50);
+                duelCoinDelta = (data.betDP || 50);
             } else if ((isP1 && p1Score > p2Score) || (!isP1 && p2Score > p1Score)) {
                 // Winner -> Full pot
-                const winAmount = (data.betDP || 50) * 2;
-                userBonusDP = (userBonusDP || 0) + winAmount;
+                duelCoinDelta = (data.betDP || 50) * 2;
                 if (typeof playResurrectSound === 'function') playResurrectSound();
                 if (typeof fireConfetti === 'function') fireConfetti();
             }
 
-            if (currentUser && db) {
-                await userDocRef.update({ bonusDP: userBonusDP });
-                await db.collection('leaderboard').doc(currentUser.uid).set({ bonusDP: userBonusDP }, { merge: true });
-            }
+            await applyCoinDelta(duelCoinDelta);
         }
     } catch(e) { console.warn(e); }
 
