@@ -9,7 +9,7 @@
   `habitmastery.web.app` và `sonnhai-2600f.web.app` vẫn chạy nhưng chỉ là URL phụ. Mọi link mới (email, CTA, trang pháp lý, đăng nhập desktop) phải dùng tên miền chuẩn.
 - **Tên ứng dụng**: **Habit Mastery** (Ứng dụng Rèn luyện Thói quen & Game hóa Kỷ luật)
 - **Công nghệ cốt lõi**: HTML5, Vanilla CSS3 (Design System chuẩn Dark/Light Mode), Vanilla JavaScript (ES6+), Firebase (Authentication, Firestore, Hosting), PWA (Service Worker), Vercel Production, Electron (bản Desktop Windows/macOS), Vercel Serverless API (Node.js — SePay Webhook, OTP, Resend Email).
-- **Phiên bản Cache / Scripts hiện tại**: `app.js?v=5.11.1`, `style.css?v=5.11.0`, `all_books_data.js?v=5.9.6`, `i18n.js?v=5.12.0` (trong `index.html`), `auth.css?v=5.12.0` (trong `auth.html`), `legal.css/legal.js?v=5.12.0` (3 trang pháp lý), `admin.js?v=5.8.4`, `admin.css?v=5.11.1` (trong `admin.html`) & Service Worker `CACHE_VERSION = '5.12.0'` (trong `sw.js`) — *cập nhật số phiên bản này mỗi khi thay đổi để buộc client tải lại cache mới.*
+- **Phiên bản Cache / Scripts hiện tại**: `app.js?v=5.12.3`, `style.css?v=5.12.3`, `hm-dialog.js?v=5.12.2`, `i18n.js?v=5.12.0` (trong `index.html`); `all_books_data.js?v=5.9.6` — **KHÔNG còn nạp tĩnh**, `app.js` tự nạp khi mở sách (xem `ensureBooksLoaded()`); `auth.js?v=5.12.1` (trong `auth.html`); `legal.css/legal.js?v=5.12.0` (3 trang pháp lý); `admin.js?v=5.12.2`, `admin.css?v=5.11.1` (trong `admin.html`) & Service Worker `CACHE_VERSION = '5.12.3'` — *nâng số phiên bản mỗi khi sửa file, vì cache nay đặt 1 NĂM immutable.*
 - **Loại Bỏ 100% Mục Lục Rác & Dấu Chấm OCR Trong Nội Dung (v5.3.3)**: Đã bóc tách và xóa sạch toàn bộ các đoạn text mục lục thô bị sao chép nhầm từ bản scan PDF (các dòng chấm dài `........ 93 146. Thu hút...`) trong toàn bộ 14 cuốn sách, giữ lại giao diện trang đọc tinh khiết, sang trọng và chuẩn mực.
 - **Đa Ngôn Ngữ Toàn Hệ Thống (v5.8.0)**: Hỗ trợ đầy đủ **Tiếng Việt / English / 简体中文**, tự động phát hiện ngôn ngữ theo quốc gia (VN→vi, CN→zh, còn lại→en mặc định), bao gồm cả tên 21 Cảnh Giới, toàn bộ UI, `auth.html`, `auth.js`. Logic đặt tại [`i18n.js`](file:///d:/3.%20D%E1%BB%B1%20%C3%A1n/3.%20%E1%BB%A9ng%20d%E1%BB%A5ng/ghi%20ch%C3%BA/habit-tracker/i18n.js) (~1.600 dòng).
 - **Bảo Mật (Security Patch)**: Đã vá các lỗ hổng nghiêm trọng — XSS, siết chặt `firestore.rules`, thêm HTTP Security Headers trong `firebase.json`, chuyển sinh mã OTP sang CSPRNG (`crypto.randomInt`), loại các script mock ra khỏi build production.
@@ -267,6 +267,56 @@
 5. Code: `api/create-checkout.js`, `api/paddle-webhook.js` (gọi `grantPremium`), bảng giá USD, dịch modal thanh toán sang en/zh (hiện **hardcode 100% tiếng Việt**, không có key i18n nào).
 
 ---
+
+### 17. Hộp Thoại Trong Ứng Dụng — thay `alert/confirm/prompt` (v5.12.2, 09/09/2026)
+
+Hộp thoại gốc của trình duyệt hiện sát mép trên, mang nhãn "habit-mastery.com cho biết",
+dùng font hệ thống — lạc hẳn giao diện và không đổi theo theme.
+
+- **`hm-dialog.js`** (dùng chung cho `index.html`, `admin.html`, `auth.html`): `hmAlert` /
+  `hmConfirm` / `hmPrompt`, đều trả Promise. Hiện giữa màn hình, ăn theo 12 theme, Esc/Enter,
+  giữ tiêu điểm, bấm nền để huỷ. File **tự chèn CSS của chính nó** vì 3 trang đặt tên biến CSS
+  khác nhau (`--text-main` vs `--text-primary` vs không có `:root`).
+- **`window.alert` bị thay ở cấp window** → 100 lời gọi cũ tự khớp giao diện, không sửa chỗ nào.
+  `confirm`/`prompt` **không làm vậy được** vì chúng đồng bộ → đã chuyển 36 chỗ sang
+  `await hmConfirm/hmPrompt`, kèm thêm `async` cho 5 hàm bao ngoài.
+- ⚠️ **Màu chữ nút tính lúc chạy** (`pickTextOnAccent`): 12 theme có accent trải từ rất sáng
+  (`#22e07a` Matrix) tới khá tối (`#9c6434` Mocha). Để cố định chữ đen thì Mocha chỉ đạt
+  **3.90:1**, dưới chuẩn AA. Đã đo lại cả 12 theme sau khi sửa: thấp nhất **4.90:1**.
+- Đã xác minh `!await x` được hiểu là `!(await x)` — sai thứ tự toán tử thì **mọi hộp xác nhận
+  sẽ đảo ngược**.
+
+### 18. Tối Ưu Tốc Độ Tải — 3.39 MB → 0.69 MB (v5.12.3, 09/09/2026)
+
+**Đo trước khi sửa** (production, đã nén brotli): `all_books_data.js` **1.355 KB = 82%** toàn bộ
+lượng tải; trang 1.66 MB **cộng** service worker tải lại 1.73 MB = **3.39 MB**. Chi phí phân tích
+cú pháp chỉ 53ms → nút thắt hoàn toàn ở mạng.
+
+1. **`all_books_data.js` nạp theo yêu cầu** *(nguyên nhân chính)*. File này chỉ dùng ở **đúng một
+   chỗ**: `getDocData()`, tức chỉ khi mở sách. Nhưng nó là `<script>` tĩnh đứng trước `app.js` nên
+   ai cũng phải tải xong toàn văn 14 quyển thì app mới khởi động. Nay có `ensureBooksLoaded()`
+   chèn script khi cần, kèm trạng thái "Đang mở sách…" và xử lý lỗi mạng.
+2. **SW không còn precache file dữ liệu lớn.** `ASSETS_TO_CACHE` trước đây liệt kê cả `app.js`,
+   `all_books_data.js`… ở dạng URL **không có `?v=`** → mỗi lần cài SW tải lại toàn bộ một lần
+   nữa (**1.73 MB thừa**). Nay chỉ precache vỏ ứng dụng.
+3. **SW đổi sang cache-first** cho js/css có `?v=`. Trước đây mọi thứ network-first → cache chỉ
+   có tác dụng khi mất mạng, không hề làm app nhanh hơn.
+4. **`Cache-Control` 3600 → 31536000 immutable** cho js/css.
+   ⚠️ **BẪY**: `sw.js` cũng là `.js`. Cache 1 năm thì trình duyệt **không bao giờ thấy bản SW
+   mới** → app kẹt phiên bản cũ vĩnh viễn. Đã đặt riêng `sw.js` + HTML thành `no-cache`.
+5. **147 KB SDK Firebase chuyển từ `<head>` xuống cuối `<body>`.** **Không dùng `defer`** vì các
+   script cuối body không defer sẽ chạy **trước** script defer → `app.js` gọi firebase khi SDK
+   chưa nạp. Di chuyển nguyên khối thì thứ tự chạy giữ nguyên.
+
+### 19. Script Phát Hành Bản Cài — sửa thứ tự tải lên (09/09/2026)
+
+`scripts/publish-desktop-release.js` trước đây **xoá asset cũ rồi mới tải lên**. Ngày 09/09/2026
+lần tải `HabitMastery-Portable.zip` đứt giữa chừng **sau khi bản cũ đã bị xoá** → release chỉ còn
+mỗi bản Setup, nút tải bản Portable trên trang đăng nhập trả **404 mà không có cảnh báo nào**.
+
+Nay: tải lên dưới tên tạm `.uploading` → xong mới xoá bản cũ → `PATCH` đổi tên. Kiểm tra
+`state === 'uploaded'` và kích thước khớp (GitHub trả `state: 'starter'` khi chưa nhận đủ). Cuối
+cùng **hỏi lại GitHub** xác nhận đủ asset, thiếu thì thoát với mã lỗi thay vì báo thành công.
 
 ## 🎯 5. KẾ HOẠCH BƯỚC TIẾP THEO
 
