@@ -1,8 +1,9 @@
 ================================================================================
 10 KỊCH BẢN TIKTOK / REELS — HABIT MASTERY
 Soạn ngày: 09/09/2026
-Tài liệu NỘI BỘ — đã loại trừ khỏi deploy trong firebase.json.
-Chiến lược tổng thể xem: content-type.txt
+Tài liệu NỘI BỘ — thư mục facebook/ đã loại trừ khỏi deploy trong firebase.json.
+Đi kèm: facebook-posts.txt (10 bài viết Facebook, cùng thư mục)
+Chiến lược tổng thể: ../content-type.txt
 ================================================================================
 
 

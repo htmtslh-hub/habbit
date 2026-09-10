@@ -1,0 +1,848 @@
+================================================================================
+10 BÀI VIẾT FACEBOOK — HABIT MASTERY
+Soạn ngày: 10/09/2026
+Tài liệu NỘI BỘ — thư mục facebook/ đã loại trừ khỏi deploy trong firebase.json.
+
+Đi kèm: content-scripts.txt (10 kịch bản video, cùng thư mục)
+Chiến lược tổng thể: ../content-type.txt
+================================================================================
+
+
+MỤC ĐÍCH CỦA TẬP NÀY
+--------------------------------------------------------------------------------
+  Đây KHÔNG phải bài quảng cáo. Đây là bài cho đi kiến thức.
+
+  Người đọc phải thấy đáng giá kể cả khi họ không bao giờ tải app. Nếu bài
+  vẫn hay khi xoá hết phần nhắc tới sản phẩm, thì đó là bài đúng. Nếu xoá đi
+  mà bài rỗng, thì đó là quảng cáo trá hình — nhóm sẽ đuổi, và đáng bị đuổi.
+
+  Phễu hoạt động theo thứ tự này, không được đảo:
+      đọc thấy hay  →  nhớ tên người viết  →  tự tìm tới sản phẩm
+
+  Mười bài này bám đúng mười kịch bản video trong content-scripts.txt.
+  Cùng ý, khác dạng: video để người ta DỪNG LẠI, bài viết để người ta TIN.
+  Đăng video trước, bài viết sau 2-3 ngày, cùng một ý — người xem gặp lại
+  lần hai thì mới nhớ.
+
+
+BỐN QUY TẮC ĐĂNG NHÓM FACEBOOK
+--------------------------------------------------------------------------------
+  1. BA DÒNG ĐẦU LÀ TẤT CẢ. Facebook cắt bài ở khoảng 250 ký tự rồi hiện
+     nút "Xem thêm". Ba dòng đầu không giữ được người thì phần còn lại
+     không tồn tại. Mỗi bài dưới đây đã tách sẵn phần đó.
+
+  2. KHÔNG ĐỂ LINK TRONG BÀI. Facebook giảm hiển thị bài có link ra ngoài.
+     Đăng bài sạch, rồi TỰ BÌNH LUẬN link vào bài của mình sau 5-10 phút.
+     Mỗi bài dưới đây có sẵn nội dung bình luận đó.
+
+  3. TRẢ LỜI HẾT BÌNH LUẬN TRONG 2 GIỜ ĐẦU. Đây là việc quan trọng hơn
+     cả viết bài. Bài được đẩy hay bị chìm quyết định ở đây.
+
+  4. MỘT TUẦN MỘT BÀI MỖI NHÓM. Nhiều hơn là spam, và người quản trị nhóm
+     nhớ mặt rất nhanh.
+
+
+NHÓM NÊN NHẮM
+--------------------------------------------------------------------------------
+  A. Phát triển bản thân / kỷ luật / thói quen ......... bài 1,2,3,5,6
+  B. Sinh viên, ôn thi, tự học ........................ bài 2,3,4,5
+  C. Freelancer, làm việc tự do ....................... bài 4,7,10
+  D. Đọc sách, tóm tắt sách ........................... bài 7
+  E. Lập trình, làm sản phẩm, khởi nghiệp ............. bài 8,9
+  F. Gym, chạy bộ, thể hình ........................... bài 2,3,6
+
+  Bài 8 và 9 nên đăng cả trên trang cá nhân và Threads — tệp kỹ thuật
+  ở đó phản hồi tốt hơn trong nhóm.
+
+
+================================================================================
+BÀI 1 — "ĐẶT TÊN CHO TRẠNG THÁI CỦA MÌNH"
+Nhóm: A  |  Độ dài: ~450 chữ  |  Kèm kịch bản video số 1
+================================================================================
+
+  BA DÒNG ĐẦU:
+      Có một thang đo sự trưởng thành nội tâm gồm 21 bậc.
+      Bậc thứ ba tên là "Thỏa hiệp".
+      Và phần lớn người trưởng thành dừng lại ở đó cả đời.
+
+  NỘI DUNG:
+      Thang đó bắt đầu bằng năm bậc mà không ai muốn nhận mình đang ở:
+
+      Vô minh — không biết là mình không biết.
+      Mê muội — biết có vấn đề nhưng không gọi tên được.
+      Thỏa hiệp — gọi tên được rồi, nhưng chọn sống chung với nó.
+      Sụp đổ — chịu không nổi nữa.
+      Overthinking — nghĩ rất nhiều, làm rất ít.
+
+      Phải đi hết năm bậc đó mới tới được bậc thứ chín: Kỷ luật.
+
+      Điều tôi muốn nói không phải cái thang. Mà là chuyện này:
+
+      Việc ĐẶT TÊN cho một trạng thái làm thay đổi trạng thái đó.
+
+      Trong tâm lý học có một hiện tượng gọi là affect labeling — gọi tên
+      cảm xúc. Khi một người nói ra chính xác thứ mình đang cảm thấy
+      ("tôi đang lo, không phải đang giận"), phản ứng cảm xúc của họ dịu
+      xuống đo được. Không phải vì họ giải quyết được vấn đề. Chỉ vì họ
+      đã gọi đúng tên nó.
+
+      Điều tương tự xảy ra với sự trì trệ.
+
+      "Dạo này tôi lười" là một câu vô dụng. Nó không chỉ ra việc gì phải làm.
+      Nó còn là một lời buộc tội, mà bị buộc tội thì người ta phòng thủ.
+
+      "Tôi đang ở giai đoạn Thỏa hiệp" là một câu khác hẳn. Nó nói rằng
+      bạn đã nhìn thấy vấn đề — đó là tiến bộ so với Mê muội. Nó cũng nói
+      rằng phía trước còn bậc nữa. Nó biến một khuyết điểm về tính cách
+      thành một vị trí trên bản đồ.
+
+      Khuyết điểm tính cách thì khó sửa. Vị trí trên bản đồ thì chỉ cần đi.
+
+      Đây là lý do vì sao mọi hệ thống tu luyện, từ thiền định tới võ đạo,
+      đều có thứ bậc và tên gọi. Không phải để phân cao thấp. Mà để người
+      đang ở giữa đường biết mình đang ở giữa đường, chứ không phải đang thất bại.
+
+      Nếu bạn đang thấy mình trì trệ, thử đổi câu hỏi:
+      đừng hỏi "vì sao mình tệ thế", hỏi "mình đang đứng ở bậc nào".
+
+      Hai câu đó dẫn tới hai hành động hoàn toàn khác nhau.
+
+  CHỐT:
+      Bạn nghĩ mình đang ở bậc nào trong năm bậc đầu? Tôi ở "Overthinking"
+      mất gần hai năm.
+
+  BÌNH LUẬN ĐẦU TIÊN:
+      Thang 21 bậc này tôi lấy từ chính app tôi đang làm — Habit Mastery,
+      miễn phí: habit-mastery.com. Ai muốn xem đủ 21 bậc thì vào.
+
+  LƯU Ý:
+      Bài này mở đường cho cả loạt. Đăng đầu tiên.
+      Phần affect labeling là nghiên cứu có thật, nhưng ĐỪNG bịa số liệu
+      phần trăm hay tên tác giả nếu bị hỏi — cứ nói "có nghiên cứu về
+      gọi tên cảm xúc", đủ rồi.
+
+
+================================================================================
+BÀI 2 — "21 NGÀY LÀ CON SỐ SAI"
+Nhóm: A, B, F  |  Độ dài: ~500 chữ  |  Kèm kịch bản video số 2
+================================================================================
+
+  BA DÒNG ĐẦU:
+      "21 ngày để tạo một thói quen" là câu bị trích sai nhiều nhất
+      trong ngành phát triển bản thân.
+      Con số thật gần gấp ba. Và nó giải thích vì sao bạn hay bỏ cuộc.
+
+  NỘI DUNG:
+      Con số 21 ngày đến từ một bác sĩ phẫu thuật thẩm mỹ những năm 1960.
+      Ông quan sát rằng bệnh nhân cần khoảng 21 ngày để quen với gương mặt
+      mới sau phẫu thuật. Đó là một nhận xét lâm sàng về việc thích nghi
+      với ngoại hình — không phải một nghiên cứu về hình thành thói quen.
+
+      Nửa thế kỷ sau, câu đó vẫn được chép lại trong hàng nghìn bài viết.
+
+      Nghiên cứu thật sự về việc này được làm ở Đại học London. Người tham
+      gia chọn một hành vi mới và làm mỗi ngày, các nhà nghiên cứu đo xem
+      bao lâu thì hành vi đó trở thành tự động.
+
+      Kết quả: trung vị khoảng 66 ngày. Và khoảng dao động rất rộng —
+      có người 18 ngày, có người hơn 200.
+
+      Ba điều rút ra, và điều thứ ba mới là quan trọng nhất:
+
+      MỘT. Nếu bạn đặt mốc 21 ngày rồi tới ngày 22 thấy vẫn phải gồng,
+      bạn sẽ kết luận là mình có vấn đề. Bạn không có vấn đề gì cả.
+      Bạn mới đi được một phần ba đường.
+
+      HAI. Khoảng dao động rộng nghĩa là so sánh với người khác gần như
+      vô nghĩa. Uống một cốc nước sau khi thức dậy khác hoàn toàn với
+      chạy 5km. Người bạn của bạn "quen sau 3 tuần" có thể đang tập một
+      thói quen dễ hơn nhiều.
+
+      BA — và đây là điều ít ai nói: cũng trong nghiên cứu đó, việc lỡ
+      MỘT ngày lẻ không làm hỏng quá trình hình thành thói quen.
+
+      Đọc lại câu trên một lần nữa.
+
+      Cái làm hỏng không phải một ngày lỡ. Cái làm hỏng là chuỗi ngày lỡ
+      liên tiếp sau đó — thứ thường bắt đầu bằng ý nghĩ "thôi hỏng rồi,
+      để tháng sau làm lại từ đầu".
+
+      Nên nếu phải nhớ một điều duy nhất từ bài này:
+
+      Đừng đếm ngược tới ngày 21. Hãy đếm xem bạn đã KHÔNG lỡ hai ngày
+      liên tiếp được bao lâu.
+
+      Đó là con số duy nhất có ý nghĩa.
+
+  CHỐT:
+      Bạn từng tin vào con số 21 ngày chứ? Tôi tin, và đã bỏ cuộc đúng
+      ngày thứ 23 vì nghĩ mình bất thường.
+
+  BÌNH LUẬN ĐẦU TIÊN:
+      Nghiên cứu tôi nhắc là của Lally và cộng sự, Đại học London,
+      công bố 2009. Ai muốn tự đọc thì tìm "Lally how are habits formed".
+      Còn app tôi làm để đếm chuỗi ngày: habit-mastery.com — miễn phí.
+
+  LƯU Ý:
+      Đây là bài dễ viral nhất trong tập, vì nó đính chính một điều
+      gần như ai cũng tin. Nhưng cũng vì thế mà phải nói CHÍNH XÁC:
+      - "trung vị khoảng 66 ngày" — đúng, cứ nói.
+      - "18 đến hơn 200 ngày" — đúng, cứ nói.
+      - ĐỪNG nói "khoa học chứng minh 66 ngày là con số chuẩn".
+        Đó là trung vị của một nghiên cứu, không phải quy luật.
+      Nếu có người vào tranh luận, nhường và dẫn nguồn. Đừng cãi.
+
+
+================================================================================
+BÀI 3 — "ĐỪNG BAO GIỜ LỠ HAI LẦN LIÊN TIẾP"
+Nhóm: A, B, F  |  Độ dài: ~450 chữ  |  Kèm kịch bản video số 3
+================================================================================
+
+  BA DÒNG ĐẦU:
+      Bạn tập đều 20 ngày. Ngày 21 bận, bỏ một buổi.
+      Ngày 22 bạn không tập nữa. Ngày 23 cũng không.
+      Thứ khiến bạn dừng lại không phải ngày 21. Là ngày 22.
+
+  NỘI DUNG:
+      Trong nghiên cứu về cai nghiện có một khái niệm tên là hiệu ứng
+      vi phạm kiêng khem. Đại ý thế này:
+
+      Người đặt ra một quy tắc tuyệt đối cho mình ("tôi sẽ không bao giờ...")
+      mà lỡ vi phạm một lần, thường không quay lại mức cũ. Họ trượt xa hơn
+      hẳn so với trước khi đặt quy tắc.
+
+      Không phải vì lần vi phạm đó gây hại. Mà vì cái diễn ra trong đầu
+      họ ngay sau đó: "Vậy là mình đã phá vỡ nó. Mình không phải kiểu
+      người làm được việc này."
+
+      Một lần lỡ được diễn giải thành một phán quyết về con người.
+      Và khi đã là phán quyết về con người thì cố gắng tiếp làm gì nữa.
+
+      Điều này xảy ra y hệt với thói quen tốt, chỉ là không ai gọi tên nó.
+
+      Hãy để ý một chuyện nghịch lý: người bỏ cuộc thường là người
+      NGHIÊM TÚC hơn.
+
+      Người hời hợt lỡ một buổi thì chả nghĩ gì, hôm sau tập tiếp.
+      Người nghiêm túc lỡ một buổi thì thấy mình đã làm hỏng một thứ
+      đẹp đẽ — và người ta không quay lại với thứ mình đã làm hỏng.
+
+      Chính sự cầu toàn giết chết thói quen, không phải sự lười biếng.
+
+      Cách chữa không nằm ở việc cố gắng hơn. Nó nằm ở việc đổi quy tắc.
+
+      Đừng đặt: "Tôi sẽ tập mỗi ngày."
+      Hãy đặt: "Tôi sẽ không bao giờ lỡ hai ngày liên tiếp."
+
+      Quy tắc thứ nhất bạn sẽ phá vỡ trong tháng đầu, chắc chắn. Đời sống
+      có ốm đau, có công tác, có đám cưới bạn bè. Và khi phá vỡ, bạn mất
+      luôn cả hệ thống.
+
+      Quy tắc thứ hai cho phép đời sống xảy ra. Nó chỉ cấm đúng một thứ:
+      cấm biến một ngày lỡ thành hai ngày lỡ.
+
+      Vì hai ngày lỡ không còn là tai nạn nữa. Đó là lúc một thói quen mới
+      đang được hình thành — thói quen không làm.
+
+  CHỐT:
+      Nếu hôm qua bạn lỡ một buổi, thì hôm nay là ngày quan trọng nhất
+      của cả tháng. Không phải vì buổi tập hôm nay quan trọng. Mà vì nó
+      quyết định con số dừng ở một hay chạy tiếp thành mười.
+
+  BÌNH LUẬN ĐẦU TIÊN:
+      Tôi làm hẳn tính năng "cứu chuỗi" trong app của mình vì đúng lý do
+      này — lỡ một ngày không nên xoá sổ cả tháng. habit-mastery.com,
+      miễn phí.
+
+  LƯU Ý:
+      Bài này và bài 6 cùng chủ đề nhưng khác góc: bài 3 nói về CÁCH SỬA
+      (đổi quy tắc), bài 6 nói về CHÂN DUNG người mắc (người cầu toàn).
+      Đăng cách nhau ít nhất 3 tuần, và không đăng cùng một nhóm.
+
+
+================================================================================
+BÀI 4 — "VÌ SAO CÁ CƯỢC VỚI BẠN HIỆU QUẢ HƠN QUYẾT TÂM"
+Nhóm: B, C  |  Độ dài: ~420 chữ  |  Kèm kịch bản video số 4
+================================================================================
+
+  BA DÒNG ĐẦU:
+      Tôi không dậy sớm nổi suốt ba tháng.
+      Rồi tôi cá với thằng bạn xem đứa nào trụ được 7 ngày.
+      Tôi dậy sớm được 7 ngày. Không phải vì tôi kỷ luật hơn.
+
+  NỘI DUNG:
+      Có một loại công cụ trong kinh tế học hành vi tên là commitment
+      device — tạm gọi là cơ chế tự ràng buộc.
+
+      Ý tưởng rất đơn giản: bạn của hôm nay biết rõ bạn của ngày mai
+      sẽ yếu lòng. Nên bạn của hôm nay đi trước một bước, dựng sẵn một
+      cái bẫy để bạn của ngày mai không thoát được.
+
+      Ulysses buộc mình vào cột buồm trước khi tàu đi qua đảo mỹ nhân ngư
+      là ví dụ kinh điển. Ông không tin vào ý chí của chính mình lúc đó —
+      và ông đúng.
+
+      Điểm mấu chốt: cơ chế này không đòi bạn phải mạnh mẽ hơn.
+      Nó chỉ đòi bạn thành thật về việc mình sẽ yếu.
+
+      Vì sao cá cược với một người bạn lại mạnh đến thế?
+
+      Thứ nhất, nó biến một lời hứa với bản thân — thứ có thể âm thầm
+      rút lại — thành lời hứa với người khác. Rút lại thì có người biết.
+
+      Thứ hai, nó đổi thời điểm của cái giá phải trả. Bình thường, việc
+      dậy sớm mệt NGAY hôm nay còn lợi ích thì ba tháng nữa. Não người
+      chiết khấu tương lai rất nặng, nên mỗi sáng nó chọn cái chăn ấm.
+      Cá cược kéo cái giá về hiện tại: ngủ nướng thì thua ngay sáng nay,
+      và người kia nhìn thấy.
+
+      Thứ ba — và cái này ít ai để ý — nó chuyển việc rèn luyện từ một
+      cuộc chiến với bản thân thành một trò chơi với người khác.
+      Chiến đấu với chính mình thì mệt và không có hồi kết. Chơi với
+      người khác thì vui.
+
+      Vài lưu ý để làm cho đúng:
+
+      Cược phải nhỏ. Cược lớn quá thì người ta sợ mà không dám tham gia,
+      hoặc gian lận. Mục đích là tạo một chút cay cú, không phải áp lực.
+
+      Thời hạn phải ngắn. Bảy ngày. Ba mươi ngày là quá xa để thấy cay.
+
+      Và phải có cách kiểm chứng. "Tin nhau" là công thức để cả hai cùng
+      lơ là sau ngày thứ ba.
+
+  CHỐT:
+      Bạn từng cá cược kiểu này chưa, và có ăn thua gì không? Tôi tò mò
+      cái gì làm nó hiệu quả với người khác.
+
+  BÌNH LUẬN ĐẦU TIÊN:
+      Tôi làm luôn tính năng thách đấu này vào app cho tiện đếm và
+      kiểm chứng: habit-mastery.com. Cược bằng điểm trong app,
+      không phải tiền thật — nhưng thua vẫn cay.
+
+  LƯU Ý:
+      Bài này hợp nhóm freelancer và sinh viên hơn nhóm phát triển
+      bản thân thuần tuý. Nhóm C phản hồi tốt vì họ làm việc một mình,
+      thiếu đúng cái áp lực xã hội này.
+
+
+================================================================================
+BÀI 5 — "VÌ SAO BẠN BỎ CUỘC VÀO NGÀY THỨ 4"           ★ BÀI TRỤ CỘT
+Nhóm: A, B  |  Độ dài: ~600 chữ  |  Kèm kịch bản video số 5
+================================================================================
+
+  BA DÒNG ĐẦU:
+      Ngày 1 hào hứng. Ngày 2 vẫn ổn. Ngày 3 hơi đuối. Ngày 4 bỏ.
+      Con số 4 lặp lại ở quá nhiều người để là ngẫu nhiên.
+      Có ba nguyên nhân, và không nguyên nhân nào là "bạn lười".
+
+  NỘI DUNG:
+      NGUYÊN NHÂN MỘT: bạn lên kế hoạch bằng năng lượng của ngày đầu tiên.
+
+      Cái cảm giác hào hứng hôm bắt đầu không phải năng lượng bền. Nó là
+      phản ứng của não với cái mới. Mà cái mới thì theo định nghĩa chỉ
+      mới được vài ngày.
+
+      Sai lầm nằm ở chỗ: bạn dùng cái năng lượng vay mượn đó để đặt ra
+      khối lượng công việc. Chạy 5km mỗi sáng. Đọc 50 trang mỗi tối.
+      Tới ngày thứ tư, khi năng lượng đó hết, bạn còn lại một kế hoạch
+      được thiết kế cho một người không còn tồn tại.
+
+      Cách sửa: đặt khối lượng ở mức bạn làm được vào NGÀY TỆ NHẤT của
+      mình, không phải ngày tốt nhất. Nghe thì thấy ít đến mức buồn cười.
+      Nhưng một việc buồn cười làm được 300 ngày vẫn hơn một việc hùng
+      tráng làm được 4 ngày.
+
+      NGUYÊN NHÂN HAI: bẫy được ăn cả ngã về không.
+
+      Ngày thứ ba bạn chỉ chạy được 2km thay vì 5km. Trong đầu vang lên:
+      "hôm nay coi như hỏng". Và vì hôm nay đã hỏng, ngày mai bạn cũng
+      chẳng buồn bắt đầu.
+
+      Nhưng 2 trên 5 km vẫn hơn 0. Sáu trên bảy ngày vẫn hơn không ngày nào.
+      Cái thang điểm "hoàn hảo hoặc vô nghĩa" là thứ bạn tự dựng lên,
+      và nó không đo lường gì cả ngoài việc làm bạn nản.
+
+      Cách sửa: định nghĩa trước một "mức tối thiểu" cho ngày tệ.
+      Không chạy được thì đi bộ 10 phút. Không đọc được 50 trang thì đọc
+      1 trang. Mục đích của ngày tệ không phải tiến bộ — mà là không đứt.
+
+      NGUYÊN NHÂN BA: phần thưởng đến quá muộn.
+
+      Đây là nguyên nhân nặng nhất và ít người nói tới.
+
+      Chạy bộ thì mệt NGAY hôm nay. Khoẻ thì ba tháng nữa. Não người
+      không định giá hai thứ đó ngang nhau — nó chiết khấu rất nặng
+      bất cứ thứ gì ở xa trong tương lai.
+
+      Nghĩa là mỗi sáng, não bạn làm một phép so sánh mà phần thưởng
+      luôn thua. Không phải vì bạn thiển cận. Vì đó là cách nó được
+      thiết kế.
+
+      Cách sửa: đừng chờ phần thưởng thật. Tự tạo một phần thưởng nhỏ
+      xảy ra NGAY hôm nay. Đánh dấu vào lịch. Một con số đếm chuỗi ngày.
+      Bất cứ thứ gì cho não một tín hiệu "xong rồi" trong vòng vài giây
+      sau khi làm.
+
+      Nghe thì trẻ con. Nhưng đó chính xác là thứ khiến trò chơi điện tử
+      giữ được người ta hàng trăm giờ trong khi việc học thì không:
+      trò chơi trả thưởng sau mỗi ba mươi giây, còn tấm bằng thì bốn năm.
+
+      ĐIỂM CHUNG CỦA CẢ BA:
+
+      Không cái nào liên quan tới ý chí. Cả ba đều là lỗi thiết kế.
+
+      Và đây là tin tốt — sửa một hệ thống thì dễ hơn sửa một con người
+      rất nhiều.
+
+  CHỐT:
+      Trong ba nguyên nhân trên, bạn nghĩ mình dính cái nào nặng nhất?
+      Tôi dính cái thứ ba, suốt nhiều năm.
+
+  BÌNH LUẬN ĐẦU TIÊN:
+      Tôi viết dài hơn ở đây: habit-mastery.com/blog
+      App tôi làm cũng chính là để giải nguyên nhân thứ ba — cho não một
+      phần thưởng ngay hôm nay thay vì ba tháng nữa. Miễn phí.
+
+  LƯU Ý:
+      Đây là bài mạnh nhất tập. Đăng ở nhóm lớn nhất, vào 20-22h.
+      Đã có sẵn bài blog tương ứng nên bình luận dẫn link là hợp lý,
+      không gượng.
+      Nếu chỉ đăng được MỘT bài trong cả tập này, đăng bài này.
+
+
+================================================================================
+BÀI 6 — "SỰ CẦU TOÀN GIẾT THÓI QUEN, KHÔNG PHẢI SỰ LƯỜI BIẾNG"
+Nhóm: A, F  |  Độ dài: ~400 chữ  |  Kèm kịch bản video số 6
+================================================================================
+
+  BA DÒNG ĐẦU:
+      Người bỏ tập gym sớm nhất thường không phải người lười nhất.
+      Mà là người nghiêm túc nhất.
+      Tôi mất khá lâu mới hiểu vì sao.
+
+  NỘI DUNG:
+      Hãy so hai người.
+
+      Người thứ nhất tập cho vui. Tuần này bận thì bỏ hai buổi, tuần sau
+      tập lại, chả nghĩ ngợi gì. Không có kế hoạch, không có mục tiêu rõ.
+
+      Người thứ hai lên lịch chi tiết, mua sẵn đồ, đặt mục tiêu ba tháng,
+      chụp ảnh ngày đầu để so sánh về sau.
+
+      Sau sáu tháng, ai còn tập?
+
+      Thường là người thứ nhất. Và điều đó thật vô lý — cho tới khi bạn
+      nhìn kỹ chuyện gì xảy ra vào cái ngày cả hai cùng lỡ một buổi.
+
+      Với người thứ nhất, lỡ một buổi là... lỡ một buổi. Không có gì bị
+      phá vỡ, vì chẳng có gì hoàn hảo để mà phá.
+
+      Với người thứ hai, lỡ một buổi là một VẾT NỨT trên một thứ đang
+      hoàn hảo. Kế hoạch không còn sạch nữa. Bảng theo dõi có một ô trống.
+      Và với người cầu toàn, một thứ đã bị làm bẩn thì thà bỏ hẳn còn hơn
+      là tiếp tục trong tình trạng dở dang.
+
+      Nghe kỹ sẽ thấy đây không phải chuyện lười. Đây là chuyện không
+      chịu nổi sự dở dang.
+
+      Người cầu toàn không bỏ vì họ không muốn. Họ bỏ vì thứ họ muốn —
+      một chuỗi hoàn hảo — đã không còn khả thi, và họ không có khái niệm
+      nào cho "tốt vừa đủ".
+
+      Nếu bạn nhận ra mình trong đoạn trên, có một câu hỏi đáng đổi:
+
+      Đừng hỏi "chuỗi của mình còn nguyên vẹn không".
+      Hãy hỏi "trong 30 ngày qua mình làm được bao nhiêu ngày".
+
+      Câu thứ nhất chỉ có hai đáp án: nguyên hoặc hỏng. Và một khi đã
+      hỏng thì không có đường quay lại.
+
+      Câu thứ hai có ba mươi mốt đáp án, và không đáp án nào là thất bại.
+      22 trên 30 là một con số rất tốt. Nó chỉ trông tệ khi bạn so nó
+      với 30 trên 30 — một con số mà gần như không ai đạt được.
+
+  CHỐT:
+      Bạn thuộc kiểu nào trong hai người trên? Tôi là người thứ hai,
+      và đã bỏ dở nhiều thứ hơn tôi muốn thừa nhận.
+
+  BÌNH LUẬN ĐẦU TIÊN:
+      Cũng vì vậy mà app tôi làm hiển thị bản đồ nhiệt cả năm chứ không
+      chỉ con số chuỗi — để người ta nhìn thấy 22 ngày đã làm được, chứ
+      không chỉ 8 ngày đã lỡ. habit-mastery.com
+
+  LƯU Ý:
+      Bài này rất hợp nhóm gym và chạy bộ — ở đó ai cũng có một câu
+      chuyện bỏ dở. Tỉ lệ bình luận cao hơn hẳn nhóm phát triển bản thân.
+
+
+================================================================================
+BÀI 7 — "QUY LUẬT #1: ĐƠN VỊ BẠN DÙNG ĐỂ ĐO"
+Nhóm: C, D  |  Độ dài: ~430 chữ  |  Kèm kịch bản video số 7
+================================================================================
+
+  BA DÒNG ĐẦU:
+      Hai người cùng xếp hàng 40 phút để tiết kiệm 50 nghìn.
+      Người thứ nhất nghĩ: tiết kiệm được 50 nghìn.
+      Người thứ hai nghĩ: 40 phút của tôi có đáng 50 nghìn không?
+
+  NỘI DUNG:
+      Khác biệt giữa hai người đó không nằm ở số tiền trong túi.
+      Nó nằm ở ĐƠN VỊ họ dùng để đo mọi quyết định.
+
+      Người đo bằng tiền sẽ luôn tìm cách đổi thời gian lấy tiền:
+      đi xa hơn để mua rẻ hơn, tự làm thay vì thuê, xếp hàng để được
+      khuyến mãi, sửa cái máy cũ thay vì mua máy mới.
+
+      Người đo bằng thời gian làm ngược lại: trả thêm tiền để khỏi mất
+      thời gian, thuê người làm việc mình không giỏi, mua thứ dùng được
+      lâu để khỏi mua lại.
+
+      Về ngắn hạn, người thứ nhất trông khôn ngoan hơn. Họ tiết kiệm được
+      thật. Con số nhìn thấy được.
+
+      Nhưng có một điều bất đối xứng khiến toàn bộ chuyện này lệch hẳn
+      về một phía:
+
+      Tiền mất rồi kiếm lại được. Thời gian thì không.
+
+      Và bất đối xứng thứ hai, nặng hơn: thời gian tiết kiệm được có thể
+      TÁI ĐẦU TƯ. Bốn mươi phút đó nếu dùng để học một kỹ năng, làm thêm
+      một việc, hay đơn giản là nghỉ ngơi đủ để ngày mai làm việc tốt hơn,
+      thì nó sinh lời. Còn năm mươi nghìn tiết kiệm được thì nằm im
+      một chỗ.
+
+      Đây không phải lời khuyên "hãy tiêu tiền thoải mái". Người chưa đủ
+      ăn thì đo bằng tiền là hoàn toàn đúng, và không có lựa chọn nào khác.
+
+      Nhưng rất nhiều người đã qua giai đoạn đó từ lâu mà vẫn giữ nguyên
+      thói quen đo lường cũ. Họ kiếm được ba trăm nghìn một giờ nhưng vẫn
+      dành một tiếng để so giá tiết kiệm hai mươi nghìn.
+
+      Thói quen tính toán được hình thành lúc còn thiếu thốn, và nó không
+      tự mất đi khi hoàn cảnh đổi.
+
+      Câu hỏi đáng tự hỏi một lần:
+
+      Một giờ của tôi đáng bao nhiêu tiền? Và tôi có đang hành xử đúng
+      như con số đó không?
+
+      Phần lớn người ta chưa bao giờ tính con số này. Đó là lý do họ
+      không nhận ra mình đang bán rẻ nó mỗi ngày.
+
+  CHỐT:
+      Đây là quy luật #1 trong loạt bài tôi rút từ những quyển sách đang
+      đọc. Tuần sau tôi viết tiếp quy luật #2.
+
+  BÌNH LUẬN ĐẦU TIÊN:
+      Ý này tôi rút từ quyển "Logic Người Nghèo" — một trong 14 quyển
+      tôi số hoá đưa vào app của mình. Ai muốn đọc bản đầy đủ:
+      habit-mastery.com, miễn phí.
+
+  LƯU Ý:
+      ĐÂY LÀ BÀI QUAN TRỌNG NHẤT VỀ MẶT CHIẾN LƯỢC, dù không phải bài
+      hay nhất. Vì nó mở ra một LOẠT đánh số, mà loạt đánh số là thứ
+      khiến người ta bấm theo dõi.
+
+      14 quyển sách trong app là 14 mỏ nội dung. Mỗi tuần một quy luật
+      thì đủ dùng trong nhiều năm.
+
+      Quan trọng: đánh số thật và giữ đúng lịch. Hứa "tuần sau quy luật
+      #2" mà không có thì mất uy tín, và người ta sẽ không tin lần sau.
+
+
+================================================================================
+BÀI 8 — "MỘT THỨ 5% NGƯỜI CẦN, 100% PHẢI TRẢ GIÁ"
+Nhóm: E (và Threads, trang cá nhân)  |  Độ dài: ~480 chữ  |  Kịch bản video số 8
+================================================================================
+
+  BA DÒNG ĐẦU:
+      Người dùng bảo app tôi mở hơi lâu. Tôi đo thử.
+      Một file duy nhất chiếm 82% mọi thứ họ phải tải về.
+      Và bài học rút ra không phải "file quá to".
+
+  NỘI DUNG:
+      Bối cảnh: tôi tự làm một app rèn thói quen. Trong app có 14 quyển
+      sách để người dùng đọc.
+
+      Toàn bộ nội dung 14 quyển nằm trong một file duy nhất, nặng khoảng
+      1,3 MB. Tổng cộng người dùng phải tải 3,39 MB cho lần vào đầu tiên.
+
+      Chỗ đau nằm ở đây: file sách đó chỉ được dùng ở ĐÚNG MỘT nơi —
+      khi người ta mở mục đọc sách ra.
+
+      Nghĩa là một người vào app chỉ để bấm điểm danh rồi thoát, việc
+      chiếm mười lăm giây, vẫn phải tải đủ toàn văn 14 quyển sách trước đã.
+
+      Tôi đoán khoảng 5% lượt mở app là để đọc sách. Nhưng 100% lượt mở
+      đều trả giá cho nó.
+
+      Đây mới là bài học, và nó không phải chuyện kỹ thuật:
+
+      Trong bất cứ sản phẩm nào, hãy tìm những thứ mà một thiểu số cần
+      nhưng toàn bộ phải trả giá.
+
+      Cái giá không phải lúc nào cũng là dung lượng. Nó có thể là:
+      - một trường bắt buộc trong form đăng ký mà chỉ bộ phận kế toán cần
+      - một bước xác nhận thêm vì 1% người dùng từng gian lận
+      - một mục trong menu chính mà 3% người bấm, làm 97% còn lại
+        phải đọc lướt qua nó mỗi lần
+
+      Những thứ này rất khó nhìn thấy, vì mỗi cái đều có lý do chính đáng
+      lúc được thêm vào. Không ai thêm một thứ vô ích. Chúng chỉ trở thành
+      gánh nặng khi cộng dồn.
+
+      Cách tôi sửa cũng đơn giản, không có gì cao siêu: không tải file
+      sách lúc mở app nữa, mà đợi tới lúc người dùng thật sự bấm vào
+      mục đọc sách mới tải.
+
+      Kết quả: 3,39 MB xuống còn 0,69 MB. Giảm gần 80%.
+
+      Một chi tiết thú vị: tôi đã đoán sai nguyên nhân trước khi đo.
+      Tôi tưởng app chậm vì mã nguồn quá nhiều, phải xử lý lâu.
+      Đo ra thì phần xử lý chỉ mất 53 mili giây — không đáng kể.
+      Toàn bộ vấn đề nằm ở việc tải file.
+
+      Nếu tôi cứ tin vào linh cảm mà đi tối ưu mã nguồn, tôi đã tốn
+      hai ngày để cải thiện được 53 mili giây.
+
+      Đo trước. Luôn luôn đo trước.
+
+  CHỐT:
+      Bạn có từng tìm ra thứ tương tự trong sản phẩm của mình không —
+      cái mà thiểu số cần nhưng tất cả phải chịu?
+
+  BÌNH LUẬN ĐẦU TIÊN:
+      Tôi ghi lại chi tiết kèm số đo ở đây: habit-mastery.com/blog
+      App đang nói tới là habit-mastery.com, tôi tự làm, miễn phí.
+
+  LƯU Ý:
+      Bài này hợp Threads và nhóm lập trình hơn nhóm phát triển bản thân.
+      Ở nhóm kỹ thuật, người ta sẽ hỏi chi tiết — chuẩn bị sẵn để trả lời
+      thật, đừng né. Trả lời được kỹ thuật là thứ xây uy tín nhanh nhất
+      trong tệp này.
+
+      Đoạn "tôi đã đoán sai" là phần giá trị nhất của bài. Đừng cắt nó
+      cho ngắn.
+
+
+================================================================================
+BÀI 9 — "LOG SẠCH KHÔNG CÓ NGHĨA LÀ KHÔNG CÓ LỖI"
+Nhóm: E (và Threads)  |  Độ dài: ~450 chữ  |  Kèm kịch bản video số 9
+================================================================================
+
+  BA DÒNG ĐẦU:
+      Máy chủ trả về mã 200. Log sạch bong, không một dòng lỗi.
+      Mà tính năng xác thực hai lớp thì hỏng hoàn toàn trên tên miền chính.
+      Không một người dùng nào báo.
+
+  NỘI DUNG:
+      Đây là loại lỗi tôi sợ nhất, vì nó không để lại dấu vết ở bất cứ
+      chỗ nào tôi thường nhìn.
+
+      Chuyện xảy ra thế này. App của tôi gửi mã xác thực qua email.
+      Phần kiểm tra nguồn gọi được viết theo kiểu: chấp nhận nếu tên miền
+      kết thúc bằng ".web.app" — vì lúc viết, app chỉ chạy trên tên miền
+      miễn phí của Firebase.
+
+      Sau đó tôi mua tên miền riêng. Tên miền mới không khớp mẫu đó.
+
+      Máy chủ vẫn nhận yêu cầu, vẫn xử lý, vẫn trả về mã 200 thành công.
+      Nhưng phần khai báo nguồn được phép trong phản hồi thì sai — nên
+      TRÌNH DUYỆT chặn kết quả trước khi nó tới được app.
+
+      Chỉ có trình duyệt biết. Máy chủ không hề biết mình vừa thất bại.
+
+      Ba điều tôi rút ra:
+
+      MỘT. Log sạch chỉ chứng minh rằng không có lỗi Ở PHÍA BẠN NHÌN.
+      Có cả một lớp lỗi xảy ra sau khi máy chủ đã trả lời xong — và
+      không hệ thống giám sát phía máy chủ nào thấy được.
+
+      HAI. Người dùng gần như không bao giờ báo lỗi. Họ chỉ bấm nút,
+      thấy không có gì xảy ra, rồi bỏ đi. Trong đầu họ đó không phải
+      "phần mềm này có lỗi" mà là "cái này không dùng được". Không ai
+      viết email cho một thứ không dùng được.
+
+      Nghĩa là: số lỗi bạn biết luôn nhỏ hơn số lỗi thật, và bạn không
+      có cách nào ước lượng khoảng cách đó.
+
+      BA — cái này mới đắt nhất: mọi quy tắc dạng "kết thúc bằng..."
+      hay "chứa chuỗi..." đều là một quả bom hẹn giờ. Nó đúng vào ngày
+      bạn viết, và sai vào ngày hạ tầng đổi. Mà hạ tầng thì luôn đổi.
+
+      Cách chữa duy nhất tôi tin được là liệt kê tường minh: viết hẳn ra
+      danh sách những thứ được phép. Dài hơn, xấu hơn, nhưng khi thêm
+      một tên miền mới, bạn buộc phải nhớ tới nó.
+
+      Và cách phát hiện duy nhất là tự thử ĐÚNG như người dùng thật:
+      mở trình duyệt, vào bằng tên miền thật, bấm đúng cái nút đó.
+      Không phải gọi thẳng vào máy chủ bằng công cụ dòng lệnh — vì
+      công cụ dòng lệnh không thực thi các quy tắc mà trình duyệt thực thi.
+
+  CHỐT:
+      Bạn từng gặp lỗi nào mà mọi chỉ số đều xanh nhưng tính năng thì
+      chết hẳn chưa?
+
+  BÌNH LUẬN ĐẦU TIÊN:
+      App tôi đang nói tới: habit-mastery.com — tôi làm một mình và
+      ghi lại mọi thứ hỏng ở mục blog.
+
+  LƯU Ý:
+      Đây là bài "build in public" đúng nghĩa: kể chuyện mình sai, không
+      kể chuyện mình giỏi. Tệp kỹ thuật rất ghét khoe và rất thích
+      thừa nhận.
+
+      Đừng thêm bất kỳ câu nào kiểu "may mà tôi phát hiện kịp". Kể
+      trơ trọi là đủ.
+
+
+================================================================================
+BÀI 10 — "VÌ SAO NHÌN NGƯỜI LẠ KỶ LUẬT HƠN LẠI KHIẾN BẠN LÀM ĐƯỢC"
+Nhóm: C  |  Độ dài: ~400 chữ  |  Kèm kịch bản video số 10   ★ ĐỂ DÀNH
+================================================================================
+
+  ĐỂ DÀNH: chỉ đăng khi bảng xếp hạng đã đủ người và có vài chuỗi dài.
+  Đăng lúc còn thưa sẽ phản tác dụng — người đọc vào xem thấy vắng.
+
+  BA DÒNG ĐẦU:
+      Tôi làm ra app này. Và tôi đang đứng thứ mười bốn trên bảng xếp hạng
+      của chính nó.
+      Thành thật mà nói thì hơi cay. Nhưng nó lại có ích.
+
+  NỘI DUNG:
+      Có một điều trong tâm lý học xã hội gọi là so sánh hướng lên —
+      việc tự so mình với người đang làm tốt hơn.
+
+      Nó có hai mặt rất rõ ràng, và mặt nào xuất hiện phụ thuộc vào
+      đúng một yếu tố.
+
+      Mặt xấu: nếu khoảng cách quá lớn, hoặc bạn thấy nó không thể rút ngắn,
+      so sánh hướng lên chỉ tạo ra sự nản. Nhìn một vận động viên chuyên
+      nghiệp không khiến ai đó đi chạy. Nó khiến người ta thấy mình
+      không thuộc về chỗ đó.
+
+      Mặt tốt: nếu khoảng cách VỪA ĐỦ GẦN để tin là có thể đuổi kịp,
+      nó trở thành động lực rất mạnh. Mạnh hơn nhiều so với mục tiêu
+      tự đặt ra cho mình.
+
+      Yếu tố quyết định là: người kia có giống bạn không.
+
+      Đây là lý do vì sao xem người lạ trên mạng có chuỗi 56 ngày lại
+      hiệu quả hơn xem một quyển sách về kỷ luật. Người đó không phải
+      chuyên gia. Không có gì đặc biệt. Họ chỉ đơn giản là đã bấm nút
+      nhiều ngày hơn bạn.
+
+      Và điều đó loại bỏ hết mọi lý do bào chữa.
+
+      Với sách thì bạn còn nói được "tác giả người ta khác mình".
+      Với một cái tên vô danh đứng trên bạn ba bậc thì không.
+
+      Vài điều đáng lưu ý nếu bạn muốn dùng cơ chế này cho mình:
+
+      Chọn người hơn bạn một chút, đừng chọn người hơn quá xa. Người đứng
+      trên bạn ba bậc có ích hơn người đứng số một.
+
+      Và đừng biến nó thành cuộc thi thật sự. Mục đích không phải thắng.
+      Mục đích là có một bằng chứng sống rằng con số đó làm được — vì
+      thứ ngăn phần lớn người ta không phải sự lười, mà là niềm tin ngầm
+      rằng "kiểu người như mình không làm được việc đó".
+
+      Một cái tên vô danh trên bảng xếp hạng phá vỡ niềm tin đó nhanh hơn
+      bất cứ lời động viên nào.
+
+  CHỐT:
+      Vào xem bạn đứng thứ mấy. Tôi thứ mười bốn, và tôi là người làm ra
+      cái app này.
+
+  BÌNH LUẬN ĐẦU TIÊN:
+      habit-mastery.com — miễn phí, đăng ký xong là có tên trên bảng.
+
+  LƯU Ý:
+      Sức mạnh của bài này nằm ở việc người làm sản phẩm tự nhận thua.
+      Đừng sửa con số cho đẹp. Nếu lúc đăng bạn đứng thứ 3 thì viết
+      thứ 3 — nhưng khi đó bài sẽ yếu hơn hẳn, cân nhắc đổi bài khác.
+
+
+================================================================================
+LỊCH ĐĂNG ĐỀ XUẤT (8 TUẦN)
+================================================================================
+
+  Nguyên tắc: bài trụ cột trước, bài mở loạt sớm, bài "để dành" cuối cùng.
+
+  Tuần 1   Bài 5  (Vì sao bỏ cuộc ngày thứ 4)      — nhóm A lớn nhất
+  Tuần 2   Bài 2  (21 ngày là con số sai)           — nhóm A + F
+  Tuần 3   Bài 7  (Quy luật #1)                     — nhóm D, mở loạt
+  Tuần 4   Bài 3  (Đừng lỡ hai lần liên tiếp)       — nhóm B
+  Tuần 5   Bài 8  (5% cần, 100% trả giá)            — nhóm E + Threads
+  Tuần 6   Bài 1  (Đặt tên cho trạng thái)          — nhóm A
+  Tuần 7   Bài 4  (Cá cược với bạn)                 — nhóm C
+  Tuần 8   Bài 6  (Cầu toàn giết thói quen)         — nhóm F
+
+  Bài 9 xen vào bất cứ tuần nào trên Threads, không tính vào lịch nhóm.
+  Bài 10 để dành, chưa xếp lịch.
+
+  Từ tuần 3 trở đi, mỗi tuần thêm một bài "Quy luật #n" rút từ 14 quyển
+  sách — đó là loạt bài giữ chân người theo dõi.
+
+
+================================================================================
+ĐO CÁI GÌ
+================================================================================
+
+  Đừng nhìn lượt thích. Ba chỉ số này mới nói lên điều gì đó:
+
+  1. BÌNH LUẬN THẬT (không tính "hay quá", "cảm ơn ad").
+     Bình luận kể chuyện của chính họ = bài đã chạm.
+
+  2. LƯỢT CHIA SẺ. Người ta chia sẻ thứ khiến họ trông thông minh hơn
+     trong mắt bạn bè. Bài được chia sẻ nhiều là bài có kiến thức thật.
+
+  3. LƯỢT BẤM VÀO BÌNH LUẬN CÓ LINK. Đây là con số phễu duy nhất.
+     Nếu bài nhiều tương tác mà không ai bấm link, nghĩa là bài hay
+     nhưng không liên quan tới sản phẩm — vẫn tốt cho uy tín, nhưng
+     đừng nhầm nó với tăng trưởng.
+
+  Sau 8 tuần, nhìn lại: bài nào có tỉ lệ bấm link cao nhất thì viết
+  thêm 3 bài cùng góc đó. Đừng vội tìm góc mới.
+
+
+================================================================================
+GHI CHÚ VỀ TÍNH CHÍNH XÁC — ĐỌC TRƯỚC KHI ĐĂNG
+================================================================================
+
+  Uy tín xây bằng nhiều tháng, mất trong một bình luận bị bắt lỗi.
+  Những điều dưới đây phân định rõ cái gì chắc, cái gì phải nói dè dặt.
+
+  NÓI ĐƯỢC, CÓ CƠ SỞ:
+  - Nghiên cứu Lally và cộng sự (Đại học London, 2009): trung vị khoảng
+    66 ngày, dao động từ 18 tới hơn 200 ngày.
+  - Con số "21 ngày" bắt nguồn từ quan sát lâm sàng của bác sĩ phẫu thuật
+    thẩm mỹ Maxwell Maltz những năm 1960, không phải nghiên cứu về thói quen.
+  - Affect labeling (gọi tên cảm xúc làm dịu phản ứng cảm xúc) — có
+    nghiên cứu hình ảnh não bộ ủng hộ.
+  - Hiệu ứng vi phạm kiêng khem (abstinence violation effect) — khái niệm
+    có thật trong nghiên cứu về tái nghiện.
+  - Chiết khấu theo thời gian (temporal discounting) — nguyên lý cơ bản,
+    được thừa nhận rộng rãi.
+  - Commitment device — khái niệm chuẩn trong kinh tế học hành vi.
+  - So sánh hướng lên (upward social comparison) — lý thuyết so sánh
+    xã hội của Festinger.
+
+  KHÔNG ĐƯỢC NÓI:
+  - Bất kỳ con số phần trăm nào không có trong tài liệu này. Đừng bịa
+    "87% người bỏ cuộc trong tuần đầu" — kiểu số này rất dễ bị bắt.
+  - "Khoa học đã chứng minh". Nghiên cứu cho thấy xu hướng, không
+    chứng minh quy luật.
+  - Con số "5% người dùng mở sách" trong bài 8 — đó là TÔI ƯỚC LƯỢNG,
+    và trong bài đã viết rõ là "tôi đoán". Giữ nguyên chữ "đoán".
+
+  NẾU BỊ HỎI NGUỒN:
+  Dẫn thẳng, thừa nhận nếu không chắc. Câu "tôi nhớ là đọc ở X, để tôi
+  tìm lại rồi gửi" tốt hơn nhiều so với việc bịa một nguồn nghe cho oai.
+
+  NẾU BỊ TRANH LUẬN:
+  Nhường. Một bình luận cãi thắng không đem về người dùng nào, nhưng
+  một bình luận cãi thua trước đám đông thì làm hỏng cả bài.
+
+================================================================================

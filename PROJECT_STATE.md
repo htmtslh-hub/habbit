@@ -344,6 +344,46 @@ Kiểm chứng: dựng lại đúng thứ tự tải trong Node, chạy chính `
 cho `curLang='en'` trong khi ngôn ngữ thật là `'vi'`; người đã lưu `'zh'` cũng ra `'en'`. Sau
 bản vá cả 3 trường hợp đều khớp (6/6 đạt).
 
+### 21. Toàn Bộ Thư Mục `.git` Bị Deploy Công Khai (10/09/2026)
+
+Phát hiện khi đang xác minh một việc khác: bản deploy có **992 file**, trong đó **932 file
+thuộc `/.git/`**. Nghĩa là `https://habit-mastery.com/.git/` phục vụ toàn bộ kho mã nguồn kèm
+lịch sử commit. Kèm theo đó là `/.vercel/project.json` (lộ `projectId` + `orgId`, chính Vercel
+ghi trong README của thư mục đó: "you should not share the .vercel folder with anyone").
+
+**Nguyên nhân:** danh sách `ignore` trong `firebase.json` có `"**/.*"`. Mẫu này chỉ khớp
+**tên file** bắt đầu bằng dấu chấm, KHÔNG khớp nội dung bên trong thư mục bắt đầu bằng dấu
+chấm. `.git/config` có tên là `config` — không bắt đầu bằng dấu chấm — nên lọt.
+
+**Bản vá:** thêm `"**/.*/**"` vào cả hai site.
+
+**Mức độ thiệt hại thực tế — thấp**, đã kiểm chứng chứ không phỏng đoán:
+- Kho `htmtslh-hub/habbit` trên GitHub vốn đã là **public**, nên mã nguồn không lộ thêm gì.
+- `.git/config` **không** nhúng token (URL remote dạng HTTPS thường).
+- Quét toàn bộ lịch sử commit: không có private key, `CRON_SECRET`, khoá API hay
+  service account nào từng được commit. Khoá Firebase Admin luôn nằm ngoài repo.
+
+**Hệ quả phụ đáng giá:** mỗi bản deploy giảm từ **79 MB xuống 8 MB** (`.git` chiếm gần hết).
+Quota Hosting 10 GB của gói Spark từ nay đủ cho gấp khoảng 10 lần số lần deploy so với trước.
+
+**Kiểm chứng không mất file hợp lệ:** 992 − 932 (`.git`) − 2 (`.vercel`) − 1 (`.github`) = **57**,
+đúng bằng số file bản mới. Đã curl xác nhận 12 đường dẫn chính đều 200 và 7 đường dẫn nhạy cảm
+đều 404.
+
+⚠️ **Nếu sau này cần `.well-known/`** (xác minh tên miền cho Paddle, Apple…), mẫu `"**/.*/**"`
+sẽ chặn luôn thư mục đó. Khi ấy phải thêm ngoại lệ, nếu không việc xác minh sẽ thất bại
+mà không rõ lý do.
+
+### 22. Thư Mục `facebook/` — Tài Liệu Nội Dung (10/09/2026)
+
+`facebook/content-scripts.txt` (10 kịch bản video) và `facebook/facebook-posts.txt` (10 bài
+viết Facebook dạng cho đi kiến thức). Đã thêm `"facebook/**"` vào `ignore` của cả hai site và
+curl xác nhận 404.
+
+⚠️ **Quy tắc chưa bao giờ thay đổi:** mọi tài liệu nội bộ mới thêm vào dự án (`.txt`, thư mục
+mới) đều PHẢI được thêm vào `ignore` của `firebase.json` cho **cả hai site**, rồi curl kiểm tra
+404 trên production. Mặc định của Firebase Hosting là deploy tất cả.
+
 ## 🎯 5. KẾ HOẠCH BƯỚC TIẾP THEO
 
 ### Tính năng
