@@ -318,6 +318,32 @@ Nay: tải lên dưới tên tạm `.uploading` → xong mới xoá bản cũ �
 `state === 'uploaded'` và kích thước khớp (GitHub trả `state: 'starter'` khi chưa nhận đủ). Cuối
 cùng **hỏi lại GitHub** xác nhận đủ asset, thiếu thì thoát với mã lỗi thay vì báo thành công.
 
+### 20. Ngôn Ngữ Bị Kẹt Ở `en` — lỗi thứ tự tải (10/09/2026)
+
+Khung trích dẫn hằng ngày luôn hiện **tiếng Anh** dù toàn bộ giao diện đang là tiếng Việt.
+
+**Nguyên nhân (sâu hơn vẻ ngoài):** `i18n.js` và `app.js` đều nằm cuối `<body>`, nên lúc chúng
+được phân tích thì `document.readyState` vẫn là `'loading'` → `i18n.init()` bị hoãn tới
+`DOMContentLoaded`. Nhưng `app.js` gán `curLang = I18N.getLanguage()` **ngay lúc tải**, khi
+`currentLang` bên `i18n` vẫn là `DEFAULT_LANG = 'en'`. Sau đó `init()` dò ra ngôn ngữ thật
+nhưng **không bắn** `hmLanguageChanged` (chỉ `setLanguage()` mới bắn) → `curLang` kẹt ở `'en'`
+vĩnh viễn, **kể cả với người đã tự chọn tiếng Việt/Trung** (tải lại trang là mất lựa chọn).
+
+⚠️ Đây **không phải lỗi riêng của khung trích dẫn**. Hơn 10 chỗ khác trong `app.js` đọc
+`curLang` để chọn tên cảnh giới, tên nhiệm vụ, tên vật phẩm, tên tháng — tất cả đều đang kẹt
+tiếng Anh. Sửa tận gốc bằng cách đồng bộ lại `curLang` ở đầu `initAuthGuard()` (chạy **sau**
+`i18n.init()` vì `i18n.js` đăng ký `DOMContentLoaded` trước).
+
+**Bài học:** biến cache ngôn ngữ ở tầng module là bẫy. Chỗ nào vẽ ra chữ thì gọi
+`getAppLanguage()` để hỏi thẳng `I18N` tại thời điểm vẽ.
+
+Sửa kèm: ảnh chia sẻ (`STOIC_QUOTES`) trước giờ chỉ có tiếng Việt → nay đủ 3 thứ tiếng;
+tooltip 3 nút của khung trích dẫn chuyển sang `data-i18n-title`; thêm tên tác giả tiếng Trung.
+
+Kiểm chứng: dựng lại đúng thứ tự tải trong Node, chạy chính `i18n.js` thật — người dùng `vi-VN`
+cho `curLang='en'` trong khi ngôn ngữ thật là `'vi'`; người đã lưu `'zh'` cũng ra `'en'`. Sau
+bản vá cả 3 trường hợp đều khớp (6/6 đạt).
+
 ## 🎯 5. KẾ HOẠCH BƯỚC TIẾP THEO
 
 ### Tính năng
