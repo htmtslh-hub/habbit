@@ -5413,6 +5413,14 @@ function detectAndSaveTrafficSource(){
 }
 
 function initAuthGuard(){
+    // [SỬA 10/09/2026] i18n.js và app.js cùng đăng ký DOMContentLoaded, i18n
+    // chạy trước. Tới đây nó đã dò xong ngôn ngữ thật, nhưng nó chỉ bắn sự
+    // kiện 'hmLanguageChanged' khi người dùng ĐỔI ngôn ngữ — lần dò đầu tiên
+    // thì không. Vì vậy curLang (gán lúc app.js vừa tải) vẫn kẹt ở 'en'.
+    // Đồng bộ lại một lần ở đây để mọi chỗ đọc curLang đều đúng ngay từ đầu.
+    if (window.I18N && typeof window.I18N.getLanguage === 'function') {
+        curLang = window.I18N.getLanguage();
+    }
     detectAndSaveTrafficSource();
     const loading = document.getElementById('authLoading');
     const app = document.getElementById('mainApp');
@@ -9638,12 +9646,14 @@ window._prevRecapSlide = prevRecapSlide;
 let shareSelectedRatio = 'story'; // 'story' (9:16) | 'square' (1:1)
 let shareSelectedTheme = 'cyberpunk'; // 'cyberpunk' | 'luxury' | 'sakura'
 
+// [SỬA 10/09/2026] Ảnh chia sẻ trước đây luôn in câu tiếng Việt, kể cả khi
+// app đang chạy tiếng Anh hoặc tiếng Trung. Nay có đủ 3 thứ tiếng.
 const STOIC_QUOTES = [
-    { text: "Kỷ luật là cây cầu nối giữa mục tiêu và thành tựu.", author: "Jim Rohn" },
-    { text: "Chúng ta là những gì chúng ta lặp đi lặp lại mỗi ngày.", author: "Aristotle" },
-    { text: "Chiến thắng vĩ đại nhất là chiến thắng chính bản thân mình.", author: "Plato" },
-    { text: "Kỷ luật hôm nay là tự do của ngày mai.", author: "Seneca" },
-    { text: "Không có sự vĩ đại nào đạt được mà thiếu đi sự rèn luyện kiên định.", author: "Marcus Aurelius" }
+    { vi: "Kỷ luật là cây cầu nối giữa mục tiêu và thành tựu.", en: "Discipline is the bridge between goals and accomplishment.", zh: "自律是连接目标与成就的桥梁。", author: "Jim Rohn", authorZh: "吉姆·罗恩" },
+    { vi: "Chúng ta là những gì chúng ta lặp đi lặp lại mỗi ngày.", en: "We are what we repeatedly do.", zh: "我们日复一日做的事情决定了我们。", author: "Aristotle", authorZh: "亚里士多德" },
+    { vi: "Chiến thắng vĩ đại nhất là chiến thắng chính bản thân mình.", en: "The greatest victory is to conquer yourself.", zh: "最伟大的胜利就是战胜自我。", author: "Plato", authorZh: "柏拉图" },
+    { vi: "Kỷ luật hôm nay là tự do của ngày mai.", en: "Discipline today equals freedom tomorrow.", zh: "今日的自律，铸就明日的自由。", author: "Seneca", authorZh: "塞内卡" },
+    { vi: "Không có sự vĩ đại nào đạt được mà thiếu đi sự rèn luyện kiên định.", en: "No great thing is created without steady practice.", zh: "不经持之以恒的磨炼，成不了任何伟业。", author: "Marcus Aurelius", authorZh: "马可·奥勒留" }
 ];
 
 function openShareCardModal() {
@@ -9833,13 +9843,16 @@ function renderShareCardToCanvas(ratio = null, theme = null) {
 
     // 6. STOIC QUOTE
     const quote = STOIC_QUOTES[Math.floor(Math.random() * STOIC_QUOTES.length)];
+    const qLang = getAppLanguage();
+    const qText = quote[qLang] || quote.vi;
+    const qAuthor = qLang === 'zh' ? (quote.authorZh || quote.author) : quote.author;
     ctx.textAlign = 'center';
     ctx.font = 'italic 700 24px sans-serif';
     ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-    ctx.fillText(`"${quote.text}"`, width / 2, currentY + 30);
+    ctx.fillText(`"${qText}"`, width / 2, currentY + 30);
     ctx.font = '600 20px sans-serif';
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-    ctx.fillText(`— ${quote.author}`, width / 2, currentY + 66);
+    ctx.fillText(`— ${qAuthor}`, width / 2, currentY + 66);
 
     // 7. FOOTER
     const footerY = height - 80;
@@ -11065,16 +11078,16 @@ function initPomodoroModal() {
 // --- 3. DAILY STOIC & MINDSET QUOTES ENGINE ---
 
 const DAILY_STOIC_QUOTES = [
-    { vi: "Kỷ luật là cây cầu nối giữa mục tiêu và thành tựu.", zh: "自律是连接目标与成就的桥梁。", en: "Discipline is the bridge between goals and accomplishment.", author: "Jim Rohn" },
-    { vi: "Chúng ta là những gì chúng ta lặp đi lặp lại mỗi ngày. Sự xuất sắc không phải là hành động mà là thói quen.", zh: "我们日复一日做的事情决定了我们。优秀不是一种行为，而是一种习惯。", en: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Aristotle" },
-    { vi: "Chiến thắng vĩ đại nhất là chiến thắng chính bản thân mình.", zh: "最伟大的胜利就是战胜自我。", en: "The first and greatest victory is to conquer yourself.", author: "Plato" },
-    { vi: "Kỷ luật hôm nay là tự do của ngày mai.", zh: "今日的自律，铸就明日的自由。", en: "Discipline today equals freedom tomorrow.", author: "Jocko Willink" },
-    { vi: "Bạn có quyền kiểm soát tâm trí của mình, chứ không phải các sự kiện bên ngoài. Hãy nhận ra điều này, và bạn sẽ tìm thấy sức mạnh.", zh: "你能掌控自己的心灵，而非外在事件。明白这一点，你将所向披靡。", en: "You have power over your mind - not outside events. Realize this, and you will find strength.", author: "Marcus Aurelius" },
-    { vi: "Chúng ta đau khổ trong trí tưởng tượng nhiều hơn là trong thực tế.", zh: "我们在想象中所受的苦，远多于在现实中所受的。", en: "We suffer more often in imagination than in reality.", author: "Seneca" },
-    { vi: "Đừng đòi hỏi sự việc phải diễn ra theo ý bạn, hãy mong muốn chúng diễn ra đúng như thực tế, và cuộc đời bạn sẽ an yên.", zh: "不要要求事情按你的期望发生，而是顺应事情原本的样子，你就会生活得平静。", en: "Don't demand that things happen as you wish, but wish them to happen as they do, and you will go on well.", author: "Epictetus" },
-    { vi: "Người chịu được những điều người khác không chịu được sẽ làm được những việc người khác không làm được.", zh: "能忍常人所不能忍者，必能成常人所不能成之事。", en: "He who can endure what others cannot will achieve what others never can.", author: "David Goggins" },
-    { vi: "Mỗi hành động bạn thực hiện là một lá phiếu cho kiểu người bạn muốn trở thành.", zh: "你的每一次行动，都是对你想成为的那种人投下的一票。", en: "Every action you take is a vote for the type of person you wish to become.", author: "James Clear" },
-    { vi: "Kẻ thắng người là có sức, kẻ thắng mình là người mạnh.", zh: "胜人者有力，自胜者强。", en: "He who overcomes others has strength; he who overcomes himself is mighty.", author: "Lão Tử (Lao Tzu)" }
+    { vi: "Kỷ luật là cây cầu nối giữa mục tiêu và thành tựu.", zh: "自律是连接目标与成就的桥梁。", en: "Discipline is the bridge between goals and accomplishment.", author: "Jim Rohn", authorZh: "吉姆·罗恩" },
+    { vi: "Chúng ta là những gì chúng ta lặp đi lặp lại mỗi ngày. Sự xuất sắc không phải là hành động mà là thói quen.", zh: "我们日复一日做的事情决定了我们。优秀不是一种行为，而是一种习惯。", en: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Aristotle", authorZh: "亚里士多德" },
+    { vi: "Chiến thắng vĩ đại nhất là chiến thắng chính bản thân mình.", zh: "最伟大的胜利就是战胜自我。", en: "The first and greatest victory is to conquer yourself.", author: "Plato", authorZh: "柏拉图" },
+    { vi: "Kỷ luật hôm nay là tự do của ngày mai.", zh: "今日的自律，铸就明日的自由。", en: "Discipline today equals freedom tomorrow.", author: "Jocko Willink", authorZh: "乔科·威林克" },
+    { vi: "Bạn có quyền kiểm soát tâm trí của mình, chứ không phải các sự kiện bên ngoài. Hãy nhận ra điều này, và bạn sẽ tìm thấy sức mạnh.", zh: "你能掌控自己的心灵，而非外在事件。明白这一点，你将所向披靡。", en: "You have power over your mind - not outside events. Realize this, and you will find strength.", author: "Marcus Aurelius", authorZh: "马可·奥勒留" },
+    { vi: "Chúng ta đau khổ trong trí tưởng tượng nhiều hơn là trong thực tế.", zh: "我们在想象中所受的苦，远多于在现实中所受的。", en: "We suffer more often in imagination than in reality.", author: "Seneca", authorZh: "塞内卡" },
+    { vi: "Đừng đòi hỏi sự việc phải diễn ra theo ý bạn, hãy mong muốn chúng diễn ra đúng như thực tế, và cuộc đời bạn sẽ an yên.", zh: "不要要求事情按你的期望发生，而是顺应事情原本的样子，你就会生活得平静。", en: "Don't demand that things happen as you wish, but wish them to happen as they do, and you will go on well.", author: "Epictetus", authorZh: "爱比克泰德" },
+    { vi: "Người chịu được những điều người khác không chịu được sẽ làm được những việc người khác không làm được.", zh: "能忍常人所不能忍者，必能成常人所不能成之事。", en: "He who can endure what others cannot will achieve what others never can.", author: "David Goggins", authorZh: "大卫·戈金斯" },
+    { vi: "Mỗi hành động bạn thực hiện là một lá phiếu cho kiểu người bạn muốn trở thành.", zh: "你的每一次行动，都是对你想成为的那种人投下的一票。", en: "Every action you take is a vote for the type of person you wish to become.", author: "James Clear", authorZh: "詹姆斯·克利尔" },
+    { vi: "Kẻ thắng người là có sức, kẻ thắng mình là người mạnh.", zh: "胜人者有力，自胜者强。", en: "He who overcomes others has strength; he who overcomes himself is mighty.", author: "Lao Tzu", authorVi: "Lão Tử", authorZh: "老子" }
 ];
 
 let curQuoteIndex = Math.floor(Math.random() * DAILY_STOIC_QUOTES.length);
@@ -11089,10 +11102,18 @@ function renderDailyQuoteWidget() {
     const authorEl = document.getElementById('dqwAuthor');
 
     if (textEl && authorEl) {
-        const lang = curLang || 'vi';
+        // [SỬA 10/09/2026] Trước đây đọc biến `curLang`. Biến đó được gán MỘT
+        // LẦN lúc app.js vừa tải, mà lúc ấy i18n.js chưa kịp chạy init() nên
+        // nó luôn nhận giá trị mặc định 'en' — kể cả với người dùng Việt Nam.
+        // Kết quả: toàn bộ giao diện tiếng Việt nhưng câu trích dẫn tiếng Anh.
+        // getAppLanguage() hỏi thẳng I18N tại thời điểm vẽ nên luôn đúng.
+        const lang = getAppLanguage();
         const txt = quote[lang] || quote.vi || quote.en;
+        const author = lang === 'zh' ? (quote.authorZh || quote.author)
+                     : lang === 'vi' ? (quote.authorVi || quote.author)
+                     : quote.author;
         textEl.textContent = `"${txt}"`;
-        authorEl.textContent = `— ${quote.author}`;
+        authorEl.textContent = `— ${author}`;
     }
 
     const refreshBtn = document.getElementById('dqwRefreshBtn');
