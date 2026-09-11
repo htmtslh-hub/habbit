@@ -263,6 +263,26 @@
     "pomoCompletedToast": "<svg class=\"rune-inline\" viewBox=\"0 0 48 48\"><use href=\"#i-spark\"></use></svg> Hoàn thành phiên tập trung! +15 Điểm thưởng Bonus",
     "pomoHabitCompletedToast": "<svg class=\"rune-inline\" viewBox=\"0 0 48 48\"><use href=\"#i-spark\"></use></svg> Đã hoàn thành 25p! Thói quen đã tự động check-in (+15 Điểm)",
     "quoteCopiedToast": "Đã sao chép câu trích dẫn!",
+    "pricing_badge": "💎 BẢNG GIÁ",
+    "pricing_headline": "Dùng miễn phí trọn đời. Nâng cấp khi cần.",
+    "pricing_free_name": "Miễn phí",
+    "pricing_free_price": "0đ",
+    "pricing_free_period": "trọn đời",
+    "pricing_pro_name": "⚡ Pro",
+    "pricing_pro_price": "99.000đ",
+    "pricing_pro_period": "30 ngày",
+    "pricing_yearly_save": "-65%",
+    "pricing_yearly_name": "👑 Premium",
+    "pricing_yearly_price": "399.000đ",
+    "pricing_yearly_period": "365 ngày",
+    "pricing_inc_title": "Gói trả phí gồm có:",
+    "pricing_inc_1": "Thống kê & biểu đồ phân tích nâng cao",
+    "pricing_inc_2": "Bản đồ nhiệt hoạt động cả năm",
+    "pricing_inc_3": "Nhật ký ghi chú mỗi ngày",
+    "pricing_inc_4": "Không giới hạn số thói quen",
+    "pricing_inc_5": "Huy hiệu & khung ảnh đại diện độc quyền",
+    "pricing_note": "Thanh toán một lần cho mỗi kỳ, <strong>không tự động gia hạn</strong>. Hoàn tiền đầy đủ trong 14 ngày, không cần nêu lý do.",
+    "pricing_mor": "Đơn hàng quốc tế do <strong>Paddle.com Market Ltd</strong> xử lý với vai trò Merchant of Record.",
     "dqwRefresh": "Đổi câu trích dẫn khác",
     "dqwCopy": "Sao chép câu nói",
     "dqwShare": "Khoe câu nói lên Story",
@@ -680,6 +700,26 @@
     "pomoCompletedToast": "<svg class=\"rune-inline\" viewBox=\"0 0 48 48\"><use href=\"#i-spark\"></use></svg> Deep work session completed! +15 Bonus",
     "pomoHabitCompletedToast": "<svg class=\"rune-inline\" viewBox=\"0 0 48 48\"><use href=\"#i-spark\"></use></svg> 25m Focus done! Habit automatically checked-in (+15)",
     "quoteCopiedToast": "Quote copied to clipboard!",
+    "pricing_badge": "💎 PRICING",
+    "pricing_headline": "Free forever. Upgrade when you need more.",
+    "pricing_free_name": "Free",
+    "pricing_free_price": "$0",
+    "pricing_free_period": "forever",
+    "pricing_pro_name": "⚡ Pro",
+    "pricing_pro_price": "$3.99",
+    "pricing_pro_period": "30 days",
+    "pricing_yearly_save": "-65%",
+    "pricing_yearly_name": "👑 Premium",
+    "pricing_yearly_price": "$15.99",
+    "pricing_yearly_period": "365 days",
+    "pricing_inc_title": "Paid plans include:",
+    "pricing_inc_1": "Advanced statistics and analytics charts",
+    "pricing_inc_2": "Full-year activity heatmap",
+    "pricing_inc_3": "Daily journal notes",
+    "pricing_inc_4": "Unlimited habits",
+    "pricing_inc_5": "Exclusive badges and avatar frames",
+    "pricing_note": "One-time payment per period, <strong>no auto-renewal</strong>. Full refund within 14 days, no questions asked.",
+    "pricing_mor": "International orders are handled by <strong>Paddle.com Market Ltd</strong> as Merchant of Record.",
     "dqwRefresh": "Show another quote",
     "dqwCopy": "Copy this quote",
     "dqwShare": "Share to your Story",
@@ -1106,6 +1146,26 @@
     "pomoCompletedToast": "<svg class=\"rune-inline\" viewBox=\"0 0 48 48\"><use href=\"#i-spark\"></use></svg> 专注完成！获得 +15 奖励",
     "pomoHabitCompletedToast": "<svg class=\"rune-inline\" viewBox=\"0 0 48 48\"><use href=\"#i-spark\"></use></svg> 25分钟专注完成！习惯已自动打卡 (+15)",
     "quoteCopiedToast": "格言已复制到剪贴板！",
+    "pricing_badge": "💎 价格",
+    "pricing_headline": "永久免费使用，需要时再升级。",
+    "pricing_free_name": "免费",
+    "pricing_free_price": "$0",
+    "pricing_free_period": "永久",
+    "pricing_pro_name": "⚡ Pro",
+    "pricing_pro_price": "$3.99",
+    "pricing_pro_period": "30 天",
+    "pricing_yearly_save": "-65%",
+    "pricing_yearly_name": "👑 Premium",
+    "pricing_yearly_price": "$15.99",
+    "pricing_yearly_period": "365 天",
+    "pricing_inc_title": "付费方案包含：",
+    "pricing_inc_1": "进阶统计与分析图表",
+    "pricing_inc_2": "全年活跃度热力图",
+    "pricing_inc_3": "每日笔记日志",
+    "pricing_inc_4": "习惯数量不限",
+    "pricing_inc_5": "专属徽章与头像框",
+    "pricing_note": "每期一次性付款，<strong>不会自动续费</strong>。14 天内全额退款，无需说明理由。",
+    "pricing_mor": "国际订单由 <strong>Paddle.com Market Ltd</strong> 以 Merchant of Record 身份处理。",
     "dqwRefresh": "换一句格言",
     "dqwCopy": "复制这句话",
     "dqwShare": "分享到快拍",
@@ -1660,6 +1720,16 @@
         // Chỉ chạy nếu người dùng chưa từng chọn ngôn ngữ thủ công
         const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_KEY);
         if (saved) return;
+
+        // [SỬA 11/09/2026] Tôn trọng tham số ?lang= / ?country= trên URL.
+        // Tham số này sinh ra để xem thử nhanh một ngôn ngữ, nhưng trước đây
+        // dò theo IP vẫn chạy và ghi đè lên nó — mở ?lang=en từ Việt Nam thì
+        // nút English sáng mà toàn bộ chữ vẫn là tiếng Việt. Không kiểm tra
+        // được trang tiếng Anh sẽ trông thế nào với người xem ở nước ngoài.
+        try {
+            const q = new URLSearchParams(window.location.search);
+            if (q.get("lang") || q.get("country")) return;
+        } catch (e) {}
 
         // Fetch nhanh với timeout 1000ms
         const controller = new AbortController();

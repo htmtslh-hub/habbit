@@ -15,7 +15,7 @@
     <link rel="alternate icon" href="./icon-192.png">
     <link rel="apple-touch-icon" href="./icon-512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="auth.css?v=5.12.0">
+    <link rel="stylesheet" href="auth.css?v=5.12.7">
 
 </head>
 <body>
@@ -80,6 +80,53 @@
                         <span class="feature-icon">🌍</span>
                         <span data-i18n="feature_multilang">Đa ngôn ngữ (VI/EN/中)</span>
                     </div>
+                </div>
+
+                <!-- ============================================================
+                     BẢNG GIÁ CÔNG KHAI
+                     Paddle duyệt tên miền có yêu cầu: "Pricing details or a
+                     pricing page - publicly visible WITHOUT LOGIN required".
+                     Giá vốn chỉ nằm trong cửa sổ nâng cấp sau khi đăng nhập,
+                     nên người duyệt của Paddle không nhìn thấy gì -> trượt.
+                     Khối này là bản công khai, không cần tài khoản.
+
+                     Giá hiển thị theo ngôn ngữ (xem i18n.js): tiếng Việt dùng
+                     VND, tiếng Anh và tiếng Trung dùng USD quy đổi trực tiếp.
+                     ============================================================ -->
+                <div class="pricing-box" id="pricingBox">
+                    <div class="pricing-badge" data-i18n="pricing_badge">💎 BẢNG GIÁ</div>
+                    <div class="pricing-headline" data-i18n="pricing_headline">Dùng miễn phí trọn đời. Nâng cấp khi cần.</div>
+
+                    <div class="pricing-grid">
+                        <div class="pricing-card">
+                            <div class="pricing-name" data-i18n="pricing_free_name">Miễn phí</div>
+                            <div class="pricing-price" data-i18n="pricing_free_price">0đ</div>
+                            <div class="pricing-period" data-i18n="pricing_free_period">trọn đời</div>
+                        </div>
+                        <div class="pricing-card">
+                            <div class="pricing-name" data-i18n="pricing_pro_name">⚡ Pro</div>
+                            <div class="pricing-price" data-i18n="pricing_pro_price">99.000đ</div>
+                            <div class="pricing-period" data-i18n="pricing_pro_period">30 ngày</div>
+                        </div>
+                        <div class="pricing-card pricing-card-best">
+                            <div class="pricing-save" data-i18n="pricing_yearly_save">-65%</div>
+                            <div class="pricing-name" data-i18n="pricing_yearly_name">👑 Premium</div>
+                            <div class="pricing-price" data-i18n="pricing_yearly_price">399.000đ</div>
+                            <div class="pricing-period" data-i18n="pricing_yearly_period">365 ngày</div>
+                        </div>
+                    </div>
+
+                    <div class="pricing-inc-title" data-i18n="pricing_inc_title">Gói trả phí gồm có:</div>
+                    <ul class="pricing-includes">
+                        <li data-i18n="pricing_inc_1">Thống kê &amp; biểu đồ phân tích nâng cao</li>
+                        <li data-i18n="pricing_inc_2">Bản đồ nhiệt hoạt động cả năm</li>
+                        <li data-i18n="pricing_inc_3">Nhật ký ghi chú mỗi ngày</li>
+                        <li data-i18n="pricing_inc_4">Không giới hạn số thói quen</li>
+                        <li data-i18n="pricing_inc_5">Huy hiệu &amp; khung ảnh đại diện độc quyền</li>
+                    </ul>
+
+                    <p class="pricing-note" data-i18n="pricing_note">Thanh toán một lần cho mỗi kỳ, <strong>không tự động gia hạn</strong>. Hoàn tiền đầy đủ trong 14 ngày, không cần nêu lý do.</p>
+                    <p class="pricing-mor" data-i18n="pricing_mor">Đơn hàng quốc tế do <strong>Paddle.com Market Ltd</strong> xử lý với vai trò Merchant of Record.</p>
                 </div>
 
                 <!-- Zalo Community Group QR Box -->
@@ -727,7 +774,7 @@
         firebase.initializeApp(firebaseConfig);
     </script>
     <script src="hm-dialog.js?v=5.12.2"></script>
-    <script src="i18n.js?v=5.12.6"></script>
+    <script src="i18n.js?v=5.12.7"></script>
     <script src="gotiengviet.js?v=5.0.8"></script>
     <script src="auth.js?v=5.12.4"></script>
     <script>

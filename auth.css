@@ -121,6 +121,61 @@ html,body{height:100%;font-family:var(--font-body);background:var(--bg-primary);
 }
 
 /* ===== ZALO COMMUNITY QR CARD ===== */
+/* ===== BẢNG GIÁ CÔNG KHAI (yêu cầu duyệt tên miền của Paddle) ===== */
+.pricing-box{
+    margin-top:24px;
+    background:linear-gradient(135deg,rgba(0,245,160,0.07) 0%,rgba(251,191,36,0.05) 100%);
+    border:1px solid rgba(0,245,160,0.22);
+    border-radius:16px;
+    padding:18px;
+    text-align:left;
+    backdrop-filter:blur(10px);
+    box-shadow:0 8px 24px rgba(0,0,0,0.25);
+}
+.pricing-badge{
+    display:inline-block;font-size:10px;font-weight:800;letter-spacing:0.8px;
+    padding:2px 8px;border-radius:6px;background:rgba(0,245,160,0.18);
+    color:#00f5a0;border:1px solid rgba(0,245,160,0.35);margin-bottom:8px;
+}
+.pricing-headline{font-size:13.5px;font-weight:800;color:#fff;margin-bottom:14px;line-height:1.35}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.pricing-card{
+    position:relative;background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.07);border-radius:11px;
+    padding:12px 8px 10px;text-align:center;transition:all .3s;
+}
+.pricing-card:hover{background:rgba(0,245,160,0.07);border-color:rgba(0,245,160,0.28);transform:translateY(-2px)}
+.pricing-card-best{border-color:rgba(251,191,36,0.42);background:rgba(251,191,36,0.07)}
+.pricing-card-best:hover{background:rgba(251,191,36,0.11);border-color:rgba(251,191,36,0.6)}
+.pricing-save{
+    position:absolute;top:-8px;left:50%;transform:translateX(-50%);
+    font-size:9px;font-weight:800;letter-spacing:.4px;padding:2px 7px;
+    border-radius:5px;background:#fbbf24;color:#1a1a0a;white-space:nowrap;
+}
+.pricing-name{font-size:11px;font-weight:700;color:var(--text-secondary);margin-bottom:5px;white-space:nowrap}
+.pricing-price{font-size:15px;font-weight:900;color:#fff;line-height:1.15;word-break:break-word}
+.pricing-card-best .pricing-price{color:#fbbf24}
+.pricing-period{font-size:10px;color:var(--text-muted);margin-top:3px}
+.pricing-inc-title{font-size:11.5px;font-weight:700;color:var(--text-secondary);margin-bottom:7px}
+.pricing-includes{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-direction:column;gap:5px}
+.pricing-includes li{
+    font-size:11.5px;color:var(--text-muted);padding-left:17px;position:relative;line-height:1.4;
+}
+.pricing-includes li::before{
+    content:'✓';position:absolute;left:0;top:0;color:#00f5a0;font-weight:800;font-size:11px;
+}
+.pricing-note{font-size:10.5px;color:var(--text-muted);line-height:1.5;margin:0 0 6px}
+.pricing-note strong{color:var(--text-secondary)}
+.pricing-mor{font-size:10px;color:var(--text-muted);line-height:1.5;margin:0;opacity:.85}
+.pricing-mor strong{color:var(--text-secondary)}
+@media (max-width:520px){
+    .pricing-grid{grid-template-columns:1fr;gap:7px}
+    .pricing-card{display:flex;align-items:center;justify-content:space-between;text-align:left;padding:10px 12px}
+    .pricing-save{position:static;transform:none;margin-left:6px}
+    .pricing-name{margin-bottom:0}
+    .pricing-period{margin-top:0;margin-left:6px}
+}
+
 .zalo-community-box{
     margin-top:24px;
     background:linear-gradient(135deg,rgba(0,104,255,0.12) 0%,rgba(0,245,160,0.08) 100%);
