@@ -205,6 +205,29 @@ function verifySignature(rawBody, signatureHeader, secret) {
 /** Tìm ra gói ("monthly" | "yearly") của một giao dịch.
  *  Thứ tự ưu tiên: custom_data của giao dịch (do checkout truyền lên) ->
  *  custom_data của price trong catalog -> biến môi trường ánh xạ price ID. */
+/** Giao dich nay co phai cua Habit Mastery khong?
+ *
+ *  Tai khoan Paddle nay dung CHUNG voi mot du an khac, nen webhook se nhan
+ *  duoc ca `transaction.completed` cua du an do. Price ID la can cu dang tin
+ *  nhat: no do chinh minh tao trong catalog, khong phu thuoc vao viec du an
+ *  kia dat `custom_data` theo hinh dang nao.
+ *
+ *  Tra ve null khi chua cau hinh PADDLE_PRICE_* — luc do khong ket luan duoc,
+ *  va nguoi goi phai coi nhu "khong biet" chu khong phai "khong phai cua minh".
+ */
+function isOurPrice(data) {
+  const ours = [process.env.PADDLE_PRICE_MONTHLY, process.env.PADDLE_PRICE_YEARLY]
+    .filter(Boolean);
+  if (ours.length === 0) return null;
+
+  const items = data && data.items ? data.items : [];
+  for (const item of items) {
+    const priceId = (item && item.price && item.price.id) || (item && item.price_id);
+    if (priceId && ours.includes(priceId)) return true;
+  }
+  return false;
+}
+
 function resolvePlan(data) {
   const direct = data?.custom_data?.plan;
   if (direct && PLAN_SPECS[direct]) return direct;
@@ -231,10 +254,22 @@ async function handleTransactionCompleted(data) {
   const orderNumber = data?.id || null;
 
   if (!uid) {
-    // Không có uid thì không biết cấp cho ai. Đây là lỗi ở phía checkout
-    // (quên truyền customData), không phải lỗi của Paddle — gửi lại cũng
-    // không cứu được, nên ghi log rồi ack để khỏi nghẽn hàng đợi.
-    console.error("paddle-webhook: giao dịch thiếu custom_data.uid:", orderNumber);
+    // Khong co uid thi khong biet cap cho ai. Nhung co HAI nguyen nhan rat
+    // khac nhau, va gop chung lai la tu lam mu mat minh:
+    //
+    //  a) Giao dich cua DU AN KHAC dung chung tai khoan Paddle nay. Hoan toan
+    //     binh thuong, khong phai loi, khong duoc bao dong.
+    //  b) Checkout cua chinh Habit Mastery quen truyen customData. Day la loi
+    //     THAT va phai hien ro trong log loi.
+    //
+    // Price ID phan biet duoc hai truong hop.
+    const ours = isOurPrice(data);
+    if (ours === false) {
+      console.log("paddle-webhook: bo qua giao dich cua du an khac:", orderNumber);
+      return { handled: false, reason: "foreign_transaction", foreign: true };
+    }
+    console.error("paddle-webhook: giao dich thieu custom_data.uid:", orderNumber,
+                  ours === null ? "(chua cau hinh PADDLE_PRICE_* nen khong loai tru duoc)" : "");
     return { handled: false, reason: "missing_uid" };
   }
   if (!plan) {
@@ -287,8 +322,14 @@ async function handleRefund(data) {
   }
 
   if (!uid) {
-    console.error("paddle-webhook: hoàn tiền nhưng không tìm ra user, giao dịch:", transactionId);
-    return { handled: false, reason: "refund_user_not_found" };
+    // Adjustment khong mang items nen khong dung price ID de loai tru duoc.
+    // Khong tra ra user thi hoac la hoan tien cua du an khac (dung chung tai
+    // khoan Paddle), hoac la don cu cap truoc khi co truong
+    // lastPaymentOrderNumber. Ca hai deu khong phai su co, nen ghi o muc warn
+    // chu khong phai error — nhung van ghi, de con doi soat duoc.
+    console.warn("paddle-webhook: hoan tien khong khop user —",
+                 "co the thuoc du an khac hoac don cu chua luu. Giao dich:", transactionId);
+    return { handled: false, reason: "refund_user_not_found", foreign: true };
   }
 
   await db.collection("users").doc(uid).update({
@@ -403,11 +444,23 @@ module.exports = async function handler(req, res) {
         outcome = { handled: false, reason: "không quan tâm sự kiện này" };
     }
 
-    await guardRef.update({
-      status: "done",
-      outcome: outcome.reason || "ok",
-      processedAt: FieldValue.serverTimestamp(),
-    });
+    if (outcome.foreign) {
+      // Su kien cua du an khac: xoa chot thay vi ghi "done". Giu lai thi
+      // Firestore cua Habit Mastery tich tu mot document cho MOI don hang
+      // cua du an kia, vinh vien va khong bao gio duoc doc.
+      try {
+        await guardRef.delete();
+      } catch (delErr) {
+        console.warn("paddle-webhook: khong xoa duoc chot cua su kien ngoai",
+                     eventId, "-", delErr.message);
+      }
+    } else {
+      await guardRef.update({
+        status: "done",
+        outcome: outcome.reason || "ok",
+        processedAt: FieldValue.serverTimestamp(),
+      });
+    }
 
     return res.status(200).json({ success: true, ...outcome });
   } catch (err) {
