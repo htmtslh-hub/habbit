@@ -384,6 +384,69 @@ curl xác nhận 404.
 mới) đều PHẢI được thêm vào `ignore` của `firebase.json` cho **cả hai site**, rồi curl kiểm tra
 404 trên production. Mặc định của Firebase Hosting là deploy tất cả.
 
+### 23. Bảng Giá Công Khai + Lộ Trình Thanh Toán Quốc Tế (11/09/2026)
+
+**Vì sao có mục này:** Paddle nêu trong tiêu chí duyệt tên miền — *"Pricing details or a pricing
+page — **publicly visible without login required**"*. Giá 99.000đ/399.000đ vốn chỉ nằm trong
+`openUpgradeModal()` tức là SAU khi đăng nhập, nên người duyệt của Paddle không nhìn thấy gì.
+Đây gần như chắc chắn là một lần trượt hồ sơ nếu không phát hiện trước.
+
+Bảng giá mới nằm ở cột thương hiệu của `auth.html`, có đủ 4 thứ Paddle đòi: mô tả sản phẩm,
+giá, danh sách quyền lợi gói trả phí, và liên kết tới 3 trang pháp lý.
+
+**Giá theo ngôn ngữ** (khoá trong `i18n.js`, không tính toán lúc chạy):
+
+| | Miễn phí | Pro (30 ngày) | Premium (365 ngày) |
+|---|---|---|---|
+| vi | 0đ | 99.000đ | 399.000đ |
+| en / zh | $0 | $3.99 | $15.99 |
+
+Quy đổi theo tỉ giá ~26.000đ/USD (09/2026), làm tròn lên `.99`. Mức tiết kiệm gói năm giữ ~65%
+ở cả hai loại tiền. ⚠️ Giá VND ở đây phải luôn **trùng** với giá trong `openUpgradeModal()` của
+`app.js` — sửa một chỗ thì phải sửa chỗ kia.
+
+**Bản vá kèm theo:** `checkGeoIpFallback()` trong `i18n.js` trước đây ghi đè cả tham số `?lang=`
+trên URL. Mở `?lang=en` từ Việt Nam thì nút English sáng nhưng toàn bộ chữ vẫn tiếng Việt — không
+xem thử được trang tiếng Anh sẽ trông ra sao với người nước ngoài. Nay `?lang=` và `?country=`
+được tôn trọng. Lựa chọn đã lưu trong localStorage vốn đã được bảo vệ nên không đổi hành vi thật.
+
+**Cách kiểm thử giao diện đa ngôn ngữ trên máy Windows này** (không có Playwright/Puppeteer):
+```bash
+python -m http.server 8899 &
+"/c/Program Files/Google/Chrome/Application/chrome.exe" --headless=new --disable-gpu   --no-sandbox --virtual-time-budget=9000   "--screenshot=C:\duong\dan\TUYET_DOI\anh.png" --window-size=1280,1500   "http://127.0.0.1:8899/auth.html?lang=en"
+```
+Hai cái bẫy: thiếu `--virtual-time-budget` thì Chrome treo vì chờ SDK Firebase; đường dẫn
+`--screenshot` phải là đường dẫn Windows TUYỆT ĐỐI, dùng đường dẫn tương đối sẽ báo
+"Access is denied". Dùng `--dump-dom` để đọc DOM sau khi JS đã chạy.
+
+### 24. Trạng Thái Thanh Toán Quốc Tế (11/09/2026)
+
+Đường đi đã chốt: **Paddle** (cổng + Merchant of Record) → **WorldFirst** (nhận USD) → VND.
+Không dùng Payoneer nữa vì WorldFirst đã xác nhận nhận được tiền từ Paddle.
+
+Paddle trả tiền qua wire transfer hoặc Payoneer, và tài liệu của họ nói các dịch vụ kiểu
+TransferWise "có thể dùng được nếu cung cấp thông tin ngân hàng (BIC/SWIFT, IBAN, số tài khoản)"
+— WorldFirst thuộc loại đó. Ngưỡng chi trả tối thiểu **100 USD**, chốt sổ ngày 1, gửi trước
+ngày 15.
+
+Chủ dự án là **cá nhân**, nên theo tài liệu Paddle **không phải làm xác minh doanh nghiệp**
+(*"this step is not required for individuals or sole traders"*), chỉ cần xác minh danh tính.
+Việt Nam không nằm trong danh sách 28 nước Paddle từ chối.
+
+**Đã xong:** 3 trang pháp lý, liên kết từ `auth.html`, tên người bán trong `terms.html`,
+bảng giá công khai, `grantPremium.js` dùng chung 2 cổng (có sẵn nhánh `"paddle"`).
+
+**Còn thiếu phía mã nguồn — CHƯA BẮT ĐẦU:**
+- `api/paddle-webhook.js` (chưa tồn tại) — xác thực chữ ký rồi gọi `grantPremium()`
+- Nhúng Paddle Checkout vào `openUpgradeModal()`; hiện chỉ dựng mã QR SePay
+- Tạo sản phẩm + giá USD trên Paddle Dashboard
+- Truyền `uid` qua `customData` để webhook biết nâng cấp cho ai
+- Xử lý hoàn tiền: `refund.html` đã hứa hoàn 14 ngày, webhook phải hạ cấp khi Paddle hoàn
+
+**Kiến trúc:** giữ cả hai cổng. Người Việt dùng SePay (phí thấp hơn nhiều), người nước ngoài
+dùng Paddle. Phân luồng bằng `getAppLanguage()`; `grantPremium.js` ghi `lastPaymentProvider`
+nên hai đường không giẫm lên nhau.
+
 ## 🎯 5. KẾ HOẠCH BƯỚC TIẾP THEO
 
 ### Tính năng
