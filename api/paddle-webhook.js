@@ -55,7 +55,14 @@ const SIGNATURE_TOLERANCE_SECONDS = Number(process.env.PADDLE_SIGNATURE_TOLERANC
 // bị vứt và tiền đã thu mà gói không được cấp, nên mặc định chỉ GHI LOG.
 // Xem log thấy IP khớp đều đặn rồi hãy đặt PADDLE_ENFORCE_IP=true.
 const ENFORCE_IP = String(process.env.PADDLE_ENFORCE_IP || "").toLowerCase() === "true";
-const PADDLE_IPS_URL = "https://api.paddle.com/ips";
+// Sandbox va live dung HAI dai IP khac nhau, o hai endpoint khac nhau.
+// Lay hop cua ca hai: nho vay viec chan IP chay dung o ca hai moi truong
+// ma khong phu thuoc vao viec dat dung mot bien moi truong — dat sai bien
+// se chan sach webhook that, tuc la thu tien roi khong cap goi.
+const PADDLE_IPS_URLS = [
+  "https://api.paddle.com/ips",
+  "https://sandbox-api.paddle.com/ips",
+];
 const IP_CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 tiếng
 
 let ipCache = { cidrs: null, fetchedAt: 0 };
@@ -78,21 +85,42 @@ async function getPaddleCidrs() {
   if (ipCache.cidrs && now - ipCache.fetchedAt < IP_CACHE_TTL_MS) {
     return ipCache.cidrs;
   }
-  try {
-    const resp = await fetch(PADDLE_IPS_URL, { signal: AbortSignal.timeout(3000) });
-    if (!resp.ok) throw new Error("HTTP " + resp.status);
-    const json = await resp.json();
-    const cidrs = json?.data?.ipv4_cidrs;
-    if (!Array.isArray(cidrs) || cidrs.length === 0) throw new Error("Danh sách rỗng");
-    ipCache = { cidrs, fetchedAt: now };
-    return cidrs;
-  } catch (err) {
-    console.warn("paddle-webhook: không lấy được danh sách IP:", err.message);
-    // Trả về bản cache cũ nếu có; không có thì null = bỏ qua bước này.
-    // KHÔNG chặn hết, vì Paddle sập endpoint IP không phải lý do để
-    // ngừng nhận tiền — chữ ký vẫn đang canh cửa.
+  const collected = [];
+  const errors = [];
+
+  // Goi song song; mot endpoint sap thi van dung duoc danh sach con lai.
+  const results = await Promise.allSettled(
+    PADDLE_IPS_URLS.map(async (url) => {
+      const resp = await fetch(url, { signal: AbortSignal.timeout(3000) });
+      if (!resp.ok) throw new Error(url + " -> HTTP " + resp.status);
+      const json = await resp.json();
+      const cidrs = json && json.data && json.data.ipv4_cidrs;
+      if (!Array.isArray(cidrs) || cidrs.length === 0) {
+        throw new Error(url + " -> danh sach rong");
+      }
+      return cidrs;
+    })
+  );
+
+  for (const r of results) {
+    if (r.status === "fulfilled") collected.push(...r.value);
+    else errors.push(r.reason && r.reason.message ? r.reason.message : String(r.reason));
+  }
+
+  if (errors.length) {
+    console.warn("paddle-webhook: khong lay duoc mot phan danh sach IP:", errors.join(" | "));
+  }
+
+  if (collected.length === 0) {
+    // Khong lay duoc gi: dung cache cu neu co, khong co thi tra null de BO QUA
+    // buoc nay. Endpoint IP cua Paddle sap khong phai ly do de ngung nhan tien
+    // — chu ky van dang canh cua.
     return ipCache.cidrs;
   }
+
+  const cidrs = Array.from(new Set(collected));
+  ipCache = { cidrs, fetchedAt: now };
+  return cidrs;
 }
 
 function ipv4ToInt(ip) {
