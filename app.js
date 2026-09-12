@@ -1261,7 +1261,7 @@ function getUserPlanDetails(){
     let daysLeft = null;
     let badgeClass = 'free';
     let badgeName = '🌱 Free (Miễn phí)';
-    let statusTag = 'Miễn phí';
+    let statusTag = t('plan_status_free');
     let statusClass = 'free';
 
     // Start date
@@ -1281,10 +1281,10 @@ function getUserPlanDetails(){
             if(diff <= 0){
                 isExpired = true;
                 expDateStr = `Đã hết hạn (${expFormatted})`;
-                statusTag = '⚠️ Đã hết hạn';
+                statusTag = t('plan_status_expired');
                 statusClass = 'expired';
             } else {
-                expDateStr = `${expFormatted} (Còn ${daysLeft} ngày)`;
+                expDateStr = t('plan_exp_remaining').replace('{date}', expFormatted).replace('{days}', daysLeft);
                 statusTag = `Còn ${daysLeft} ngày`;
                 statusClass = 'active';
             }
@@ -1302,32 +1302,32 @@ function getUserPlanDetails(){
             if(diff <= 0){
                 isExpired = true;
                 expDateStr = `Đã hết hạn (${expFormatted})`;
-                statusTag = '⚠️ Đã hết hạn';
+                statusTag = t('plan_status_expired');
                 statusClass = 'expired';
             } else {
-                expDateStr = `${expFormatted} (Còn ${daysLeft} ngày)`;
-                statusTag = `Dùng thử (${daysLeft} ngày)`;
+                expDateStr = t('plan_exp_remaining').replace('{date}', expFormatted).replace('{days}', daysLeft);
+                statusTag = t('plan_status_trial').replace('{days}', daysLeft);
                 statusClass = 'trial';
             }
         }
     } else {
-        expDateStr = 'Không giới hạn thời gian';
-        statusTag = 'Miễn phí';
+        expDateStr = t('plan_exp_unlimited');
+        statusTag = t('plan_status_free');
         statusClass = 'free';
     }
 
     if(effectivePlan === 'premium'){
         badgeClass = 'premium';
-        badgeName = '👑 Premium VIP';
+        badgeName = t('plan_badge_premium');
     } else if(effectivePlan === 'pro'){
         badgeClass = 'pro';
-        badgeName = '⚡ Gói Pro';
+        badgeName = t('plan_badge_pro');
     } else if(effectivePlan === 'trial'){
         badgeClass = 'trial';
-        badgeName = '⏳ Dùng thử (Trial)';
+        badgeName = t('plan_badge_trial');
     } else {
         badgeClass = isExpired ? 'expired' : 'free';
-        badgeName = isExpired ? `⚠️ Hết hạn (${rawPlan.toUpperCase()})` : '🌱 Gói Free';
+        badgeName = isExpired ? t('plan_badge_expired').replace('{plan}', rawPlan.toUpperCase()) : t('plan_badge_free');
     }
 
     return {
@@ -1380,8 +1380,8 @@ function renderPremiumBanner(){
         banner.classList.add('expired');
         banner.innerHTML = `
             <span class="pb-icon">⚠️</span>
-            <span class="pb-text">Gói <strong>${planDetails.rawPlan.toUpperCase()}</strong> đã hết hạn. Hệ thống tạm khóa thói quen từ thứ 4 trở đi (không mất dữ liệu).</span>
-            <button class="pb-btn" onclick="window._openUpgrade()">Gia hạn ngay</button>
+            <span class="pb-text">${t('upsell_expired_text').replace('{plan}', planDetails.rawPlan.toUpperCase())}</span>
+            <button class="pb-btn" onclick="window._openUpgrade()">${t('upsell_expired_btn')}</button>
             <button class="pb-close" onclick="this.parentElement.remove()">✕</button>
         `;
     } else if(plan === 'trial'){
@@ -1389,16 +1389,16 @@ function renderPremiumBanner(){
         banner.classList.add('trial');
         banner.innerHTML = `
             <span class="pb-icon">⏳</span>
-            <span class="pb-text">Dùng thử Premium — Còn <strong>${days} ngày</strong></span>
-            <button class="pb-btn" onclick="window._openUpgrade()">Nâng cấp ngay</button>
+            <span class="pb-text">${t('upsell_trial_text').replace('{days}', days)}</span>
+            <button class="pb-btn" onclick="window._openUpgrade()">${t('upsell_trial_btn')}</button>
             <button class="pb-close" onclick="this.parentElement.remove()">✕</button>
         `;
     } else {
         banner.classList.add('free');
         banner.innerHTML = `
             <span class="pb-icon">🔒</span>
-            <span class="pb-text">Bạn đang dùng gói <strong>Free</strong> (giới hạn ${MAX_FREE_HABITS} thói quen)</span>
-            <button class="pb-btn" onclick="window._openUpgrade()">👑 Nâng cấp Pro/Premium</button>
+            <span class="pb-text">${t('upsell_free_text').replace('{n}', MAX_FREE_HABITS)}</span>
+            <button class="pb-btn" onclick="window._openUpgrade()">${t('upsell_free_btn')}</button>
             <button class="pb-close" onclick="this.parentElement.remove()">✕</button>
         `;
     }
@@ -1418,7 +1418,7 @@ function applyPremiumGate(){
         if(isFree){
             heatmap.classList.add('locked-feature');
             if(!heatmap.querySelector('.lock-overlay')){
-                heatmap.insertAdjacentHTML('beforeend', '<div class="lock-overlay" onclick="window._openUpgrade()"><span>🔒</span><p>Tính năng Pro/Premium</p></div>');
+                heatmap.insertAdjacentHTML('beforeend', `<div class="lock-overlay" onclick="window._openUpgrade()"><span>🔒</span><p>${t('upsell_locked_feature')}</p></div>`);
             }
         } else {
             heatmap.classList.remove('locked-feature');
@@ -1432,7 +1432,7 @@ function applyPremiumGate(){
         if(isFree){
             notes.classList.add('locked-feature');
             if(!notes.querySelector('.lock-overlay')){
-                notes.insertAdjacentHTML('beforeend', '<div class="lock-overlay" onclick="window._openUpgrade()"><span>🔒</span><p>Tính năng Pro/Premium</p></div>');
+                notes.insertAdjacentHTML('beforeend', `<div class="lock-overlay" onclick="window._openUpgrade()"><span>🔒</span><p>${t('upsell_locked_feature')}</p></div>`);
             }
         } else {
             notes.classList.remove('locked-feature');
@@ -1446,7 +1446,7 @@ function applyPremiumGate(){
         if(isFree){
             lineBox.classList.add('locked-feature');
             if(!lineBox.querySelector('.lock-overlay')){
-                lineBox.insertAdjacentHTML('beforeend', '<div class="lock-overlay" onclick="window._openUpgrade()"><span>🔒</span><p>Tính năng Pro/Premium</p></div>');
+                lineBox.insertAdjacentHTML('beforeend', `<div class="lock-overlay" onclick="window._openUpgrade()"><span>🔒</span><p>${t('upsell_locked_feature')}</p></div>`);
             }
         } else {
             lineBox.classList.remove('locked-feature');
@@ -1459,7 +1459,7 @@ function applyPremiumGate(){
     if(addBtn){
         if(!canAddHabit()){
             addBtn.classList.add('btn-locked');
-            addBtn.title = `Giới hạn ${MAX_FREE_HABITS} thói quen (Free). Nâng cấp Pro/Premium!`;
+            addBtn.title = t('upsell_addbtn_title').replace('{n}', MAX_FREE_HABITS);
         } else {
             addBtn.classList.remove('btn-locked');
             addBtn.title = '';
@@ -2295,7 +2295,7 @@ function openEditModal(id){
     const isLocked = isFreeUser && (hIdx >= MAX_FREE_HABITS);
 
     if (isLocked) {
-        $('#modalTitle').innerHTML = `${t('editHabit')} <span style="font-size:11px;color:#f87171;background:rgba(239,68,68,0.18);border:1px solid rgba(239,68,68,0.4);border-radius:99px;padding:2px 8px;margin-left:6px;font-family:var(--font-heading);">🔒 Tạm khóa (Gói Free)</span>`;
+        $('#modalTitle').innerHTML = `${t('editHabit')} <span style="font-size:11px;color:#f87171;background:rgba(239,68,68,0.18);border:1px solid rgba(239,68,68,0.4);border-radius:99px;padding:2px 8px;margin-left:6px;font-family:var(--font-heading);">${t('upsell_habit_locked')}</span>`;
     } else {
         $('#modalTitle').textContent = t('editHabit');
     }
@@ -2422,7 +2422,7 @@ function renderGrid(){
         const streak=getStreak(h.id);
         let streakHtml='';
         if(isLocked) {
-            streakHtml = `<span class="habit-lock-pill" onclick="event.stopPropagation(); if(window._openUpgrade) window._openUpgrade();" title="Thói quen tạm khóa do gói Free chỉ hỗ trợ 3 thói quen. Bấm để nâng cấp Pro/Premium!">🔒 Khóa (Free)</span>`;
+            streakHtml = `<span class="habit-lock-pill" onclick="event.stopPropagation(); if(window._openUpgrade) window._openUpgrade();" title="${t('upsell_habit_click').replace('{n}', MAX_FREE_HABITS)}">🔒 Khóa (Free)</span>`;
         } else if(streak>=7) streakHtml=`<span class="streak-badge hot">🔥${streak}</span>`;
         else if(streak>=3) streakHtml=`<span class="streak-badge warm">🔥${streak}</span>`;
         else if(streak>=2) streakHtml=`<span class="streak-badge cool">🔥${streak}</span>`;
@@ -2449,7 +2449,7 @@ function renderGrid(){
                 cellInner = `<div class="cb-locked-dot" title="🔒 Khóa">🔒</div>`;
             }
 
-            bb+=`<td class="td-chk${tc}${frozenClass}${isLocked ? ' cell-locked' : ''}" data-h="${h.id}" data-d="${d}" data-locked="${isLocked ? 'true' : 'false'}" title="${isLocked ? '🔒 Thói quen đang bị khóa (Gói Free giới hạn 3 thói quen)' : esc(h.emoji)+' '+esc(h.name)+' ('+dateStr+')'}">${cellInner}</td>`;
+            bb+=`<td class="td-chk${tc}${frozenClass}${isLocked ? ' cell-locked' : ''}" data-h="${h.id}" data-d="${d}" data-locked="${isLocked ? 'true' : 'false'}" title="${isLocked ? t('upsell_habit_title').replace('{n}', MAX_FREE_HABITS) : esc(h.emoji)+' '+esc(h.name)+' ('+dateStr+')'}">${cellInner}</td>`;
         }
         const targetVal = h.target !== undefined ? h.target : days;
         const lt = Math.max(0, targetVal - dn);
@@ -2765,7 +2765,7 @@ function initModal(){
     const bg=$('#modalBg');
     $('#btnAdd').onclick=async ()=>{
         if(!canAddHabit()){
-            if(await hmConfirm(`🌱 Tài khoản của bạn đang ở gói Free (giới hạn tối đa 3 thói quen).\n\nBạn có muốn XÓA bớt thói quen cũ để thêm thói quen mới không?\n\n- Bấm "OK": Để xem danh sách và xóa bớt thói quen cũ.\n- Bấm "Hủy": Để nâng cấp Pro hoặc Premium sử dụng không giới hạn.`)){
+            if(await hmConfirm(t('plan_limit_confirm').replace('{n}', MAX_FREE_HABITS))){
                 return;
             }
             openUpgradeModal();
@@ -5891,7 +5891,7 @@ window._updateProfileModalUI = () => {
     if (ppcExp) ppcExp.textContent = planDetails.expDateStr;
     if (ppcLimit) {
         if (planDetails.effectivePlan === 'premium' || planDetails.effectivePlan === 'pro') {
-            ppcLimit.innerHTML = `<span style="color:#10b981;font-weight:700;">Không giới hạn</span> (${S.h.length} thói quen)`;
+            ppcLimit.innerHTML = `<span style="color:#10b981;font-weight:700;">${t('plan_unlimited')}</span> (${S.h.length})`;
         } else {
             const lockedCount = Math.max(0, S.h.length - MAX_FREE_HABITS);
             if (lockedCount > 0) {
@@ -5904,7 +5904,7 @@ window._updateProfileModalUI = () => {
     if (ppcNoticeWrap && ppcNoticeText) {
         if (planDetails.isExpired) {
             ppcNoticeWrap.style.display = 'flex';
-            ppcNoticeText.textContent = `Gói ${planDetails.rawPlan.toUpperCase()} của bạn đã hết hạn. Hệ thống đang áp dụng gói Free (giới hạn 3 thói quen). Toàn bộ dữ liệu của các thói quen khác vẫn được lưu giữ an toàn, hãy gia hạn để tiếp tục sử dụng!`;
+            ppcNoticeText.textContent = t('plan_expired_notice').replace('{plan}', planDetails.rawPlan.toUpperCase()).replace('{n}', MAX_FREE_HABITS);
         } else if (planDetails.effectivePlan === 'free' && S.h.length > MAX_FREE_HABITS) {
             ppcNoticeWrap.style.display = 'flex';
             ppcNoticeText.textContent = `Tài khoản của bạn đang có ${S.h.length} thói quen nhưng gói Free chỉ hỗ trợ tối đa 3 thói quen. Các thói quen từ thứ 4 trở đi đã được tạm khóa để bảo vệ dữ liệu. Nâng cấp Pro hoặc Premium để mở khóa lại!`;
@@ -5914,7 +5914,7 @@ window._updateProfileModalUI = () => {
     }
     if (ppcUpgradeBtn) {
         if (planDetails.effectivePlan === 'premium' && !planDetails.isExpired && !userPlan?.planExpiresAt) {
-            ppcUpgradeBtn.innerHTML = `<span>👑 Đã là VIP</span>`;
+            ppcUpgradeBtn.innerHTML = `<span>${t('plan_already_vip')}</span>`;
             ppcUpgradeBtn.style.opacity = '0.7';
         } else if (planDetails.isExpired) {
             ppcUpgradeBtn.innerHTML = `<svg class="rune-inline rune-sm" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Gia Hạn Ngay`;
