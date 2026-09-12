@@ -1664,9 +1664,44 @@ const PADDLE_CONFIG = {
 let _paddleReady = null;
 let _paddleActivationListener = null;
 
-/** Quyet dinh cong thanh toan theo ngon ngu dang dung. */
+/** Moi truong sandbox chi duoc phep chay o noi dung de phat trien.
+ *
+ *  Ly do phai co ham nay: Firebase Hosting deploy tu THU MUC LAM VIEC chu
+ *  khong phai tu git. Nghia la chi can mot lan deploy trong luc PADDLE_CONFIG
+ *  con tro sandbox la production co ngay checkout sandbox — khach nuoc ngoai
+ *  bam nang cap, nhap the that, va sandbox chi nhan the test. Ho khong mua
+ *  duoc gi, con minh thi khong he biet.
+ *
+ *  Chot nay giu vinh vien, khong phai thu tam thoi: mo checkout sandbox tren
+ *  ten mien thuc thi khong bao gio dung, o bat ky giai doan nao.
+ */
+function _paddleSandboxAllowedHere(){
+    const h = location.hostname;
+    return h === 'localhost'
+        || h === '127.0.0.1'
+        || h === ''                       // file:// khi chay ban desktop
+        || h.endsWith('.vercel.app');     // ban xem truoc cua PR
+}
+
+/** Quyet dinh cong thanh toan theo ngon ngu dang dung.
+ *
+ *  vi  -> SePay (phi thap hon nhieu)
+ *  con lai -> Paddle
+ *
+ *  Ngoai le: dang o sandbox ma lai chay tren ten mien thuc thi quay ve SePay,
+ *  tha rang bat tien con hon de khach nhap the that vao checkout sandbox. */
 function _usePaddle(){
-    return getAppLanguage() !== 'vi';
+    if (getAppLanguage() === 'vi') return false;
+
+    if (PADDLE_CONFIG.environment === 'sandbox' && !_paddleSandboxAllowedHere()) {
+        console.warn(
+            '[Paddle] PADDLE_CONFIG.environment van la "sandbox" tren ' +
+            location.hostname + ' — tam thoi dung SePay de khach khong nhap ' +
+            'the that vao checkout sandbox. Doi sang "production" khi go live.'
+        );
+        return false;
+    }
+    return true;
 }
 
 /** Nap Paddle.js tu CDN dung MOT lan roi khoi tao.

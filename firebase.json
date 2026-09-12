@@ -136,6 +136,13 @@
           "source": "/blog",
           "destination": "/blog.html"
         }
+      ],
+      "redirects": [
+        {
+          "source": "**",
+          "destination": "https://habit-mastery.com/**",
+          "type": 301
+        }
       ]
     },
     {
