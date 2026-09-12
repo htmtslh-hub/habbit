@@ -1479,123 +1479,145 @@ function openUpgradeModal(){
         modal = document.createElement('div');
         modal.id = 'upgradeModal';
         modal.className = 'upgrade-modal-bg';
-        modal.innerHTML = `
+        document.body.appendChild(modal);
+        modal.onclick = (e) => { if(e.target === modal) modal.classList.remove('show'); };
+    }
+
+    // Dung lai noi dung MOI LAN mo, khong cache.
+    // Ban cu chi dung modal dung mot lan roi giu lai; nguoi dung doi ngon ngu
+    // giua chung thi modal ket o ngon ngu cu cho toi khi tai lai trang.
+    const t = (k, f) => (window.I18N && window.I18N.t) ? window.I18N.t(k, f) : (f || k);
+
+    // Loai tien phai khop voi cong thanh toan se dung, neu khong khach nuoc
+    // ngoai nhin thay "99.000d" roi bi Paddle tinh $3.99.
+    const intl = _usePaddle();
+    const pricePro  = intl ? PADDLE_CONFIG.plans.monthly.display : '99.000\u0111';
+    const pricePrem = intl ? PADDLE_CONFIG.plans.yearly.display  : '399.000\u0111';
+    const subPro    = intl ? '' : '<small>/th\u00e1ng</small>';
+    const subPrem   = intl ? '' : '<small>/n\u0103m</small>';
+
+    const sigil = '<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>';
+    const cross = '<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg>';
+
+    modal.innerHTML = `
             <div class="upgrade-modal">
-                <button class="upgrade-close" onclick="document.querySelector('#upgradeModal').classList.remove('show')">✕</button>
+                <button class="upgrade-close" onclick="document.querySelector('#upgradeModal').classList.remove('show')">\u2715</button>
                 <div class="upgrade-header">
-                    <span class="upgrade-crown">👑</span>
-                    <h2>Nâng Cấp Gói VIP</h2>
-                    <p>Mở khóa toàn bộ sức mạnh Habit Mastery: Gói Pro (Tháng) & Gói Premium (Năm)</p>
+                    <span class="upgrade-crown">\u{1F451}</span>
+                    <h2>${t('upg_title')}</h2>
+                    <p>${t('upg_sub')}</p>
                 </div>
 
                 <!-- Step indicators -->
                 <div class="pay-steps">
-                    <div class="pay-step active" id="payStep1"><span class="pay-step-num">1</span> Chọn gói</div>
+                    <div class="pay-step active" id="payStep1"><span class="pay-step-num">1</span> ${t('upg_step1')}</div>
                     <div class="pay-step-line" id="payLine1"></div>
-                    <div class="pay-step" id="payStep2"><span class="pay-step-num">2</span> Thanh toán</div>
+                    <div class="pay-step" id="payStep2"><span class="pay-step-num">2</span> ${t('upg_step2')}</div>
                     <div class="pay-step-line" id="payLine2"></div>
-                    <div class="pay-step" id="payStep3"><span class="pay-step-num">3</span> Hoàn tất</div>
+                    <div class="pay-step" id="payStep3"><span class="pay-step-num">3</span> ${t('upg_step3')}</div>
                 </div>
 
                 <!-- STEP 1: Plan Selection -->
                 <div id="payView1">
                     <div class="upgrade-compare">
                         <div class="compare-col free-col">
-                            <h3>Free (Miễn phí)</h3>
+                            <h3>${t('upg_free_title')}</h3>
                             <ul>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> ${MAX_FREE_HABITS} thói quen hoạt động</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Theo dõi & check-in ngày</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Đồng bộ đám mây</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg> Biểu đồ phân tích</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg> Heatmap cả năm</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-close"></use></svg> Nhật ký Daily Notes</li>
+                                <li>${sigil} ${t('upg_free_habits').replace('{n}', MAX_FREE_HABITS)}</li>
+                                <li>${sigil} ${t('upg_free_2')}</li>
+                                <li>${sigil} ${t('upg_free_3')}</li>
+                                <li>${cross} ${t('upg_free_4')}</li>
+                                <li>${cross} ${t('upg_free_5')}</li>
+                                <li>${cross} ${t('upg_free_6')}</li>
                             </ul>
-                            <div class="compare-price">0đ</div>
+                            <div class="compare-price">${intl ? '$0' : '0\u0111'}</div>
                         </div>
                         <div class="compare-col premium-col">
-                            <h3>Pro & Premium <svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg></h3>
+                            <h3>${t('upg_paid_title')} <svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg></h3>
                             <ul>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Không giới hạn thói quen</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Biểu đồ phân tích chi tiết</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Heatmap hoạt động cả năm</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Ghi chú nhật ký Daily Notes</li>
-                                <li><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> Không khóa thói quen</li>
+                                <li>${sigil} ${t('upg_paid_1')}</li>
+                                <li>${sigil} ${t('upg_paid_2')}</li>
+                                <li>${sigil} ${t('upg_paid_3')}</li>
+                                <li>${sigil} ${t('upg_paid_4')}</li>
+                                <li>${sigil} ${t('upg_paid_5')}</li>
                             </ul>
                         </div>
                     </div>
                     <div class="plan-selector">
                         <div class="plan-card" data-plan="monthly" onclick="window._selectPlan('monthly')">
-                            <span class="plan-check"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span>
-                            <div class="plan-name">⚡ Gói Pro (Tháng)</div>
-                            <div class="plan-price">99.000đ<small>/tháng</small></div>
-                            <div class="plan-save" style="color:#38bdf8;">Thời hạn: 30 ngày (1 tháng)</div>
+                            <span class="plan-check">${sigil}</span>
+                            <div class="plan-name">${t('upg_plan_pro')}</div>
+                            <div class="plan-price">${pricePro}${subPro}</div>
+                            <div class="plan-save" style="color:#38bdf8;">${t('upg_plan_pro_term')}</div>
                         </div>
                         <div class="plan-card" data-plan="yearly" onclick="window._selectPlan('yearly')">
-                            <span class="plan-badge">Tiết kiệm 65%</span>
-                            <span class="plan-check"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span>
-                            <div class="plan-name">👑 Gói Premium (Năm)</div>
-                            <div class="plan-price">399.000đ<small>/năm</small></div>
-                            <div class="plan-save" style="color:#fbbf24;">~33.250đ/tháng (365 ngày)</div>
+                            <span class="plan-badge">${t('upg_badge_save')}</span>
+                            <span class="plan-check">${sigil}</span>
+                            <div class="plan-name">${t('upg_plan_prem')}</div>
+                            <div class="plan-price">${pricePrem}${subPrem}</div>
+                            <div class="plan-save" style="color:#fbbf24;">${t('upg_plan_prem_term')}</div>
                         </div>
                     </div>
-                    <button class="btn-pay-next" id="btnPayNext" disabled onclick="window._goToPayment()">Tiếp tục thanh toán →</button>
+                    <button class="btn-pay-next" id="btnPayNext" disabled onclick="window._goToPayment()">${t('upg_next')}</button>
                 </div>
 
-                <!-- STEP 2: QR Payment -->
+                <!-- STEP 2: QR Payment.
+                     Chi nguoi dung tieng Viet moi toi buoc nay — khach quoc te
+                     duoc _goToPayment() chuyen thang sang overlay cua Paddle,
+                     nen phan nay co tinh giu nguyen tieng Viet. -->
                 <div id="payView2" style="display:none">
                     <div class="qr-payment-section">
-                        <h3>📱 Quét mã QR để thanh toán</h3>
+                        <h3>\u{1F4F1} Qu\u00e9t m\u00e3 QR \u0111\u1ec3 thanh to\u00e1n</h3>
                         <div class="qr-container">
-                            <img id="sepayQrImg" alt="QR Code thanh toán" />
+                            <img id="sepayQrImg" alt="QR Code thanh to\u00e1n" />
                         </div>
                         <div class="qr-amount" id="qrAmountDisplay"></div>
                         <div class="qr-desc" id="qrDescDisplay"></div>
                         <div class="qr-bank-info">
-                            Ngân hàng: <strong>VietinBank</strong><br>
-                            STK: <strong>109887120806</strong> — <strong>DINH VAN TRIEN</strong>
+                            Ng\u00e2n h\u00e0ng: <strong>VietinBank</strong><br>
+                            STK: <strong>109887120806</strong> \u2014 <strong>DINH VAN TRIEN</strong>
                         </div>
                     </div>
                     <div class="pay-waiting">
                         <div class="spinner"></div>
-                        <span>Đang chờ xác nhận thanh toán...</span>
+                        <span>\u0110ang ch\u1edd x\u00e1c nh\u1eadn thanh to\u00e1n...</span>
                     </div>
                     <div class="pay-countdown">
-                        <span class="cd-icon">⏱️</span>
-                        <span>Hết hạn sau</span>
+                        <span class="cd-icon">\u23f1\ufe0f</span>
+                        <span>H\u1ebft h\u1ea1n sau</span>
                         <span class="cd-time" id="payCountdown">15:00</span>
                     </div>
                     <div class="pay-manual-fallback">
-                        Đã chuyển khoản? <a onclick="window._manualConfirm()">Xác nhận thủ công</a>
+                        \u0110\u00e3 chuy\u1ec3n kho\u1ea3n? <a onclick="window._manualConfirm()">X\u00e1c nh\u1eadn th\u1ee7 c\u00f4ng</a>
                     </div>
-                    <button class="btn-pay-back" onclick="window._backToPlanSelect()">← Quay lại chọn gói</button>
+                    <button class="btn-pay-back" onclick="window._backToPlanSelect()">\u2190 Quay l\u1ea1i ch\u1ecdn g\u00f3i</button>
                 </div>
 
                 <!-- STEP 3: Success -->
                 <div id="payView3" style="display:none">
                     <div class="pay-success">
-                        <div class="success-icon">✓</div>
-                        <h3>🎉 Thanh toán thành công!</h3>
-                        <p id="paySuccessSubTitle">Tài khoản của bạn đã được kích hoạt VIP</p>
+                        <div class="success-icon">\u2713</div>
+                        <h3>${t('upg_success')}</h3>
+                        <p id="paySuccessSubTitle">${t('upg_success_sub')}</p>
                         <div class="success-details" id="successDetails"></div>
                     </div>
-                    <button class="btn-pay-next" onclick="window._closePaymentSuccess()">Bắt đầu sử dụng ngay →</button>
+                    <button class="btn-pay-next" onclick="window._closePaymentSuccess()">${t('upg_success_btn')}</button>
                 </div>
 
                 <!-- EXPIRED -->
                 <div id="payViewExpired" style="display:none">
                     <div class="pay-expired">
-                        <div class="expired-icon">⏰</div>
-                        <h3>Đã hết thời gian thanh toán</h3>
-                        <p>Vui lòng tạo đơn thanh toán mới</p>
+                        <div class="expired-icon">\u23f0</div>
+                        <h3>${t('upg_expired')}</h3>
+                        <p>${t('upg_expired_sub')}</p>
                     </div>
-                    <button class="btn-pay-next" onclick="window._backToPlanSelect()">Thử lại</button>
+                    <button class="btn-pay-next" onclick="window._backToPlanSelect()">${t('upg_retry')}</button>
                 </div>
             </div>
         `;
-        document.body.appendChild(modal);
-        modal.onclick = (e) => { if(e.target === modal) modal.classList.remove('show'); };
-    }
-    // Reset to step 1
+
+    // Moi lan dung lai thi lua chon cu khong con y nghia.
+    _selectedPlan = null;
     _payShowStep(1);
     modal.classList.add('show');
 }
@@ -1617,6 +1639,257 @@ let _selectedPlan = null;
 let _currentPaymentOrder = null;
 let _paymentListener = null;
 let _countdownTimer = null;
+
+// ===== PADDLE PAYMENT CONFIG (khach quoc te) =====
+//
+// Nguoi Viet van dung SePay vi phi thap hon nhieu. Khach nuoc ngoai di qua
+// Paddle — Paddle dung ten nguoi ban (Merchant of Record) va tu lo thue
+// VAT/GST toan cau.
+//
+// GIU CA HAI MOI TRUONG trong cung mot cho, doi bang DUNG MOT DONG ben duoi.
+// Ly do: ban truoc chi co mot bo ID, nen moi lan chuyen sandbox <-> live la
+// mot lan sua 3 gia tri nam ra rieng (token + 2 price ID). Quen mot cai thi
+// checkout mo ra nhung tinh sai tien, hoac khong mo duoc ma khong ro vi sao.
+// Nay khong the quen le mot cai.
+//
+// `token` la CLIENT-SIDE token, khac voi API key. No nam trong JS chay tren
+// trinh duyet nen cong khai la binh thuong, khong phai bi mat.
+const PADDLE_ENV = 'production';   // <-- doi giua 'sandbox' va 'production'
+
+// Nhung thu GIONG NHAU o ca hai moi truong, de mot cho de gia khong the lech.
+const PADDLE_PLAN_META = {
+    monthly: { display: '$3.99',  label: 'Pro (30 days)',      days: 30  },
+    yearly:  { display: '$15.99', label: 'Premium (365 days)', days: 365 },
+};
+
+const PADDLE_CATALOG = {
+    sandbox: {
+        token: 'test_7871626627e60cbff1aeacdf761',
+        priceIds: {
+            monthly: 'pri_01m27vcq2kw8y21vz7bdkqww07',
+            yearly:  'pri_01m27vcqd3fktb8v88mwkaknh7',
+        },
+    },
+    production: {
+        token: 'live_de82afd66c55d30cdf165170cc4',
+        priceIds: {
+            monthly: 'pri_01m29vxncf6vbr52sndp1c0r8d',
+            yearly:  'pri_01m29vxp1xw1anmbx705wdxf9p',
+        },
+    },
+};
+
+const PADDLE_CONFIG = (function () {
+    const env = PADDLE_CATALOG[PADDLE_ENV];
+    if (!env) throw new Error('PADDLE_ENV khong hop le: ' + PADDLE_ENV);
+    const plans = {};
+    for (const key of Object.keys(PADDLE_PLAN_META)) {
+        plans[key] = Object.assign({ priceId: env.priceIds[key] }, PADDLE_PLAN_META[key]);
+    }
+    return { environment: PADDLE_ENV, token: env.token, plans: plans };
+})();
+
+let _paddleReady = null;
+let _paddleActivationListener = null;
+
+/** Cac host ma Paddle DA DUYET cho moi truong live.
+ *
+ *  Paddle chi cho checkout chay tren domain da duoc duyet. Chay o domain
+ *  chua duyet thi cua so checkout khong load duoc — va that bai kieu im lang:
+ *  khach bam mua, khong co gi hien ra, minh khong nhan duoc bat ky loi nao.
+ *
+ *  Danh sach nay phai khop voi Checkout > Website approval tren dashboard.
+ *  Them domain moi vao Paddle thi phai them vao day, va nguoc lai.
+ *
+ *  Khong dung www: Paddle khong nhan subdomain www, nen www.habit-mastery.com
+ *  da duoc chuyen thanh 301 ve apex o tang Firebase domainRedirect.
+ */
+const PADDLE_APPROVED_HOSTS = ['habit-mastery.com'];
+
+/** Paddle Checkout co the chay o day khong?
+ *
+ *  Hai che do, hai tap host khac nhau:
+ *
+ *  - sandbox: Paddle tu duyet moi domain, nen chay duoc o bat ky dau. Nhung
+ *    ta CO Y gioi han o noi phat trien. Ly do: Firebase Hosting deploy tu THU
+ *    MUC LAM VIEC chu khong phai tu git, nen chi can mot lan deploy trong luc
+ *    PADDLE_CONFIG con tro sandbox la production co ngay checkout sandbox —
+ *    khach nhap the that, sandbox chi nhan the test, ho khong mua duoc gi ma
+ *    minh khong he biet.
+ *
+ *  - production: chi nhung host da duoc Paddle duyet.
+ *
+ *  Ca hai truong hop, khi khong chay duoc thi quay ve SePay — bat tien con
+ *  hon mot cua so checkout khong bao gio mo ra.
+ */
+function _paddleCanRunHere(){
+    const h = location.hostname;
+
+    if (PADDLE_CONFIG.environment === 'sandbox') {
+        return h === 'localhost'
+            || h === '127.0.0.1'
+            || h === ''                    // file:// khi chay ban desktop
+            || h.endsWith('.vercel.app');  // ban xem truoc cua PR
+    }
+
+    return PADDLE_APPROVED_HOSTS.includes(h);
+}
+
+/** Quyet dinh cong thanh toan theo ngon ngu dang dung.
+ *
+ *  vi      -> SePay (phi thap hon nhieu)
+ *  con lai -> Paddle, neu Paddle chay duoc o host hien tai
+ */
+function _usePaddle(){
+    if (getAppLanguage() === 'vi') return false;
+
+    if (!_paddleCanRunHere()) {
+        console.warn(
+            '[Paddle] khong the mo checkout tren ' + location.hostname +
+            ' (environment=' + PADDLE_CONFIG.environment + ') — tam dung SePay. ' +
+            'Sandbox chi chay o localhost/vercel.app; live chi chay o host da ' +
+            'duoc Paddle duyet: ' + PADDLE_APPROVED_HOSTS.join(', ')
+        );
+        return false;
+    }
+    return true;
+}
+
+/** Nap Paddle.js tu CDN dung MOT lan roi khoi tao.
+ *  Tra ve Promise nen goi bao nhieu lan cung an toan. */
+function _ensurePaddle(){
+    if(_paddleReady) return _paddleReady;
+
+    _paddleReady = new Promise((resolve, reject) => {
+        const boot = () => {
+            try {
+                // Environment.set PHAI goi truoc Initialize. Live la mac dinh
+                // nen chi set khi dang o sandbox.
+                if(PADDLE_CONFIG.environment === 'sandbox' && window.Paddle.Environment){
+                    window.Paddle.Environment.set('sandbox');
+                }
+                window.Paddle.Initialize({
+                    token: PADDLE_CONFIG.token,
+                    eventCallback: _onPaddleEvent,
+                });
+                resolve(window.Paddle);
+            } catch(err){ reject(err); }
+        };
+
+        if(window.Paddle) return boot();
+
+        const sc = document.createElement('script');
+        sc.src = 'https://cdn.paddle.com/paddle/v2/paddle.js';
+        sc.async = true;
+        sc.onload = boot;
+        sc.onerror = () => reject(new Error('Khong tai duoc Paddle.js'));
+        document.head.appendChild(sc);
+    });
+
+    return _paddleReady;
+}
+
+function _onPaddleEvent(event){
+    if(!event || !event.name) return;
+    if(event.name === 'checkout.completed'){
+        _onPaddleCompleted();
+    } else if(event.name === 'checkout.error' || event.name === 'checkout.payment-error'){
+        console.error('Paddle checkout error:', event.data);
+    }
+}
+
+/** Mo checkout dang overlay cua Paddle. */
+window._goToPaddleCheckout = async function(){
+    if(!_selectedPlan || !currentUser) return;
+    const planInfo = PADDLE_CONFIG.plans[_selectedPlan];
+    if(!planInfo) return;
+
+    const btn = document.getElementById('btnPayNext');
+    if(btn) btn.disabled = true;
+
+    try {
+        const Paddle = await _ensurePaddle();
+
+        // customData la duong DUY NHAT de webhook biet cap goi cho ai.
+        // Thieu uid o day thi tien vao ma tai khoan khong len goi.
+        Paddle.Checkout.open({
+            items: [{ priceId: planInfo.priceId, quantity: 1 }],
+            customData: { uid: currentUser.uid, plan: _selectedPlan },
+            customer: currentUser.email ? { email: currentUser.email } : undefined,
+            settings: {
+                displayMode: 'overlay',
+                variant: 'one-page',
+                theme: 'dark',
+                locale: getAppLanguage() === 'zh' ? 'zh-Hans' : 'en',
+            },
+        });
+    } catch(err){
+        console.error('Paddle open error:', err);
+        if(window.hmAlert) hmAlert('Could not open the payment window. Please try again.');
+    } finally {
+        if(btn) btn.disabled = false;
+    }
+};
+
+/** Thanh toan xong tren overlay.
+ *
+ *  KHONG cap goi o day. Trinh duyet noi gi cung khong dang tin — webhook
+ *  `transaction.completed` moi la nguon su that va no ghi thang vao
+ *  Firestore. O day chi ngoi nghe tai lieu user doi trang thai. */
+function _onPaddleCompleted(){
+    const plan = _selectedPlan;
+    const planInfo = PADDLE_CONFIG.plans[plan] || {};
+
+    _payShowStep(3);
+    const subTitle = document.getElementById('paySuccessSubTitle');
+    if(subTitle) subTitle.textContent = 'Payment received — activating your account...';
+
+    const details = document.getElementById('successDetails');
+    if(details){
+        details.innerHTML =
+            '<div><span>Plan</span><span style="font-weight:800; color:#10b981;">' + (planInfo.label || '') + '</span></div>' +
+            '<div><span>Amount</span><span>' + (planInfo.display || '') + '</span></div>' +
+            '<div><span>Term</span><span>' + (planInfo.days || '') + ' days</span></div>';
+    }
+
+    _startPaddleActivationListener(plan);
+}
+
+function _startPaddleActivationListener(plan){
+    if(!userDocRef) return;
+    if(_paddleActivationListener){ _paddleActivationListener(); _paddleActivationListener = null; }
+
+    const stopAt = Date.now() + 2 * 60 * 1000; // ngung nghe sau 2 phut
+
+    _paddleActivationListener = userDocRef.onSnapshot(function(doc){
+        if(!doc.exists) return;
+        const d = doc.data() || {};
+        if(d.plan === 'premium' && d.lastPaymentProvider === 'paddle'){
+            _paddleActivationListener(); _paddleActivationListener = null;
+
+            userPlan = userPlan || {};
+            userPlan.plan = d.plan;
+            userPlan.planExpiresAt = d.planExpiresAt || null;
+            applyPremiumGate();
+            if(window._updateProfileModalUI) window._updateProfileModalUI();
+
+            const st = document.getElementById('paySuccessSubTitle');
+            if(st) st.textContent = 'Your account has been upgraded. Enjoy!';
+            if(typeof fireConfetti === 'function') fireConfetti();
+            return;
+        }
+
+        // Webhook cham bat thuong — van bao nguoi dung yen tam, tien khong mat.
+        if(Date.now() > stopAt){
+            _paddleActivationListener(); _paddleActivationListener = null;
+            const st = document.getElementById('paySuccessSubTitle');
+            if(st) st.textContent =
+                'Payment received. Activation is taking longer than usual — refresh in a minute, or email htmt.slh@gmail.com if it does not appear.';
+        }
+    }, function(err){ console.error('Paddle activation listener error:', err); });
+}
+
+
 
 function _payShowStep(step){
     ['payView1','payView2','payView3','payViewExpired'].forEach(id => {
@@ -1654,6 +1927,9 @@ window._selectPlan = function(plan){
 
 window._goToPayment = async function(){
     if(!_selectedPlan || !currentUser) return;
+
+    // Khach quoc te di qua Paddle; nguoi Viet giu nguyen luong QR SePay.
+    if(_usePaddle()) return window._goToPaddleCheckout();
 
     const planInfo = SEPAY_CONFIG.plans[_selectedPlan];
     if(!planInfo) return;

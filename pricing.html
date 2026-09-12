@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bảng Giá — Habit Mastery</title>
+<meta name="description" content="Pricing for Habit Mastery — free forever plan, Pro at $3.99 for 30 days, Premium at $15.99 for 365 days. One-time payments, no auto-renewal, 14-day refund.">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="legal.css?v=5.13.0">
+<script>
+(function () {
+    var saved = null;
+    try { saved = localStorage.getItem('hm_app_lang') || localStorage.getItem('hg_lang'); } catch (e) {}
+    var lang = saved || (navigator.language || 'en').slice(0, 2).toLowerCase();
+    if (lang !== 'vi' && lang !== 'zh') lang = 'en';
+    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.setAttribute('lang', lang === 'zh' ? 'zh-CN' : lang);
+})();
+</script>
+<style>
+/* ============================================================
+   Chỉ dùng cho trang này. Không đụng vào legal.css vì file đó
+   đang dùng chung cho 3 trang pháp lý. Mọi màu đều lấy từ biến
+   --lg-* sẵn có nên trang tự động đúng ở cả nền sáng lẫn nền tối.
+   ============================================================ */
+.pr-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 26px 0 10px;
+}
+.pr-card {
+    background: var(--lg-card);
+    border: 1px solid var(--lg-border);
+    border-radius: 12px;
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.pr-card.best {
+    border-color: var(--lg-accent);
+    box-shadow: 0 0 0 1px var(--lg-accent);
+}
+.pr-save {
+    align-self: flex-start;
+    background: var(--lg-accent-soft);
+    color: var(--lg-accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    padding: 2px 8px;
+    border-radius: 99px;
+    margin-bottom: 6px;
+}
+.pr-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--lg-heading);
+}
+.pr-price {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--lg-heading);
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+}
+.pr-period { font-size: 14px; color: var(--lg-muted); }
+.pr-what {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--lg-border);
+    font-size: 14px;
+    line-height: 1.6;
+}
+.pr-note-strong { color: var(--lg-heading); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="lg-topbar">
+  <div class="lg-topbar-inner">
+    <a class="lg-brand" href="index.html">✦ HABIT <span>MASTERY</span></a>
+    <nav class="lg-nav">
+      <a href="pricing.html" class="active" data-lang="vi">Bảng giá</a>
+      <a href="pricing.html" class="active" data-lang="en">Pricing</a>
+      <a href="pricing.html" class="active" data-lang="zh">价格</a>
+      <a href="terms.html" data-lang="vi">Điều khoản</a>
+      <a href="terms.html" data-lang="en">Terms</a>
+      <a href="terms.html" data-lang="zh">服务条款</a>
+      <a href="privacy.html" data-lang="vi">Quyền riêng tư</a>
+      <a href="privacy.html" data-lang="en">Privacy</a>
+      <a href="privacy.html" data-lang="zh">隐私政策</a>
+      <a href="refund.html" data-lang="vi">Hoàn tiền</a>
+      <a href="refund.html" data-lang="en">Refunds</a>
+      <a href="refund.html" data-lang="zh">退款政策</a>
+    </nav>
+    <div class="lg-langs">
+      <button type="button" onclick="setLang('vi')" data-btn="vi">VI</button>
+      <button type="button" onclick="setLang('en')" data-btn="en">EN</button>
+      <button type="button" onclick="setLang('zh')" data-btn="zh">中文</button>
+    </div>
+  </div>
+</div>
+
+<div class="lg-wrap">
+
+<!-- ============================ TIẾNG VIỆT ============================ -->
+<div data-lang="vi">
+<h1>Bảng Giá</h1>
+<p class="lg-updated">Cập nhật lần cuối: 11/09/2026</p>
+
+<p>Habit Mastery là ứng dụng theo dõi thói quen, chạy trên trình duyệt tại <strong>habit-mastery.com</strong> và có bản cài cho máy tính Windows. Bạn tạo thói quen hằng ngày, đánh dấu hoàn thành, xây chuỗi ngày liên tiếp và xem lại tiến bộ của mình qua thống kê.</p>
+
+<p><strong>Dùng miễn phí trọn đời.</strong> Nâng cấp khi cần thêm.</p>
+
+<div class="pr-grid">
+  <div class="pr-card">
+    <div class="pr-name">Miễn phí</div>
+    <div class="pr-price">0đ</div>
+    <div class="pr-period">trọn đời</div>
+    <div class="pr-what">Tối đa 3 thói quen, thống kê cơ bản, đồng bộ giữa các thiết bị.</div>
+  </div>
+  <div class="pr-card">
+    <div class="pr-name">⚡ Pro</div>
+    <div class="pr-price">99.000đ</div>
+    <div class="pr-period">30 ngày</div>
+    <div class="pr-what">Mở khoá toàn bộ tính năng trả phí trong 30 ngày.</div>
+  </div>
+  <div class="pr-card best">
+    <div class="pr-save">TIẾT KIỆM 65%</div>
+    <div class="pr-name">👑 Premium</div>
+    <div class="pr-price">399.000đ</div>
+    <div class="pr-period">365 ngày</div>
+    <div class="pr-what">Mở khoá toàn bộ tính năng trả phí trong 365 ngày.</div>
+  </div>
+</div>
+
+<h2>Gói trả phí gồm có</h2>
+<ul>
+<li>Thống kê &amp; biểu đồ phân tích nâng cao</li>
+<li>Bản đồ nhiệt hoạt động cả năm</li>
+<li>Nhật ký ghi chú mỗi ngày</li>
+<li>Không giới hạn số thói quen</li>
+<li>Huy hiệu &amp; khung ảnh đại diện độc quyền</li>
+</ul>
+
+<h2>Cách tính tiền</h2>
+<div class="lg-box">
+<p><strong>Thanh toán một lần cho mỗi kỳ, không tự động gia hạn.</strong> Đây không phải gói thuê bao. Hết hạn thì tài khoản tự chuyển về gói Miễn phí, không có khoản trừ tiền bất ngờ nào và bạn không cần huỷ đăng ký. Muốn dùng tiếp thì mua lại khi nào bạn thấy cần.</p>
+</div>
+
+<p>Sản phẩm là hàng số, được kích hoạt ngay trong tài khoản của bạn sau khi thanh toán thành công. Hoàn tiền đầy đủ trong 14 ngày, không cần nêu lý do — xem <a href="refund.html">Chính Sách Hoàn Tiền</a>.</p>
+
+<h2>Đơn vị bán hàng</h2>
+<p>Đơn hàng quốc tế do <strong>Paddle.com Market Ltd</strong> xử lý với vai trò Merchant of Record. Paddle đứng tên người bán trên hoá đơn và chịu trách nhiệm về thuế VAT/GST. Đơn hàng trong nước thanh toán bằng chuyển khoản ngân hàng.</p>
+
+<h2>Liên hệ</h2>
+<p>Email: <a href="mailto:htmt.slh@gmail.com">htmt.slh@gmail.com</a><br>Chúng tôi phản hồi trong vòng 2 ngày làm việc.</p>
+</div>
+
+<!-- ============================ ENGLISH ============================ -->
+<div data-lang="en">
+<h1>Pricing</h1>
+<p class="lg-updated">Last updated: 11 September 2026</p>
+
+<p>Habit Mastery is a habit-tracking app that runs in the browser at <strong>habit-mastery.com</strong> and as a desktop build for Windows. You create daily habits, check them off, build streaks, and review your progress through statistics.</p>
+
+<p><strong>Free forever.</strong> Upgrade when you need more.</p>
+
+<div class="pr-grid">
+  <div class="pr-card">
+    <div class="pr-name">Free</div>
+    <div class="pr-price">$0</div>
+    <div class="pr-period">forever</div>
+    <div class="pr-what">Up to 3 habits, basic statistics, sync across devices.</div>
+  </div>
+  <div class="pr-card">
+    <div class="pr-name">⚡ Pro</div>
+    <div class="pr-price">$3.99</div>
+    <div class="pr-period">30 days</div>
+    <div class="pr-what">Unlocks every paid feature for 30 days.</div>
+  </div>
+  <div class="pr-card best">
+    <div class="pr-save">SAVE 65%</div>
+    <div class="pr-name">👑 Premium</div>
+    <div class="pr-price">$15.99</div>
+    <div class="pr-period">365 days</div>
+    <div class="pr-what">Unlocks every paid feature for 365 days.</div>
+  </div>
+</div>
+
+<h2>Paid plans include</h2>
+<ul>
+<li>Advanced statistics and analytics charts</li>
+<li>Full-year activity heatmap</li>
+<li>Daily journal notes</li>
+<li>Unlimited habits</li>
+<li>Exclusive badges and avatar frames</li>
+</ul>
+
+<h2>How billing works</h2>
+<div class="lg-box">
+<p><strong>One-time payment per period. No auto-renewal.</strong> This is not a subscription. When a term ends, the account simply returns to the Free plan — no surprise charge is taken and there is nothing for you to cancel. Buy again whenever you want to continue.</p>
+</div>
+
+<p>Products are digital and are activated in your account immediately after a successful payment. Full refund within 14 days, no questions asked — see our <a href="refund.html">Refund Policy</a>.</p>
+
+<h2>Who you are buying from</h2>
+<p>International orders are handled by <strong>Paddle.com Market Ltd</strong> as Merchant of Record. Paddle is the seller of record on your invoice and is responsible for VAT/GST. Domestic orders in Vietnam are paid by bank transfer.</p>
+
+<h2>Contact</h2>
+<p>Email: <a href="mailto:htmt.slh@gmail.com">htmt.slh@gmail.com</a><br>We reply within 2 business days.</p>
+</div>
+
+<!-- ============================ 中文 ============================ -->
+<div data-lang="zh">
+<h1>价格</h1>
+<p class="lg-updated">最后更新：2026年9月11日</p>
+
+<p>Habit Mastery 是一款习惯追踪应用，可在浏览器中访问 <strong>habit-mastery.com</strong>，亦提供 Windows 桌面版。您可以创建每日习惯、打卡完成、累积连续记录，并通过统计图表回顾自己的进步。</p>
+
+<p><strong>永久免费使用。</strong>需要时再升级。</p>
+
+<div class="pr-grid">
+  <div class="pr-card">
+    <div class="pr-name">免费</div>
+    <div class="pr-price">$0</div>
+    <div class="pr-period">永久</div>
+    <div class="pr-what">最多 3 个习惯、基础统计、多设备同步。</div>
+  </div>
+  <div class="pr-card">
+    <div class="pr-name">⚡ Pro</div>
+    <div class="pr-price">$3.99</div>
+    <div class="pr-period">30 天</div>
+    <div class="pr-what">30 天内解锁全部付费功能。</div>
+  </div>
+  <div class="pr-card best">
+    <div class="pr-save">省 65%</div>
+    <div class="pr-name">👑 Premium</div>
+    <div class="pr-price">$15.99</div>
+    <div class="pr-period">365 天</div>
+    <div class="pr-what">365 天内解锁全部付费功能。</div>
+  </div>
+</div>
+
+<h2>付费方案包含</h2>
+<ul>
+<li>进阶统计与分析图表</li>
+<li>全年活跃度热力图</li>
+<li>每日笔记日志</li>
+<li>习惯数量不限</li>
+<li>专属徽章与头像框</li>
+</ul>
+
+<h2>计费方式</h2>
+<div class="lg-box">
+<p><strong>每期一次性付款，不会自动续费。</strong>本服务并非订阅制。期限届满后账户直接回到免费版，不会出现意外扣款，您也无需取消任何订阅。想继续使用时再次购买即可。</p>
+</div>
+
+<p>本产品为数字商品，付款成功后立即在您的账户中激活。14 天内全额退款，无需说明理由——详见<a href="refund.html">退款政策</a>。</p>
+
+<h2>销售方</h2>
+<p>国际订单由 <strong>Paddle.com Market Ltd</strong> 以 Merchant of Record 身份处理。Paddle 为发票上的登记销售方，并负责 VAT/GST 税务。越南境内订单通过银行转账支付。</p>
+
+<h2>联系方式</h2>
+<p>邮箱：<a href="mailto:htmt.slh@gmail.com">htmt.slh@gmail.com</a><br>我们将在 2 个工作日内回复。</p>
+</div>
+
+<div class="lg-footer">
+  <span data-lang="vi">© 2026 Habit Mastery · <a href="terms.html">Điều khoản</a> · <a href="privacy.html">Quyền riêng tư</a> · <a href="refund.html">Hoàn tiền</a> · <a href="index.html">Về ứng dụng</a></span>
+  <span data-lang="en">© 2026 Habit Mastery · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="refund.html">Refunds</a> · <a href="index.html">Back to the app</a></span>
+  <span data-lang="zh">© 2026 Habit Mastery · <a href="terms.html">服务条款</a> · <a href="privacy.html">隐私政策</a> · <a href="refund.html">退款政策</a> · <a href="index.html">返回应用</a></span>
+</div>
+
+</div>
+
+<script src="legal.js?v=5.13.0"></script>
+</body>
+</html>
