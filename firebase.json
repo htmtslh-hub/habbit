@@ -139,8 +139,8 @@
       ],
       "redirects": [
         {
-          "source": "**",
-          "destination": "https://habit-mastery.com/**",
+          "regex": "^/(?P<rest>.*)$",
+          "destination": "https://habit-mastery.com/:rest",
           "type": 301
         }
       ]
