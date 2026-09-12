@@ -1646,20 +1646,48 @@ let _countdownTimer = null;
 // Paddle — Paddle dung ten nguoi ban (Merchant of Record) va tu lo thue
 // VAT/GST toan cau.
 //
+// GIU CA HAI MOI TRUONG trong cung mot cho, doi bang DUNG MOT DONG ben duoi.
+// Ly do: ban truoc chi co mot bo ID, nen moi lan chuyen sandbox <-> live la
+// mot lan sua 3 gia tri nam ra rieng (token + 2 price ID). Quen mot cai thi
+// checkout mo ra nhung tinh sai tien, hoac khong mo duoc ma khong ro vi sao.
+// Nay khong the quen le mot cai.
+//
 // `token` la CLIENT-SIDE token, khac voi API key. No nam trong JS chay tren
 // trinh duyet nen cong khai la binh thuong, khong phai bi mat.
-//
-// KHI CHUYEN SANG LIVE phai doi ca 3 thu: environment -> 'production',
-// token -> 'live_...', va 2 price ID -> ID cua moi truong live. ID sandbox
-// KHONG ton tai o live.
-const PADDLE_CONFIG = {
-    environment: 'sandbox',
-    token: 'test_7871626627e60cbff1aeacdf761',
-    plans: {
-        monthly: { priceId: 'pri_01m27vcq2kw8y21vz7bdkqww07', display: '$3.99',  label: 'Pro (30 days)',      days: 30  },
-        yearly:  { priceId: 'pri_01m27vcqd3fktb8v88mwkaknh7', display: '$15.99', label: 'Premium (365 days)', days: 365 },
+const PADDLE_ENV = 'production';   // <-- doi giua 'sandbox' va 'production'
+
+// Nhung thu GIONG NHAU o ca hai moi truong, de mot cho de gia khong the lech.
+const PADDLE_PLAN_META = {
+    monthly: { display: '$3.99',  label: 'Pro (30 days)',      days: 30  },
+    yearly:  { display: '$15.99', label: 'Premium (365 days)', days: 365 },
+};
+
+const PADDLE_CATALOG = {
+    sandbox: {
+        token: 'test_7871626627e60cbff1aeacdf761',
+        priceIds: {
+            monthly: 'pri_01m27vcq2kw8y21vz7bdkqww07',
+            yearly:  'pri_01m27vcqd3fktb8v88mwkaknh7',
+        },
+    },
+    production: {
+        token: 'live_de82afd66c55d30cdf165170cc4',
+        priceIds: {
+            monthly: 'pri_01m29vxncf6vbr52sndp1c0r8d',
+            yearly:  'pri_01m29vxp1xw1anmbx705wdxf9p',
+        },
     },
 };
+
+const PADDLE_CONFIG = (function () {
+    const env = PADDLE_CATALOG[PADDLE_ENV];
+    if (!env) throw new Error('PADDLE_ENV khong hop le: ' + PADDLE_ENV);
+    const plans = {};
+    for (const key of Object.keys(PADDLE_PLAN_META)) {
+        plans[key] = Object.assign({ priceId: env.priceIds[key] }, PADDLE_PLAN_META[key]);
+    }
+    return { environment: PADDLE_ENV, token: env.token, plans: plans };
+})();
 
 let _paddleReady = null;
 let _paddleActivationListener = null;
