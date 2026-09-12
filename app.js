@@ -1798,6 +1798,57 @@ function _onPaddleEvent(event){
     }
 }
 
+/** Dang chay trong ban dong goi Electron? */
+function _isDesktopApp(){
+    return Boolean(window.electronAPI && window.electronAPI.isElectron);
+}
+
+/** Trang web chinh thuc — noi DUY NHAT checkout Paddle chay duoc o che do live. */
+const HM_WEB_ORIGIN = 'https://habit-mastery.com';
+
+/** Nang cap qua trinh duyet, danh cho khach quoc te dung ban desktop.
+ *
+ *  Ban desktop chay o http://127.0.0.1:<port> (xem electron/main.js). Paddle
+ *  chi cho checkout chay tren domain DA DUOC DUYET, ma 127.0.0.1 thi khong
+ *  bao gio duoc duyet o moi truong live. Neu khong xu ly rieng, khach quoc te
+ *  dung ban desktop se roi ve SePay va nhin thay ma QR chuyen khoan ngan hang
+ *  Viet Nam — vo dung voi ho.
+ *
+ *  Nen: mo trinh duyet toi trang web that. Ho mua o do, webhook cap goi vao
+ *  Firestore, va app desktop tu nhan ra nho listener ben duoi — khong can
+ *  dang nhap lai hay khoi dong lai.
+ */
+window._upgradeViaBrowser = async function(){
+    if (!_selectedPlan || !currentUser) return;
+
+    const lang = getAppLanguage();
+    const url = HM_WEB_ORIGIN + '/?upgrade=1&lang=' + encodeURIComponent(lang);
+
+    const msg = lang === 'zh'
+        ? '\u4ed8\u6b3e\u5c06\u5728\u60a8\u7684\u6d4f\u89c8\u5668\u4e2d\u5b8c\u6210\u3002\u5b8c\u6210\u540e\u8bf7\u56de\u5230\u672c\u5e94\u7528\uff0c\u65b9\u6848\u4f1a\u81ea\u52a8\u751f\u6548\u3002'
+        : 'Payment opens in your browser. Come back to this app when you are done \u2014 your plan activates automatically.';
+
+    if (window.hmAlert) { await hmAlert(msg); } else { alert(msg); }
+
+    if (window.electronAPI && window.electronAPI.openExternal) {
+        window.electronAPI.openExternal(url);
+    } else {
+        window.open(url, '_blank', 'noopener');
+    }
+
+    // Cho webhook cap goi. Dung chung listener voi luong overlay.
+    _payShowStep(3);
+    const subTitle = document.getElementById('paySuccessSubTitle');
+    if (subTitle) {
+        subTitle.textContent = lang === 'zh'
+            ? '\u7b49\u5f85\u4ed8\u6b3e\u5b8c\u6210...'
+            : 'Waiting for payment to complete in your browser...';
+    }
+    const details = document.getElementById('successDetails');
+    if (details) details.innerHTML = '';
+    _startPaddleActivationListener(_selectedPlan);
+};
+
 /** Mo checkout dang overlay cua Paddle. */
 window._goToPaddleCheckout = async function(){
     if(!_selectedPlan || !currentUser) return;
@@ -1930,6 +1981,12 @@ window._goToPayment = async function(){
 
     // Khach quoc te di qua Paddle; nguoi Viet giu nguyen luong QR SePay.
     if(_usePaddle()) return window._goToPaddleCheckout();
+
+    // Khach quoc te ma Paddle khong chay duoc o day (ban desktop chay o
+    // 127.0.0.1) — dua ho sang trinh duyet, dung de roi vao QR ngan hang VN.
+    if(getAppLanguage() !== 'vi' && _isDesktopApp()) {
+        return window._upgradeViaBrowser();
+    }
 
     const planInfo = SEPAY_CONFIG.plans[_selectedPlan];
     if(!planInfo) return;
@@ -2097,6 +2154,17 @@ window._closePaymentSuccess = function(){
 };
 
 window._openUpgrade = openUpgradeModal;
+
+// Den tu ban desktop qua ?upgrade=1 thi mo san hop thoai nang cap.
+// Neu phai dang nhap truoc thi tham so mat — chap nhan duoc, ho bam tay mot lan.
+(function () {
+    try {
+        if (new URLSearchParams(location.search).get('upgrade') !== '1') return;
+        const open = () => { if (currentUser) openUpgradeModal(); };
+        if (document.readyState === 'complete') setTimeout(open, 1200);
+        else window.addEventListener('load', () => setTimeout(open, 1200));
+    } catch (e) { /* URL la -> bo qua */ }
+})();
 window._requestUpgrade = window._manualConfirm;
 const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
 function escHtml(str) {
