@@ -1664,40 +1664,63 @@ const PADDLE_CONFIG = {
 let _paddleReady = null;
 let _paddleActivationListener = null;
 
-/** Moi truong sandbox chi duoc phep chay o noi dung de phat trien.
+/** Cac host ma Paddle DA DUYET cho moi truong live.
  *
- *  Ly do phai co ham nay: Firebase Hosting deploy tu THU MUC LAM VIEC chu
- *  khong phai tu git. Nghia la chi can mot lan deploy trong luc PADDLE_CONFIG
- *  con tro sandbox la production co ngay checkout sandbox — khach nuoc ngoai
- *  bam nang cap, nhap the that, va sandbox chi nhan the test. Ho khong mua
- *  duoc gi, con minh thi khong he biet.
+ *  Paddle chi cho checkout chay tren domain da duoc duyet. Chay o domain
+ *  chua duyet thi cua so checkout khong load duoc — va that bai kieu im lang:
+ *  khach bam mua, khong co gi hien ra, minh khong nhan duoc bat ky loi nao.
  *
- *  Chot nay giu vinh vien, khong phai thu tam thoi: mo checkout sandbox tren
- *  ten mien thuc thi khong bao gio dung, o bat ky giai doan nao.
+ *  Danh sach nay phai khop voi Checkout > Website approval tren dashboard.
+ *  Them domain moi vao Paddle thi phai them vao day, va nguoc lai.
+ *
+ *  Khong dung www: Paddle khong nhan subdomain www, nen www.habit-mastery.com
+ *  da duoc chuyen thanh 301 ve apex o tang Firebase domainRedirect.
  */
-function _paddleSandboxAllowedHere(){
+const PADDLE_APPROVED_HOSTS = ['habit-mastery.com'];
+
+/** Paddle Checkout co the chay o day khong?
+ *
+ *  Hai che do, hai tap host khac nhau:
+ *
+ *  - sandbox: Paddle tu duyet moi domain, nen chay duoc o bat ky dau. Nhung
+ *    ta CO Y gioi han o noi phat trien. Ly do: Firebase Hosting deploy tu THU
+ *    MUC LAM VIEC chu khong phai tu git, nen chi can mot lan deploy trong luc
+ *    PADDLE_CONFIG con tro sandbox la production co ngay checkout sandbox —
+ *    khach nhap the that, sandbox chi nhan the test, ho khong mua duoc gi ma
+ *    minh khong he biet.
+ *
+ *  - production: chi nhung host da duoc Paddle duyet.
+ *
+ *  Ca hai truong hop, khi khong chay duoc thi quay ve SePay — bat tien con
+ *  hon mot cua so checkout khong bao gio mo ra.
+ */
+function _paddleCanRunHere(){
     const h = location.hostname;
-    return h === 'localhost'
-        || h === '127.0.0.1'
-        || h === ''                       // file:// khi chay ban desktop
-        || h.endsWith('.vercel.app');     // ban xem truoc cua PR
+
+    if (PADDLE_CONFIG.environment === 'sandbox') {
+        return h === 'localhost'
+            || h === '127.0.0.1'
+            || h === ''                    // file:// khi chay ban desktop
+            || h.endsWith('.vercel.app');  // ban xem truoc cua PR
+    }
+
+    return PADDLE_APPROVED_HOSTS.includes(h);
 }
 
 /** Quyet dinh cong thanh toan theo ngon ngu dang dung.
  *
- *  vi  -> SePay (phi thap hon nhieu)
- *  con lai -> Paddle
- *
- *  Ngoai le: dang o sandbox ma lai chay tren ten mien thuc thi quay ve SePay,
- *  tha rang bat tien con hon de khach nhap the that vao checkout sandbox. */
+ *  vi      -> SePay (phi thap hon nhieu)
+ *  con lai -> Paddle, neu Paddle chay duoc o host hien tai
+ */
 function _usePaddle(){
     if (getAppLanguage() === 'vi') return false;
 
-    if (PADDLE_CONFIG.environment === 'sandbox' && !_paddleSandboxAllowedHere()) {
+    if (!_paddleCanRunHere()) {
         console.warn(
-            '[Paddle] PADDLE_CONFIG.environment van la "sandbox" tren ' +
-            location.hostname + ' — tam thoi dung SePay de khach khong nhap ' +
-            'the that vao checkout sandbox. Doi sang "production" khi go live.'
+            '[Paddle] khong the mo checkout tren ' + location.hostname +
+            ' (environment=' + PADDLE_CONFIG.environment + ') — tam dung SePay. ' +
+            'Sandbox chi chay o localhost/vercel.app; live chi chay o host da ' +
+            'duoc Paddle duyet: ' + PADDLE_APPROVED_HOSTS.join(', ')
         );
         return false;
     }
