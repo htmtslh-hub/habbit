@@ -925,7 +925,7 @@ window._openInviteModal = async function () {
         bg.onclick = (e) => { if (e.target === bg) bg.classList.remove('show'); };
     }
     const body = document.getElementById('inviteModalBody');
-    body.innerHTML = `<div style="text-align:center;padding:26px 0;color:var(--text-muted);">Đang tải…</div>`;
+    body.innerHTML = `<div style="text-align:center;padding:26px 0;color:var(--text-muted);">${t('inv_loading')}</div>`;
     bg.classList.add('show');
 
     let info;
@@ -934,15 +934,15 @@ window._openInviteModal = async function () {
     } catch (e) {
         body.innerHTML = `<div style="text-align:center;padding:24px 0;">
             <div style="font-size:38px;">📡</div>
-            <p style="color:var(--text-muted);margin-top:10px;">Không kết nối được máy chủ. Vui lòng thử lại.</p>
-            <button class="btn-pay-next" onclick="document.getElementById('inviteModalBg').classList.remove('show')">Đóng</button>
+            <p style="color:var(--text-muted);margin-top:10px;">${t('inv_no_server')}</p>
+            <button class="btn-pay-next" onclick="document.getElementById('inviteModalBg').classList.remove('show')">${t('btn_close')}</button>
         </div>`;
         return;
     }
     if (!info || !info.success) {
         body.innerHTML = `<div style="text-align:center;padding:24px 0;">
-            <p style="color:var(--text-muted);">${escHtml((info && info.message) || 'Có lỗi xảy ra.')}</p>
-            <button class="btn-pay-next" onclick="document.getElementById('inviteModalBg').classList.remove('show')">Đóng</button>
+            <p style="color:var(--text-muted);">${escHtml((info && info.message) || t('err_generic_short'))}</p>
+            <button class="btn-pay-next" onclick="document.getElementById('inviteModalBg').classList.remove('show')">${t('btn_close')}</button>
         </div>`;
         return;
     }
@@ -952,42 +952,40 @@ window._openInviteModal = async function () {
     // Ô nhập mã chỉ hiện khi người dùng CHƯA từng nhập — tránh cho bấm
     // rồi mới báo "đã nhập rồi".
     const claimBlock = info.alreadyClaimed ? `
-        <div class="inv-note done">✓ Bạn đã nhập mã mời của một người bạn.</div>
+        <div class="inv-note done">${t('inv_already_claimed')}</div>
     ` : `
         <div class="inv-divider"></div>
-        <div class="inv-label">Có mã mời của bạn bè?</div>
+        <div class="inv-label">${t('inv_have_code')}</div>
         <div class="inv-claim-row">
-            <input id="invClaimInput" class="inv-input" maxlength="6" placeholder="VD: K7M2QP"
+            <input id="invClaimInput" class="inv-input" maxlength="6" placeholder="${t('inv_code_ph')}"
                    value="${escHtml((() => { try { return localStorage.getItem('hm_pending_invite') || ''; } catch (e) { return ''; } })())}"
                    oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
-            <button class="inv-btn primary" onclick="window._claimInvite()">Nhận</button>
+            <button class="inv-btn primary" onclick="window._claimInvite()">${t('inv_claim_btn')}</button>
         </div>
-        <div class="inv-hint">Cần điểm danh đủ ${info.minCheckins} lượt mới nhận được
-            (bạn đang có ${info.checkins}). Nhận ngay +${info.rewardInvitee} Coins.</div>
+        <div class="inv-hint">${t('inv_hint').replace('{min}', info.minCheckins).replace('{cur}', info.checkins).replace('{reward}', info.rewardInvitee)}</div>
     `;
 
     body.innerHTML = `
-        <div class="modal-title" style="text-align:center;">🎁 Mời bạn bè</div>
+        <div class="modal-title" style="text-align:center;">${t('inv_title')}</div>
         <p style="text-align:center;color:var(--text-muted);font-size:13.5px;margin:2px 0 18px;">
-            Bạn bè dùng mã của bạn: bạn nhận <b style="color:var(--accent)">+${info.rewardReferrer}</b> Coins,
-            họ nhận <b style="color:var(--accent)">+${info.rewardInvitee}</b> Coins.
+            ${t('inv_desc').replace('{a}', info.rewardReferrer).replace('{b}', info.rewardInvitee)}
         </p>
 
-        <div class="inv-label">Mã mời của bạn</div>
-        <div class="inv-code" onclick="window._copyInvite('${info.code}', this)" title="Bấm để chép">${info.code}</div>
+        <div class="inv-label">${t('inv_label_code')}</div>
+        <div class="inv-code" onclick="window._copyInvite('${info.code}', this)" title="${t('inv_tip_copy')}">${info.code}</div>
 
-        <div class="inv-label" style="margin-top:14px;">Đường dẫn mời</div>
-        <div class="inv-link" onclick="window._copyInvite('${link}', this)" title="Bấm để chép">${escHtml(link)}</div>
+        <div class="inv-label" style="margin-top:14px;">${t('inv_label_link')}</div>
+        <div class="inv-link" onclick="window._copyInvite('${link}', this)" title="${t('inv_tip_copy')}">${escHtml(link)}</div>
 
         <div class="inv-stats">
-            <div><span>${info.invitedCount}</span>Đã mời</div>
-            <div><span>${info.earnedFromInvites}</span>Coins nhận được</div>
+            <div><span>${info.invitedCount}</span>${t('inv_stat_invited')}</div>
+            <div><span>${info.earnedFromInvites}</span>${t('inv_stat_coins')}</div>
         </div>
 
         ${claimBlock}
 
         <button class="inv-btn ghost" style="width:100%;margin-top:16px;"
-                onclick="document.getElementById('inviteModalBg').classList.remove('show')">Đóng</button>
+                onclick="document.getElementById('inviteModalBg').classList.remove('show')">${t('btn_close')}</button>
     `;
 };
 
@@ -995,10 +993,10 @@ window._copyInvite = async function (text, el) {
     try {
         await navigator.clipboard.writeText(text);
         const old = el.textContent;
-        el.textContent = '✓ Đã chép';
+        el.textContent = t('inv_copied');
         setTimeout(() => { el.textContent = old; }, 1400);
     } catch (e) {
-        hmAlert('Không chép được. Bạn hãy chọn và sao chép thủ công nhé.');
+        hmAlert(t('inv_copy_failed'));
     }
 };
 
@@ -1006,13 +1004,13 @@ window._claimInvite = async function () {
     const input = document.getElementById('invClaimInput');
     if (!input) return;
     const code = (input.value || '').trim().toUpperCase();
-    if (code.length !== 6) { hmAlert('Mã mời gồm 6 ký tự.'); return; }
+    if (code.length !== 6) { hmAlert(t('inv_code_len')); return; }
 
     let r;
     try {
         r = await callReferralApi({ action: 'claim', code });
     } catch (e) {
-        hmAlert('Không kết nối được máy chủ. Vui lòng thử lại.');
+        hmAlert(t('inv_no_server'));
         return;
     }
 
@@ -2422,7 +2420,7 @@ function renderGrid(){
         const streak=getStreak(h.id);
         let streakHtml='';
         if(isLocked) {
-            streakHtml = `<span class="habit-lock-pill" onclick="event.stopPropagation(); if(window._openUpgrade) window._openUpgrade();" title="${t('upsell_habit_click').replace('{n}', MAX_FREE_HABITS)}">🔒 Khóa (Free)</span>`;
+            streakHtml = `<span class="habit-lock-pill" onclick="event.stopPropagation(); if(window._openUpgrade) window._openUpgrade();" title="${t('upsell_habit_click').replace('{n}', MAX_FREE_HABITS)}">${t('habit_lock_pill')}</span>`;
         } else if(streak>=7) streakHtml=`<span class="streak-badge hot">🔥${streak}</span>`;
         else if(streak>=3) streakHtml=`<span class="streak-badge warm">🔥${streak}</span>`;
         else if(streak>=2) streakHtml=`<span class="streak-badge cool">🔥${streak}</span>`;
@@ -7604,11 +7602,11 @@ function renderShopUI(targetTab = null) {
                         <div>
                             ${isOwned ? `
                                 <button class="shop-action-btn btn-read-doc" onclick="window._openDocReader('${doc.id}')">
-                                    📖 Đọc ngay
+                                    ${t('shop_read_now')}
                                 </button>
                             ` : `
                                 <button class="shop-action-btn btn-buy doc-buy-btn" onclick="window._buyShopItem('docs', '${doc.id}', ${doc.price})" ${!canAfford && !isAdmin ? 'disabled' : ''}>
-                                    ${doc.free ? 'Nhận miễn phí' : 'Mở khóa'}
+                                    ${doc.free ? t('shop_get_free') : t('shop_unlock')}
                                 </button>
                             `}
                         </div>
@@ -8583,7 +8581,7 @@ function renderDocPage(pageIndex) {
                         </button>
                     ` : `
                         <button class="dr-nav-btn next-btn finish-btn" onclick="window._markDocCompleted()">
-                            ✨ Hoàn Thành Sách (+20 Coins)
+                            ${t('doc_finish_book').replace('{n}', 20)}
                         </button>
                     `}
                 </div>
