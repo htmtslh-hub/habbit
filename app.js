@@ -925,7 +925,7 @@ window._openInviteModal = async function () {
         bg.onclick = (e) => { if (e.target === bg) bg.classList.remove('show'); };
     }
     const body = document.getElementById('inviteModalBody');
-    body.innerHTML = `<div style="text-align:center;padding:26px 0;color:var(--text-muted);">Đang tải…</div>`;
+    body.innerHTML = `<div style="text-align:center;padding:26px 0;color:var(--text-muted);">${t('inv_loading')}</div>`;
     bg.classList.add('show');
 
     let info;
@@ -934,15 +934,15 @@ window._openInviteModal = async function () {
     } catch (e) {
         body.innerHTML = `<div style="text-align:center;padding:24px 0;">
             <div style="font-size:38px;">📡</div>
-            <p style="color:var(--text-muted);margin-top:10px;">Không kết nối được máy chủ. Vui lòng thử lại.</p>
-            <button class="btn-pay-next" onclick="document.getElementById('inviteModalBg').classList.remove('show')">Đóng</button>
+            <p style="color:var(--text-muted);margin-top:10px;">${t('inv_no_server')}</p>
+            <button class="btn-pay-next" onclick="document.getElementById('inviteModalBg').classList.remove('show')">${t('btn_close')}</button>
         </div>`;
         return;
     }
     if (!info || !info.success) {
         body.innerHTML = `<div style="text-align:center;padding:24px 0;">
-            <p style="color:var(--text-muted);">${escHtml((info && info.message) || 'Có lỗi xảy ra.')}</p>
-            <button class="btn-pay-next" onclick="document.getElementById('inviteModalBg').classList.remove('show')">Đóng</button>
+            <p style="color:var(--text-muted);">${escHtml((info && info.message) || t('err_generic_short'))}</p>
+            <button class="btn-pay-next" onclick="document.getElementById('inviteModalBg').classList.remove('show')">${t('btn_close')}</button>
         </div>`;
         return;
     }
@@ -952,42 +952,40 @@ window._openInviteModal = async function () {
     // Ô nhập mã chỉ hiện khi người dùng CHƯA từng nhập — tránh cho bấm
     // rồi mới báo "đã nhập rồi".
     const claimBlock = info.alreadyClaimed ? `
-        <div class="inv-note done">✓ Bạn đã nhập mã mời của một người bạn.</div>
+        <div class="inv-note done">${t('inv_already_claimed')}</div>
     ` : `
         <div class="inv-divider"></div>
-        <div class="inv-label">Có mã mời của bạn bè?</div>
+        <div class="inv-label">${t('inv_have_code')}</div>
         <div class="inv-claim-row">
-            <input id="invClaimInput" class="inv-input" maxlength="6" placeholder="VD: K7M2QP"
+            <input id="invClaimInput" class="inv-input" maxlength="6" placeholder="${t('inv_code_ph')}"
                    value="${escHtml((() => { try { return localStorage.getItem('hm_pending_invite') || ''; } catch (e) { return ''; } })())}"
                    oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
-            <button class="inv-btn primary" onclick="window._claimInvite()">Nhận</button>
+            <button class="inv-btn primary" onclick="window._claimInvite()">${t('inv_claim_btn')}</button>
         </div>
-        <div class="inv-hint">Cần điểm danh đủ ${info.minCheckins} lượt mới nhận được
-            (bạn đang có ${info.checkins}). Nhận ngay +${info.rewardInvitee} Coins.</div>
+        <div class="inv-hint">${t('inv_hint').replace('{min}', info.minCheckins).replace('{cur}', info.checkins).replace('{reward}', info.rewardInvitee)}</div>
     `;
 
     body.innerHTML = `
-        <div class="modal-title" style="text-align:center;">🎁 Mời bạn bè</div>
+        <div class="modal-title" style="text-align:center;">${t('inv_title')}</div>
         <p style="text-align:center;color:var(--text-muted);font-size:13.5px;margin:2px 0 18px;">
-            Bạn bè dùng mã của bạn: bạn nhận <b style="color:var(--accent)">+${info.rewardReferrer}</b> Coins,
-            họ nhận <b style="color:var(--accent)">+${info.rewardInvitee}</b> Coins.
+            ${t('inv_desc').replace('{a}', info.rewardReferrer).replace('{b}', info.rewardInvitee)}
         </p>
 
-        <div class="inv-label">Mã mời của bạn</div>
-        <div class="inv-code" onclick="window._copyInvite('${info.code}', this)" title="Bấm để chép">${info.code}</div>
+        <div class="inv-label">${t('inv_label_code')}</div>
+        <div class="inv-code" onclick="window._copyInvite('${info.code}', this)" title="${t('inv_tip_copy')}">${info.code}</div>
 
-        <div class="inv-label" style="margin-top:14px;">Đường dẫn mời</div>
-        <div class="inv-link" onclick="window._copyInvite('${link}', this)" title="Bấm để chép">${escHtml(link)}</div>
+        <div class="inv-label" style="margin-top:14px;">${t('inv_label_link')}</div>
+        <div class="inv-link" onclick="window._copyInvite('${link}', this)" title="${t('inv_tip_copy')}">${escHtml(link)}</div>
 
         <div class="inv-stats">
-            <div><span>${info.invitedCount}</span>Đã mời</div>
-            <div><span>${info.earnedFromInvites}</span>Coins nhận được</div>
+            <div><span>${info.invitedCount}</span>${t('inv_stat_invited')}</div>
+            <div><span>${info.earnedFromInvites}</span>${t('inv_stat_coins')}</div>
         </div>
 
         ${claimBlock}
 
         <button class="inv-btn ghost" style="width:100%;margin-top:16px;"
-                onclick="document.getElementById('inviteModalBg').classList.remove('show')">Đóng</button>
+                onclick="document.getElementById('inviteModalBg').classList.remove('show')">${t('btn_close')}</button>
     `;
 };
 
@@ -995,10 +993,10 @@ window._copyInvite = async function (text, el) {
     try {
         await navigator.clipboard.writeText(text);
         const old = el.textContent;
-        el.textContent = '✓ Đã chép';
+        el.textContent = t('inv_copied');
         setTimeout(() => { el.textContent = old; }, 1400);
     } catch (e) {
-        hmAlert('Không chép được. Bạn hãy chọn và sao chép thủ công nhé.');
+        hmAlert(t('inv_copy_failed'));
     }
 };
 
@@ -1006,13 +1004,13 @@ window._claimInvite = async function () {
     const input = document.getElementById('invClaimInput');
     if (!input) return;
     const code = (input.value || '').trim().toUpperCase();
-    if (code.length !== 6) { hmAlert('Mã mời gồm 6 ký tự.'); return; }
+    if (code.length !== 6) { hmAlert(t('inv_code_len')); return; }
 
     let r;
     try {
         r = await callReferralApi({ action: 'claim', code });
     } catch (e) {
-        hmAlert('Không kết nối được máy chủ. Vui lòng thử lại.');
+        hmAlert(t('inv_no_server'));
         return;
     }
 
@@ -2422,7 +2420,7 @@ function renderGrid(){
         const streak=getStreak(h.id);
         let streakHtml='';
         if(isLocked) {
-            streakHtml = `<span class="habit-lock-pill" onclick="event.stopPropagation(); if(window._openUpgrade) window._openUpgrade();" title="${t('upsell_habit_click').replace('{n}', MAX_FREE_HABITS)}">🔒 Khóa (Free)</span>`;
+            streakHtml = `<span class="habit-lock-pill" onclick="event.stopPropagation(); if(window._openUpgrade) window._openUpgrade();" title="${t('upsell_habit_click').replace('{n}', MAX_FREE_HABITS)}">${t('habit_lock_pill')}</span>`;
         } else if(streak>=7) streakHtml=`<span class="streak-badge hot">🔥${streak}</span>`;
         else if(streak>=3) streakHtml=`<span class="streak-badge warm">🔥${streak}</span>`;
         else if(streak>=2) streakHtml=`<span class="streak-badge cool">🔥${streak}</span>`;
@@ -2430,7 +2428,7 @@ function renderGrid(){
         const isMobile = window.innerWidth <= 768;
         const lockedRowClass = isLocked ? ' habit-row-locked' : '';
         bb+=`<tr ${isMobile || isLocked ? '' : 'draggable="true"'} data-id="${h.id}" class="${lockedRowClass}" data-locked="${isLocked ? 'true' : 'false'}">`;
-        bb+=`<td class="td-name${freezeClass}${collapseClass}${isLocked ? ' td-name-locked' : ''}" title="${esc(h.emoji+' '+h.name)}"><div class="td-name-content"><span class="drag-handle">${isLocked ? '🔒' : '☰'}</span><span class="hname">${esc(h.emoji)} <span class="hname-text">${esc(h.name)}</span></span>${streakHtml}<button class="he" data-id="${h.id}" title="${isLocked ? 'Thói quen bị khóa - Bấm để chỉnh sửa hoặc xóa' : 'Chỉnh sửa & Xóa thói quen'}">✏️</button></div></td>`;
+        bb+=`<td class="td-name${freezeClass}${collapseClass}${isLocked ? ' td-name-locked' : ''}" title="${esc(h.emoji+' '+h.name)}"><div class="td-name-content"><span class="drag-handle">${isLocked ? '🔒' : '☰'}</span><span class="hname">${esc(h.emoji)} <span class="hname-text">${esc(h.name)}</span></span>${streakHtml}<button class="he" data-id="${h.id}" title="${isLocked ? t('tip_locked_edit') : t('tip_edit_delete')}">✏️</button></div></td>`;
         for(let d=1;d<=days;d++){
             const on=S.c[ck(h.id,d)];if(on)dn++;
             const tc=isToday(d)?' today':'';
@@ -7519,16 +7517,16 @@ function renderShopUI(targetTab = null) {
             `;
             titleItems.forEach(item => {
                 const isEquipped = myEquippedTitle === item.id;
-                const tName = curLang === 'en' ? item.nameEn : (curLang === 'zh' ? item.nameZh : item.name);
+                const tName = curLang === 'en' ? (item.nameEn || item.name) : (curLang === 'zh' ? (item.nameZh || item.name) : item.name);
                 html += `
                     <div class="backpack-card ${isEquipped ? 'equipped-card' : ''}">
                         <div class="backpack-card-art">${item.icon}</div>
                         <div class="backpack-card-info">
                             <div class="backpack-card-name">${tName}</div>
-                            <div class="backpack-card-qty">${isEquipped ? '<span style="color:#34d399;font-weight:700;">★ Đang trang bị</span>' : 'Đã mở khóa'}</div>
+                            <div class="backpack-card-qty">${isEquipped ? '<span style="color:#34d399;font-weight:700;">' + t('bp_equipped') + '</span>' : t('bp_unlocked')}</div>
                         </div>
                         <button class="backpack-use-btn ${isEquipped ? 'equipped-btn' : ''}" onclick="${isEquipped ? `window._unequipShopItem('titles', '${item.id}')` : `window._equipShopItem('titles', '${item.id}')`}">
-                            ${isEquipped ? 'Tháo ra' : 'Trang bị'}
+                            ${isEquipped ? t('bp_unequip') : t('bp_equip')}
                         </button>
                     </div>
                 `;
@@ -7575,8 +7573,8 @@ function renderShopUI(targetTab = null) {
             <div class="shop-banner-highlight doc-banner">
                 <div class="sbh-icon">📚</div>
                 <div class="sbh-content">
-                    <div class="sbh-title">KHO TÀI LIỆU & SÁCH TINH HOA TÂM THỨC</div>
-                    <div class="sbh-desc">Mở khóa các tuyệt tác về nhân tính, mưu lược, thương chiến và tư duy đỉnh cao để đọc trực tiếp trên ứng dụng!</div>
+                    <div class="sbh-title">${t('doc_hub_title')}</div>
+                    <div class="sbh-desc">${t('doc_hub_desc')}</div>
                 </div>
             </div>
         `;
@@ -7584,7 +7582,7 @@ function renderShopUI(targetTab = null) {
         SHOP_CATALOG.docs.forEach(doc => {
             const isOwned = doc.free || unlockedDocs.includes(doc.id);
             const canAfford = myDP >= doc.price || isAdmin;
-            const priceLabel = doc.free ? '<span style="color:#10b981;font-weight:800;">Miễn phí</span>' : (isOwned ? '<span style="color:#10b981;font-weight:800;">✓ Đã sở hữu</span>' : `<span style="font-weight:800;">${doc.price.toLocaleString()}</span> ${coinXs}`);
+            const priceLabel = doc.free ? '<span style="color:#10b981;font-weight:800;">' + t('doc_free') + '</span>' : (isOwned ? '<span style="color:#10b981;font-weight:800;">' + t('doc_owned') + '</span>' : `<span style="font-weight:800;">${doc.price.toLocaleString()}</span> ${coinXs}`);
 
             html += `
                 <div class="shop-card doc-card ${isOwned ? 'doc-owned' : ''}">
@@ -7592,7 +7590,7 @@ function renderShopUI(targetTab = null) {
                     <div class="shop-card-header">
                         ${window.getBookCoverHTML ? window.getBookCoverHTML(doc.id, 'sm') : `<div class="shop-card-art doc-cover-art" style="background:${doc.gradient};">${doc.icon}</div>`}
                         <div class="shop-card-meta">
-                            <div class="shop-card-category">${doc.category || 'Tài Liệu Đặc Biệt'}</div>
+                            <div class="shop-card-category">${doc.category || t('doc_special')}</div>
                             <div class="shop-card-title">${doc.name}</div>
                             <div class="shop-card-desc">${doc.desc}</div>
                         </div>
@@ -7604,11 +7602,11 @@ function renderShopUI(targetTab = null) {
                         <div>
                             ${isOwned ? `
                                 <button class="shop-action-btn btn-read-doc" onclick="window._openDocReader('${doc.id}')">
-                                    📖 Đọc ngay
+                                    ${t('shop_read_now')}
                                 </button>
                             ` : `
                                 <button class="shop-action-btn btn-buy doc-buy-btn" onclick="window._buyShopItem('docs', '${doc.id}', ${doc.price})" ${!canAfford && !isAdmin ? 'disabled' : ''}>
-                                    ${doc.free ? 'Nhận miễn phí' : 'Mở khóa'}
+                                    ${doc.free ? t('shop_get_free') : t('shop_unlock')}
                                 </button>
                             `}
                         </div>
@@ -7623,7 +7621,7 @@ function renderShopUI(targetTab = null) {
         SHOP_CATALOG.titles.forEach(item => {
             const isOwned = owned.includes(item.id);
             const isEquipped = equipped === item.id;
-            const tName = curLang === 'en' ? item.nameEn : (curLang === 'zh' ? item.nameZh : item.name);
+            const tName = curLang === 'en' ? (item.nameEn || item.name) : (curLang === 'zh' ? (item.nameZh || item.name) : item.name);
             const tDesc = curLang === 'en' ? (item.descEn || item.desc) : (curLang === 'zh' ? (item.descZh || item.desc) : item.desc);
             const canAfford = myDP >= item.price || isAdmin;
 
@@ -8583,7 +8581,7 @@ function renderDocPage(pageIndex) {
                         </button>
                     ` : `
                         <button class="dr-nav-btn next-btn finish-btn" onclick="window._markDocCompleted()">
-                            ✨ Hoàn Thành Sách (+20 Coins)
+                            ${t('doc_finish_book').replace('{n}', 20)}
                         </button>
                     `}
                 </div>
@@ -8991,7 +8989,7 @@ async function renderSquadHubUI(targetTab = null) {
     const myAvatar = currentUser ? (getUserAvatar(currentUser) || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%236366f1'/%3E%3Ctext x='20' y='26' text-anchor='middle' fill='white' font-size='18' font-family='sans-serif'%3E${(myName||'U').charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E`) : '';
 
     if (squadHubActiveTab === 'squads') {
-        container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">⏳ Đang tải dữ liệu Tổ Đội...</div>';
+        container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">' + t('sq_loading') + '</div>';
         
         let squadData = null;
         if (S.squadId && db) {
@@ -9008,7 +9006,7 @@ async function renderSquadHubUI(targetTab = null) {
                 if (typeof fireConfetti === 'function') fireConfetti();
                 const rankToast = document.createElement('div');
                 rankToast.className = 'quest-toast';
-                rankToast.innerHTML = `<span>${rankUp.name ? (SQUAD_RANKS.find(r=>r.level===rankUp.level)||{}).icon || '🎉' : '🎉'}</span> Tổ đội đã lên bậc <strong>${escHtml(rankUp.name)}</strong>! Bạn nhận thưởng <strong>+${rankUp.rewardDP} DP</strong>!`;
+                rankToast.innerHTML = `<span>${rankUp.name ? (SQUAD_RANKS.find(r=>r.level===rankUp.level)||{}).icon || '🎉' : '🎉'}</span> ${t('sq_rankup')} <strong>${escHtml(rankUp.name)}</strong>${t('sq_rankup_reward')} <strong>+${rankUp.rewardDP} DP</strong>!`;
                 document.body.appendChild(rankToast);
                 setTimeout(() => rankToast.classList.add('show'), 10);
                 setTimeout(() => { rankToast.classList.remove('show'); setTimeout(() => rankToast.remove(), 400); }, 3800);
@@ -9035,17 +9033,17 @@ async function renderSquadHubUI(targetTab = null) {
                                 <div class="squad-member-name">
                                     <span>${escHtml(m.displayName || 'Member')}</span>
                                     ${titleHtml}
-                                    ${isMe ? '<span style="font-size:10.5px;padding:1px 6px;border-radius:10px;background:#6366f1;color:#fff;">Bạn</span>' : ''}
+                                    ${isMe ? '<span style="font-size:10.5px;padding:1px 6px;border-radius:10px;background:#6366f1;color:#fff;">' + t('sq_you') + '</span>' : ''}
                                 </div>
                                 <div class="squad-member-status ${isChecked ? 'checked' : 'pending'}">
-                                    ${isChecked ? 'Đã check-in hôm nay' : 'Chưa hoàn thành'}
+                                    ${isChecked ? t('sq_checked_in') : t('sq_not_done')}
                                 </div>
                             </div>
                         </div>
                         <div>
                             ${!isChecked && !isMe ? `
                                 <button class="squad-nudge-btn" onclick="window._nudgeMember('${m.uid}', '${escHtml(m.displayName)}')">
-                                    ${t('btnNudge') || '⚡ Thúc giục'}
+                                    ${t('btnNudge') || t('sq_nudge_btn')}
                                 </button>
                             ` : isChecked ? '<span style="font-size:12px;color:#10b981;font-weight:700;">+10 DP</span>' : ''}
                         </div>
@@ -9060,12 +9058,12 @@ async function renderSquadHubUI(targetTab = null) {
                     logHtml += `
                         <div class="squad-log-item">
                             <span>⚡</span>
-                            <span><strong>${escHtml(n.fromName)}</strong> đã gửi lời thúc giục tới <strong>${escHtml(n.toName)}</strong>!</span>
+                            <span><strong>${escHtml(n.fromName)}</strong> ${t('sq_nudged')} <strong>${escHtml(n.toName)}</strong>!</span>
                         </div>
                     `;
                 });
             } else {
-                logHtml = '<div style="font-size:12px;color:var(--text-muted);padding:4px 0;">Chưa có hoạt động thúc giục nào hôm nay.</div>';
+                logHtml = '<div style="font-size:12px;color:var(--text-muted);padding:4px 0;">' + t('sq_no_nudge') + '</div>';
             }
 
             container.innerHTML = `
@@ -9075,17 +9073,17 @@ async function renderSquadHubUI(targetTab = null) {
                             <div class="squad-hero-icon">${squadData.icon || '🛡️'}</div>
                             <div>
                                 <div class="squad-hero-name">
-                                    ${escHtml(squadData.name || 'Tổ Đội Kỷ Luật')}
+                                    ${escHtml(squadData.name || t('sq_default_name'))}
                                     <span class="squad-level-badge">${lvlInfo.icon} ${lvlInfo.name}</span>
                                 </div>
-                                <div class="squad-hero-desc">${escHtml(squadData.description || 'Cùng nhau rèn luyện thói quen mỗi ngày!')}</div>
+                                <div class="squad-hero-desc">${escHtml(squadData.description || t('sq_default_goal'))}</div>
                             </div>
                         </div>
                         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                            <button class="squad-btn-primary" style="padding:6px 14px;font-size:12px;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#6366f1,#4f46e5);" onclick="window._shareSquadInvite('${squadData.code}', '${escHtml(squadData.name || 'Tổ Đội')}')" title="${t('squad_share_invite')}">
-                                <span>🔗</span> Mời Bạn Bè
+                            <button class="squad-btn-primary" style="padding:6px 14px;font-size:12px;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#6366f1,#4f46e5);" onclick="window._shareSquadInvite('${squadData.code}', '${escHtml(squadData.name || t('sq_word'))}')" title="${t('squad_share_invite')}">
+                                <span>🔗</span> ${t('sq_invite_btn')}
                             </button>
-                            <div class="squad-code-pill" onclick="window._shareSquadInvite('${squadData.code}', '${escHtml(squadData.name || 'Tổ Đội')}')" title="${t('squad_copy_invite')}">
+                            <div class="squad-code-pill" onclick="window._shareSquadInvite('${squadData.code}', '${escHtml(squadData.name || t('sq_word'))}')" title="${t('squad_copy_invite')}">
                                 <span>🔑 MÃ: ${squadData.code}</span>
                                 <span>📋</span>
                             </div>
@@ -9095,7 +9093,7 @@ async function renderSquadHubUI(targetTab = null) {
                     <div class="squad-rank-section">
                         <div class="squad-progress-header">
                             <span>${lvlInfo.icon} Bậc Đồng Đội: <strong>${lvlInfo.name}</strong></span>
-                            <span>${(squadData.totalDP || 0).toLocaleString()} DP ${lvlInfo.isMax ? '(Bậc cao nhất)' : `· còn ${lvlInfo.dpToNext.toLocaleString()} DP → ${lvlInfo.nextName}`}</span>
+                            <span>${(squadData.totalDP || 0).toLocaleString()} DP ${lvlInfo.isMax ? t('sq_max_rank') : `· còn ${lvlInfo.dpToNext.toLocaleString()} DP → ${lvlInfo.nextName}`}</span>
                         </div>
                         <div class="squad-rank-track">
                             <div class="squad-rank-fill" style="width:${lvlInfo.pct}%;"></div>
@@ -9115,12 +9113,12 @@ async function renderSquadHubUI(targetTab = null) {
 
                 <div class="squad-members-title">
                     <span>Thành viên tổ đội (${members.length}/5)</span>
-                    <button style="background:none;border:none;color:#ef4444;font-size:12px;font-weight:700;cursor:pointer;" onclick="window._leaveSquad()">Rời đội 🚪</button>
+                    <button style="background:none;border:none;color:#ef4444;font-size:12px;font-weight:700;cursor:pointer;" onclick="window._leaveSquad()">${t('sq_leave')}</button>
                 </div>
                 <div class="squad-members-grid">${membersHtml}</div>
 
                 <div class="squad-log-box">
-                    <div class="squad-log-header">⚡ Nhật ký Thúc Giục & Hoạt Động</div>
+                    <div class="squad-log-header">${t('sq_log_title')}</div>
                     <div class="squad-log-list">${logHtml}</div>
                 </div>
             `;
@@ -9128,43 +9126,43 @@ async function renderSquadHubUI(targetTab = null) {
             // No squad -> Show Welcome / Create & Join
             container.innerHTML = `
                 <div class="squad-welcome-card">
-                    <div class="squad-welcome-title">🛡️ Gia Nhập Tổ Đội Rèn Luyện</div>
+                    <div class="squad-welcome-title">${t('sq_join_title')}</div>
                     <div class="squad-welcome-desc">
-                        Nghiên cứu chỉ ra rằng khi có đồng đội cùng theo dõi và nhắc nhở, tỷ lệ duy trì kỷ luật thói quen tăng tới <strong>85%</strong>! Hãy tạo hoặc tham gia một tổ đội ngay.
+                        ${t('sq_join_desc').replace('{n}', '<strong>85%</strong>')}
                     </div>
                 </div>
 
                 <div class="squad-actions-row">
                     <div class="squad-action-card">
-                        <h3><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Tạo Tổ Đội Mới (3-5 Người)</h3>
+                        <h3><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> ${t('sq_create_title')}</h3>
                         <input type="text" id="squadNewName" class="squad-input" placeholder="${t('squad_name_ph')}" maxlength="30">
                         <div style="display:flex;gap:8px;align-items:center;">
-                            <label style="font-size:12px;font-weight:700;color:var(--text-muted);">Biểu tượng:</label>
+                            <label style="font-size:12px;font-weight:700;color:var(--text-muted);">${t('sq_icon_label')}</label>
                             <select id="squadNewIcon" class="squad-input" style="width:auto;">
-                                <option value="⚔️">⚔️ Kiếm Tiên Phong</option>
-                                <option value="🐺">🐺 Sói Đầu Đàn</option>
-                                <option value="🦁">🦁 Sư Tử Kỷ Luật</option>
-                                <option value="🔥">🔥 Ngọn Lửa Bền Bỉ</option>
-                                <option value="🏆">🏆 Nhà Vô Địch</option>
-                                <option value="⚡">⚡ Tia Chớp Thần Tốc</option>
-                                <option value="🛡️">🛡️ Khiên Bất Hoại</option>
+                                <option value="⚔️">${t('sq_icon_1')}</option>
+                                <option value="🐺">${t('sq_icon_2')}</option>
+                                <option value="🦁">${t('sq_icon_3')}</option>
+                                <option value="🔥">${t('sq_icon_4')}</option>
+                                <option value="🏆">${t('sq_icon_5')}</option>
+                                <option value="⚡">${t('sq_icon_6')}</option>
+                                <option value="🛡️">${t('sq_icon_7')}</option>
                             </select>
                         </div>
                         <input type="text" id="squadNewDesc" class="squad-input" placeholder="${t('squad_goal_ph')}" maxlength="80">
-                        <button class="squad-btn-primary" onclick="window._createSquad()"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Tạo Tổ Đội Ngay</button>
+                        <button class="squad-btn-primary" onclick="window._createSquad()"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> ${t('sq_create_btn')}</button>
                     </div>
 
                     <div class="squad-action-card">
-                        <h3>🔑 Gia Nhập Bằng Mã Mời</h3>
-                        <p style="font-size:12.5px;color:var(--text-muted);margin:0;">Nhập mã mời 6 ký tự do đội trưởng hoặc bạn bè gửi cho bạn:</p>
+                        <h3>${t('sq_join_code_t')}</h3>
+                        <p style="font-size:12.5px;color:var(--text-muted);margin:0;">${t('sq_join_code_d')}</p>
                         <input type="text" id="squadJoinCode" class="squad-input" placeholder="VD: SD8921" maxlength="10" style="text-transform:uppercase;font-family:monospace;font-weight:800;">
-                        <button class="squad-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669);" onclick="window._joinSquadByCode()"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> Gia Nhập Đội</button>
+                        <button class="squad-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669);" onclick="window._joinSquadByCode()"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-aegis"></use></svg> ${t('sq_join_btn')}</button>
                     </div>
                 </div>
             `;
         }
     } else if (squadHubActiveTab === 'duels') {
-        container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">⏳ Đang tải Đấu Trường 1v1...</div>';
+        container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">' + t('sq_duel_loading') + '</div>';
 
         let activeDuel = null;
         let openDuels = [];
@@ -9218,10 +9216,10 @@ async function renderSquadHubUI(targetTab = null) {
                 resultHtml = `
                     <div style="background:rgba(0,0,0,0.3);border:1px solid #f59e0b;padding:12px;border-radius:8px;text-align:center;margin-top:14px;">
                         <div style="font-size:16px;font-weight:900;color:#f59e0b;">
-                            ${draw ? 'KẾT QUẢ HÒA CÂN NÃO (7/7)!' : won ? 'BẠN ĐÃ CHIẾN THẮNG TRẬN ĐẤU!' : 'BẠN ĐÃ THUA TRẬN ĐẤU!'}
+                            ${draw ? t('sq_duel_draw') : won ? t('sq_duel_win') : t('sq_duel_lose')}
                         </div>
                         <button class="squad-btn-primary" style="margin-top:10px;" onclick="window._claimDuelReward('${activeDuel.id}')">
-                            ${won ? `Nhận Thưởng ${pot.toLocaleString()} ${coinXs}` : 'Đóng trận đấu & Nhận kết quả'}
+                            ${won ? `Nhận Thưởng ${pot.toLocaleString()} ${coinXs}` : t('sq_duel_close')}
                         </button>
                     </div>
                 `;
@@ -9230,7 +9228,7 @@ async function renderSquadHubUI(targetTab = null) {
             html += `
                 <div class="duel-vs-banner">
                     <div class="duel-vs-header">
-                        <span class="duel-badge-live">${isFinished ? '🏁 ĐÃ KẾT THÚC' : '🔥 ĐANG TRANH TÀI 7 NGÀY'}</span>
+                        <span class="duel-badge-live">${isFinished ? t('sq_duel_ended') : t('sq_duel_running')}</span>
                         <span style="font-size:12.5px;color:var(--text-secondary);font-weight:700;">⏳ Còn lại: ${daysLeft} ngày</span>
                     </div>
 
@@ -9238,7 +9236,7 @@ async function renderSquadHubUI(targetTab = null) {
                         <div class="duel-fighter challenger">
                             <img class="duel-fighter-avatar" src="${p1.photoURL || myAvatar}" alt="">
                             <div class="duel-fighter-name">${escHtml(p1.displayName || 'P1')}${getUserTitleBadgeHTML(p1.equippedTitle)}</div>
-                            <div style="font-size:12px;color:var(--text-muted);">Đạt: <strong>${p1.daysChecked || 0}/7 ngày</strong></div>
+                            <div style="font-size:12px;color:var(--text-muted);">${t('sq_duel_score')} <strong>${p1.daysChecked || 0}/7 ngày</strong></div>
                             <div class="duel-7day-track">${p1Dots}</div>
                         </div>
 
@@ -9250,7 +9248,7 @@ async function renderSquadHubUI(targetTab = null) {
                         <div class="duel-fighter opponent">
                             <img class="duel-fighter-avatar" src="${p2.photoURL || myAvatar}" alt="">
                             <div class="duel-fighter-name">${escHtml(p2.displayName || 'P2')}${getUserTitleBadgeHTML(p2.equippedTitle)}</div>
-                            <div style="font-size:12px;color:var(--text-muted);">Đạt: <strong>${p2.daysChecked || 0}/7 ngày</strong></div>
+                            <div style="font-size:12px;color:var(--text-muted);">${t('sq_duel_score')} <strong>${p2.daysChecked || 0}/7 ngày</strong></div>
                             <div class="duel-7day-track">${p2Dots}</div>
                         </div>
                     </div>
@@ -9262,13 +9260,13 @@ async function renderSquadHubUI(targetTab = null) {
             html += `
                 <div class="duel-vs-banner">
                     <div class="duel-vs-header">
-                        <span class="duel-badge-live" style="background:#f59e0b;">⏳ ĐANG CHỜ ĐỐI THỦ NHẬN KÈO</span>
+                        <span class="duel-badge-live" style="background:#f59e0b;">${t('sq_duel_waiting')}</span>
                         <button style="background:none;border:none;color:#ef4444;font-size:12px;font-weight:700;cursor:pointer;" onclick="window._cancelDuel('${activeDuel.id}', ${activeDuel.betDP || 50})">Hủy thách đấu (Hoàn lại ${activeDuel.betDP} ${coinXs}) ✕</button>
                     </div>
                     <div style="text-align:center;padding:16px;">
                         <div style="font-size:24px;margin-bottom:6px;">⚔️</div>
                         <div style="font-size:16px;font-weight:800;color:var(--text-primary);display:flex;align-items:center;justify-content:center;gap:4px;">Phòng thách đấu cược ${activeDuel.betDP || 50} ${coinXs} của bạn đã sẵn sàng!</div>
-                        <div style="font-size:13px;color:var(--text-secondary);margin-top:4px;display:flex;align-items:center;justify-content:center;gap:4px;">Hũ thưởng: <strong>${(activeDuel.betDP || 50) * 2} ${coinXs}</strong> đang chờ một đấu thủ vào nhận kèo.</div>
+                        <div style="font-size:13px;color:var(--text-secondary);margin-top:4px;display:flex;align-items:center;justify-content:center;gap:4px;">${t('sq_duel_pot')} <strong>${(activeDuel.betDP || 50) * 2} ${coinXs}</strong> ${t('sq_duel_open')}</div>
                     </div>
                 </div>
             `;
@@ -9276,13 +9274,13 @@ async function renderSquadHubUI(targetTab = null) {
             // Create duel & Lobby
             html += `
                 <div class="squad-welcome-card" style="background:radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.12), rgba(15, 23, 42, 0.85)); border-color:rgba(239, 68, 68, 0.35);">
-                    <div class="squad-welcome-title" style="color:#ef4444;">⚔️ Đấu Trường Thách Đấu 1v1 (7-Day Streak Duel)</div>
+                    <div class="squad-welcome-title" style="color:#ef4444;">${t('sq_duel_title')}</div>
                     <div class="squad-welcome-desc">
                         Đặt cược và so tài kỷ luật trong 7 ngày liên tiếp không đứt chuỗi! Người chiến thắng sẽ ăn trọn toàn bộ hũ thưởng.
                     </div>
 
                     <div style="background:rgba(0,0,0,0.3);padding:14px;border-radius:10px;display:inline-block;border:1px solid rgba(255,255,255,0.08);">
-                        <div style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px;">CHỌN MỨC CƯỢC:</div>
+                        <div style="font-size:12.5px;font-weight:800;color:var(--text-muted);margin-bottom:6px;">${t('sq_duel_stake')}</div>
                         <div class="bet-chips-row" style="justify-content:center;">
                             <div class="bet-chip active" onclick="window._selectBet(this, 50)">50 ${coinXs}</div>
                             <div class="bet-chip" onclick="window._selectBet(this, 100)">100 ${coinXs}</div>
@@ -9318,7 +9316,7 @@ async function renderSquadHubUI(targetTab = null) {
                                 </div>
                             </div>
                             <div>
-                                ${isMyOwn ? '<span style="font-size:12px;color:var(--text-muted);font-weight:700;">Phòng của bạn</span>' : `
+                                ${isMyOwn ? '<span style="font-size:12px;color:var(--text-muted);font-weight:700;">' + t('sq_duel_my_room') + '</span>' : `
                                     <button class="squad-btn-primary" style="background:linear-gradient(135deg,#ef4444,#b91c1c);font-size:12px;padding:6px 14px;" onclick="window._acceptDuel('${od.id}', ${od.betDP})" ${!canAfford ? 'disabled' : ''}>
                                         Nhận Kèo ⚔️
                                     </button>
@@ -9328,7 +9326,7 @@ async function renderSquadHubUI(targetTab = null) {
                     `;
                 });
             } else {
-                html += '<div style="font-size:13px;color:var(--text-muted);text-align:center;padding:12px;">Hiện chưa có phòng thách đấu nào đang mở. Hãy là người đầu tiên tạo kèo!</div>';
+                html += '<div style="font-size:13px;color:var(--text-muted);text-align:center;padding:12px;">' + t('sq_duel_none') + '</div>';
             }
         }
 
@@ -11477,7 +11475,7 @@ function renderDailyQuoteWidget() {
             navigator.clipboard.writeText(txt).then(() => {
                 const toast = document.createElement('div');
                 toast.className = 'quest-toast';
-                toast.innerHTML = `<span>📜</span> ${t('quoteCopiedToast') || 'Đã sao chép câu trích dẫn!'}`;
+                toast.innerHTML = `<span>📜</span> ${t('quoteCopiedToast') || t('toast_quote_copied')}`;
                 document.body.appendChild(toast);
                 setTimeout(() => toast.classList.add('show'), 10);
                 setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2500);
@@ -12433,7 +12431,7 @@ function renderInboxConversationsList() {
         const isUnread = unread > 0;
         const lastMsg = conv.lastMessage || {};
         const timeStr = formatChatTime(conv.updatedAt || lastMsg.createdAt);
-        const preview = lastMsg.text ? (lastMsg.senderId === currentUser.uid ? `Bạn: ${lastMsg.text}` : lastMsg.text) : 'Bắt đầu trò chuyện...';
+        const preview = lastMsg.text ? (lastMsg.senderId === currentUser.uid ? `Bạn: ${lastMsg.text}` : lastMsg.text) : t('ib_start_chat');
 
         const frameLevel = partner.rankLevel || 1;
         const avatarSrc = partner.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(partner.displayName || 'U')}&background=0d1117&color=10b981&bold=true`;
@@ -12446,7 +12444,7 @@ function renderInboxConversationsList() {
                 </div>
                 <div class="inbox-conv-meta">
                     <div class="inbox-conv-top-row">
-                        <span class="inbox-conv-name">${escHtml(partner.displayName || 'Chiến Binh')}${getUserTitleBadgeHTML(partner.equippedTitle)}</span>
+                        <span class="inbox-conv-name">${escHtml(partner.displayName || t('ib_warrior'))}${getUserTitleBadgeHTML(partner.equippedTitle)}</span>
                         <span class="inbox-conv-time">${timeStr}</span>
                     </div>
                     <div class="inbox-conv-bot-row">
@@ -12522,7 +12520,7 @@ function renderInboxDiscoverList() {
                 <div class="inbox-user-info">
                     <div style="flex-shrink:0;">${avatarHtml}</div>
                     <div class="inbox-user-text">
-                        <span class="inbox-user-name">${escHtml(u.displayName || 'Chiến Binh')}${getUserTitleBadgeHTML(u.equippedTitle)}</span>
+                        <span class="inbox-user-name">${escHtml(u.displayName || t('ib_warrior'))}${getUserTitleBadgeHTML(u.equippedTitle)}</span>
                         <span class="inbox-user-rank">${realmStr}</span>
                     </div>
                 </div>
@@ -12585,7 +12583,7 @@ async function openChatWithUser(targetUid) {
                         displayName: uData.displayName || 'Chiến Binh',
                         photoURL: uData.photoURL || '',
                         rankLevel: 1,
-                        realmName: 'Tập sự',
+                        realmName: t('ib_novice'),
                         step: 1,
                         equippedTitle: ''
                     };
@@ -12622,13 +12620,13 @@ function selectConversation(convId, partnerInfo) {
         const frameLevel = partnerInfo.rankLevel || 1;
         const avatarSrc = partnerInfo.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(partnerInfo.displayName || 'U')}&background=0d1117&color=10b981&bold=true`;
         const avatarHtml = window.getAvatarHTML ? window.getAvatarHTML(frameLevel, avatarSrc, 38) : `<img style="width:38px;height:38px;border-radius:50%;" src="${avatarSrc}" alt="">`;
-        const realmStr = partnerInfo.realmName ? formatRankBadge(partnerInfo.step || 1, partnerInfo.realmName) : (curLang === 'en' ? 'Training Partner' : (curLang === 'zh' ? '自律同行伙伴' : 'Đồng đội rèn luyện'));
+        const realmStr = partnerInfo.realmName ? formatRankBadge(partnerInfo.step || 1, partnerInfo.realmName) : (curLang === 'en' ? 'Training Partner' : (curLang === 'zh' ? '自律同行伙伴' : t('ib_teammate')));
 
         headerPartner.innerHTML = `
             <div style="flex-shrink:0;">${avatarHtml}</div>
             <div class="inbox-chat-partner-info">
                 <div class="inbox-partner-name-row">
-                    <span>${escHtml(partnerInfo.displayName || 'Chiến Binh')}</span>
+                    <span>${escHtml(partnerInfo.displayName || t('ib_warrior'))}</span>
                     ${getUserTitleBadgeHTML(partnerInfo.equippedTitle)}
                 </div>
                 <div class="inbox-partner-sub">${realmStr}</div>
@@ -12679,8 +12677,8 @@ function renderActiveChatMessages(messages) {
         stream.innerHTML = `
             <div style="text-align:center; padding:48px 16px; color:var(--text-muted); font-size:12px;">
                 <div style="font-size:36px; margin-bottom:8px;">✨</div>
-                <div style="font-weight:700; color:var(--text-main); margin-bottom:4px;">Chưa có tin nhắn nào</div>
-                <div>Gửi lời chào hoặc một lời nhắc kỷ luật để bắt đầu kết nối!</div>
+                <div style="font-weight:700; color:var(--text-main); margin-bottom:4px;">${t('ib_no_msgs')}</div>
+                <div>${t('ib_no_msgs_hint')}</div>
             </div>
         `;
         return;
