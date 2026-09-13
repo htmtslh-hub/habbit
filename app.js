@@ -2442,11 +2442,11 @@ function renderGrid(){
 
             let cellInner = `<div class="cb${on?' on':''}"></div>`;
             if(!on && isFrozen){
-                cellInner = `<div class="cb-frozen" title="🧊 Đã đóng băng chuỗi">🧊</div>`;
+                cellInner = `<div class="cb-frozen" title="${t('tip_frozen')}">🧊</div>`;
             } else if(!on && isRepaired){
-                cellInner = `<div class="cb-repaired" title="⚡ Đã hồi sinh chuỗi">⚡</div>`;
+                cellInner = `<div class="cb-repaired" title="${t('tip_repaired')}">⚡</div>`;
             } else if(isLocked){
-                cellInner = `<div class="cb-locked-dot" title="🔒 Khóa">🔒</div>`;
+                cellInner = `<div class="cb-locked-dot" title="${t('tip_locked_dot')}">🔒</div>`;
             }
 
             bb+=`<td class="td-chk${tc}${frozenClass}${isLocked ? ' cell-locked' : ''}" data-h="${h.id}" data-d="${d}" data-locked="${isLocked ? 'true' : 'false'}" title="${isLocked ? t('upsell_habit_title').replace('{n}', MAX_FREE_HABITS) : esc(h.emoji)+' '+esc(h.name)+' ('+dateStr+')'}">${cellInner}</td>`;
@@ -2494,7 +2494,7 @@ function renderGrid(){
     $$('.td-chk').forEach(td=>{
         td.onclick=()=>{
             if(td.dataset.locked === 'true' || td.classList.contains('cell-locked')){
-                alert('🔒 Thói quen này đang bị tạm khóa vì tài khoản của bạn đang ở gói Miễn phí (tối đa 3 thói quen).\n\nToàn bộ dữ liệu của bạn vẫn được lưu giữ an toàn 100%. Hãy nâng cấp gói Pro hoặc Premium để mở khóa và tiếp tục check-in!');
+                alert(t('alert_habit_locked').replace('{n}', MAX_FREE_HABITS));
                 if(window._openUpgrade) window._openUpgrade();
                 return;
             }
@@ -9082,10 +9082,10 @@ async function renderSquadHubUI(targetTab = null) {
                             </div>
                         </div>
                         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                            <button class="squad-btn-primary" style="padding:6px 14px;font-size:12px;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#6366f1,#4f46e5);" onclick="window._shareSquadInvite('${squadData.code}', '${escHtml(squadData.name || 'Tổ Đội')}')" title="Chia sẻ link mời vào đội">
+                            <button class="squad-btn-primary" style="padding:6px 14px;font-size:12px;display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#6366f1,#4f46e5);" onclick="window._shareSquadInvite('${squadData.code}', '${escHtml(squadData.name || 'Tổ Đội')}')" title="${t('squad_share_invite')}">
                                 <span>🔗</span> Mời Bạn Bè
                             </button>
-                            <div class="squad-code-pill" onclick="window._shareSquadInvite('${squadData.code}', '${escHtml(squadData.name || 'Tổ Đội')}')" title="Bấm để sao chép link mời">
+                            <div class="squad-code-pill" onclick="window._shareSquadInvite('${squadData.code}', '${escHtml(squadData.name || 'Tổ Đội')}')" title="${t('squad_copy_invite')}">
                                 <span>🔑 MÃ: ${squadData.code}</span>
                                 <span>📋</span>
                             </div>
@@ -9137,7 +9137,7 @@ async function renderSquadHubUI(targetTab = null) {
                 <div class="squad-actions-row">
                     <div class="squad-action-card">
                         <h3><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Tạo Tổ Đội Mới (3-5 Người)</h3>
-                        <input type="text" id="squadNewName" class="squad-input" placeholder="Tên tổ đội (VD: Chiến Binh 5H Sáng)..." maxlength="30">
+                        <input type="text" id="squadNewName" class="squad-input" placeholder="${t('squad_name_ph')}" maxlength="30">
                         <div style="display:flex;gap:8px;align-items:center;">
                             <label style="font-size:12px;font-weight:700;color:var(--text-muted);">Biểu tượng:</label>
                             <select id="squadNewIcon" class="squad-input" style="width:auto;">
@@ -9150,7 +9150,7 @@ async function renderSquadHubUI(targetTab = null) {
                                 <option value="🛡️">🛡️ Khiên Bất Hoại</option>
                             </select>
                         </div>
-                        <input type="text" id="squadNewDesc" class="squad-input" placeholder="Mục tiêu chung của đội..." maxlength="80">
+                        <input type="text" id="squadNewDesc" class="squad-input" placeholder="${t('squad_goal_ph')}" maxlength="80">
                         <button class="squad-btn-primary" onclick="window._createSquad()"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-ignite"></use></svg> Tạo Tổ Đội Ngay</button>
                     </div>
 
@@ -12471,7 +12471,7 @@ async function loadAndRenderDiscoverList() {
     const container = document.getElementById('inboxDiscoverList');
     if (!container) return;
 
-    container.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:12px;">⏳ Đang tải danh sách chiến binh...</div>';
+    container.innerHTML = `<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:12px;">${t('inbox_loading_users')}</div>`;
 
     try {
         // Fetch Top warriors from leaderboard collection
@@ -12487,7 +12487,7 @@ async function loadAndRenderDiscoverList() {
         renderInboxDiscoverList();
     } catch(e) {
         console.warn('Load discover warriors error:', e);
-        container.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:12px;">Không thể tải danh sách chiến binh.</div>';
+        container.innerHTML = `<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:12px;">${t('inbox_load_users_failed')}</div>`;
     }
 }
 
@@ -12650,7 +12650,7 @@ function selectConversation(convId, partnerInfo) {
 
     const stream = document.getElementById('inboxMessagesStream');
     if (stream) {
-        stream.innerHTML = '<div style="text-align:center; padding:32px; color:var(--text-muted); font-size:12px;">⏳ Đang tải tin nhắn...</div>';
+        stream.innerHTML = `<div style="text-align:center; padding:32px; color:var(--text-muted); font-size:12px;">${t('inbox_loading_msgs')}</div>`;
     }
 
     try {
@@ -12664,7 +12664,7 @@ function selectConversation(convId, partnerInfo) {
                 renderActiveChatMessages(messages);
             }, (err) => {
                 console.warn('Messages stream error:', err);
-                if (stream) stream.innerHTML = '<div style="text-align:center; padding:20px; color:#ef4444; font-size:12px;">Không thể tải tin nhắn.</div>';
+                if (stream) stream.innerHTML = `<div style="text-align:center; padding:20px; color:#ef4444; font-size:12px;">${t('inbox_load_msgs_failed')}</div>`;
             });
     } catch(e) {
         console.warn('Messages listener error:', e);
@@ -12701,7 +12701,7 @@ function renderActiveChatMessages(messages) {
         }
 
         const avatarSrc = msg.senderPhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(msg.senderName || 'U')}&background=0d1117&color=10b981&bold=true`;
-        const readStatusHtml = isOutgoing ? `<span class="inbox-msg-status" title="Đã gửi">✓</span>` : '';
+        const readStatusHtml = isOutgoing ? `<span class="inbox-msg-status" title="${t('inbox_sent')}">✓</span>` : '';
 
         html += `
             <div class="inbox-msg-row ${isOutgoing ? 'outgoing' : 'incoming'}">
@@ -12787,7 +12787,7 @@ async function handleSendMessage(presetText = null) {
         playMessageSound();
     } catch(e) {
         console.error('Send message error:', e);
-        alert('Lỗi gửi tin nhắn: ' + e.message);
+        alert(t('inbox_send_failed') + e.message);
     }
 }
 window._handleSendMessage = handleSendMessage;

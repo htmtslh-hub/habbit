@@ -850,7 +850,7 @@ function initDesktopGateway() {
         if (btnGoogleExternal) {
             btnGoogleExternal.onclick = async () => {
                 setLoading(btnGoogleExternal, true);
-                if (externalStatus) externalStatus.textContent = 'Đang mở cửa sổ đăng nhập Google...';
+                if (externalStatus) externalStatus.textContent = (window.I18N ? window.I18N.t('auth_opening_google') : 'Opening the Google sign-in window...');
                 
                 try {
                     const provider = new firebase.auth.GoogleAuthProvider();
@@ -889,7 +889,7 @@ function initDesktopGateway() {
                         accessToken = 'FIREBASE_TOKEN'; // Flag to tell Electron this is a Firebase token, not Google OAuth
                     }
                     
-                    if (externalStatus) externalStatus.textContent = 'Đang chuyển thông tin đăng nhập về ứng dụng máy tính...';
+                    if (externalStatus) externalStatus.textContent = (window.I18N ? window.I18N.t('auth_sending_desktop') : 'Sending your sign-in back to the desktop app...');
                     
                     // Redirect browser to Electron's local server to deliver tokens
                     const callbackUrl = `http://127.0.0.1:${port}/api/google-callback?idToken=${encodeURIComponent(idToken)}&accessToken=${encodeURIComponent(accessToken)}&redirect=1`;
@@ -898,7 +898,7 @@ function initDesktopGateway() {
                     console.error('[Desktop Gateway] Error:', err);
                     setLoading(btnGoogleExternal, false);
                     if (externalStatus) {
-                        externalStatus.innerHTML = `<span style="color: var(--error);">Lỗi: ${translateFirebaseError(err.code) || err.message}</span>`;
+                        externalStatus.innerHTML = `<span style="color: var(--error);">${window.I18N ? window.I18N.t('auth_error_prefix') : 'Error: '}${translateFirebaseError(err.code) || err.message}</span>`;
                     }
                 }
             };
