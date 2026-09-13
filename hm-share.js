@@ -31,7 +31,7 @@
             days: 'ngày',
             caption: (realm, streak) =>
                 `Tôi đang ở cảnh giới "${realm}" với chuỗi ${streak} ngày liên tiếp 🔥\n` +
-                `Rèn kỷ luật như tu luyện — habit-mastery.com`,
+                (window.I18N ? window.I18N.t('share_caption') : 'Discipline, practised daily \u2014 habit-mastery.com'),
             saved: 'Đã tải ảnh về máy. Giờ bạn có thể đăng lên trang cá nhân!',
             copied: 'Đã chép nội dung kèm theo vào bộ nhớ tạm.',
             failed: 'Không tạo được ảnh. Vui lòng thử lại.',
