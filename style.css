@@ -14375,3 +14375,411 @@ td.td-chk.frozen-day {
     text-overflow: ellipsis;
     line-height: 1.3;
 }
+
+/* ==========================================================================
+   AFFILIATE & REFERRAL PROGRAM MODAL SYSTEM (+500 DP / INVITE)
+   ========================================================================== */
+.affiliate-modal {
+    max-width: 680px;
+    width: 94%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.affiliate-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 4px 2px 14px;
+}
+
+.affiliate-hero {
+    position: relative;
+    padding: 18px 20px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(6, 182, 212, 0.12) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), inset 0 0 20px rgba(16, 185, 129, 0.08);
+}
+
+.affiliate-hero-icon {
+    font-size: 42px;
+    line-height: 1;
+    filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.6));
+    animation: hmPulseGlow 3s infinite ease-in-out;
+}
+
+.affiliate-hero-info h3 {
+    margin: 0 0 4px 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.affiliate-hero-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #10b981, #06b6d4);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.affiliate-hero-info p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--text-secondary, #94a3b8);
+    line-height: 1.4;
+}
+
+/* Stats Row */
+.affiliate-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.affiliate-stat-card {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.affiliate-stat-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-secondary, #94a3b8);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.affiliate-stat-value {
+    font-size: 1.55rem;
+    font-weight: 900;
+    font-family: Outfit, sans-serif;
+    color: #10b981;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.affiliate-stat-sub {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #f59e0b;
+}
+
+/* Affiliate Identification Cards */
+.affiliate-cards-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.affiliate-box-card {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.affiliate-box-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.affiliate-box-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-secondary, #94a3b8);
+}
+
+.affiliate-code-display {
+    font-size: 1.35rem;
+    font-weight: 900;
+    font-family: monospace;
+    letter-spacing: 2px;
+    color: #00f5a0;
+    text-shadow: 0 0 10px rgba(0, 245, 160, 0.35);
+    background: rgba(0, 0, 0, 0.35);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px dashed rgba(0, 245, 160, 0.35);
+    text-align: center;
+    user-select: all;
+}
+
+.affiliate-uid-display {
+    font-size: 0.82rem;
+    font-weight: 700;
+    font-family: monospace;
+    color: #e2e8f0;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    user-select: all;
+}
+
+.affiliate-mini-btn {
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: #10b981;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.affiliate-mini-btn:hover {
+    background: #10b981;
+    color: #0d1117;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+    transform: translateY(-1px);
+}
+
+/* Link Share Card */
+.affiliate-share-card {
+    padding: 16px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.affiliate-link-row {
+    display: flex;
+    gap: 8px;
+}
+
+.affiliate-link-input {
+    flex: 1;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-family: monospace;
+    outline: none;
+}
+
+.affiliate-link-input:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.affiliate-action-btns {
+    display: flex;
+    gap: 8px;
+}
+
+.affiliate-btn-primary {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: none;
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.affiliate-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45);
+}
+
+.affiliate-btn-share {
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    color: #60a5fa;
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.affiliate-btn-share:hover {
+    background: #3b82f6;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 0 14px rgba(59, 130, 246, 0.4);
+}
+
+/* Claim Referrer Section */
+.affiliate-claim-card {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px dashed rgba(245, 158, 11, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.affiliate-claim-row {
+    display: flex;
+    gap: 8px;
+}
+
+.affiliate-claim-input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.affiliate-claim-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #f59e0b;
+    border: none;
+    color: #0f172a;
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* History / Referrals List */
+.affiliate-history-wrap {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.affiliate-history-title {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.affiliate-friends-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.affiliate-friend-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.affiliate-friend-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.affiliate-friend-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.affiliate-friend-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.affiliate-friend-date {
+    font-size: 0.72rem;
+    color: var(--text-secondary, #94a3b8);
+}
+
+.affiliate-friend-reward {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.12);
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.affiliate-empty-hint {
+    padding: 16px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary, #94a3b8);
+    font-style: italic;
+}
+
+@media (max-width: 600px) {
+    .affiliate-cards-row {
+        grid-template-columns: 1fr;
+    }
+    .affiliate-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .affiliate-link-row {
+        flex-direction: column;
+    }
+    .affiliate-claim-row {
+        flex-direction: column;
+    }
+}

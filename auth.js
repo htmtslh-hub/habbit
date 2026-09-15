@@ -131,6 +131,114 @@ function getStoredTrafficDetails(){
     };
 }
 
+// ===== REFERRAL & AFFILIATE SYSTEM HELPERS =====
+function generateRandomInviteCode() {
+    const chars = 'ABCDEFGHJKMNPQRSTWXYZ23456789';
+    let code = 'HM';
+    for (let i = 0; i < 4; i++) {
+        code += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return code;
+}
+
+async function resolveReferrerUid(refCodeOrUid, currentUid) {
+    if (!refCodeOrUid || !db) return null;
+    const clean = String(refCodeOrUid).trim().toUpperCase();
+    const raw = String(refCodeOrUid).trim();
+    if (!clean || clean === currentUid.toUpperCase() || raw === currentUid) return null;
+
+    // 1. Check if raw input is directly a UID in leaderboard or users
+    try {
+        const lbDoc = await db.collection('leaderboard').doc(raw).get();
+        if (lbDoc.exists && lbDoc.id !== currentUid) return lbDoc.id;
+    } catch (e) {}
+
+    try {
+        const uDoc = await db.collection('users').doc(raw).get();
+        if (uDoc.exists && uDoc.id !== currentUid) return uDoc.id;
+    } catch (e) {}
+
+    // 2. Check if clean input is an inviteCode in invite_codes collection
+    try {
+        const codeDoc = await db.collection('invite_codes').doc(clean).get();
+        if (codeDoc.exists && codeDoc.data() && codeDoc.data().uid) {
+            const foundUid = codeDoc.data().uid;
+            if (foundUid !== currentUid) return foundUid;
+        }
+    } catch (e) {}
+
+    // 3. Check query users by inviteCode
+    try {
+        const q = await db.collection('users').where('inviteCode', '==', clean).limit(1).get();
+        if (!q.empty && q.docs[0].id !== currentUid) return q.docs[0].id;
+    } catch (e) {}
+
+    return null;
+}
+
+async function recordReferralReward(referrerUid, newUser) {
+    if (!referrerUid || !newUser || !db) return;
+    try {
+        // 1. Record referral doc
+        const refDocRef = db.collection('referrals').doc(newUser.uid);
+        const existing = await refDocRef.get();
+        if (existing.exists) return; // Already credited
+
+        await refDocRef.set({
+            referralId: newUser.uid,
+            referrerUid: referrerUid,
+            inviteeUid: newUser.uid,
+            inviteeName: newUser.displayName || newUser.email?.split('@')[0] || 'Chiến Binh Mới',
+            rewardDP: 500,
+            status: 'completed',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // 2. Award +500 DP to referrer in users & leaderboard
+        const inc500 = firebase.firestore.FieldValue.increment(500);
+        const inc1 = firebase.firestore.FieldValue.increment(1);
+
+        try {
+            await db.collection('users').doc(referrerUid).update({
+                bonusDP: inc500,
+                invitedCount: inc1,
+                referralEarnings: inc500
+            });
+        } catch (uErr) {
+            console.warn('Referrer users doc bonus update:', uErr);
+        }
+
+        try {
+            await db.collection('leaderboard').doc(referrerUid).set({
+                bonusDP: inc500,
+                invitedCount: inc1
+            }, { merge: true });
+        } catch (lbErr) {
+            console.warn('Referrer leaderboard bonus update:', lbErr);
+        }
+
+        // 3. Create inbox notification for referrer
+        try {
+            const notifRef = db.collection('conversations').doc('affiliate_' + referrerUid + '_' + newUser.uid);
+            await notifRef.set({
+                participants: [referrerUid],
+                type: 'affiliate_reward',
+                title: '🎉 Nhận Thưởng +500 DP Giới Thiệu Bạn Bè!',
+                titleEn: '🎉 +500 DP Referral Reward Earned!',
+                titleZh: '🎉 成功邀请好友，获得 +500 DP！',
+                body: `Chiến binh ${newUser.displayName || 'mới'} vừa đăng ký tài khoản qua liên kết mời của bạn. Bạn đã được cộng +500 DP vào ví kỷ luật!`,
+                rewardDP: 500,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                unread: true
+            }, { merge: true });
+        } catch (notifErr) {
+            console.warn('Affiliate notification creation:', notifErr);
+        }
+    } catch (e) {
+        console.warn('recordReferralReward error:', e);
+    }
+}
+
 // ===== CREATE USER PROFILE =====
 async function createUserProfile(user, isNewUser){
     const userRef = db.collection('users').doc(user.uid);
@@ -140,6 +248,10 @@ async function createUserProfile(user, isNewUser){
         const trialEnd = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days
         const sourceDetails = getStoredTrafficDetails();
         const registerSource = getStoredTrafficSource();
+        
+        // Retain existing inviteCode or generate new unique code
+        let inviteCode = (doc.exists && doc.data().inviteCode) ? doc.data().inviteCode : generateRandomInviteCode();
+
         const profileData = {
             email: user.email || '',
             displayName: user.displayName || '',
@@ -153,6 +265,9 @@ async function createUserProfile(user, isNewUser){
             createdAt: firebase.firestore.Timestamp.fromDate(now),
             lastLoginAt: firebase.firestore.Timestamp.fromDate(now),
             disabled: false,
+            inviteCode: inviteCode,
+            invitedCount: (doc.exists && doc.data().invitedCount) || 0,
+            referralEarnings: (doc.exists && doc.data().referralEarnings) || 0,
             registerSource: registerSource,
             utm_source: sourceDetails.utm_source || registerSource,
             utm_medium: sourceDetails.utm_medium || '',
@@ -160,10 +275,47 @@ async function createUserProfile(user, isNewUser){
             referrer: sourceDetails.referrer || '',
             landingPage: sourceDetails.landingPage || '',
         };
+
+        // Check if user came from an affiliate referral code or link
+        const refInputEl = document.getElementById('regReferralCode');
+        const rawRefInput = (refInputEl ? refInputEl.value.trim() : '') || localStorage.getItem('hm_ref_code') || localStorage.getItem('hm_referrer_uid') || '';
+        let referrerUid = null;
+        if (rawRefInput && (!doc.exists || !doc.data().referredBy)) {
+            referrerUid = await resolveReferrerUid(rawRefInput, user.uid);
+            if (referrerUid) {
+                profileData.referredBy = referrerUid;
+                profileData.referredAt = firebase.firestore.Timestamp.fromDate(now);
+                profileData.bonusDP = firebase.firestore.FieldValue.increment(100); // Welcome bonus +100 DP
+            }
+        }
+
         if(doc.exists){
             await userRef.set(profileData, {merge: true});
         } else {
             await userRef.set(profileData);
+        }
+
+        // Register inviteCode in public lookup table
+        try {
+            await db.collection('invite_codes').doc(inviteCode).set({
+                code: inviteCode,
+                uid: user.uid,
+                displayName: user.displayName || user.email?.split('@')[0] || 'User',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+        } catch (errCode) {
+            console.warn('Register invite_codes warning:', errCode);
+        }
+
+        // If registered via referral, credit referrer with 500 DP and send notification
+        if (referrerUid) {
+            try {
+                await recordReferralReward(referrerUid, user);
+                localStorage.removeItem('hm_ref_code');
+                localStorage.removeItem('hm_referrer_uid');
+            } catch (refErr) {
+                console.warn('recordReferralReward warning:', refErr);
+            }
         }
     } else {
         await userRef.update({
@@ -1063,16 +1215,26 @@ function init(){
     initDesktopGateway();
     checkAuth();
     
-    // Capture Viral Deep Links (?joinSquad=SQxxx / ?ref=UID)
+    // Capture Viral Deep Links (?joinSquad=SQxxx / ?ref=UID / ?invite=CODE)
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const joinSquadCode = urlParams.get('joinSquad') || urlParams.get('squad');
-        const refUid = urlParams.get('ref');
+        const refVal = urlParams.get('ref') || urlParams.get('invite') || urlParams.get('referrer');
         if (joinSquadCode) {
             localStorage.setItem('hm_pending_squad', joinSquadCode.trim().toUpperCase());
         }
-        if (refUid) {
-            localStorage.setItem('hm_referrer_uid', refUid.trim());
+        if (refVal) {
+            const cleanRef = refVal.trim().toUpperCase();
+            localStorage.setItem('hm_ref_code', cleanRef);
+            localStorage.setItem('hm_referrer_uid', cleanRef);
+            const refInp = document.getElementById('regReferralCode');
+            if (refInp) refInp.value = cleanRef;
+        } else {
+            const savedRef = localStorage.getItem('hm_ref_code') || localStorage.getItem('hm_referrer_uid');
+            const refInp = document.getElementById('regReferralCode');
+            if (savedRef && refInp && !refInp.value) {
+                refInp.value = savedRef;
+            }
         }
     } catch(e) {}
 }

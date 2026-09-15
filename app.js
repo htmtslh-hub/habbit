@@ -366,6 +366,10 @@ window.addEventListener('hmLanguageChanged', (e) => {
         if (guideModal && guideModal.classList.contains('show') && typeof renderGuideContent === 'function') {
             renderGuideContent(curGuideTab);
         }
+        const affModal = document.getElementById('affiliateModalBg');
+        if (affModal && affModal.classList.contains('show') && typeof renderAffiliateUI === 'function') {
+            renderAffiliateUI();
+        }
     }
 });
 
@@ -1148,6 +1152,15 @@ window.addEventListener('resize', () => {
     }, 150);
 });
 
+function generateUserInviteCode() {
+    const chars = 'ABCDEFGHJKMNPQRSTWXYZ23456789';
+    let code = 'HM';
+    for (let i = 0; i < 4; i++) {
+        code += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return code;
+}
+
 async function ensureUserProfile(user){
     if(!userDocRef) return;
     try {
@@ -1156,6 +1169,8 @@ async function ensureUserProfile(user){
         const trialEnd = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days
         
         if(!doc.exists){
+            const initialCode = generateUserInviteCode();
+            userInviteCode = initialCode;
             const profileData = {
                 email: user.email || '',
                 displayName: user.displayName || '',
@@ -1169,8 +1184,19 @@ async function ensureUserProfile(user){
                 createdAt: firebase.firestore.Timestamp.fromDate(now),
                 lastLoginAt: firebase.firestore.Timestamp.fromDate(now),
                 disabled: false,
+                inviteCode: initialCode,
+                invitedCount: 0,
+                referralEarnings: 0
             };
             await userDocRef.set(profileData);
+            try {
+                await db.collection('invite_codes').doc(initialCode).set({
+                    code: initialCode,
+                    uid: user.uid,
+                    displayName: user.displayName || 'User',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+            } catch(e) {}
         } else {
             const data = doc.data();
             const updates = {};
@@ -1194,6 +1220,26 @@ async function ensureUserProfile(user){
             if(data.role === undefined) { updates.role = 'customer'; needsUpdate = true; }
             if(data.disabled === undefined) { updates.disabled = false; needsUpdate = true; }
             
+            // Manage Affiliate Invite Code
+            if (!data.inviteCode) {
+                const newCode = generateUserInviteCode();
+                updates.inviteCode = newCode;
+                updates.invitedCount = data.invitedCount || 0;
+                updates.referralEarnings = data.referralEarnings || 0;
+                userInviteCode = newCode;
+                needsUpdate = true;
+                try {
+                    await db.collection('invite_codes').doc(newCode).set({
+                        code: newCode,
+                        uid: user.uid,
+                        displayName: data.displayName || user.displayName || 'User',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                } catch(e) {}
+            } else {
+                userInviteCode = data.inviteCode;
+            }
+
             updates.lastLoginAt = firebase.firestore.Timestamp.fromDate(now);
             needsUpdate = true;
             
@@ -3208,6 +3254,8 @@ async function startApp(user){
         initQuestSystem();
         initGuideModal();
         initInboxSystem();
+        initAffiliateModal();
+        startReferralsWatcher();
         renderAll();
         if(typeof updateUserDPState==='function') updateUserDPState(true);
         else syncUserLeaderboard();
@@ -3220,6 +3268,11 @@ async function startApp(user){
         // Check incoming Deep Links / Viral Squad Invites (?joinSquad=SQxxx)
         try {
             const urlParams = new URLSearchParams(window.location.search);
+            const refVal = urlParams.get('ref') || urlParams.get('invite') || urlParams.get('referrer');
+            if (refVal) {
+                localStorage.setItem('hm_ref_code', refVal.trim().toUpperCase());
+                localStorage.setItem('hm_referrer_uid', refVal.trim());
+            }
             const joinSquadCode = urlParams.get('joinSquad') || urlParams.get('squad') || localStorage.getItem('hm_pending_squad');
             if (joinSquadCode) {
                 const cleanCode = joinSquadCode.trim().toUpperCase();
@@ -12644,6 +12697,428 @@ function initGuideModal() {
     });
 }
 window.initGuideModal = initGuideModal;
+
+// ==========================================================================
+// AFFILIATE & REFERRAL PROGRAM SYSTEM (MỜI BẠN BÈ & NHẬN THƯỞNG 500 DP)
+// ==========================================================================
+let userInviteCode = '';
+let userReferralUnsubscribe = null;
+
+function openAffiliateModal() {
+    const modal = document.getElementById('affiliateModalBg');
+    if (!modal) return;
+    modal.classList.add('show');
+    renderAffiliateUI();
+}
+window._openAffiliateModal = openAffiliateModal;
+
+function closeAffiliateModal() {
+    const modal = document.getElementById('affiliateModalBg');
+    if (modal) modal.classList.remove('show');
+}
+window._closeAffiliateModal = closeAffiliateModal;
+
+function copyAffiliateText(text, successMsgKey) {
+    if (!text) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            const msg = window.I18N ? window.I18N.t(successMsgKey || 'affiliate_copied') : 'Đã sao chép vào bộ nhớ tạm!';
+            if (typeof showToast === 'function') {
+                showToast('📋 ' + msg);
+            } else {
+                alert(msg);
+            }
+        }).catch(() => {
+            prompt('Sao chép nội dung:', text);
+        });
+    } else {
+        prompt('Sao chép nội dung:', text);
+    }
+}
+window._copyAffiliateText = copyAffiliateText;
+
+async function shareAffiliateLinkDirect() {
+    if (!currentUser) return;
+    const origin = window.location.origin + window.location.pathname;
+    const code = userInviteCode || currentUser.uid;
+    const url = `${origin}?ref=${encodeURIComponent(code)}`;
+    const lang = typeof getAppLanguage === 'function' ? getAppLanguage() : (typeof curLang !== 'undefined' ? curLang : 'vi');
+
+    const shareTitle = 'Habit Mastery - Rèn Luyện Kỷ Luật RPG';
+    const shareText = lang === 'en' 
+        ? `🔥 Join me on Habit Mastery to build daily habits, earn rewards, and ascend through realm ranks!\n👉 Join with my link: ${url}`
+        : (lang === 'zh'
+            ? `🔥 邀请你加入 Habit Mastery，一起每日打卡自律，冲击二十一重境界！\n👉 专属直达链接：${url}`
+            : `🔥 Cùng mình tham gia Habit Mastery để rèn luyện kỷ luật mỗi ngày, tích luỹ Coin và mở khoá 21 Cảnh Giới!\n👉 Vào ngay nhận quà khởi đầu: ${url}`);
+
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: shareTitle,
+                text: shareText,
+                url: url
+            });
+            return;
+        } catch (err) {
+            console.log('Share dismissed or cancelled:', err);
+        }
+    }
+    copyAffiliateText(url, 'affiliate_copied');
+}
+window._shareAffiliateLinkDirect = shareAffiliateLinkDirect;
+
+async function claimManualReferralCode() {
+    if (!currentUser || !db) return;
+    const inputEl = document.getElementById('affiliateClaimInput');
+    const btnEl = document.getElementById('affiliateClaimBtn');
+    if (!inputEl) return;
+    const codeVal = inputEl.value.trim().toUpperCase();
+    const rawVal = inputEl.value.trim();
+    if (!codeVal) return;
+
+    if (codeVal === currentUser.uid.toUpperCase() || rawVal === currentUser.uid) {
+        if (typeof showToast === 'function') {
+            showToast('⚠️ ' + (window.I18N ? window.I18N.t('affiliate_claim_err_self') : 'Không thể tự nhập mã mời của chính mình!'));
+        }
+        return;
+    }
+
+    if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.textContent = '...';
+    }
+
+    try {
+        // Check if user already has referredBy
+        const uDoc = await db.collection('users').doc(currentUser.uid).get();
+        if (uDoc.exists && uDoc.data().referredBy) {
+            if (typeof showToast === 'function') {
+                showToast('⚠️ ' + (window.I18N ? window.I18N.t('affiliate_claim_err_already') : 'Bạn đã nhập mã người giới thiệu trước đó rồi.'));
+            }
+            if (btnEl) { btnEl.disabled = false; btnEl.textContent = window.I18N ? window.I18N.t('affiliate_claim_btn') : 'Nhận +100 DP'; }
+            return;
+        }
+
+        // Resolve referrer
+        let referrerUid = null;
+        try {
+            const lbDoc = await db.collection('leaderboard').doc(rawVal).get();
+            if (lbDoc.exists && lbDoc.id !== currentUser.uid) referrerUid = lbDoc.id;
+        } catch(e) {}
+
+        if (!referrerUid) {
+            try {
+                const uCheck = await db.collection('users').doc(rawVal).get();
+                if (uCheck.exists && uCheck.id !== currentUser.uid) referrerUid = uCheck.id;
+            } catch(e) {}
+        }
+
+        if (!referrerUid) {
+            try {
+                const codeDoc = await db.collection('invite_codes').doc(codeVal).get();
+                if (codeDoc.exists && codeDoc.data() && codeDoc.data().uid && codeDoc.data().uid !== currentUser.uid) {
+                    referrerUid = codeDoc.data().uid;
+                }
+            } catch(e) {}
+        }
+
+        if (!referrerUid) {
+            try {
+                const q = await db.collection('users').where('inviteCode', '==', codeVal).limit(1).get();
+                if (!q.empty && q.docs[0].id !== currentUser.uid) referrerUid = q.docs[0].id;
+            } catch(e) {}
+        }
+
+        if (!referrerUid) {
+            if (typeof showToast === 'function') {
+                showToast('❌ ' + (window.I18N ? window.I18N.t('affiliate_claim_err_invalid') : 'Mã mời hoặc ID người giới thiệu không tồn tại.'));
+            }
+            if (btnEl) { btnEl.disabled = false; btnEl.textContent = window.I18N ? window.I18N.t('affiliate_claim_btn') : 'Nhận +100 DP'; }
+            return;
+        }
+
+        // 1. Record referral doc
+        const refDoc = db.collection('referrals').doc(currentUser.uid);
+        await refDoc.set({
+            referralId: currentUser.uid,
+            referrerUid: referrerUid,
+            inviteeUid: currentUser.uid,
+            inviteeName: currentUser.displayName || currentUser.email?.split('@')[0] || 'Chiến Binh Mới',
+            rewardDP: 500,
+            status: 'completed',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // 2. Award +100 DP to current user
+        await db.collection('users').doc(currentUser.uid).update({
+            referredBy: referrerUid,
+            referredAt: firebase.firestore.FieldValue.serverTimestamp(),
+            bonusDP: firebase.firestore.FieldValue.increment(100)
+        });
+        if (typeof applyCoinDelta === 'function') {
+            await applyCoinDelta(100);
+        }
+
+        // 3. Award +500 DP to referrer
+        try {
+            await db.collection('users').doc(referrerUid).update({
+                bonusDP: firebase.firestore.FieldValue.increment(500),
+                invitedCount: firebase.firestore.FieldValue.increment(1),
+                referralEarnings: firebase.firestore.FieldValue.increment(500)
+            });
+            await db.collection('leaderboard').doc(referrerUid).set({
+                bonusDP: firebase.firestore.FieldValue.increment(500),
+                invitedCount: firebase.firestore.FieldValue.increment(1)
+            }, { merge: true });
+        } catch(e) {}
+
+        if (typeof showToast === 'function') {
+            showToast('🎉 ' + (window.I18N ? window.I18N.t('affiliate_claim_success') : 'Nhận thành công +100 DP! Người mời bạn cũng nhận được +500 DP.'));
+        }
+        if (typeof updateUserDPState === 'function') updateUserDPState(true);
+        renderAffiliateUI();
+    } catch(err) {
+        console.warn('claimManualReferralCode error:', err);
+        if (typeof showToast === 'function') showToast('❌ Có lỗi xảy ra, vui lòng thử lại.');
+    } finally {
+        if (btnEl) {
+            btnEl.disabled = false;
+            btnEl.textContent = window.I18N ? window.I18N.t('affiliate_claim_btn') : 'Nhận +100 DP';
+        }
+    }
+}
+window._claimManualReferralCode = claimManualReferralCode;
+
+async function renderAffiliateUI() {
+    const container = document.getElementById('affiliateModalBody');
+    if (!container || !currentUser) return;
+
+    const lang = typeof getAppLanguage === 'function' ? getAppLanguage() : (typeof curLang !== 'undefined' ? curLang : 'vi');
+    const origin = window.location.origin + window.location.pathname;
+    const myUid = currentUser.uid;
+    const myCode = userInviteCode || ('HM' + myUid.slice(0, 4).toUpperCase());
+    const myInviteLink = `${origin}?ref=${encodeURIComponent(myCode)}`;
+
+    // Fetch user doc to get latest stats
+    let invitedCount = 0;
+    let referralEarnings = 0;
+    let referredBy = null;
+
+    try {
+        const uDoc = await db.collection('users').doc(myUid).get();
+        if (uDoc.exists) {
+            const ud = uDoc.data();
+            invitedCount = ud.invitedCount || 0;
+            referralEarnings = ud.referralEarnings || (invitedCount * 500);
+            referredBy = ud.referredBy || null;
+            if (ud.inviteCode) userInviteCode = ud.inviteCode;
+        }
+    } catch(e) {}
+
+    // Fetch list of invited friends
+    let friends = [];
+    try {
+        const qSnap = await db.collection('referrals')
+            .where('referrerUid', '==', myUid)
+            .limit(20)
+            .get();
+        friends = qSnap.docs.map(doc => doc.data());
+        friends.sort((a, b) => {
+            const ta = a.createdAt ? (a.createdAt.toMillis ? a.createdAt.toMillis() : (a.createdAt.seconds * 1000)) : 0;
+            const tb = b.createdAt ? (b.createdAt.toMillis ? b.createdAt.toMillis() : (b.createdAt.seconds * 1000)) : 0;
+            return tb - ta;
+        });
+        if (friends.length > invitedCount) {
+            invitedCount = friends.length;
+            referralEarnings = invitedCount * 500;
+        }
+    } catch(e) {
+        console.warn('Fetch referrals list warning:', e);
+    }
+
+    const t = (k, fallback) => window.I18N ? window.I18N.t(k) : fallback;
+
+    container.innerHTML = `
+        <!-- HERO BANNER -->
+        <div class="affiliate-hero">
+            <div class="affiliate-hero-icon">🎁</div>
+            <div class="affiliate-hero-info">
+                <h3>
+                    <span>${t('affiliate_hero_title', 'Mời Bạn Bè & Nhận Ngay +500 DP')}</span>
+                    <span class="affiliate-hero-badge">${t('affiliate_hero_badge', '+500 DP / LƯỢT ĐĂNG KÝ')}</span>
+                </h3>
+                <p>${t('affiliate_hero_desc', 'Mỗi khi có bạn bè đăng ký tài khoản thành công qua mã mời hoặc ID của bạn, bạn sẽ được cộng ngay 500 DP vào ví kỷ luật!')}</p>
+            </div>
+        </div>
+
+        <!-- STATS ROW -->
+        <div class="affiliate-stats-grid">
+            <div class="affiliate-stat-card">
+                <span class="affiliate-stat-label">${t('affiliate_stat_invited', 'Bạn bè đã mời')}</span>
+                <div class="affiliate-stat-value">
+                    <span>${invitedCount}</span>
+                    <span class="affiliate-stat-sub">(${t('affiliate_stat_rate', '+500 DP / bạn mới')})</span>
+                </div>
+            </div>
+            <div class="affiliate-stat-card">
+                <span class="affiliate-stat-label">${t('affiliate_stat_earned', 'Tổng DP nhận được')}</span>
+                <div class="affiliate-stat-value" style="color:#f59e0b;">
+                    <span>+${referralEarnings.toLocaleString()}</span>
+                    <span class="affiliate-stat-sub">DP</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DUAL CARDS: INVITE CODE & UID -->
+        <div class="affiliate-cards-row">
+            <div class="affiliate-box-card">
+                <div class="affiliate-box-header">
+                    <span class="affiliate-box-title">🎟️ ${t('affiliate_box_code', 'Mã Mời Của Bạn')}</span>
+                    <button type="button" class="affiliate-mini-btn" onclick="window._copyAffiliateText('${myCode}', 'affiliate_copied')">
+                        📋 ${t('affiliate_btn_copy', 'Sao Chép')}
+                    </button>
+                </div>
+                <div class="affiliate-code-display">${myCode}</div>
+            </div>
+
+            <div class="affiliate-box-card">
+                <div class="affiliate-box-header">
+                    <span class="affiliate-box-title">🆔 ${t('affiliate_box_uid', 'ID Định Danh Của Bạn (UID)')}</span>
+                    <button type="button" class="affiliate-mini-btn" onclick="window._copyAffiliateText('${myUid}', 'affiliate_copied')">
+                        📋 ${t('affiliate_btn_copy', 'Sao Chép')}
+                    </button>
+                </div>
+                <div class="affiliate-uid-display" title="${myUid}">${myUid}</div>
+            </div>
+        </div>
+
+        <!-- DIRECT SHARE LINK CARD -->
+        <div class="affiliate-share-card">
+            <span class="affiliate-box-title">🔗 ${t('affiliate_link_title', 'Liên Kết Mời Bạn Bè Trực Tiếp')}</span>
+            <div class="affiliate-link-row">
+                <input type="text" class="affiliate-link-input" value="${myInviteLink}" readonly onclick="this.select();">
+            </div>
+            <div class="affiliate-action-btns">
+                <button type="button" class="affiliate-btn-primary" onclick="window._copyAffiliateText('${myInviteLink}', 'affiliate_copied')">
+                    ${t('affiliate_btn_copy_link', '📋 Sao Chép Link Mời')}
+                </button>
+                <button type="button" class="affiliate-btn-share" onclick="window._shareAffiliateLinkDirect()">
+                    ${t('affiliate_btn_share', '📲 Chia Sẻ Nhanh (Zalo/FB)')}
+                </button>
+            </div>
+        </div>
+
+        <!-- CLAIM REFERRER (Only if user hasn't been referred yet) -->
+        ${!referredBy ? `
+            <div class="affiliate-claim-card">
+                <span class="affiliate-box-title" style="color:#f59e0b;">🎁 ${t('affiliate_claim_title', 'Nhập Mã Người Giới Thiệu')}</span>
+                <p style="margin:0; font-size:0.8rem; color:var(--text-secondary,#94a3b8);">${t('affiliate_claim_desc', 'Chưa có ai giới thiệu? Nhập mã mời hoặc ID của bạn bè để nhận ngay +100 DP chào mừng!')}</p>
+                <div class="affiliate-claim-row">
+                    <input type="text" id="affiliateClaimInput" class="affiliate-claim-input" placeholder="${t('affiliate_claim_placeholder', 'Nhập mã mời hoặc UID bạn bè...')}">
+                    <button type="button" id="affiliateClaimBtn" class="affiliate-claim-btn" onclick="window._claimManualReferralCode()">
+                        ${t('affiliate_claim_btn', 'Nhận +100 DP')}
+                    </button>
+                </div>
+            </div>
+        ` : ''}
+
+        <!-- REFERRALS HISTORY -->
+        <div class="affiliate-history-wrap">
+            <div class="affiliate-history-title">
+                <span>👥 ${t('affiliate_history_title', 'Danh Sách Bạn Bè Đã Tham Gia')}</span>
+                <span style="font-size:0.75rem; color:#10b981; font-weight:700;">${friends.length} người</span>
+            </div>
+            <div class="affiliate-friends-list">
+                ${friends.length > 0 ? friends.map(f => {
+                    const avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(f.inviteeName || 'U')}&background=10b981&color=ffffff&bold=true`;
+                    let dateStr = '';
+                    if (f.createdAt) {
+                        const d = f.createdAt.toDate ? f.createdAt.toDate() : new Date(f.createdAt.seconds * 1000);
+                        dateStr = d.toLocaleDateString(lang === 'vi' ? 'vi-VN' : 'en-US');
+                    }
+                    return `
+                        <div class="affiliate-friend-item">
+                            <div class="affiliate-friend-info">
+                                <img class="affiliate-friend-avatar" src="${avatar}" alt="">
+                                <div>
+                                    <div class="affiliate-friend-name">${escHtml(f.inviteeName || 'Chiến Binh Mới')}</div>
+                                    <div class="affiliate-friend-date">${dateStr ? 'Tham gia: ' + dateStr : 'Thành viên mới'}</div>
+                                </div>
+                            </div>
+                            <span class="affiliate-friend-reward">+500 DP</span>
+                        </div>
+                    `;
+                }).join('') : `
+                    <div class="affiliate-empty-hint">
+                        ${t('affiliate_history_empty', 'Chưa có bạn bè nào đăng ký qua liên kết của bạn. Hãy chia sẻ link mời ngay!')}
+                    </div>
+                `}
+            </div>
+        </div>
+    `;
+}
+window._renderAffiliateUI = renderAffiliateUI;
+
+function initAffiliateModal() {
+    const closeBtn = document.getElementById('affiliateCloseBtn');
+    if (closeBtn) closeBtn.onclick = closeAffiliateModal;
+
+    const bg = document.getElementById('affiliateModalBg');
+    if (bg) bg.onclick = (e) => { if (e.target === bg) closeAffiliateModal(); };
+
+    const moreBtn = document.getElementById('moreBtnAffiliate');
+    if (moreBtn) {
+        moreBtn.onclick = () => {
+            if (window._closeMoreMenu) window._closeMoreMenu();
+            openAffiliateModal();
+        };
+    }
+}
+window.initAffiliateModal = initAffiliateModal;
+
+function startReferralsWatcher() {
+    if (!currentUser || !db) return;
+    if (userReferralUnsubscribe) {
+        try { userReferralUnsubscribe(); } catch(e) {}
+        userReferralUnsubscribe = null;
+    }
+    try {
+        let initialLoaded = false;
+        userReferralUnsubscribe = db.collection('referrals')
+            .where('referrerUid', '==', currentUser.uid)
+            .onSnapshot(snap => {
+                if (!initialLoaded) {
+                    initialLoaded = true;
+                    return;
+                }
+                snap.docChanges().forEach(change => {
+                    if (change.type === 'added') {
+                        const data = change.doc.data();
+                        const friendName = data.inviteeName || 'Bạn mới';
+                        if (typeof showToast === 'function') {
+                            showToast(`🎉 +500 DP! ${friendName} vừa đăng ký qua mã mời của bạn!`);
+                        }
+                        if (typeof applyCoinDelta === 'function') {
+                            applyCoinDelta(500);
+                        }
+                        if (typeof updateUserDPState === 'function') {
+                            updateUserDPState(true);
+                        }
+                        const affModal = document.getElementById('affiliateModalBg');
+                        if (affModal && affModal.classList.contains('show')) {
+                            renderAffiliateUI();
+                        }
+                    }
+                });
+            }, err => {
+                console.warn('Referrals watcher notice:', err);
+            });
+    } catch(e) {
+        console.warn('startReferralsWatcher error:', e);
+    }
+}
+window.startReferralsWatcher = startReferralsWatcher;
+
 
 // ==========================================================================
 // DIRECT MESSAGING & INBOX CHAT SYSTEM (HỘP THƯ KẾT NỐI TRỰC TIẾP GIỮA CÁC TÀI KHOẢN)
