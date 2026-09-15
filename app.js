@@ -820,43 +820,43 @@ const SHOP_CATALOG = {
         { id: 'supreme_destiny', name: 'Vận Mệnh Tối Thượng', nameEn: 'Supreme Destiny', nameZh: '至尊宿命', icon: '🌟', desc: 'Chạm đỉnh vận mệnh, hào quang thần thoại bất tử.', descEn: 'Apex of destiny with immortal mythic aura.', descZh: '触及宿命巅峰，不朽神话光芒。', price: 3500, mythic: true }
     ],
     themes: [
-        { id: 'dark', name: 'Dark Mode', desc: 'Giao diện tối cổ điển huyền bí.', price: 0, free: true, bg: '#0f172a', accent: '#10b981' },
-        { id: 'light', name: 'Light Mode', desc: 'Giao diện sáng sủa tươi mới.', price: 0, free: true, bg: '#f8fafc', accent: '#059669' },
-        { id: 'cyberpunk', name: 'Cyberpunk Neon', desc: 'Hồng neon & lam ngọc rực rỡ trên nền chàm tương lai.', price: 600, bg: '#0a0616', accent: '#f0399c' },
-        { id: 'luxury', name: 'Gold Luxury', desc: 'Vàng kim hoàng gia quý phái obsidian.', price: 800, bg: '#0b0b0e', accent: '#d4af37' },
-        { id: 'sakura', name: 'Minimalist Sakura', desc: 'Hồng hoa anh đào thanh tao Nhật Bản.', price: 500, bg: '#fcf5f8', accent: '#ec4899' },
-        { id: 'matrix', name: 'Midnight Matrix', desc: 'Xanh terminal hacker trên nền đêm ma trận.', price: 600, bg: '#030a06', accent: '#22e07a' },
-        { id: 'forest', name: 'Forest Zen', desc: 'Rừng thông sâu ngọc bích, dịu mát an lành.', price: 500, bg: '#06140f', accent: '#34d399' },
-        { id: 'cosmic', name: 'Cosmic Nexus', desc: 'Tím dạ quang & lam sao băng giữa vũ trụ đêm.', price: 700, bg: '#05061a', accent: '#a78bfa' },
-        { id: 'volcano', name: 'Crimson Volcano', desc: 'Dung nham cam rực & than hồng trên đá obsidian.', price: 700, bg: '#120806', accent: '#f97316' },
-        { id: 'nordic', name: 'Nordic Frost', desc: 'Xanh băng Bắc Âu tĩnh lặng trên nền đá phiến đêm.', price: 650, bg: '#0b1220', accent: '#38bdf8' },
-        { id: 'abyss', name: 'Deep Abyss', desc: 'Vực sâu đại dương với ánh lân quang xanh ngọc.', price: 700, bg: '#04121a', accent: '#2dd4bf' },
-        { id: 'mocha', name: 'Mocha Cream', desc: 'Kem sữa & cà phê ấm áp, dịu mắt để đọc lâu.', price: 550, bg: '#f5efe6', accent: '#9c6434' }
+        { id: 'dark', name: 'Dark Mode', desc: 'Giao diện tối cổ điển huyền bí.', descEn: 'Classic mysterious dark mode.', descZh: '经典神秘深色界面。', price: 0, free: true, bg: '#0f172a', accent: '#10b981' },
+        { id: 'light', name: 'Light Mode', desc: 'Giao diện sáng sủa tươi mới.', descEn: 'Crisp & refreshing light mode.', descZh: '明亮清新的浅色界面。', price: 0, free: true, bg: '#f8fafc', accent: '#059669' },
+        { id: 'cyberpunk', name: 'Cyberpunk Neon', desc: 'Hồng neon & lam ngọc rực rỡ trên nền chàm tương lai.', descEn: 'Vibrant neon pink & cyan on futuristic indigo.', descZh: '赛博霓虹粉与青蓝，未来科技质感。', price: 600, bg: '#0a0616', accent: '#f0399c' },
+        { id: 'luxury', name: 'Gold Luxury', desc: 'Vàng kim hoàng gia quý phái obsidian.', descEn: 'Royal gold and obsidian luxury.', descZh: '黑曜石与高贵皇家金。', price: 800, bg: '#0b0b0e', accent: '#d4af37' },
+        { id: 'sakura', name: 'Minimalist Sakura', desc: 'Hồng hoa anh đào thanh tao Nhật Bản.', descEn: 'Delicate Japanese cherry blossom pink.', descZh: '典雅日本樱花粉。', price: 500, bg: '#fcf5f8', accent: '#ec4899' },
+        { id: 'matrix', name: 'Midnight Matrix', desc: 'Xanh terminal hacker trên nền đêm ma trận.', descEn: 'Terminal green on midnight matrix grid.', descZh: '黑客终端绿与矩阵暗夜。', price: 600, bg: '#030a06', accent: '#22e07a' },
+        { id: 'forest', name: 'Forest Zen', desc: 'Rừng thông sâu ngọc bích, dịu mát an lành.', descEn: 'Deep jade pine forest, calm and refreshing.', descZh: '翡翠松林，宁静清新。', price: 500, bg: '#06140f', accent: '#34d399' },
+        { id: 'cosmic', name: 'Cosmic Nexus', desc: 'Tím dạ quang & lam sao băng giữa vũ trụ đêm.', descEn: 'Luminous violet & meteor blue across deep space.', descZh: '深邃夜空中的极光紫与流星蓝。', price: 700, bg: '#05061a', accent: '#a78bfa' },
+        { id: 'volcano', name: 'Crimson Volcano', desc: 'Dung nham cam rực & than hồng trên đá obsidian.', descEn: 'Blazing orange lava and embers on obsidian rock.', descZh: '黑曜岩上的烈焰熔岩与炽热余烬。', price: 700, bg: '#120806', accent: '#f97316' },
+        { id: 'nordic', name: 'Nordic Frost', desc: 'Xanh băng Bắc Âu tĩnh lặng trên nền đá phiến đêm.', descEn: 'Serene Nordic ice blue over midnight slate.', descZh: '暗夜石板上的静谧北欧冰蓝。', price: 650, bg: '#0b1220', accent: '#38bdf8' },
+        { id: 'abyss', name: 'Deep Abyss', desc: 'Vực sâu đại dương với ánh lân quang xanh ngọc.', descEn: 'Ocean abyss with bioluminescent turquoise glow.', descZh: '深海幽蓝与荧光青绿交织。', price: 700, bg: '#04121a', accent: '#2dd4bf' },
+        { id: 'mocha', name: 'Mocha Cream', desc: 'Kem sữa & cà phê ấm áp, dịu mắt để đọc lâu.', descEn: 'Warm milk cream & coffee, easy on the eyes.', descZh: '温润咖啡奶霜，持久阅读舒适护眼。', price: 550, bg: '#f5efe6', accent: '#9c6434' }
     ],
     soundFx: [
-        { id: 'default', name: 'Chime Mặc Định', desc: 'Âm thanh trong trẻo êm tai.', price: 0, free: true },
-        { id: 'katana', name: 'Katana Slash', desc: 'Tiếng chém kiếm sắc bén dứt khoát.', price: 350 },
-        { id: 'rpg', name: 'RPG Level-Up', desc: 'Hợp âm chiến thắng thăng cấp nhập vai.', price: 400 },
-        { id: 'mechanical', name: 'Phím Cơ Thocky', desc: 'Âm switch phím cơ êm ái gây nghiện.', price: 350 },
-        { id: 'bubble', name: 'Bong Bóng Nước', desc: 'Tiếng giọt nước bùng nổ tươi mát.', price: 250 },
-        { id: 'laser', name: 'Laser Beam Zap', desc: 'Tia năng lượng viễn tưởng siêu tốc.', price: 300 }
+        { id: 'default', name: 'Chime Mặc Định', nameEn: 'Default Chime', nameZh: '默认清脆铃声', desc: 'Âm thanh trong trẻo êm tai.', descEn: 'Crisp, pleasant bell chime.', descZh: '清脆悦耳的完成提示音。', price: 0, free: true },
+        { id: 'katana', name: 'Katana Slash', nameEn: 'Katana Slash', nameZh: '武士利刃劈斩', desc: 'Tiếng chém kiếm sắc bén dứt khoát.', descEn: 'Sharp, decisive blade cut.', descZh: '清脆凌厉的拔刀斩音效。', price: 350 },
+        { id: 'rpg', name: 'RPG Level-Up', nameEn: 'RPG Level-Up', nameZh: 'RPG 升级合弦', desc: 'Hợp âm chiến thắng thăng cấp nhập vai.', descEn: 'Triumphant role-play level-up chords.', descZh: '充满胜利感的角色升级音效。', price: 400 },
+        { id: 'mechanical', name: 'Phím Cơ Thocky', nameEn: 'Thocky Mechanical Key', nameZh: '客制化机械键轴', desc: 'Âm switch phím cơ êm ái gây nghiện.', descEn: 'Addictive, soothing mechanical switch sound.', descZh: '令人沉浸的温润麻将音机械键轴。', price: 350 },
+        { id: 'bubble', name: 'Bong Bóng Nước', nameEn: 'Water Bubble', nameZh: '清新气泡水滴', desc: 'Tiếng giọt nước bùng nổ tươi mát.', descEn: 'Crisp popping water drop sound.', descZh: '清爽悦耳的水滴破裂音效。', price: 250 },
+        { id: 'laser', name: 'Laser Beam Zap', nameEn: 'Sci-Fi Laser Zap', nameZh: '科幻激光脉冲', desc: 'Tia năng lượng viễn tưởng siêu tốc.', descEn: 'High-speed futuristic energy beam.', descZh: '极具未来感的超速能量激光束。', price: 300 }
     ],
     visualFx: [
-        { id: 'default', name: 'Pop Nhẹ Mặc Định', desc: 'Hiệu ứng phóng to nhẹ nhàng.', price: 0, free: true },
-        { id: 'fireworks', name: 'Pháo Hoa Mini', desc: 'Hạt pháo hoa lung linh bùng nổ từ ô check.', price: 400 },
-        { id: 'laser', name: 'Tia Laser Neon', desc: 'Vệt sáng laser quét ngang rực rỡ.', price: 400 },
-        { id: 'gold_aura', name: 'Hào Quang Vàng Kim', desc: 'Vòng sáng hoàng kim tỏa rộng đẳng cấp.', price: 450 },
-        { id: 'sakura', name: 'Cánh Hoa Bay', desc: 'Cánh hoa anh đào rơi lãng mạn.', price: 350 }
+        { id: 'default', name: 'Pop Nhẹ Mặc Định', nameEn: 'Default Gentle Pop', nameZh: '默认轻微回弹', desc: 'Hiệu ứng phóng to nhẹ nhàng.', descEn: 'Smooth, subtle zoom animation.', descZh: '优雅平滑的微缩放效果。', price: 0, free: true },
+        { id: 'fireworks', name: 'Pháo Hoa Mini', nameEn: 'Mini Fireworks', nameZh: '微型烟花爆裂', desc: 'Hạt pháo hoa lung linh bùng nổ từ ô check.', descEn: 'Shimmering firework sparkles from the check box.', descZh: '打卡框绽放出绚丽的微型烟火微粒。', price: 400 },
+        { id: 'laser', name: 'Tia Laser Neon', nameEn: 'Neon Laser Sweep', nameZh: '霓虹激光光波', desc: 'Vệt sáng laser quét ngang rực rỡ.', descEn: 'Vibrant horizontal laser beam sweep.', descZh: '横向扫过的绚烂霓虹能量光轨。', price: 400 },
+        { id: 'gold_aura', name: 'Hào Quang Vàng Kim', nameEn: 'Golden Aura', nameZh: '耀世黄金光环', desc: 'Vòng sáng hoàng kim tỏa rộng đẳng cấp.', descEn: 'Expanding prestigious royal gold halo.', descZh: '高贵耀眼的金色光环缓缓向外扩散。', price: 450 },
+        { id: 'sakura', name: 'Cánh Hoa Bay', nameEn: 'Floating Petals', nameZh: '飘逸樱花飞花', desc: 'Cánh hoa anh đào rơi lãng mạn.', descEn: 'Romantic drifting cherry blossom petals.', descZh: '浪漫随风飘落的粉色樱花瓣。', price: 350 }
     ],
     items: [
-        { id: 'mystery_chest', name: 'Rương Kỷ Luật Bí Ẩn', icon: '🎁', desc: 'Mở ngay tại chỗ nhận quà ngẫu nhiên: 100-600 Coins, Vé Boost x2/x3, Bình Đóng Băng, Bùa Nghỉ Phép hoặc Danh hiệu thần thoại!', price: 250, badge: 'HOT', type: 'chest' },
-        { id: 'vacation_pass', name: 'Bùa Nghỉ Phép (3 Ngày)', icon: '🏖️', desc: 'Tự động bảo lưu toàn bộ Streak của tất cả thói quen trong 3 ngày liên tiếp (thích hợp khi đi du lịch, công tác, thi cử).', price: 350, badge: 'TIỆN ÍCH', type: 'consumable' },
-        { id: 'boost3x', name: 'Vé Siêu Cấp x3 Boost (12H)', icon: '🚀', desc: 'Nhân 3 toàn bộ Coins nhận được từ Check-in thói quen & Hoàn thành mục tiêu trong suốt 12 giờ!', price: 450, badge: 'SIÊU LỢI', type: 'consumable' },
-        { id: 'focus_elixir', name: 'Thuốc Tiên Tập Trung Focus', icon: '🧪', desc: 'Tăng gấp đôi thưởng: Nhận ngay +30 Coins thưởng cho 3 phiên Pomodoro hoàn thành kế tiếp!', price: 150, badge: 'FOCUS', type: 'consumable' },
-        { id: 'shield7d', name: 'Bùa Khiên Bất Hoại (7 Ngày)', icon: '🛡️', desc: 'Bảo vệ tuyệt đối toàn bộ chuỗi ngày trong 7 ngày liên tiếp kể từ khi kích hoạt.', price: 500, badge: 'BẢO HỘ', type: 'consumable' },
-        { id: 'squad_energy', name: 'Nước Tăng Lực Đồng Đội', icon: '⚡', desc: 'Tặng ngay 50 Năng lượng & 50 Coins cho toàn bộ thành viên trong Tổ Đội và vinh danh trên bảng tin!', price: 300, badge: 'ĐỒNG ĐỘI', type: 'consumable' },
-        { id: 'freeze', name: 'Bình Đóng Băng Chuỗi', icon: '🧊', desc: 'Tự động bảo vệ chuỗi khi quên check-in (Tối đa 3 bình).', price: 200, badge: 'DỰ TRỮ', type: 'flask' },
-        { id: 'boost2x', name: 'Vé Nhân Đôi Điểm (2X DP 24h)', icon: '⚡', desc: 'Nhân đôi tất cả Coins khi check-in trong suốt 24 giờ!', price: 300, badge: 'PHỔ BIẾN', type: 'consumable' }
+        { id: 'mystery_chest', name: 'Rương Kỷ Luật Bí Ẩn', nameEn: 'Mystery Discipline Chest', nameZh: '神秘自律宝箱', icon: '🎁', desc: 'Mở ngay tại chỗ nhận quà ngẫu nhiên: 100-600 Coins, Vé Boost x2/x3, Bình Đóng Băng, Bùa Nghỉ Phép hoặc Danh hiệu thần thoại!', descEn: 'Open instantly for random rewards: 100-600 Coins, Boost passes, Freeze Flasks, or Mythic Titles!', descZh: '即刻开启获取随机大奖：100-600金币、翻倍券、冻结瓶或神话头衔！', price: 250, badge: 'HOT', badgeEn: 'HOT', badgeZh: '热门', type: 'chest' },
+        { id: 'vacation_pass', name: 'Bùa Nghỉ Phép (3 Ngày)', nameEn: 'Vacation Pass (3 Days)', nameZh: '请假休假符（3天）', icon: '🏖️', desc: 'Tự động bảo lưu toàn bộ Streak của tất cả thói quen trong 3 ngày liên tiếp (thích hợp khi đi du lịch, công tác, thi cử).', descEn: 'Automatically preserves all habit streaks for 3 consecutive days (ideal for travel, exams, or business trips).', descZh: '连续 3 天自动保留所有习惯打卡记录（非常适合出差、旅行、考试期间）。', price: 350, badge: 'TIỆN ÍCH', badgeEn: 'UTILITY', badgeZh: '实用', type: 'consumable' },
+        { id: 'boost3x', name: 'Vé Siêu Cấp x3 Boost (12H)', nameEn: 'Super 3X Boost Pass (12H)', nameZh: '超级 3 倍加速券（12小时）', icon: '🚀', desc: 'Nhân 3 toàn bộ Coins nhận được từ Check-in thói quen & Hoàn thành mục tiêu trong suốt 12 giờ!', descEn: 'Triple all Coins earned from habit check-ins and goal completions for 12 hours!', descZh: '在 12 小时内，所有习惯打卡与目标完成获得的积分全部翻 3 倍！', price: 450, badge: 'SIÊU LỢI', badgeEn: 'SUPER', badgeZh: '超值', type: 'consumable' },
+        { id: 'focus_elixir', name: 'Thuốc Tiên Tập Trung Focus', nameEn: 'Focus Elixir', nameZh: '深度专注灵药', icon: '🧪', desc: 'Tăng gấp đôi thưởng: Nhận ngay +30 Coins thưởng cho 3 phiên Pomodoro hoàn thành kế tiếp!', descEn: 'Double bonus: Receive +30 bonus Coins for the next 3 completed Pomodoro sessions!', descZh: '双倍奖励：接下来完成的 3 场番茄钟每场额外赠送 +30 积分！', price: 150, badge: 'FOCUS', badgeEn: 'FOCUS', badgeZh: '专注', type: 'consumable' },
+        { id: 'shield7d', name: 'Bùa Khiên Bất Hoại (7 Ngày)', nameEn: 'Invincible Shield (7 Days)', nameZh: '坚不可摧圣盾（7天）', icon: '🛡️', desc: 'Bảo vệ tuyệt đối toàn bộ chuỗi ngày trong 7 ngày liên tiếp kể từ khi kích hoạt.', descEn: 'Absolute protection for your habit streaks for 7 consecutive days.', descZh: '激活后连续 7 天无条件绝对保护全量打卡连击记录。', price: 500, badge: 'BẢO HỘ', badgeEn: 'PROTECT', badgeZh: '庇护', type: 'consumable' },
+        { id: 'squad_energy', name: 'Nước Tăng Lực Đồng Đội', nameEn: 'Squad Energy Drink', nameZh: '战队活力补给水', icon: '⚡', desc: 'Tặng ngay 50 Năng lượng & 50 Coins cho toàn bộ thành viên trong Tổ Đội và vinh danh trên bảng tin!', descEn: 'Instantly grants 50 Energy & 50 Coins to all squad members and spotlights your generosity on the feed!', descZh: '立即为战队全体成员赠送 50 点能量与 50 积分，并在动态榜首公示表彰！', price: 300, badge: 'ĐỒNG ĐỘI', badgeEn: 'SQUAD', badgeZh: '同伴', type: 'consumable' },
+        { id: 'freeze', name: 'Bình Đóng Băng Chuỗi', nameEn: 'Streak Freeze Flask', nameZh: '连击冻结保全瓶', icon: '🧊', desc: 'Tự động bảo vệ chuỗi khi quên check-in (Tối đa 3 bình).', descEn: 'Automatically saves your streak when you forget to check in (Hold up to 3 flasks).', descZh: '遗漏打卡时自动保全连击记录（背包最多同时储备 3 瓶）。', price: 200, badge: 'DỰ TRỮ', badgeEn: 'STOCK', badgeZh: '储备', type: 'flask' },
+        { id: 'boost2x', name: 'Vé Nhân Đôi Điểm (2X DP 24h)', nameEn: 'Double Score Pass (2X DP 24H)', nameZh: '双倍积分通行证（2X 24小时）', icon: '⚡', desc: 'Nhân đôi tất cả Coins khi check-in trong suốt 24 giờ!', descEn: 'Double all Coins from check-ins for 24 continuous hours!', descZh: '在整整 24 小时内，所有打卡积分全部翻倍！', price: 300, badge: 'PHỔ BIẾN', badgeEn: 'POPULAR', badgeZh: '推荐', type: 'consumable' }
     ],
     docs: [
         { id: 'doc_nhan_tinh', name: 'Tuyệt Mật Nhân Tính', desc: 'Thấu hiểu bản chất con người, quy luật tâm lý ẩn sâu, nghệ thuật đối nhân xử thế và thu phục nhân tâm.', icon: '📜', badge: 'MIỄN PHÍ', price: 0, free: true, gradient: 'linear-gradient(135deg, #059669, #10b981)', accent: '#10b981', category: 'Tâm Lý Học Hành Vi' },
@@ -5121,51 +5121,51 @@ function renderRankTiersShowcase() {
 // ==================== QUEST SYSTEM ====================
 const QUEST_DEFINITIONS = [
     // Daily
-    { id:'d_earlybird', type:'daily', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Chim Sớm', nameEn:'Early Bird', nameZh:'早起鸟', desc:'Check thói quen trước 7h sáng', dp:20,
+    { id:'d_earlybird', type:'daily', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Chim Sớm', nameEn:'Early Bird', nameZh:'早起鸟', desc:'Check thói quen trước 7h sáng', descEn:'Check habits before 7:00 AM', descZh:'早上7点前完成习惯打卡', dp:20,
       check: (ctx) => ctx.firstCheckHour !== null && ctx.firstCheckHour < 7 },
-    { id:'d_morning_gold', type:'daily', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg>', name:'Buổi Sáng Vàng', nameEn:'Golden Morning', nameZh:'黄金早晨', desc:'Hoàn thành ≥3 thói quen trước 9h', dp:40,
+    { id:'d_morning_gold', type:'daily', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg>', name:'Buổi Sáng Vàng', nameEn:'Golden Morning', nameZh:'黄金早晨', desc:'Hoàn thành ≥3 thói quen trước 9h', descEn:'Complete ≥3 habits before 9:00 AM', descZh:'上午9点前完成≥3个习惯', dp:40,
       check: (ctx) => ctx.checksBeforeHour9 >= 3 },
-    { id:'d_perfect', type:'daily', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', name:'Ngày Không Lùi Bước', nameEn:'No Retreat', nameZh:'不退缩', desc:'100% thói quen hôm nay', dp:50,
+    { id:'d_perfect', type:'daily', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', name:'Ngày Không Lùi Bước', nameEn:'No Retreat', nameZh:'不退缩', desc:'100% thói quen hôm nay', descEn:'100% habits completed today', descZh:'今日习惯完成率达100%', dp:50,
       check: (ctx) => ctx.todayPct === 100 && ctx.totalHabits > 0 },
-    { id:'d_reflect', type:'daily', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', name:'Suy Ngẫm', nameEn:'Reflect', nameZh:'反思', desc:'Viết ghi chú ≥50 chữ', dp:15,
+    { id:'d_reflect', type:'daily', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', name:'Suy Ngẫm', nameEn:'Reflect', nameZh:'反思', desc:'Viết ghi chú ≥50 chữ', descEn:'Write a journal note of ≥50 words', descZh:'撰写≥50字的心得笔记', dp:15,
       check: (ctx) => ctx.todayNoteLen >= 50 },
     // Weekly
-    { id:'w_weekend', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg>', name:'Chiến Binh Cuối Tuần', nameEn:'Weekend Warrior', nameZh:'周末战士', desc:'100% cả T7 và CN', dp:120,
+    { id:'w_weekend', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg>', name:'Chiến Binh Cuối Tuần', nameEn:'Weekend Warrior', nameZh:'周末战士', desc:'100% cả T7 và CN', descEn:'100% completion on Saturday & Sunday', descZh:'周六与周日均达100%完成率', dp:120,
       check: (ctx) => ctx.satPct === 100 && ctx.sunPct === 100 },
-    { id:'w_new_habit', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', name:'Thử Thách Mới', nameEn:'New Challenge', nameZh:'新挑战', desc:'Thêm 1 thói quen mới, hoàn thành ≥3 ngày', dp:100,
+    { id:'w_new_habit', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', name:'Thử Thách Mới', nameEn:'New Challenge', nameZh:'新挑战', desc:'Thêm 1 thói quen mới, hoàn thành ≥3 ngày', descEn:'Add 1 new habit, complete for ≥3 days', descZh:'新增1个习惯并连续完成≥3天', dp:100,
       check: (ctx) => ctx.newHabitDays >= 3 },
-    { id:'w_steel', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg>', name:'Tuần Thép', nameEn:'Steel Week', nameZh:'钢铁周', desc:'Check-in 7/7 ngày', dp:100,
+    { id:'w_steel', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-target"></use></svg>', name:'Tuần Thép', nameEn:'Steel Week', nameZh:'钢铁周', desc:'Check-in 7/7 ngày', descEn:'Check-in all 7 days of the week', descZh:'整周7天每日打卡', dp:100,
       check: (ctx) => ctx.daysWithChecks >= 7 },
-    { id:'w_no_quit', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg>', name:'Quy Tắc Không Bỏ Cuộc', nameEn:'No Quit Rule', nameZh:'不放弃', desc:'Duy trì thói quen "Không" 7 ngày', dp:80,
+    { id:'w_no_quit', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-crescent"></use></svg>', name:'Quy Tắc Không Bỏ Cuộc', nameEn:'No Quit Rule', nameZh:'不放弃', desc:'Duy trì thói quen "Không" 7 ngày', descEn:'Maintain a "Don\'t" habit for 7 days', descZh:'坚持“不”习惯达7天', dp:80,
       check: (ctx) => ctx.noHabitStreak >= 7 },
     // Community Weekly
-    { id:'w_share', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-echo"></use></svg>', name:'Chia Sẻ Hành Trình', nameEn:'Share Journey', nameZh:'分享旅程', desc:'Đăng 1 bài cộng đồng', dp:60,
+    { id:'w_share', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-echo"></use></svg>', name:'Chia Sẻ Hành Trình', nameEn:'Share Journey', nameZh:'分享旅程', desc:'Đăng 1 bài cộng đồng', descEn:'Publish 1 community post', descZh:'在社区发布1篇动态', dp:60,
       check: (ctx) => ctx.weeklyPosts >= 1 },
-    { id:'w_kudos', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Người Truyền Lửa', nameEn:'Fire Starter', nameZh:'传火者', desc:'Tặng Kudos ≥5 người', dp:40,
+    { id:'w_kudos', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Người Truyền Lửa', nameEn:'Fire Starter', nameZh:'传火者', desc:'Tặng Kudos ≥5 người', descEn:'Give Kudos to ≥5 people', descZh:'为≥5位同伴送出点赞鼓励', dp:40,
       check: (ctx) => kudosSet.size >= 5 },
-    { id:'w_mentor', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg>', name:'Mentor', nameEn:'Mentor', nameZh:'导师', desc:'Bình luận ≥3 bài viết', dp:50,
+    { id:'w_mentor', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-dp"></use></svg>', name:'Mentor', nameEn:'Mentor', nameZh:'导师', desc:'Bình luận ≥3 bài viết', descEn:'Comment on ≥3 community posts', descZh:'在≥3篇动态下发表评论', dp:50,
       check: (ctx) => ctx.weeklyComments >= 3 },
-    { id:'w_inspire', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Người Truyền Cảm Hứng', nameEn:'Inspirator', nameZh:'激励者', desc:'Bài viết nhận ≥5 likes', dp:80,
+    { id:'w_inspire', type:'weekly', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Người Truyền Cảm Hứng', nameEn:'Inspirator', nameZh:'激励者', desc:'Bài viết nhận ≥5 likes', descEn:'Post receives ≥5 likes', descZh:'发布的动态获得≥5个赞', dp:80,
       check: (ctx) => ctx.maxPostLikes >= 5 },
     // Achievement (permanent)
     { id:'a_join_zalo', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48" style="color:#0088ff;"><use href="#i-zalo"></use></svg>', name:'Gia Nhập Nhóm Chat Zalo', nameEn:'Join Zalo Chat Group', nameZh:'加入Zalo聊天群', desc:'Tham gia nhóm chat Zalo cộng đồng Habit Mastery để nhận 1.000 DP & kết nối đồng đội', descEn:'Join Habit Mastery Zalo group to receive 1,000 DP & connect with members', descZh:'加入Habit Mastery Zalo群组获取1000 DP并结识同行伙伴', dp:1000,
       isZalo: true,
       check: (ctx) => true },
-    { id:'a_first_day', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Ngày Đầu Tiên', nameEn:'First Day', nameZh:'第一天', desc:'100% lần đầu tiên', dp:50,
+    { id:'a_first_day', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', name:'Ngày Đầu Tiên', nameEn:'First Day', nameZh:'第一天', desc:'100% lần đầu tiên', descEn:'First 100% completion day', descZh:'首次达成100%完成日', dp:50,
       check: (ctx) => ctx.perfectDays >= 1 },
-    { id:'a_streak30', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg>', name:'Lửa Không Tắt', nameEn:'Eternal Flame', nameZh:'永恒之火', desc:'Chuỗi 30 ngày', dp:500,
+    { id:'a_streak30', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-streak"></use></svg>', name:'Lửa Không Tắt', nameEn:'Eternal Flame', nameZh:'永恒之火', desc:'Chuỗi 30 ngày', descEn:'30-day streak reached', descZh:'连续打卡达30天', dp:500,
       check: (ctx) => ctx.maxStreak >= 30 },
-    { id:'a_streak100', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', name:'Kim Cương', nameEn:'Diamond', nameZh:'钻石', desc:'Chuỗi 100 ngày', dp:2000,
+    { id:'a_streak100', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', name:'Kim Cương', nameEn:'Diamond', nameZh:'钻石', desc:'Chuỗi 100 ngày', descEn:'100-day streak reached', descZh:'连续打卡达100天', dp:2000,
       check: (ctx) => ctx.maxStreak >= 100 },
-    { id:'a_1000checks', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', name:'Huyền Thoại', nameEn:'Legend', nameZh:'传说', desc:'1000 lần check', dp:1000,
+    { id:'a_1000checks', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', name:'Huyền Thoại', nameEn:'Legend', nameZh:'传说', desc:'1000 lần check', descEn:'1,000 total check-ins completed', descZh:'累计完成1000次打卡', dp:1000,
       check: (ctx) => ctx.totalChecks >= 1000 },
-    { id:'a_multi', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', name:'Chiến Binh Đa Năng', nameEn:'Versatile', nameZh:'多才多艺', desc:'≥5 thói quen 1 tuần', dp:100,
+    { id:'a_multi', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', name:'Chiến Binh Đa Năng', nameEn:'Versatile', nameZh:'多才多艺', desc:'≥5 thói quen 1 tuần', descEn:'Maintain ≥5 habits in a week', descZh:'一周内同时坚持≥5个习惯', dp:100,
       check: (ctx) => ctx.totalHabits >= 5 },
-    { id:'a_month', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-metric"></use></svg>', name:'Tháng Thép', nameEn:'Steel Month', nameZh:'钢铁月', desc:'≥80% cả tháng', dp:300,
+    { id:'a_month', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-metric"></use></svg>', name:'Tháng Thép', nameEn:'Steel Month', nameZh:'钢铁月', desc:'≥80% cả tháng', descEn:'≥80% completion for the entire month', descZh:'整月完成率达≥80%', dp:300,
       check: (ctx) => ctx.monthPct >= 80 },
-    { id:'a_comm10', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-echo"></use></svg>', name:'Linh Hồn Cộng Đồng', nameEn:'Community Soul', nameZh:'社区灵魂', desc:'10 bài viết', dp:200,
+    { id:'a_comm10', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-echo"></use></svg>', name:'Linh Hồn Cộng Đồng', nameEn:'Community Soul', nameZh:'社区灵魂', desc:'10 bài viết', descEn:'10 community posts published', descZh:'累计在社区发布10篇动态', dp:200,
       check: (ctx) => ctx.totalPosts >= 10 },
-    { id:'a_kudos50', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg>', name:'Đồng Đội Tuyệt Vời', nameEn:'Great Teammate', nameZh:'好队友', desc:'50 Kudos cho người khác', dp:150,
+    { id:'a_kudos50', type:'achievement', icon:'<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-duel"></use></svg>', name:'Đồng Đội Tuyệt Vời', nameEn:'Great Teammate', nameZh:'好队友', desc:'50 Kudos cho người khác', descEn:'Give Kudos to others 50 times', descZh:'累计为他人点赞50次', dp:150,
       check: (ctx) => kudosSet.size >= 50 },
 ];
 
@@ -5367,20 +5367,24 @@ function renderQuestPanel() {
 
     // Pinned Zalo Quest Card if not claimed yet (shows at top of ALL tabs for maximum discoverability)
     if (!isZaloClaimed && questActiveFilter !== 'achievement') {
+        const zaloTitle = curLang === 'en' ? 'Join Zalo Community Chat' : (curLang === 'zh' ? '加入 Zalo 官方社群群聊' : 'Gia Nhập Nhóm Chat Zalo');
+        const zaloBadge = curLang === 'en' ? 'PINNED' : (curLang === 'zh' ? '置顶' : 'CỐ ĐỊNH');
+        const zaloDesc = curLang === 'en' ? 'Join Habit Mastery community Zalo chat to get 1,000 DP & connect with teammates' : (curLang === 'zh' ? '加入 Habit Mastery 官方 Zalo 社群交流群，领取 1,000 DP 奖励并结识同伴' : 'Tham gia nhóm chat Zalo cộng đồng Habit Mastery để nhận 1.000 DP & kết nối đồng đội');
+        const zaloBtn = curLang === 'en' ? '📱 Join & Claim 1,000 DP' : (curLang === 'zh' ? '📱 加入并领取 1,000 DP' : '📱 Tham Gia & Nhận 1.000 DP');
         html += `<div class="quest-card ready zalo-quest-card" style="margin-bottom:12px; flex-shrink:0;">
             <div class="quest-card-header">
                 <span class="quest-icon" style="color:#0088ff;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg></span>
                 <div class="quest-card-title">
                     <div class="quest-name" style="color:#38bdf8; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                        Gia Nhập Nhóm Chat Zalo
-                        <span class="zalo-badge-pill">CỐ ĐỊNH</span>
+                        ${zaloTitle}
+                        <span class="zalo-badge-pill">${zaloBadge}</span>
                     </div>
-                    <div class="quest-desc">Tham gia nhóm chat Zalo cộng đồng Habit Mastery để nhận 1.000 DP & kết nối đồng đội</div>
+                    <div class="quest-desc">${zaloDesc}</div>
                 </div>
                 <div class="quest-dp-badge" style="background:rgba(0,136,255,0.15); color:#38bdf8; border:1px solid rgba(0,136,255,0.35);">+1.000 ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div>
             </div>
             <div class="quest-card-footer" style="gap:8px; align-items:center;">
-                <button class="quest-claim-btn zalo-quest-btn" onclick="window._openZaloQuestModal()"><svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg> 📱 Tham Gia & Nhận 1.000 DP</button>
+                <button class="quest-claim-btn zalo-quest-btn" onclick="window._openZaloQuestModal()"><svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg> ${zaloBtn}</button>
             </div>
         </div>`;
     }
@@ -5388,37 +5392,43 @@ function renderQuestPanel() {
     if (questActiveFilter === 'surprise') {
         // Render surprise quests from admin
         if (surpriseQuests.length === 0) {
-            html = '<div class="lb-empty">⚡ Chưa có nhiệm vụ đột xuất nào</div>';
+            const emptyText = curLang === 'en' ? '⚡ No surprise quests right now' : (curLang === 'zh' ? '⚡ 当前暂无突发任务' : '⚡ Chưa có nhiệm vụ đột xuất nào');
+            html = `<div class="lb-empty">${emptyText}</div>`;
         } else {
             surpriseQuests.forEach(sq => {
-                const deadline = sq.deadline ? new Date(sq.deadline.toDate()).toLocaleDateString('vi-VN') : '';
+                const localeStr = curLang === 'en' ? 'en-US' : (curLang === 'zh' ? 'zh-CN' : 'vi-VN');
+                const deadline = sq.deadline ? new Date(sq.deadline.toDate()).toLocaleDateString(localeStr) : '';
+                const sqTitle = escHtml(sq.title || (curLang === 'en' ? 'Special Quest' : (curLang === 'zh' ? '特别任务' : 'Nhiệm vụ')));
+                const dueText = curLang === 'en' ? `⏰ Due: ${deadline}` : (curLang === 'zh' ? `⏰ 截止: ${deadline}` : `⏰ Hạn: ${deadline}`);
                 html += `<div class="quest-card surprise">
                     <div class="quest-card-header">
                         <span class="quest-icon">⚡</span>
                         <div class="quest-card-title">
-                            <div class="quest-name">${escHtml(sq.title || 'Nhiệm vụ')}</div>
+                            <div class="quest-name">${sqTitle}</div>
                             <div class="quest-desc">${escHtml(sq.description || '')}</div>
                         </div>
                         <div class="quest-dp-badge">+${sq.rewardDP || 0} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div>
                     </div>
-                    ${deadline ? `<div class="quest-deadline">⏰ Hạn: ${deadline}</div>` : ''}
+                    ${deadline ? `<div class="quest-deadline">${dueText}</div>` : ''}
                     <button class="quest-claim-btn surprise-btn" onclick="window._reportSurpriseQuest('${sq.id}')">${t('questReportDone')}</button>
                 </div>`;
             });
         }
     } else {
         quests.forEach(q => {
-            const qName = curLang === 'en' ? q.nameEn : (curLang === 'zh' ? q.nameZh : q.name);
+            const qName = curLang === 'en' ? (q.nameEn || q.name) : (curLang === 'zh' ? (q.nameZh || q.name) : q.name);
+            const qDesc = curLang === 'en' ? (q.descEn || q.desc) : (curLang === 'zh' ? (q.descZh || q.desc) : q.desc);
             if (q.id === 'a_join_zalo') {
                 const isClaimed = !!(S.questData && S.questData.claimed && S.questData.claimed[q.id]);
-                const qDesc = curLang === 'en' ? (q.descEn || q.desc) : (curLang === 'zh' ? (q.descZh || q.desc) : q.desc);
+                const zaloBadge = curLang === 'en' ? 'PINNED' : (curLang === 'zh' ? '置顶' : 'CỐ ĐỊNH');
+                const zaloBtn = curLang === 'en' ? '📱 Join & Claim 1,000 DP' : (curLang === 'zh' ? '📱 加入并领取 1,000 DP' : '📱 Tham Gia & Nhận 1.000 DP');
                 html += `<div class="quest-card ${isClaimed ? 'claimed' : 'ready'} zalo-quest-card" style="flex-shrink:0;">
                     <div class="quest-card-header">
                         <span class="quest-icon" style="color:#0088ff;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg></span>
                         <div class="quest-card-title">
                             <div class="quest-name" style="color:#38bdf8; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                                 ${qName}
-                                <span class="zalo-badge-pill">CỐ ĐỊNH</span>
+                                <span class="zalo-badge-pill">${zaloBadge}</span>
                             </div>
                             <div class="quest-desc">${qDesc}</div>
                         </div>
@@ -5426,7 +5436,7 @@ function renderQuestPanel() {
                     </div>
                     <div class="quest-card-footer" style="gap:8px; align-items:center;">
                         ${isClaimed ? `<span class="quest-status-done"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg> ${t('questClaimed')} (+1.000 DP)</span>` :
-                          `<button class="quest-claim-btn zalo-quest-btn" onclick="window._openZaloQuestModal()"><svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg> 📱 Tham Gia & Nhận 1.000 DP</button>`}
+                          `<button class="quest-claim-btn zalo-quest-btn" onclick="window._openZaloQuestModal()"><svg class="rune-inline rune-xs" viewBox="0 0 48 48"><use href="#i-zalo"></use></svg> ${zaloBtn}</button>`}
                     </div>
                 </div>`;
                 return;
@@ -5441,7 +5451,7 @@ function renderQuestPanel() {
                     <span class="quest-icon">${q.icon}</span>
                     <div class="quest-card-title">
                         <div class="quest-name">${qName}</div>
-                        <div class="quest-desc">${q.desc}</div>
+                        <div class="quest-desc">${qDesc}</div>
                     </div>
                     <div class="quest-dp-badge">+${q.dp} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div>
                 </div>
@@ -5461,8 +5471,9 @@ function renderQuestPanel() {
     if (summaryEl) {
         const total = QUEST_DEFINITIONS.length;
         const done = QUEST_DEFINITIONS.filter(q => S.questData.claimed[q.id]).length;
+        const totalRewardsLabel = t('questTotalRewards') || (curLang === 'en' ? 'Total Rewards' : (curLang === 'zh' ? '总奖励' : 'Tổng Thưởng'));
         summaryEl.innerHTML = `<div class="lb-stat-card"><div class="lb-stat-value">${done}/${total}</div><div class="lb-stat-label">${t('questProgress')}</div></div>
-            <div class="lb-stat-card"><div class="lb-stat-value">${(S.questData.totalDP || 0).toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div><div class="lb-stat-label">Tổng Thưởng</div></div>`;
+            <div class="lb-stat-card"><div class="lb-stat-value">${(S.questData.totalDP || 0).toLocaleString()} ${window.getCoinIconHTML ? window.getCoinIconHTML('xs') : ''}</div><div class="lb-stat-label">${totalRewardsLabel}</div></div>`;
     }
 }
 
@@ -5812,15 +5823,29 @@ window._updateProfileModalUI = () => {
     const titleBadge = getUserTitleBadgeHTML();
     if (pName) pName.innerHTML = `${escHtml(currentUser.displayName || currentUser.email || 'User')}${titleBadge}`;
     if (pLevel) {
+        const stepLabel = curLang === 'en' ? `Step ${rank.step}` : (curLang === 'zh' ? `第 ${rank.step} 重` : `Bước thứ ${rank.step}`);
         pLevel.innerHTML = `
             <div style="display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:2px;">
                 <span style="font-size:15px; font-weight:800; color:${rank.color}; text-shadow:0 0 12px ${rank.color}66; letter-spacing:0.02em;">
-                    Bước thứ ${rank.step} - ${rank.realmName}
+                    ${stepLabel} - ${rank.realmName}
                 </span>
                 <div style="font-size:11.5px; color:var(--text-sub, #94a3b8); font-style:italic; line-height:1.4; text-align:center; max-width:320px; margin-top:2px;">"${rank.realmDesc}"</div>
             </div>
         `;
     }
+    const orbShop = document.getElementById('orbShopBtn');
+    const orbStreak = document.getElementById('orbStreakBtn');
+    const orbRecap = document.getElementById('orbRecapBtn');
+    const orbShare = document.getElementById('orbShareBtn');
+    const orbAvatar = document.getElementById('orbAvatarBtn');
+    const orbSettings = document.getElementById('orbSettingsBtn');
+    const profLang = typeof getAppLanguage === 'function' ? getAppLanguage() : (typeof curLang !== 'undefined' ? curLang : 'vi');
+    if (orbShop) orbShop.title = profLang === 'en' ? 'Personal Backpack' : (profLang === 'zh' ? '个人背包' : 'Túi đồ');
+    if (orbStreak) orbStreak.title = profLang === 'en' ? 'Streak Protection' : (profLang === 'zh' ? '连击保护' : 'Bảo vệ chuỗi');
+    if (orbRecap) orbRecap.title = profLang === 'en' ? 'Weekly Recap' : (profLang === 'zh' ? '每周总结' : 'Tổng kết tuần');
+    if (orbShare) orbShare.title = profLang === 'en' ? 'Share Rank Card' : (profLang === 'zh' ? '炫耀排位卡片' : 'Khoe thẻ rank');
+    if (orbAvatar) orbAvatar.title = profLang === 'en' ? 'Profile Avatar' : (profLang === 'zh' ? '个人头像' : 'Ảnh đại diện');
+    if (orbSettings) orbSettings.title = profLang === 'en' ? 'Settings' : (profLang === 'zh' ? '设置' : 'Cài đặt');
     if (pDP) pDP.textContent = dp.toLocaleString();
     if (pStreak) pStreak.textContent = streak;
 
@@ -6169,13 +6194,15 @@ function initProfileModal() {
     const orbShop = document.getElementById('orbShopBtn');
     if (orbShop) orbShop.onclick = (e) => {
         e.stopPropagation();
-        showOrbitalPopup(orbShop, 'Túi đồ cá nhân', [
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', label: 'Mở túi đồ', desc: 'Xem tất cả vật phẩm & bùa lợi', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('backpack'); } },
-            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', label: 'Tủ sách tri thức', desc: 'Sách & tài liệu đã mở khóa', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('backpack'); } },
-            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: 'Danh hiệu sở hữu', desc: 'Trang bị danh hiệu của bạn', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('titles'); } },
-            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', label: 'Giao diện sở hữu', desc: 'Đổi theme & màu sắc', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('themes'); } },
-            { icon: '<svg class="rune-icon rune-sound" viewBox="0 0 48 48"><use href="#i-disc"></use></svg>', label: 'Hiệu ứng sở hữu', desc: 'Âm thanh & visual fx', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('fx'); } },
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-market"></use></svg>', label: 'Cửa hàng kỷ luật', desc: 'Mua sắm thêm vật phẩm mới', action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('items'); } },
+        const l = typeof getAppLanguage === 'function' ? getAppLanguage() : (typeof curLang !== 'undefined' ? curLang : 'vi');
+        const popTitle = l === 'en' ? 'Personal Backpack' : (l === 'zh' ? '个人背包' : 'Túi đồ cá nhân');
+        showOrbitalPopup(orbShop, popTitle, [
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', label: l === 'en' ? 'Open Backpack' : (l === 'zh' ? '打开背包' : 'Mở túi đồ'), desc: l === 'en' ? 'View all items & active buffs' : (l === 'zh' ? '查看所有道具与增益' : 'Xem tất cả vật phẩm & bùa lợi'), action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('backpack'); } },
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', label: l === 'en' ? 'Knowledge Library' : (l === 'zh' ? '知识书库' : 'Tủ sách tri thức'), desc: l === 'en' ? 'Unlocked books & documents' : (l === 'zh' ? '已解锁书籍与资料' : 'Sách & tài liệu đã mở khóa'), action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('backpack'); } },
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: l === 'en' ? 'Owned Titles' : (l === 'zh' ? '已拥有的头衔' : 'Danh hiệu sở hữu'), desc: l === 'en' ? 'Equip your titles' : (l === 'zh' ? '佩戴并展示头衔' : 'Trang bị danh hiệu của bạn'), action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('titles'); } },
+            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', label: l === 'en' ? 'Owned Themes' : (l === 'zh' ? '已拥有的主题' : 'Giao diện sở hữu'), desc: l === 'en' ? 'Change theme & colors' : (l === 'zh' ? '切换主题与色彩' : 'Đổi theme & màu sắc'), action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('themes'); } },
+            { icon: '<svg class="rune-icon rune-sound" viewBox="0 0 48 48"><use href="#i-disc"></use></svg>', label: l === 'en' ? 'Owned FX' : (l === 'zh' ? '已拥有的特效' : 'Hiệu ứng sở hữu'), desc: l === 'en' ? 'Sound & visual fx' : (l === 'zh' ? '提示音效与视觉特效' : 'Âm thanh & visual fx'), action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('fx'); } },
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-market"></use></svg>', label: l === 'en' ? 'Discipline Shop' : (l === 'zh' ? '自律商店' : 'Cửa hàng kỷ luật'), desc: l === 'en' ? 'Shop for more items' : (l === 'zh' ? '购买更多道具' : 'Mua sắm thêm vật phẩm mới'), action: () => { closeProfile(); if (window._openShopModal) window._openShopModal('items'); } },
         ]);
     };
 
@@ -6183,10 +6210,12 @@ function initProfileModal() {
     const orbStreak = document.getElementById('orbStreakBtn');
     if (orbStreak) orbStreak.onclick = (e) => {
         e.stopPropagation();
-        showOrbitalPopup(orbStreak, 'Bảo vệ chuỗi', [
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', label: 'Bình đóng băng', desc: 'Xem & kích hoạt Freeze', action: () => { closeProfile(); if (window._openStreakModal) window._openStreakModal(); } },
-            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-streak"></use></svg>', label: 'Cứu chuỗi ngay', desc: 'Hồi sinh chuỗi trong 24h', action: () => { closeProfile(); if (window._openStreakModal) window._openStreakModal(); } },
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-metric"></use></svg>', label: 'Lịch sử chuỗi', desc: 'Xem heatmap thói quen', action: () => {
+        const l = typeof getAppLanguage === 'function' ? getAppLanguage() : (typeof curLang !== 'undefined' ? curLang : 'vi');
+        const popTitle = l === 'en' ? 'Streak Protection' : (l === 'zh' ? '连击保护' : 'Bảo vệ chuỗi');
+        showOrbitalPopup(orbStreak, popTitle, [
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>', label: l === 'en' ? 'Streak Freeze' : (l === 'zh' ? '连击冻结瓶' : 'Bình đóng băng'), desc: l === 'en' ? 'View & activate Freeze' : (l === 'zh' ? '查看并激活冻结瓶' : 'Xem & kích hoạt Freeze'), action: () => { closeProfile(); if (window._openStreakModal) window._openStreakModal(); } },
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-streak"></use></svg>', label: l === 'en' ? 'Revive Streak' : (l === 'zh' ? '立即挽救连击' : 'Cứu chuỗi ngay'), desc: l === 'en' ? 'Revive streak within 24h' : (l === 'zh' ? '24小时内挽救打卡连击' : 'Hồi sinh chuỗi trong 24h'), action: () => { closeProfile(); if (window._openStreakModal) window._openStreakModal(); } },
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-metric"></use></svg>', label: l === 'en' ? 'Streak History' : (l === 'zh' ? '连击历史' : 'Lịch sử chuỗi'), desc: l === 'en' ? 'View habit heatmap' : (l === 'zh' ? '查看习惯热力图' : 'Xem heatmap thói quen'), action: () => {
                 closeProfile();
                 const hm = document.getElementById('heatmapGrid') || document.getElementById('streakSection');
                 if (hm) hm.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -6198,21 +6227,26 @@ function initProfileModal() {
     const orbRecap = document.getElementById('orbRecapBtn');
     if (orbRecap) orbRecap.onclick = (e) => {
         e.stopPropagation();
-        showOrbitalPopup(orbRecap, 'Tổng kết & Thống kê', [
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-metric"></use></svg>', label: 'Tổng kết tuần', desc: 'Weekly Recap Infographic', action: () => { closeProfile(); if (window._openWeeklyRecapModal) window._openWeeklyRecapModal(); } },
-            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', label: 'Thống kê chi tiết', desc: 'Biểu đồ & dữ liệu', action: () => {
+        const l = typeof getAppLanguage === 'function' ? getAppLanguage() : (typeof curLang !== 'undefined' ? curLang : 'vi');
+        const popTitle = l === 'en' ? 'Recap & Statistics' : (l === 'zh' ? '周报与统计' : 'Tổng kết & Thống kê');
+        showOrbitalPopup(orbRecap, popTitle, [
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-metric"></use></svg>', label: l === 'en' ? 'Weekly Recap' : (l === 'zh' ? '每周总结' : 'Tổng kết tuần'), desc: 'Weekly Recap Infographic', action: () => { closeProfile(); if (window._openWeeklyRecapModal) window._openWeeklyRecapModal(); } },
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', label: l === 'en' ? 'Detailed Stats' : (l === 'zh' ? '详细统计' : 'Thống kê chi tiết'), desc: l === 'en' ? 'Charts & data' : (l === 'zh' ? '图表与数据看板' : 'Biểu đồ & dữ liệu'), action: () => {
                 closeProfile();
                 const statsEl = document.getElementById('statsSection') || document.querySelector('.top-right');
                 if (statsEl) statsEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }},
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', label: 'Sao chép thống kê', desc: 'Copy vào clipboard', action: () => {
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', label: l === 'en' ? 'Copy Stats' : (l === 'zh' ? '复制统计数据' : 'Sao chép thống kê'), desc: l === 'en' ? 'Copy to clipboard' : (l === 'zh' ? '复制到剪贴板' : 'Copy vào clipboard'), action: () => {
                 const computed = typeof calculateUserDPAndStreak === 'function' ? calculateUserDPAndStreak() : {};
                 const name = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User';
-                const text = `${name} — Habit Mastery\nĐiểm: ${(computed.totalDP || 0).toLocaleString()}\nStreak: ${computed.currentStreak || 0} ngày\nMax Streak: ${computed.maxStreak || 0} ngày\nTổng check-in: ${computed.totalChecks || 0}`;
+                const text = l === 'en' ? `${name} — Habit Mastery\nPoints: ${(computed.totalDP || 0).toLocaleString()}\nStreak: ${computed.currentStreak || 0} days\nMax Streak: ${computed.maxStreak || 0} days\nTotal check-ins: ${computed.totalChecks || 0}`
+                           : (l === 'zh' ? `${name} — Habit Mastery\n积分: ${(computed.totalDP || 0).toLocaleString()}\n连续打卡: ${computed.currentStreak || 0} 天\n最高连击: ${computed.maxStreak || 0} 天\n总打卡次数: ${computed.totalChecks || 0}`
+                           : `${name} — Habit Mastery\nĐiểm: ${(computed.totalDP || 0).toLocaleString()}\nStreak: ${computed.currentStreak || 0} ngày\nMax Streak: ${computed.maxStreak || 0} ngày\nTổng check-in: ${computed.totalChecks || 0}`);
                 navigator.clipboard.writeText(text).then(() => {
                     const toast = document.createElement('div');
                     toast.className = 'quest-toast';
-                    toast.innerHTML = '<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></span> Đã sao chép thống kê!';
+                    const toastTxt = l === 'en' ? 'Stats copied to clipboard!' : (l === 'zh' ? '统计数据已复制！' : 'Đã sao chép thống kê!');
+                    toast.innerHTML = `<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></span> ${toastTxt}`;
                     document.body.appendChild(toast);
                     setTimeout(() => toast.classList.add('show'), 10);
                     setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2200);
@@ -6225,17 +6259,22 @@ function initProfileModal() {
     const orbShare = document.getElementById('orbShareBtn');
     if (orbShare) orbShare.onclick = (e) => {
         e.stopPropagation();
-        showOrbitalPopup(orbShare, 'Chia sẻ & Khoe', [
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: 'Khoe thẻ Rank', desc: 'Xuất ảnh Story 9:16', action: () => { closeProfile(); if (window._openShareCardModal) window._openShareCardModal(); } },
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-metric"></use></svg>', label: 'Khoe tổng kết tuần', desc: 'Weekly Recap → Share', action: () => { closeProfile(); if (window._openWeeklyRecapModal) window._openWeeklyRecapModal(); } },
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', label: 'Sao chép thành tích', desc: 'Copy text thành tích', action: () => {
+        const l = typeof getAppLanguage === 'function' ? getAppLanguage() : (typeof curLang !== 'undefined' ? curLang : 'vi');
+        const popTitle = l === 'en' ? 'Share & Showcase' : (l === 'zh' ? '分享展示' : 'Chia sẻ & Khoe');
+        showOrbitalPopup(orbShare, popTitle, [
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: l === 'en' ? 'Share Rank Card' : (l === 'zh' ? '炫耀排位卡片' : 'Khoe thẻ Rank'), desc: l === 'en' ? 'Export 9:16 Story card' : (l === 'zh' ? '导出 9:16 故事海报' : 'Xuất ảnh Story 9:16'), action: () => { closeProfile(); if (window._openShareCardModal) window._openShareCardModal(); } },
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-metric"></use></svg>', label: l === 'en' ? 'Share Weekly Recap' : (l === 'zh' ? '分享每周总结' : 'Khoe tổng kết tuần'), desc: 'Weekly Recap → Share', action: () => { closeProfile(); if (window._openWeeklyRecapModal) window._openWeeklyRecapModal(); } },
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-archive"></use></svg>', label: l === 'en' ? 'Copy Achievement' : (l === 'zh' ? '复制打卡成就' : 'Sao chép thành tích'), desc: l === 'en' ? 'Copy achievement text' : (l === 'zh' ? '复制成就文本' : 'Copy text thành tích'), action: () => {
                 const computed = typeof calculateUserDPAndStreak === 'function' ? calculateUserDPAndStreak() : {};
                 const name = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User';
-                const text = `${name} đang trên chuỗi ${computed.currentStreak || 0} ngày liên tiếp!\nĐiểm tích lũy: ${(computed.totalDP || 0).toLocaleString()}\nMax Streak: ${computed.maxStreak || 0} ngày\n— Habit Mastery`;
+                const text = l === 'en' ? `${name} is on a ${computed.currentStreak || 0}-day streak!\nPoints: ${(computed.totalDP || 0).toLocaleString()}\nMax Streak: ${computed.maxStreak || 0} days\n— Habit Mastery`
+                           : (l === 'zh' ? `${name} 正在保持连续 ${computed.currentStreak || 0} 天打卡！\n累计积分: ${(computed.totalDP || 0).toLocaleString()}\n最高连击: ${computed.maxStreak || 0} 天\n— Habit Mastery`
+                           : `${name} đang trên chuỗi ${computed.currentStreak || 0} ngày liên tiếp!\nĐiểm tích lũy: ${(computed.totalDP || 0).toLocaleString()}\nMax Streak: ${computed.maxStreak || 0} ngày\n— Habit Mastery`);
                 navigator.clipboard.writeText(text).then(() => {
                     const toast = document.createElement('div');
                     toast.className = 'quest-toast';
-                    toast.innerHTML = '<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></span> Đã sao chép thành tích!';
+                    const toastTxt = l === 'en' ? 'Achievement copied!' : (l === 'zh' ? '打卡成就已复制！' : 'Đã sao chép thành tích!');
+                    toast.innerHTML = `<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-archive"></use></svg></span> ${toastTxt}`;
                     document.body.appendChild(toast);
                     setTimeout(() => toast.classList.add('show'), 10);
                     setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2200);
@@ -6248,12 +6287,15 @@ function initProfileModal() {
     const orbAvatar = document.getElementById('orbAvatarBtn');
     if (orbAvatar) orbAvatar.onclick = (e) => {
         e.stopPropagation();
-        showOrbitalPopup(orbAvatar, 'Ảnh đại diện', [
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: 'Studio Đổi Avatar', desc: 'Tải ảnh, URL & Mẫu đẹp', action: () => { openAvatarStudio(); } },
-            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: 'Tải ảnh từ máy', desc: 'Chọn tệp hình ảnh', action: () => { const fileInput = document.getElementById('avatarFileInput'); if (fileInput) fileInput.click(); } },
-            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: 'Chọn khung Rank', desc: 'Đổi khung cấp bậc', action: () => { openAvatarStudio(); } },
-            { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Xóa ảnh đại diện', desc: 'Về avatar mặc định', danger: true, action: async () => {
-                if (!await hmConfirm('Bạn có chắc muốn xóa ảnh đại diện?')) return;
+        const l = typeof getAppLanguage === 'function' ? getAppLanguage() : (typeof curLang !== 'undefined' ? curLang : 'vi');
+        const popTitle = l === 'en' ? 'Profile Avatar' : (l === 'zh' ? '个人头像' : 'Ảnh đại diện');
+        showOrbitalPopup(orbAvatar, popTitle, [
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: l === 'en' ? 'Avatar Studio' : (l === 'zh' ? '头像工坊' : 'Studio Đổi Avatar'), desc: l === 'en' ? 'Upload, URL & presets' : (l === 'zh' ? '上传图片、URL 与精选预设' : 'Tải ảnh, URL & Mẫu đẹp'), action: () => { openAvatarStudio(); } },
+            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-lens"></use></svg>', label: l === 'en' ? 'Upload from Device' : (l === 'zh' ? '从本地上传' : 'Tải ảnh từ máy'), desc: l === 'en' ? 'Choose image file' : (l === 'zh' ? '选择本地图片文件' : 'Chọn tệp hình ảnh'), action: () => { const fileInput = document.getElementById('avatarFileInput'); if (fileInput) fileInput.click(); } },
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: l === 'en' ? 'Select Rank Frame' : (l === 'zh' ? '选择段位边框' : 'Chọn khung Rank'), desc: l === 'en' ? 'Change rank border' : (l === 'zh' ? '切换段位专属边框' : 'Đổi khung cấp bậc'), action: () => { openAvatarStudio(); } },
+            { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: l === 'en' ? 'Remove Avatar' : (l === 'zh' ? '删除头像' : 'Xóa ảnh đại diện'), desc: l === 'en' ? 'Reset to default' : (l === 'zh' ? '恢复默认初始头像' : 'Về avatar mặc định'), danger: true, action: async () => {
+                const confirmTxt = l === 'en' ? 'Are you sure you want to remove your avatar?' : (l === 'zh' ? '确定要删除当前头像吗？' : 'Bạn có chắc muốn xóa ảnh đại diện?');
+                if (!await hmConfirm(confirmTxt)) return;
                 await saveUserAvatar('');
             }},
         ]);
@@ -6272,15 +6314,21 @@ function initProfileModal() {
     const orbSettings = document.getElementById('orbSettingsBtn');
     if (orbSettings) orbSettings.onclick = (e) => {
         e.stopPropagation();
-        showOrbitalPopup(orbSettings, 'Cài đặt', [
-            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-core"></use></svg>', label: 'Đổi tên hiển thị', desc: 'Thay đổi tên nhân vật', action: () => {
-                showOrbitalContentPopup('<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-core"></use></svg> Đổi tên hiển thị', () => {
+        const l = typeof getAppLanguage === 'function' ? getAppLanguage() : (typeof curLang !== 'undefined' ? curLang : 'vi');
+        const popTitle = l === 'en' ? 'Settings' : (l === 'zh' ? '设置' : 'Cài đặt');
+        showOrbitalPopup(orbSettings, popTitle, [
+            { icon: '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-core"></use></svg>', label: l === 'en' ? 'Change Display Name' : (l === 'zh' ? '修改展示昵称' : 'Đổi tên hiển thị'), desc: l === 'en' ? 'Update user name' : (l === 'zh' ? '修改您的展示昵称' : 'Thay đổi tên nhân vật'), action: () => {
+                const titleStr = l === 'en' ? 'Change Display Name' : (l === 'zh' ? '修改展示昵称' : 'Đổi tên hiển thị');
+                showOrbitalContentPopup(`<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-core"></use></svg> ${titleStr}`, () => {
                     const curName = currentUser?.displayName || currentUser?.email?.split('@')[0] || '';
+                    const curNameLabel = l === 'en' ? 'Current name:' : (l === 'zh' ? '当前昵称:' : 'Tên hiện tại:');
+                    const phStr = l === 'en' ? 'Enter new name (2 - 30 characters)...' : (l === 'zh' ? '输入新昵称（2 - 30 字符）...' : 'Nhập tên mới (2 - 30 ký tự)...');
+                    const btnSaveStr = l === 'en' ? 'Save name' : (l === 'zh' ? '保存新昵称' : 'Lưu tên mới');
                     return `<div class="ocp-name-section">
-                        <div class="ocp-name-current">Tên hiện tại: <strong>${escHtml(curName)}</strong></div>
-                        <input type="text" class="ocp-name-input" id="ocpNameInput" placeholder="Nhập tên mới (2 - 30 ký tự)..." maxlength="30" value="${escHtml(curName)}">
+                        <div class="ocp-name-current">${curNameLabel} <strong>${escHtml(curName)}</strong></div>
+                        <input type="text" class="ocp-name-input" id="ocpNameInput" placeholder="${phStr}" maxlength="30" value="${escHtml(curName)}">
                         <div class="ocp-name-error" id="ocpNameError"></div>
-                        <button class="ocp-name-save-btn" id="ocpNameSaveBtn"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> Lưu tên mới</button>
+                        <button class="ocp-name-save-btn" id="ocpNameSaveBtn"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> ${btnSaveStr}</button>
                     </div>`;
                 }, (body) => {
                     const inp = body.querySelector('#ocpNameInput');
@@ -6289,8 +6337,8 @@ function initProfileModal() {
                     if (inp) setTimeout(() => inp.focus(), 100);
                     const doSave = async () => {
                         const val = inp.value.trim();
-                        if (!val) { errEl.textContent = 'Vui lòng nhập tên hiển thị!'; errEl.style.display = 'block'; return; }
-                        if (val.length < 2 || val.length > 30) { errEl.textContent = 'Tên phải từ 2 đến 30 ký tự!'; errEl.style.display = 'block'; return; }
+                        if (!val) { errEl.textContent = l === 'en' ? 'Please enter a display name!' : (l === 'zh' ? '请输入展示昵称！' : 'Vui lòng nhập tên hiển thị!'); errEl.style.display = 'block'; return; }
+                        if (val.length < 2 || val.length > 30) { errEl.textContent = l === 'en' ? 'Name must be 2 to 30 characters!' : (l === 'zh' ? '昵称长度必须在 2 至 30 字符之间！' : 'Tên phải từ 2 đến 30 ký tự!'); errEl.style.display = 'block'; return; }
                         if (val === currentUser?.displayName) { closeOrbitalContentPopup(); return; }
                         saveBtn.textContent = '⏳...'; saveBtn.disabled = true; errEl.style.display = 'none';
                         try {
@@ -6301,22 +6349,25 @@ function initProfileModal() {
                             if (window._updateProfileModalUI) window._updateProfileModalUI();
                             closeOrbitalContentPopup();
                             const toast = document.createElement('div'); toast.className = 'quest-toast';
-                            toast.innerHTML = '<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span> Đã đổi tên thành công!';
+                            const toastTxt = l === 'en' ? 'Name updated successfully!' : (l === 'zh' ? '昵称修改成功！' : 'Đã đổi tên thành công!');
+                            toast.innerHTML = `<span><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg></span> ${toastTxt}`;
                             document.body.appendChild(toast);
                             setTimeout(() => toast.classList.add('show'), 10);
                             setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 2200);
                         } catch (err) {
-                            errEl.textContent = 'Lỗi: ' + (err.message || err); errEl.style.display = 'block';
-                            saveBtn.innerHTML = '<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> Lưu tên mới'; saveBtn.disabled = false;
+                            errEl.textContent = (l === 'en' ? 'Error: ' : (l === 'zh' ? '错误: ' : 'Lỗi: ')) + (err.message || err); errEl.style.display = 'block';
+                            const btnSaveStr = l === 'en' ? 'Save name' : (l === 'zh' ? '保存新昵称' : 'Lưu tên mới');
+                            saveBtn.innerHTML = `<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-vault"></use></svg> ${btnSaveStr}`; saveBtn.disabled = false;
                         }
                     };
                     if (saveBtn) saveBtn.onclick = doSave;
                     if (inp) inp.onkeydown = (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); doSave(); } };
                 });
             }},
-            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', label: 'Đổi giao diện', desc: 'Chọn theme yêu thích', action: () => {
-                showOrbitalContentPopup('<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> Đổi giao diện', () => {
-                    if (typeof SHOP_CATALOG === 'undefined') return '<p>Không tìm thấy danh sách giao diện.</p>';
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', label: l === 'en' ? 'Change Theme' : (l === 'zh' ? '切换主题' : 'Đổi giao diện'), desc: l === 'en' ? 'Choose favorite theme' : (l === 'zh' ? '选择喜爱的主题' : 'Chọn theme yêu thích'), action: () => {
+                const titleStr = l === 'en' ? 'Change Theme' : (l === 'zh' ? '切换主题' : 'Đổi giao diện');
+                showOrbitalContentPopup(`<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-spark"></use></svg> ${titleStr}`, () => {
+                    if (typeof SHOP_CATALOG === 'undefined') return '<p>' + (l === 'en' ? 'Theme catalog not found.' : (l === 'zh' ? '未找到主题目录。' : 'Không tìm thấy danh sách giao diện.')) + '</p>';
                     const ownedThemes = (S.inventory?.themes) || ['dark', 'light'];
                     const equippedTheme = curTheme || 'light';
                     let html = '<div class="ocp-theme-grid">';
@@ -6324,16 +6375,19 @@ function initProfileModal() {
                         const isOwned = item.free || ownedThemes.includes(item.id);
                         if (!isOwned) return;
                         const isActive = (equippedTheme === item.id);
+                        const statusTxt = isActive ? (l === 'en' ? 'Active' : (l === 'zh' ? '使用中' : 'Đang dùng')) : (l === 'en' ? 'Apply' : (l === 'zh' ? '应用' : 'Áp dụng'));
+                        const tName = l === 'en' ? (item.nameEn || item.name) : (l === 'zh' ? (item.nameZh || item.name) : item.name);
                         html += `<div class="ocp-theme-card ${isActive ? 'active' : ''}" data-theme-id="${item.id}">
                             <div class="ocp-theme-preview" style="background: linear-gradient(135deg, ${item.bg}, ${item.accent});"></div>
                             <div class="ocp-theme-info">
-                                <div class="ocp-theme-name">${item.name}</div>
-                                <div class="ocp-theme-status">${isActive ? 'Đang dùng' : 'Áp dụng'}</div>
+                                <div class="ocp-theme-name">${tName}</div>
+                                <div class="ocp-theme-status">${statusTxt}</div>
                             </div>
                         </div>`;
                     });
                     html += '</div>';
-                    html += '<div style="margin-top:12px;text-align:center;"><button class="ocp-name-save-btn" id="ocpBrowseShopBtn" style="background:rgba(255,255,255,0.08);color:var(--text-main);font-size:12px;padding:10px;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-market"></use></svg> Mua thêm trong Cửa hàng</button></div>';
+                    const moreShopTxt = l === 'en' ? 'Browse Shop for More' : (l === 'zh' ? '前往商店选购更多' : 'Mua thêm trong Cửa hàng');
+                    html += `<div style="margin-top:12px;text-align:center;"><button class="ocp-name-save-btn" id="ocpBrowseShopBtn" style="background:rgba(255,255,255,0.08);color:var(--text-main);font-size:12px;padding:10px;"><svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-market"></use></svg> ${moreShopTxt}</button></div>`;
                     return html;
                 }, (body) => {
                     body.querySelectorAll('.ocp-theme-card').forEach(card => {
@@ -6352,19 +6406,20 @@ function initProfileModal() {
                     };
                 });
             }},
-            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-echo"></use></svg>', label: 'Ngôn ngữ', desc: 'Việt / 中文 / English', action: () => {
-                showOrbitalContentPopup('<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-echo"></use></svg> Ngôn ngữ', () => {
+            { icon: '<svg class="rune-icon rune-nav" viewBox="0 0 48 48"><use href="#i-echo"></use></svg>', label: l === 'en' ? 'Language' : (l === 'zh' ? '语言设置' : 'Ngôn ngữ'), desc: 'Việt / 中文 / English', action: () => {
+                const titleStr = l === 'en' ? 'Language' : (l === 'zh' ? '语言设置' : 'Ngôn ngữ');
+                showOrbitalContentPopup(`<svg class="rune-inline" viewBox="0 0 48 48"><use href="#i-echo"></use></svg> ${titleStr}`, () => {
                     const langs = [
                         { code: 'vi', flag: '🇻🇳', name: 'Tiếng Việt' },
                         { code: 'zh', flag: '🇨🇳', name: '中文 (Chinese)' },
                         { code: 'en', flag: '🇬🇧', name: 'English' }
                     ];
                     let html = '<div class="ocp-lang-grid">';
-                    langs.forEach(l => {
-                        const isActive = (typeof curLang !== 'undefined' && curLang === l.code);
-                        html += `<div class="ocp-lang-item ${isActive ? 'active' : ''}" data-lang="${l.code}">
-                            <span class="ocp-lang-flag">${l.flag}</span>
-                            <span class="ocp-lang-label">${l.name}</span>
+                    langs.forEach(itemLang => {
+                        const isActive = (typeof curLang !== 'undefined' && curLang === itemLang.code);
+                        html += `<div class="ocp-lang-item ${isActive ? 'active' : ''}" data-lang="${itemLang.code}">
+                            <span class="ocp-lang-flag">${itemLang.flag}</span>
+                            <span class="ocp-lang-label">${itemLang.name}</span>
                             <span class="ocp-lang-check">✓</span>
                         </div>`;
                     });
@@ -6373,30 +6428,31 @@ function initProfileModal() {
                 }, (body) => {
                     body.querySelectorAll('.ocp-lang-item').forEach(item => {
                         item.onclick = () => {
-                            const lang = item.dataset.lang;
-                            if (window._switchLang) window._switchLang(lang);
+                            const langCode = item.dataset.lang;
+                            if (window._switchLang) window._switchLang(langCode);
                             if (window._updateProfileModalUI) window._updateProfileModalUI();
                             closeOrbitalContentPopup();
                         };
                     });
                 });
             }},
-            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', label: 'Hướng dẫn sử dụng', desc: 'Cẩm nang full tính năng', action: () => {
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-spark"></use></svg>', label: l === 'en' ? 'User Guide' : (l === 'zh' ? '使用指南' : 'Hướng dẫn sử dụng'), desc: l === 'en' ? 'Full feature guide' : (l === 'zh' ? '完整功能使用指南' : 'Cẩm nang full tính năng'), action: () => {
                 closeOrbitalPopup();
                 if (typeof closeProfile === 'function') closeProfile();
                 if (typeof openGuideModal === 'function') openGuideModal('quickstart');
             }},
-            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', label: 'Gói tài khoản', desc: 'Gói Free, Pro, Premium & hạn dùng', action: () => {
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg>', label: l === 'en' ? 'Account Plan' : (l === 'zh' ? '账户套餐' : 'Gói tài khoản'), desc: l === 'en' ? 'Free, Pro, Premium & expiry' : (l === 'zh' ? 'Free, Pro, Premium 及到期时间' : 'Gói Free, Pro, Premium & hạn dùng'), action: () => {
                 closeOrbitalPopup();
                 if (window._openUpgrade) window._openUpgrade();
             }},
-            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: 'Mời bạn bè', desc: 'Cả hai cùng nhận Coins', action: () => {
+            { icon: '<svg class="rune-icon rune-stat" viewBox="0 0 48 48"><use href="#i-sigil"></use></svg>', label: l === 'en' ? 'Invite Friends' : (l === 'zh' ? '邀请好友' : 'Mời bạn bè'), desc: l === 'en' ? 'Both receive Coins' : (l === 'zh' ? '双方同享金币奖励' : 'Cả hai cùng nhận Coins'), action: () => {
                 closeOrbitalPopup();
                 if (typeof closeProfile === 'function') closeProfile();
                 if (window._openInviteModal) window._openInviteModal();
             }},
-            { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: 'Đăng xuất', danger: true, action: async () => {
-                if (await hmConfirm('Bạn có chắc chắn muốn đăng xuất tài khoản không?')) {
+            { icon: '<svg class="rune-icon" style="color:#f87171" viewBox="0 0 48 48"><use href="#i-close"></use></svg>', label: l === 'en' ? 'Log Out' : (l === 'zh' ? '退出登录' : 'Đăng xuất'), danger: true, action: async () => {
+                const confirmLogoutTxt = l === 'en' ? 'Are you sure you want to log out?' : (l === 'zh' ? '确定要退出当前账号吗？' : 'Bạn có chắc chắn muốn đăng xuất tài khoản không?');
+                if (await hmConfirm(confirmLogoutTxt)) {
                     performSignOut();
                 }
             }},
@@ -6940,22 +6996,22 @@ function renderStreakProtectionUI() {
                 <div class="sm-flask-card ${flask1Filled ? 'filled' : 'empty'}">
                     <div class="sm-flask-art">${flask1Filled ? '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>' : '<svg class="rune-icon" style="color:var(--text-muted)" viewBox="0 0 48 48"><use href="#i-close"></use></svg>'}</div>
                     <div class="sm-flask-meta">
-                        <div class="sm-flask-name">Bình 1</div>
-                        <div class="sm-flask-status">${flask1Filled ? 'Sẵn sàng' : 'Trống'}</div>
+                        <div class="sm-flask-name">${curLang === 'en' ? 'Flask 1' : (curLang === 'zh' ? '1号瓶' : 'Bình 1')}</div>
+                        <div class="sm-flask-status">${flask1Filled ? (curLang === 'en' ? 'Ready' : (curLang === 'zh' ? '就绪' : 'Sẵn sàng')) : (curLang === 'en' ? 'Empty' : (curLang === 'zh' ? '空置' : 'Trống'))}</div>
                     </div>
                 </div>
                 <div class="sm-flask-card ${flask2Filled ? 'filled' : 'empty'}">
                     <div class="sm-flask-art">${flask2Filled ? '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>' : '<svg class="rune-icon" style="color:var(--text-muted)" viewBox="0 0 48 48"><use href="#i-close"></use></svg>'}</div>
                     <div class="sm-flask-meta">
-                        <div class="sm-flask-name">Bình 2</div>
-                        <div class="sm-flask-status">${flask2Filled ? 'Sẵn sàng' : 'Trống'}</div>
+                        <div class="sm-flask-name">${curLang === 'en' ? 'Flask 2' : (curLang === 'zh' ? '2号瓶' : 'Bình 2')}</div>
+                        <div class="sm-flask-status">${flask2Filled ? (curLang === 'en' ? 'Ready' : (curLang === 'zh' ? '就绪' : 'Sẵn sàng')) : (curLang === 'en' ? 'Empty' : (curLang === 'zh' ? '空置' : 'Trống'))}</div>
                     </div>
                 </div>
                 <div class="sm-flask-card ${flask3Filled ? 'filled' : 'empty'}">
                     <div class="sm-flask-art">${flask3Filled ? '<svg class="rune-icon rune-sys" viewBox="0 0 48 48"><use href="#i-vault"></use></svg>' : '<svg class="rune-icon" style="color:var(--text-muted)" viewBox="0 0 48 48"><use href="#i-close"></use></svg>'}</div>
                     <div class="sm-flask-meta">
-                        <div class="sm-flask-name">Bình 3</div>
-                        <div class="sm-flask-status">${flask3Filled ? 'Sẵn sàng' : 'Trống'}</div>
+                        <div class="sm-flask-name">${curLang === 'en' ? 'Flask 3' : (curLang === 'zh' ? '3号瓶' : 'Bình 3')}</div>
+                        <div class="sm-flask-status">${flask3Filled ? (curLang === 'en' ? 'Ready' : (curLang === 'zh' ? '就绪' : 'Sẵn sàng')) : (curLang === 'en' ? 'Empty' : (curLang === 'zh' ? '空置' : 'Trống'))}</div>
                     </div>
                 </div>
             </div>
@@ -6964,8 +7020,8 @@ function renderStreakProtectionUI() {
         <!-- SHOP & REPAIR ACTIONS -->
         <div>
             <div class="sm-section-title">
-                <span><svg class="rune-inline rune-nav" viewBox="0 0 48 48"><use href="#i-market"></use></svg> CỬA HÀNG CỨU CHUỖI</span>
-                <span style="font-size:12px; color:var(--accent); font-weight:700;">Ví: ${myDP.toLocaleString()} DP</span>
+                <span><svg class="rune-inline rune-nav" viewBox="0 0 48 48"><use href="#i-market"></use></svg> ${curLang === 'en' ? 'STREAK RESCUE SHOP' : (curLang === 'zh' ? '连击救援商店' : 'CỬA HÀNG CỨU CHUỖI')}</span>
+                <span style="font-size:12px; color:var(--accent); font-weight:700;">${curLang === 'en' ? 'Wallet' : (curLang === 'zh' ? '钱包' : 'Ví')}: ${myDP.toLocaleString()} DP</span>
             </div>
             <div class="sm-shop-grid">
                 <!-- BUY FREEZE -->
@@ -6978,7 +7034,7 @@ function renderStreakProtectionUI() {
                         </div>
                     </div>
                     <button class="sm-item-btn btn-buy-freeze" onclick="window._buyStreakFreeze()" ${!canBuyFreeze ? 'disabled' : ''}>
-                        ${freezes >= 3 ? 'Đầy bình (3/3)' : (t('streakBuyBtn') || 'Mua') + ' (200 DP)'}
+                        ${freezes >= 3 ? (curLang === 'en' ? 'Full (3/3)' : (curLang === 'zh' ? '已满 (3/3)' : 'Đầy bình (3/3)')) : (t('streakBuyBtn') || 'Mua') + ' (200 DP)'}
                     </button>
                 </div>
 
@@ -7321,8 +7377,8 @@ function renderShopUI(targetTab = null) {
             <div class="shop-banner-highlight">
                 <div class="sbh-icon">🎁</div>
                 <div class="sbh-content">
-                    <div class="sbh-title">VẬT PHẨM TIÊU THỤ & BÙA LỢI KỶ LUẬT</div>
-                    <div class="sbh-desc">Sử dụng điểm rèn luyện để tích trữ bùa lợi, bảo vệ chuỗi ngày và nhân cấp phần thưởng!</div>
+                    <div class="sbh-title">${curLang === 'en' ? 'CONSUMABLES & DISCIPLINE BUFFS' : (curLang === 'zh' ? '消耗品与自律增益道具' : 'VẬT PHẨM TIÊU THỤ & BÙA LỢI KỶ LUẬT')}</div>
+                    <div class="sbh-desc">${curLang === 'en' ? 'Use training points to stock up on buffs, protect your streaks, and multiply rewards!' : (curLang === 'zh' ? '使用自律积分储备增益道具，守护连续打卡，获取多倍奖励！' : 'Sử dụng điểm rèn luyện để tích trữ bùa lợi, bảo vệ chuỗi ngày và nhân cấp phần thưởng!')}</div>
                 </div>
             </div>
         `;
@@ -7331,39 +7387,42 @@ function renderShopUI(targetTab = null) {
             const canAfford = myDP >= item.price || isAdmin;
             let statusText = '';
             let btnDisabled = false;
-            let btnText = t('btnBuy') || 'Mua';
+            let btnText = t('btnBuy') || (curLang === 'en' ? 'Buy' : (curLang === 'zh' ? '购买' : 'Mua'));
             const ownedQty = bp[item.id] || 0;
+            const tName = curLang === 'en' ? (item.nameEn || item.name) : (curLang === 'zh' ? (item.nameZh || item.name) : item.name);
+            const tDesc = curLang === 'en' ? (item.descEn || item.desc) : (curLang === 'zh' ? (item.descZh || item.desc) : item.desc);
+            const tBadge = curLang === 'en' ? (item.badgeEn || item.badge) : (curLang === 'zh' ? (item.badgeZh || item.badge) : item.badge);
 
             if (item.id === 'freeze') {
-                statusText = `Hiện có: ${freezes}/3 bình`;
+                statusText = curLang === 'en' ? `Stock: ${freezes}/3 flasks` : (curLang === 'zh' ? `拥有：${freezes}/3 瓶` : `Hiện có: ${freezes}/3 bình`);
                 if (freezes >= 3) {
                     btnDisabled = true;
-                    btnText = 'Đầy túi (3/3)';
+                    btnText = curLang === 'en' ? 'Full (3/3)' : (curLang === 'zh' ? '已装满 (3/3)' : 'Đầy túi (3/3)');
                 }
             } else if (item.id === 'mystery_chest') {
-                statusText = ownedQty > 0 ? `Trong túi: ${ownedQty} rương` : 'Mở ngẫu nhiên quà khủng';
+                statusText = ownedQty > 0 ? (curLang === 'en' ? `In pack: ${ownedQty} chests` : (curLang === 'zh' ? `背包拥有：${ownedQty} 个` : `Trong túi: ${ownedQty} rương`)) : (curLang === 'en' ? 'Open for random rewards' : (curLang === 'zh' ? '开启赢取随机大奖' : 'Mở ngẫu nhiên quà khủng'));
             } else if (item.id === 'vacation_pass') {
-                statusText = isVacationActive ? '🏖️ Đang nghỉ phép' : (ownedQty > 0 ? `Trong túi: ${ownedQty} bùa` : 'Bảo lưu chuỗi 3 ngày');
+                statusText = isVacationActive ? (curLang === 'en' ? '🏖️ Vacation active' : (curLang === 'zh' ? '🏖️ 休假中' : '🏖️ Đang nghỉ phép')) : (ownedQty > 0 ? (curLang === 'en' ? `In pack: ${ownedQty} passes` : (curLang === 'zh' ? `背包拥有：${ownedQty} 张` : `Trong túi: ${ownedQty} bùa`)) : (curLang === 'en' ? 'Preserve 3-day streak' : (curLang === 'zh' ? '保留 3 天打卡记录' : 'Bảo lưu chuỗi 3 ngày')));
             } else if (item.id === 'boost3x') {
-                statusText = is3xActive ? '🚀 Đang kích hoạt' : (ownedQty > 0 ? `Trong túi: ${ownedQty} vé` : 'Nhân 3 Coins trong 12h');
+                statusText = is3xActive ? (curLang === 'en' ? '🚀 Active now' : (curLang === 'zh' ? '🚀 生效中' : '🚀 Đang kích hoạt')) : (ownedQty > 0 ? (curLang === 'en' ? `In pack: ${ownedQty} passes` : (curLang === 'zh' ? `背包拥有：${ownedQty} 张` : `Trong túi: ${ownedQty} vé`)) : (curLang === 'en' ? 'Triple Coins for 12h' : (curLang === 'zh' ? '12小时内 3 倍金币' : 'Nhân 3 Coins trong 12h')));
             } else if (item.id === 'boost2x') {
-                statusText = is2xActive ? '⚡ Đang kích hoạt' : (ownedQty > 0 ? `Trong túi: ${ownedQty} vé` : 'Nhân 2 Coins trong 24h');
+                statusText = is2xActive ? (curLang === 'en' ? '⚡ Active now' : (curLang === 'zh' ? '⚡ 生效中' : '⚡ Đang kích hoạt')) : (ownedQty > 0 ? (curLang === 'en' ? `In pack: ${ownedQty} passes` : (curLang === 'zh' ? `背包拥有：${ownedQty} 张` : `Trong túi: ${ownedQty} vé`)) : (curLang === 'en' ? 'Double Coins for 24h' : (curLang === 'zh' ? '24小时内双倍金币' : 'Nhân 2 Coins trong 24h')));
             } else if (item.id === 'focus_elixir') {
-                statusText = focusCharges > 0 ? `🧪 Còn ${focusCharges} phiên (+30)` : (ownedQty > 0 ? `Trong túi: ${ownedQty} lọ` : '+30 Coins cho 3 phiên Pomo');
+                statusText = focusCharges > 0 ? (curLang === 'en' ? `🧪 ${focusCharges} sessions left (+30)` : (curLang === 'zh' ? `🧪 剩余 ${focusCharges} 场 (+30)` : `🧪 Còn ${focusCharges} phiên (+30)`)) : (ownedQty > 0 ? (curLang === 'en' ? `In pack: ${ownedQty} vials` : (curLang === 'zh' ? `背包拥有：${ownedQty} 瓶` : `Trong túi: ${ownedQty} lọ`)) : (curLang === 'en' ? '+30 Coins for 3 Pomo sessions' : (curLang === 'zh' ? '前3场番茄钟各+30金币' : '+30 Coins cho 3 phiên Pomo')));
             } else if (item.id === 'shield7d') {
-                statusText = isShieldActive ? '🛡️ Khiên đang kích hoạt' : (ownedQty > 0 ? `Trong túi: ${ownedQty} bùa` : 'Bảo vệ chuỗi 7 ngày');
+                statusText = isShieldActive ? (curLang === 'en' ? '🛡️ Shield active' : (curLang === 'zh' ? '🛡️ 圣盾生效中' : '🛡️ Khiên đang kích hoạt')) : (ownedQty > 0 ? (curLang === 'en' ? `In pack: ${ownedQty} shields` : (curLang === 'zh' ? `背包拥有：${ownedQty} 张` : `Trong túi: ${ownedQty} bùa`)) : (curLang === 'en' ? '7-day streak protection' : (curLang === 'zh' ? '连续 7 天保护打卡' : 'Bảo vệ chuỗi 7 ngày')));
             } else if (item.id === 'squad_energy') {
-                statusText = ownedQty > 0 ? `Trong túi: ${ownedQty} gói` : 'Buff 50 năng lượng toàn đội';
+                statusText = ownedQty > 0 ? (curLang === 'en' ? `In pack: ${ownedQty} drinks` : (curLang === 'zh' ? `背包拥有：${ownedQty} 瓶` : `Trong túi: ${ownedQty} gói`)) : (curLang === 'en' ? '+50 Energy for squad' : (curLang === 'zh' ? '全队+50能量增益' : 'Buff 50 năng lượng toàn đội'));
             }
 
             html += `
                 <div class="shop-card ${item.badge ? 'has-badge' : ''}">
-                    ${item.badge ? `<span class="shop-card-badge">${item.badge}</span>` : ''}
+                    ${tBadge ? `<span class="shop-card-badge">${tBadge}</span>` : ''}
                     <div class="shop-card-header">
                         <div class="shop-card-art">${item.icon}</div>
                         <div class="shop-card-meta">
-                            <div class="shop-card-title">${item.name}</div>
-                            <div class="shop-card-desc">${item.desc}</div>
+                            <div class="shop-card-title">${tName}</div>
+                            <div class="shop-card-desc">${tDesc}</div>
                         </div>
                     </div>
                     <div class="shop-card-footer">
@@ -7389,22 +7448,32 @@ function renderShopUI(targetTab = null) {
         if (is3xActive) {
             const remSec = Math.max(0, Math.floor((S.inventory.boost3xExpiresAt - now) / 1000));
             const h = Math.floor(remSec / 3600), m = Math.floor((remSec % 3600) / 60);
-            activeBuffsHtml += `<div class="active-buff-pill boost3x"><span class="ab-icon">🚀</span> <div><strong>Vé Siêu Cấp 3X:</strong> Còn ${h}h ${m}m (x3 Coins toàn bộ check-in)</div></div>`;
+            const bTitle = curLang === 'en' ? 'Super 3X Boost:' : (curLang === 'zh' ? '超级3倍加速券：' : 'Vé Siêu Cấp 3X:');
+            const bSub = curLang === 'en' ? `${h}h ${m}m left (3X Coins on all check-ins)` : (curLang === 'zh' ? `剩余 ${h}时 ${m}分 (全打卡3倍金币)` : `Còn ${h}h ${m}m (x3 Coins toàn bộ check-in)`);
+            activeBuffsHtml += `<div class="active-buff-pill boost3x"><span class="ab-icon">🚀</span> <div><strong>${bTitle}</strong> ${bSub}</div></div>`;
         } else if (is2xActive) {
             const remSec = Math.max(0, Math.floor((S.inventory.boost2xExpiresAt - now) / 1000));
             const h = Math.floor(remSec / 3600), m = Math.floor((remSec % 3600) / 60);
-            activeBuffsHtml += `<div class="active-buff-pill boost2x"><span class="ab-icon">⚡</span> <div><strong>Vé Nhân Đôi 2X:</strong> Còn ${h}h ${m}m (x2 Coins toàn bộ check-in)</div></div>`;
+            const bTitle = curLang === 'en' ? 'Double 2X Boost:' : (curLang === 'zh' ? '双倍2X加速券：' : 'Vé Nhân Đôi 2X:');
+            const bSub = curLang === 'en' ? `${h}h ${m}m left (2X Coins on all check-ins)` : (curLang === 'zh' ? `剩余 ${h}时 ${m}分 (全打卡2倍金币)` : `Còn ${h}h ${m}m (x2 Coins toàn bộ check-in)`);
+            activeBuffsHtml += `<div class="active-buff-pill boost2x"><span class="ab-icon">⚡</span> <div><strong>${bTitle}</strong> ${bSub}</div></div>`;
         }
         if (isVacationActive) {
             const daysLeft = Math.ceil((S.inventory.vacationUntil - now) / (24 * 60 * 60 * 1000));
-            activeBuffsHtml += `<div class="active-buff-pill vacation"><span class="ab-icon">🏖️</span> <div><strong>Bùa Nghỉ Phép:</strong> Còn ${daysLeft} ngày (Tự động bảo toàn streak)</div></div>`;
+            const bTitle = curLang === 'en' ? 'Vacation Pass:' : (curLang === 'zh' ? '休假符：' : 'Bùa Nghỉ Phép:');
+            const bSub = curLang === 'en' ? `${daysLeft} days left (Streak auto-preserved)` : (curLang === 'zh' ? `剩余 ${daysLeft} 天 (自动保全打卡连击)` : `Còn ${daysLeft} ngày (Tự động bảo toàn streak)`);
+            activeBuffsHtml += `<div class="active-buff-pill vacation"><span class="ab-icon">🏖️</span> <div><strong>${bTitle}</strong> ${bSub}</div></div>`;
         }
         if (isShieldActive) {
             const daysLeft = Math.ceil((S.inventory.invincibleShieldUntil - now) / (24 * 60 * 60 * 1000));
-            activeBuffsHtml += `<div class="active-buff-pill shield"><span class="ab-icon">🛡️</span> <div><strong>Khiên Bất Hoại:</strong> Còn ${daysLeft} ngày (Miễn nhiễm mất chuỗi)</div></div>`;
+            const bTitle = curLang === 'en' ? 'Invincible Shield:' : (curLang === 'zh' ? '坚不可摧圣盾：' : 'Khiên Bất Hoại:');
+            const bSub = curLang === 'en' ? `${daysLeft} days left (Immune to streak loss)` : (curLang === 'zh' ? `剩余 ${daysLeft} 天 (免除连击丢失)` : `Còn ${daysLeft} ngày (Miễn nhiễm mất chuỗi)`);
+            activeBuffsHtml += `<div class="active-buff-pill shield"><span class="ab-icon">🛡️</span> <div><strong>${bTitle}</strong> ${bSub}</div></div>`;
         }
         if (focusCharges > 0) {
-            activeBuffsHtml += `<div class="active-buff-pill focus"><span class="ab-icon">🧪</span> <div><strong>Thuốc Tiên Focus:</strong> Còn ${focusCharges} phiên Pomodoro (+30 Coins/phiên)</div></div>`;
+            const bTitle = curLang === 'en' ? 'Focus Elixir:' : (curLang === 'zh' ? '深度专注灵药：' : 'Thuốc Tiên Focus:');
+            const bSub = curLang === 'en' ? `${focusCharges} Pomodoro sessions left (+30 Coins/session)` : (curLang === 'zh' ? `剩余 ${focusCharges} 场番茄钟 (+30金币/场)` : `Còn ${focusCharges} phiên Pomodoro (+30 Coins/phiên)`);
+            activeBuffsHtml += `<div class="active-buff-pill focus"><span class="ab-icon">🧪</span> <div><strong>${bTitle}</strong> ${bSub}</div></div>`;
         }
 
         if (activeBuffsHtml) {
@@ -7418,20 +7487,22 @@ function renderShopUI(targetTab = null) {
 
         // Inventory items grid
         const backpackItems = [
-            { id: 'mystery_chest', name: 'Rương Kỷ Luật Bí Ẩn', icon: '🎁', qty: bp.mystery_chest || 0, actionText: 'Mở Rương', action: "window._openMysteryChest()" },
-            { id: 'vacation_pass', name: 'Bùa Nghỉ Phép (3 Ngày)', icon: '🏖️', qty: bp.vacation_pass || 0, actionText: 'Dùng (+3 Ngày)', action: "window._useBackpackItem('vacation_pass')" },
-            { id: 'boost3x', name: 'Vé Siêu Cấp x3 Boost (12H)', icon: '🚀', qty: bp.boost3x || 0, actionText: 'Dùng (+12H)', action: "window._useBackpackItem('boost3x')" },
-            { id: 'boost2x', name: 'Vé Nhân Đôi x2 Boost (24H)', icon: '⚡', qty: bp.boost2x || 0, actionText: 'Dùng (+24H)', action: "window._useBackpackItem('boost2x')" },
-            { id: 'focus_elixir', name: 'Thuốc Tiên Tập Trung Focus', icon: '🧪', qty: bp.focus_elixir || 0, actionText: 'Uống (+3 Nạp)', action: "window._useBackpackItem('focus_elixir')" },
-            { id: 'shield7d', name: 'Bùa Khiên Bất Hoại (7 Ngày)', icon: '🛡️', qty: bp.shield7d || 0, actionText: 'Kích Hoạt (+7 Ngày)', action: "window._useBackpackItem('shield7d')" },
-            { id: 'squad_energy', name: 'Nước Tăng Lực Đồng Đội', icon: '⚡', qty: bp.squad_energy || 0, actionText: 'Tặng Đội (+50⚡)', action: "window._useBackpackItem('squad_energy')" }
+            { id: 'mystery_chest', name: curLang === 'en' ? 'Mystery Discipline Chest' : (curLang === 'zh' ? '神秘自律宝箱' : 'Rương Kỷ Luật Bí Ẩn'), icon: '🎁', qty: bp.mystery_chest || 0, actionText: curLang === 'en' ? 'Open Chest' : (curLang === 'zh' ? '开启宝箱' : 'Mở Rương'), action: "window._openMysteryChest()" },
+            { id: 'vacation_pass', name: curLang === 'en' ? 'Vacation Pass (3 Days)' : (curLang === 'zh' ? '请假休假符 (3天)' : 'Bùa Nghỉ Phép (3 Ngày)'), icon: '🏖️', qty: bp.vacation_pass || 0, actionText: curLang === 'en' ? 'Use (+3 Days)' : (curLang === 'zh' ? '使用 (+3天)' : 'Dùng (+3 Ngày)'), action: "window._useBackpackItem('vacation_pass')" },
+            { id: 'boost3x', name: curLang === 'en' ? 'Super 3X Boost Pass (12H)' : (curLang === 'zh' ? '超级3倍加速券 (12小时)' : 'Vé Siêu Cấp x3 Boost (12H)'), icon: '🚀', qty: bp.boost3x || 0, actionText: curLang === 'en' ? 'Use (+12H)' : (curLang === 'zh' ? '使用 (+12小时)' : 'Dùng (+12H)'), action: "window._useBackpackItem('boost3x')" },
+            { id: 'boost2x', name: curLang === 'en' ? 'Double Score Pass (24H)' : (curLang === 'zh' ? '双倍积分通行证 (24小时)' : 'Vé Nhân Đôi x2 Boost (24H)'), icon: '⚡', qty: bp.boost2x || 0, actionText: curLang === 'en' ? 'Use (+24H)' : (curLang === 'zh' ? '使用 (+24小时)' : 'Dùng (+24H)'), action: "window._useBackpackItem('boost2x')" },
+            { id: 'focus_elixir', name: curLang === 'en' ? 'Focus Elixir' : (curLang === 'zh' ? '深度专注灵药' : 'Thuốc Tiên Tập Trung Focus'), icon: '🧪', qty: bp.focus_elixir || 0, actionText: curLang === 'en' ? 'Drink (+3 Charges)' : (curLang === 'zh' ? '服用 (+3次)' : 'Uống (+3 Nạp)'), action: "window._useBackpackItem('focus_elixir')" },
+            { id: 'shield7d', name: curLang === 'en' ? 'Invincible Shield (7 Days)' : (curLang === 'zh' ? '坚不可摧圣盾 (7天)' : 'Bùa Khiên Bất Hoại (7 Ngày)'), icon: '🛡️', qty: bp.shield7d || 0, actionText: curLang === 'en' ? 'Activate (+7 Days)' : (curLang === 'zh' ? '激活 (+7天)' : 'Kích Hoạt (+7 Ngày)'), action: "window._useBackpackItem('shield7d')" },
+            { id: 'squad_energy', name: curLang === 'en' ? 'Squad Energy Drink' : (curLang === 'zh' ? '战队活力补给水' : 'Nước Tăng Lực Đồng Đội'), icon: '⚡', qty: bp.squad_energy || 0, actionText: curLang === 'en' ? 'Send (+50⚡)' : (curLang === 'zh' ? '赠予战队 (+50⚡)' : 'Tặng Đội (+50⚡)'), action: "window._useBackpackItem('squad_energy')" }
         ];
 
         // Add Freeze flasks card in backpack
+        const bpSecTitle = curLang === 'en' ? '🎒 PERSONAL INVENTORY' : (curLang === 'zh' ? '🎒 个人道具背包' : '🎒 KHO VẬT PHẨM CÁ NHÂN');
+        const freezePillText = curLang === 'en' ? 'Freeze Flasks:' : (curLang === 'zh' ? '冻结瓶：' : 'Bình Freeze:');
         html += `
             <div class="backpack-header-row">
-                <div class="backpack-sec-title">🎒 KHO VẬT PHẨM CÁ NHÂN</div>
-                <div class="backpack-freeze-pill">🧊 Bình Freeze: <strong>${freezes}/3</strong></div>
+                <div class="backpack-sec-title">${bpSecTitle}</div>
+                <div class="backpack-freeze-pill">🧊 ${freezePillText} <strong>${freezes}/3</strong></div>
             </div>
         `;
 
@@ -7459,10 +7530,10 @@ function renderShopUI(targetTab = null) {
             html += `
                 <div class="backpack-empty-box">
                     <div class="beb-icon">🎒</div>
-                    <div class="beb-title">Túi Đồ Đang Trống</div>
-                    <div class="beb-desc">${t('noBackpackItems') || 'Hãy ghé tab Vật phẩm để sở hữu các bùa lợi kỷ luật!'}</div>
+                    <div class="beb-title">${curLang === 'en' ? 'Backpack is Empty' : (curLang === 'zh' ? '背包空空如也' : 'Túi Đồ Đang Trống')}</div>
+                    <div class="beb-desc">${t('noBackpackItems') || (curLang === 'en' ? 'Visit the Items tab to acquire discipline buffs!' : (curLang === 'zh' ? '前往道具商城获取自律增益道具！' : 'Hãy ghé tab Vật phẩm để sở hữu các bùa lợi kỷ luật!'))}</div>
                     <button class="beb-shop-btn" onclick="window._openShopModal('items')">
-                        🛒 Đến Cửa Hàng Vật Phẩm
+                        ${curLang === 'en' ? '🛒 Visit Items Shop' : (curLang === 'zh' ? '🛒 前往道具商城' : '🛒 Đến Cửa Hàng Vật Phẩm')}
                     </button>
                 </div>
             `;
@@ -7508,9 +7579,9 @@ function renderShopUI(targetTab = null) {
         if (titleItems.length > 0) {
             html += `
                 <div class="backpack-header-row" style="margin-top: 24px;">
-                    <div class="backpack-sec-title">🏷️ DANH HIỆU ĐÃ SỞ HỮU (${titleItems.length} Danh hiệu)</div>
+                    <div class="backpack-sec-title">${curLang === 'en' ? `🏷️ OWNED TITLES (${titleItems.length} Titles)` : (curLang === 'zh' ? `🏷️ 已拥有的头衔 (${titleItems.length} 个)` : `🏷️ DANH HIỆU ĐÃ SỞ HỮU (${titleItems.length} Danh hiệu)`)}</div>
                     <button class="doc-browse-shop-btn" onclick="window._openShopModal('titles')">
-                        + Xem Tất Cả
+                        ${curLang === 'en' ? '+ View All' : (curLang === 'zh' ? '+ 查看全部' : '+ Xem Tất Cả')}
                     </button>
                 </div>
                 <div class="backpack-grid">
@@ -7541,9 +7612,9 @@ function renderShopUI(targetTab = null) {
         if (themeItems.length > 0) {
             html += `
                 <div class="backpack-header-row" style="margin-top: 24px;">
-                    <div class="backpack-sec-title">🎨 GIAO DIỆN ĐÃ SỞ HỮU (${themeItems.length} Themes)</div>
+                    <div class="backpack-sec-title">${curLang === 'en' ? `🎨 OWNED THEMES (${themeItems.length} Themes)` : (curLang === 'zh' ? `🎨 已拥有的主题风格 (${themeItems.length} 个)` : `🎨 GIAO DIỆN ĐÃ SỞ HỮU (${themeItems.length} Themes)`)}</div>
                     <button class="doc-browse-shop-btn" onclick="window._openShopModal('themes')">
-                        + Thêm Theme
+                        ${curLang === 'en' ? '+ Add Theme' : (curLang === 'zh' ? '+ 浏览主题' : '+ Thêm Theme')}
                     </button>
                 </div>
                 <div class="backpack-grid">
@@ -7657,24 +7728,31 @@ function renderShopUI(targetTab = null) {
             const isEquipped = (equipped === item.id || curTheme === item.id);
             const canAfford = myDP >= item.price || isAdmin;
 
+            const tDesc = curLang === 'en' ? (item.descEn || item.desc) : (curLang === 'zh' ? (item.descZh || item.desc) : item.desc);
+            const freeLabel = curLang === 'en' ? 'Free' : (curLang === 'zh' ? '免费' : 'Miễn phí');
+            const ownedLabel = curLang === 'en' ? 'Owned' : (curLang === 'zh' ? '已拥有' : 'Đã sở hữu');
+            const equippedLabel = curLang === 'en' ? 'Equipped' : (curLang === 'zh' ? '使用中' : 'Đang dùng');
+            const applyLabel = curLang === 'en' ? 'Apply' : (curLang === 'zh' ? '应用' : 'Áp dụng');
+            const unlockLabel = curLang === 'en' ? 'Unlock' : (curLang === 'zh' ? '解锁' : 'Mở khóa');
+
             html += `
                 <div class="shop-card ${isEquipped ? 'equipped' : ''}">
                     <div class="shop-card-header">
                         <div class="shop-card-art" style="background:${item.bg}; color:${item.accent}; border:1px solid ${item.accent};">🎨</div>
                         <div class="shop-card-meta">
                             <div class="shop-card-title">${item.name}</div>
-                            <div class="shop-card-desc">${item.desc}</div>
+                            <div class="shop-card-desc">${tDesc}</div>
                             <div class="shop-card-preview" style="background:linear-gradient(90deg, ${item.bg}, ${item.accent});"></div>
                         </div>
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${item.free ? '<span style="color:#10b981;">Miễn phí</span>' : isOwned ? '<span style="color:#10b981;font-weight:700;">Đã sở hữu</span>' : `${item.price.toLocaleString()} ${coinXs}`}
+                            ${item.free ? `<span style="color:#10b981;">${freeLabel}</span>` : isOwned ? `<span style="color:#10b981;font-weight:700;">${ownedLabel}</span>` : `${item.price.toLocaleString()} ${coinXs}`}
                         </div>
                         <div>
-                            ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
-                              isOwned ? `<button class="shop-action-btn btn-equip" onclick="window._equipShopItem('themes', '${item.id}')">${t('btnEquip') || 'Áp dụng'}</button>` :
-                              `<button class="shop-action-btn btn-buy" onclick="window._buyShopItem('themes', '${item.id}', ${item.price})" ${!canAfford ? 'disabled' : ''}>${t('btnBuy') || 'Mở khóa'}</button>`}
+                            ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || equippedLabel}</button>` :
+                              isOwned ? `<button class="shop-action-btn btn-equip" onclick="window._equipShopItem('themes', '${item.id}')">${t('btnEquip') || applyLabel}</button>` :
+                              `<button class="shop-action-btn btn-buy" onclick="window._buyShopItem('themes', '${item.id}', ${item.price})" ${!canAfford ? 'disabled' : ''}>${t('btnBuy') || unlockLabel}</button>`}
                         </div>
                     </div>
                 </div>
@@ -7686,58 +7764,70 @@ function renderShopUI(targetTab = null) {
         const soundEquipped = S.inventory?.soundFx || 'default';
         const visualEquipped = S.inventory?.visualFx || 'default';
 
-        html += `<div style="grid-column:1/-1;font-family:var(--font-heading);font-size:13px;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin-bottom:-6px;">Gói Âm Thanh Check-in</div>`;
+        const soundTitle = curLang === 'en' ? 'Check-in Sound Effects' : (curLang === 'zh' ? '打卡完成音效' : 'Gói Âm Thanh Check-in');
+        const visualTitle = curLang === 'en' ? 'Check-in Visual Effects' : (curLang === 'zh' ? '打卡特效视觉' : 'Gói Thị Giác Check-in');
+        const defaultLabel = curLang === 'en' ? 'Default' : (curLang === 'zh' ? '默认' : 'Mặc định');
+        const ownedLabel = curLang === 'en' ? 'Owned' : (curLang === 'zh' ? '已拥有' : 'Đã sở hữu');
+        const equippedLabel = curLang === 'en' ? 'Equipped' : (curLang === 'zh' ? '使用中' : 'Đang dùng');
+        const equipLabel = curLang === 'en' ? 'Equip' : (curLang === 'zh' ? '装备' : 'Trang bị');
+        const buyLabel = curLang === 'en' ? 'Buy' : (curLang === 'zh' ? '购买' : 'Mua');
+
+        html += `<div style="grid-column:1/-1;font-family:var(--font-heading);font-size:13px;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin-bottom:-6px;">${soundTitle}</div>`;
         SHOP_CATALOG.soundFx.forEach(item => {
             const isOwned = item.free || soundOwned.includes(item.id);
             const isEquipped = soundEquipped === item.id;
             const canAfford = myDP >= item.price || isAdmin;
+            const tName = curLang === 'en' ? (item.nameEn || item.name) : (curLang === 'zh' ? (item.nameZh || item.name) : item.name);
+            const tDesc = curLang === 'en' ? (item.descEn || item.desc) : (curLang === 'zh' ? (item.descZh || item.desc) : item.desc);
 
             html += `
                 <div class="shop-card ${isEquipped ? 'equipped' : ''}">
                     <div class="shop-card-header">
                         <div class="shop-card-art">🔊</div>
                         <div class="shop-card-meta">
-                            <div class="shop-card-title">${item.name}</div>
-                            <div class="shop-card-desc">${item.desc}</div>
+                            <div class="shop-card-title">${tName}</div>
+                            <div class="shop-card-desc">${tDesc}</div>
                         </div>
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${item.free ? '<span style="color:#10b981;">Mặc định</span>' : isOwned ? '<span style="color:#10b981;font-weight:700;">Đã sở hữu</span>' : `${item.price.toLocaleString()} ${coinXs}`}
+                            ${item.free ? `<span style="color:#10b981;">${defaultLabel}</span>` : isOwned ? `<span style="color:#10b981;font-weight:700;">${ownedLabel}</span>` : `${item.price.toLocaleString()} ${coinXs}`}
                         </div>
                         <div>
-                            ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
-                              isOwned ? `<button class="shop-action-btn btn-equip" onclick="window._equipShopItem('soundFx', '${item.id}')">${t('btnEquip') || 'Trang bị'}</button>` :
-                              `<button class="shop-action-btn btn-buy" onclick="window._buyShopItem('soundFx', '${item.id}', ${item.price})" ${!canAfford ? 'disabled' : ''}>${t('btnBuy') || 'Mua'}</button>`}
+                            ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || equippedLabel}</button>` :
+                              isOwned ? `<button class="shop-action-btn btn-equip" onclick="window._equipShopItem('soundFx', '${item.id}')">${t('btnEquip') || equipLabel}</button>` :
+                              `<button class="shop-action-btn btn-buy" onclick="window._buyShopItem('soundFx', '${item.id}', ${item.price})" ${!canAfford ? 'disabled' : ''}>${t('btnBuy') || buyLabel}</button>`}
                         </div>
                     </div>
                 </div>
             `;
         });
 
-        html += `<div style="grid-column:1/-1;font-family:var(--font-heading);font-size:13px;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin:12px 0 -6px;">Gói Thị Giác Check-in</div>`;
+        html += `<div style="grid-column:1/-1;font-family:var(--font-heading);font-size:13px;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin:12px 0 -6px;">${visualTitle}</div>`;
         SHOP_CATALOG.visualFx.forEach(item => {
             const isOwned = item.free || visualOwned.includes(item.id);
             const isEquipped = visualEquipped === item.id;
             const canAfford = myDP >= item.price || isAdmin;
+            const tName = curLang === 'en' ? (item.nameEn || item.name) : (curLang === 'zh' ? (item.nameZh || item.name) : item.name);
+            const tDesc = curLang === 'en' ? (item.descEn || item.desc) : (curLang === 'zh' ? (item.descZh || item.desc) : item.desc);
 
             html += `
                 <div class="shop-card ${isEquipped ? 'equipped' : ''}">
                     <div class="shop-card-header">
                         <div class="shop-card-art"><svg class="rune-icon rune-xl" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></div>
                         <div class="shop-card-meta">
-                            <div class="shop-card-title">${item.name}</div>
-                            <div class="shop-card-desc">${item.desc}</div>
+                            <div class="shop-card-title">${tName}</div>
+                            <div class="shop-card-desc">${tDesc}</div>
                         </div>
                     </div>
                     <div class="shop-card-footer">
                         <div class="shop-card-price">
-                            ${item.free ? '<span style="color:#10b981;">Mặc định</span>' : isOwned ? '<span style="color:#10b981;font-weight:700;">Đã sở hữu</span>' : `${item.price.toLocaleString()} ${coinXs}`}
+                            ${item.free ? `<span style="color:#10b981;">${defaultLabel}</span>` : isOwned ? `<span style="color:#10b981;font-weight:700;">${ownedLabel}</span>` : `${item.price.toLocaleString()} ${coinXs}`}
                         </div>
                         <div>
-                            ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || 'Đang dùng'}</button>` :
-                              isOwned ? `<button class="shop-action-btn btn-equip" onclick="window._equipShopItem('visualFx', '${item.id}')">${t('btnEquip') || 'Trang bị'}</button>` :
-                              `<button class="shop-action-btn btn-buy" onclick="window._buyShopItem('visualFx', '${item.id}', ${item.price})" ${!canAfford ? 'disabled' : ''}>${t('btnBuy') || 'Mua'}</button>`}
+                            ${isEquipped ? `<button class="shop-action-btn btn-equipped">${t('btnEquipped') || equippedLabel}</button>` :
+                              isOwned ? `<button class="shop-action-btn btn-equip" onclick="window._equipShopItem('visualFx', '${item.id}')">${t('btnEquip') || equipLabel}</button>` :
+                              `<button class="shop-action-btn btn-buy" onclick="window._buyShopItem('visualFx', '${item.id}', ${item.price})" ${!canAfford ? 'disabled' : ''}>${t('btnBuy') || buyLabel}</button>`}
                         </div>
                     </div>
                 </div>
@@ -9915,48 +10005,78 @@ function renderRecapSlide() {
     let html = '';
 
     if (recapCurrentSlide === 0) {
+        const titleStr = curLang === 'en' ? 'PAST WEEK DISCIPLINE' : (curLang === 'zh' ? '上周自律总结' : 'KỶ LUẬT TUẦN QUA');
+        const subStr = curLang === 'en' ? `You completed <strong>${data.totalChecks}/${data.targetChecks}</strong> habit goals in the last 7 days.`
+                     : (curLang === 'zh' ? `您在过去 7 天内完成了 <strong>${data.totalChecks}/${data.targetChecks}</strong> 次习惯目标。`
+                     : `Bạn đã hoàn thành <strong>${data.totalChecks}/${data.targetChecks}</strong> mục tiêu thói quen trong 7 ngày gần nhất.`);
         html = `
             <div class="recap-slide-icon"><svg class="rune-icon rune-xl" viewBox="0 0 48 48"><use href="#i-triumph"></use></svg></div>
-            <div class="recap-slide-title">KỶ LUẬT TUẦN QUA</div>
+            <div class="recap-slide-title">${titleStr}</div>
             <div class="recap-slide-value">${data.completionPct}%</div>
-            <div class="recap-slide-subtitle">Bạn đã hoàn thành <strong>${data.totalChecks}/${data.targetChecks}</strong> mục tiêu thói quen trong 7 ngày gần nhất.</div>
+            <div class="recap-slide-subtitle">${subStr}</div>
             <div class="recap-slide-pill">${data.gradeTitle}</div>
         `;
     } else if (recapCurrentSlide === 1) {
         const coinLg = window.getCoinIconHTML ? window.getCoinIconHTML('lg') : '';
         const coinXs = window.getCoinIconHTML ? window.getCoinIconHTML('xs') : '';
+        const titleStr = curLang === 'en' ? 'EARNED ENERGY POINTS' : (curLang === 'zh' ? '本周收获能量积分' : 'ĐIỂM NĂNG LƯỢNG THU VỀ');
+        const subStr = curLang === 'en' ? `Including habit check-ins and bonus from <strong>${data.perfectDays} perfect days</strong> (100%).`
+                     : (curLang === 'zh' ? `包含习惯打卡积分以及 <strong>${data.perfectDays} 天完美全卡</strong> (100%) 奖励。`
+                     : `Bao gồm điểm tick thói quen và thưởng <strong>${data.perfectDays} ngày rèn luyện hoàn hảo</strong> (100%).`);
+        const walletPill = curLang === 'en' ? `Current Wallet: ${data.totalDP.toLocaleString()} ${coinXs}`
+                         : (curLang === 'zh' ? `钱包余额: ${data.totalDP.toLocaleString()} ${coinXs}`
+                         : `Ví hiện có: ${data.totalDP.toLocaleString()} ${coinXs}`);
         html = `
             <div class="recap-slide-icon">⚡</div>
-            <div class="recap-slide-title">ĐIỂM NĂNG LƯỢNG THU VỀ</div>
+            <div class="recap-slide-title">${titleStr}</div>
             <div class="recap-slide-value">+${data.weeklyDP.toLocaleString()} ${coinLg}</div>
-            <div class="recap-slide-subtitle">Bao gồm điểm tick thói quen và thưởng <strong>${data.perfectDays} ngày rèn luyện hoàn hảo</strong> (100%).</div>
-            <div class="recap-slide-pill">Ví hiện có: ${data.totalDP.toLocaleString()} ${coinXs}</div>
+            <div class="recap-slide-subtitle">${subStr}</div>
+            <div class="recap-slide-pill">${walletPill}</div>
         `;
     } else if (recapCurrentSlide === 2) {
+        const titleStr = curLang === 'en' ? 'ON-FIRE STREAK' : (curLang === 'zh' ? '炽热打卡连击' : 'CHUỖI NGÀY BÙNG CHÁY');
+        const unitStr = curLang === 'en' ? 'DAYS' : (curLang === 'zh' ? '天' : 'NGÀY');
+        const subStr = curLang === 'en' ? 'Discipline is not a fleeting spark; it is resilience proven by day after day of persistence!'
+                     : (curLang === 'zh' ? '自律不是转瞬即逝的激情，而是日复一日在坚持中铸就的沉稳与坚韧！'
+                     : 'Kỷ luật không phải là cảm xúc nhất thời, đó là sự bền bỉ được chứng minh qua chuỗi ngày liên tiếp!');
+        const flaskPill = curLang === 'en' ? `🧊 Reserve Freeze Flasks: ${S.freezes || 0}/3`
+                        : (curLang === 'zh' ? `🧊 备用冻结瓶: ${S.freezes || 0}/3`
+                        : `🧊 Bình Freeze dự phòng: ${S.freezes || 0}/3`);
         html = `
             <div class="recap-slide-icon">🔥</div>
-            <div class="recap-slide-title">CHUỖI NGÀY BÙNG CHÁY</div>
-            <div class="recap-slide-value">${data.streak} NGÀY</div>
-            <div class="recap-slide-subtitle">Kỷ luật không phải là cảm xúc nhất thời, đó là sự bền bỉ được chứng minh qua chuỗi ngày liên tiếp!</div>
-            <div class="recap-slide-pill">🧊 Bình Freeze dự phòng: ${S.freezes || 0}/2</div>
+            <div class="recap-slide-title">${titleStr}</div>
+            <div class="recap-slide-value">${data.streak} ${unitStr}</div>
+            <div class="recap-slide-subtitle">${subStr}</div>
+            <div class="recap-slide-pill">${flaskPill}</div>
         `;
     } else if (recapCurrentSlide === 3) {
-        const bestName = data.bestHabit ? `${data.bestHabit.emoji || '✨'} ${data.bestHabit.name}` : 'Chưa có';
-        const bestCount = data.bestHabit ? `${data.bestHabit.checksInWeek}/7 ngày` : '0';
+        const bestName = data.bestHabit ? `${data.bestHabit.emoji || '✨'} ${data.bestHabit.name}` : (curLang === 'en' ? 'None' : (curLang === 'zh' ? '暂无' : 'Chưa có'));
+        const daysUnit = curLang === 'en' ? 'days' : (curLang === 'zh' ? '天' : 'ngày');
+        const bestCount = data.bestHabit ? `${data.bestHabit.checksInWeek}/7 ${daysUnit}` : '0';
+        const titleStr = curLang === 'en' ? 'CHAMPION HABIT' : (curLang === 'zh' ? '最佳冠军习惯' : 'THÓI QUEN QUÁN QUÂN');
+        const subStr = curLang === 'en' ? `Your most consistently practiced habit with <strong>${bestCount}</strong> completions this week!`
+                     : (curLang === 'zh' ? `本周践行最出色的核心习惯，已完成 <strong>${bestCount}</strong>！`
+                     : `Thói quen được rèn luyện xuất sắc nhất với <strong>${bestCount}</strong> hoàn thành trong tuần!`);
+        const pillStr = curLang === 'en' ? '💪 Keep it up next week!' : (curLang === 'zh' ? '💪 下周继续保持！' : '💪 Tiếp tục phát huy tuần tới!');
         html = `
             <div class="recap-slide-icon"><svg class="rune-icon rune-xl" viewBox="0 0 48 48"><use href="#i-spark"></use></svg></div>
-            <div class="recap-slide-title">THÓI QUEN QUÁN QUÂN</div>
+            <div class="recap-slide-title">${titleStr}</div>
             <div class="recap-slide-value" style="font-size:32px;">${escHtml(bestName)}</div>
-            <div class="recap-slide-subtitle">Thói quen được rèn luyện xuất sắc nhất với <strong>${bestCount}</strong> hoàn thành trong tuần!</div>
-            <div class="recap-slide-pill">💪 Tiếp tục phát huy tuần tới!</div>
+            <div class="recap-slide-subtitle">${subStr}</div>
+            <div class="recap-slide-pill">${pillStr}</div>
         `;
     } else if (recapCurrentSlide === 4) {
+        const titleStr = curLang === 'en' ? 'SHARE YOUR ACHIEVEMENT' : (curLang === 'zh' ? '晒出您的自律成果' : 'KHOE THÀNH QUẢ KỶ LUẬT');
+        const subStr = curLang === 'en' ? 'Take pride in your disciplined journey! Generate a gorgeous 9:16 Story card to share on social media.'
+                     : (curLang === 'zh' ? '为自己的坚持感到自豪！一键生成精美 9:16 故事海报，分享至社交网络。'
+                     : 'Hãy tự hào về hành trình kiên trì của bạn! Xuất bức ảnh thẻ Story 9:16 tuyệt đẹp để chia sẻ lên mạng xã hội.');
+        const btnStr = curLang === 'en' ? '📸 Open Story Card Creator' : (curLang === 'zh' ? '📸 打开故事海报生成器' : '📸 Mở Bộ Tạo Ảnh Thẻ Story');
         html = `
             <div class="recap-slide-icon">📸</div>
-            <div class="recap-slide-title">KHOE THÀNH QUẢ KỶ LUẬT</div>
-            <div class="recap-slide-subtitle" style="margin:16px 0;">Hãy tự hào về hành trình kiên trì của bạn! Xuất bức ảnh thẻ Story 9:16 tuyệt đẹp để chia sẻ lên mạng xã hội.</div>
+            <div class="recap-slide-title">${titleStr}</div>
+            <div class="recap-slide-subtitle" style="margin:16px 0;">${subStr}</div>
             <button class="recap-share-btn" style="pointer-events:auto;margin-top:12px;" onclick="window._openShareCardModal()">
-                📸 Mở Bộ Tạo Ảnh Thẻ Story
+                ${btnStr}
             </button>
         `;
     }
@@ -11058,14 +11178,14 @@ function switchPomoMode(mode) {
         if (customRow) customRow.style.display = 'none';
         if (rewardPill) {
             rewardPill.className = 'pomo-reward-pill neutral';
-            rewardPill.innerHTML = '☕ Nghỉ ngơi ngắn (5m)';
+            rewardPill.innerHTML = curLang === 'en' ? '☕ Short break (5m)' : (curLang === 'zh' ? '☕ 短暂休息 (5分钟)' : '☕ Nghỉ ngơi ngắn (5m)');
         }
     } else if (mode === 'long') {
         pomoState.totalSeconds = 15 * 60;
         if (customRow) customRow.style.display = 'none';
         if (rewardPill) {
             rewardPill.className = 'pomo-reward-pill neutral';
-            rewardPill.innerHTML = '🔋 Nghỉ ngơi sâu (15m)';
+            rewardPill.innerHTML = curLang === 'en' ? '🔋 Deep rest (15m)' : (curLang === 'zh' ? '🔋 深度休息 (15分钟)' : '🔋 Nghỉ ngơi sâu (15m)');
         }
     } else if (mode === 'custom') {
         const savedMins = parseInt(localStorage.getItem('pomo_custom_mins') || '30', 10) || 30;

@@ -36,7 +36,12 @@
 
     function lang() {
         var l = null;
-        try { l = localStorage.getItem('hm_app_lang') || localStorage.getItem('hg_lang'); } catch (e) {}
+        if (window.I18N && typeof window.I18N.getLanguage === 'function') {
+            l = window.I18N.getLanguage();
+        }
+        if (!l) {
+            try { l = localStorage.getItem('hm_app_lang') || localStorage.getItem('hg_lang') || localStorage.getItem('lang'); } catch (e) {}
+        }
         if (!l) l = (navigator.language || 'vi').slice(0, 2).toLowerCase();
         return LABELS[l] ? l : 'vi';
     }
