@@ -362,6 +362,10 @@ window.addEventListener('hmLanguageChanged', (e) => {
         // Khung trích dẫn không nằm trong renderAll() và chỉ render 1 lần lúc khởi
         // động — thời điểm đó việc dò ngôn ngữ thường chưa xong nên nó kẹt ở 'en'.
         if (typeof renderDailyQuoteWidget === 'function') renderDailyQuoteWidget();
+        const guideModal = document.getElementById('guideModalBg');
+        if (guideModal && guideModal.classList.contains('show') && typeof renderGuideContent === 'function') {
+            renderGuideContent(curGuideTab);
+        }
     }
 });
 
@@ -11619,91 +11623,215 @@ let curGuideTab = 'quickstart';
 const GUIDE_SECTIONS = {
     quickstart: {
         title: 'Bắt Đầu Nhanh & Lưới Kỷ Luật',
+        titleEn: 'Quick Start & Discipline Matrix',
+        titleZh: '快速入门与自律矩阵',
         desc: 'Hướng dẫn thiết lập thói quen, check-in hàng ngày và tích lũy điểm kỷ luật đầu tiên.',
+        descEn: 'Guide to setting up habits, daily check-ins, and earning your first discipline points.',
+        descZh: '指引您设置核心习惯、进行每日打卡并获取初阶自律积分。',
         icon: '🚀',
         badge: 'Cơ Bản',
+        badgeEn: 'Basics',
+        badgeZh: '入门必读',
         heroTitle: 'Chào Mừng Đến Với Habit Mastery',
+        heroTitleEn: 'Welcome to Habit Mastery',
+        heroTitleZh: '欢迎来到 Habit Mastery',
         heroDesc: 'Biến việc rèn luyện kỷ luật thành hành trình Game RPG nhập vai: Check-in thói quen, tích lũy Coin, duy trì chuỗi Streak và nâng cấp Cảnh giới rank!',
+        heroDescEn: 'Turn discipline into an RPG journey: Check-in habits, earn coins, sustain streaks, and ascend through realm ranks!',
+        heroDescZh: '将自律习惯培养转化为角色扮演RPG之旅：打卡习惯、积攒积分、保持连击，突破重重境界！',
         cards: [
             {
                 icon: '➕',
                 title: 'Tạo thói quen mới (+ Add Habit)',
+                titleEn: 'Create New Habit (+ Add Habit)',
+                titleZh: '创建新习惯 (+ Add Habit)',
                 badge: 'Bước 1',
+                badgeEn: 'Step 1',
+                badgeZh: '第 1 步',
                 steps: [
                     'Bấm nút <strong>+ Add Habit</strong> trên thanh công cụ hoặc bấm phím tắt.',
                     'Nhập tên thói quen (VD: <em>Dậy sớm 5h30, Đọc sách 30p, Tập Gym, Không lướt MXH...</em>).',
                     'Chọn biểu tượng <strong>Emoji</strong> sinh động đại diện cho thói quen.',
                     'Thiết lập <strong>Mục tiêu số ngày/tháng</strong> (Mặc định 30 ngày) rồi nhấn <strong>Save</strong>.'
                 ],
-                action: { label: '+ Tạo thói quen ngay', onClick: 'if(typeof openAddModal==="function"){closeGuideModal();openAddModal();}' }
+                stepsEn: [
+                    'Click the <strong>+ Add Habit</strong> button on the toolbar or use the shortcut.',
+                    'Enter habit name (e.g. <em>Wake up at 5:30 AM, Read 30 mins, Workout, No social doomscrolling...</em>).',
+                    'Select a vivid <strong>Emoji</strong> representing your habit.',
+                    'Set your <strong>Monthly Target Days</strong> (default 30 days) and click <strong>Save</strong>.'
+                ],
+                stepsZh: [
+                    '点击顶部工具栏上的 <strong>+ Add Habit</strong> 按钮或快捷键。',
+                    '输入习惯名称（例如：<em>早起 5:30、阅读 30分钟、健身锻炼、远离短视频...</em>）。',
+                    '为该习惯挑选一个生动的 <strong>Emoji 图标</strong>。',
+                    '设置<strong>每月目标天数</strong>（默认 30 天）并点击 <strong>Save 保存</strong>。'
+                ],
+                action: { 
+                    label: '+ Tạo thói quen ngay', 
+                    labelEn: '+ Create habit now',
+                    labelZh: '+ 立即创建习惯',
+                    onClick: 'if(typeof openAddModal==="function"){closeGuideModal();openAddModal();}' 
+                }
             },
             {
                 icon: '✅',
                 title: 'Check-in Hàng Ngày & Tích Điểm DP',
+                titleEn: 'Daily Check-in & Earn DP Points',
+                titleZh: '每日打卡与获取自律点 DP',
                 badge: 'Bước 2',
+                badgeEn: 'Step 2',
+                badgeZh: '第 2 步',
                 steps: [
                     'Nhấp vào ô ngày tương ứng trong tháng trên bảng lưới ma trận để đánh dấu hoàn thành.',
                     'Mỗi thói quen hoàn thành thưởng ngay <strong>+10 DP</strong> (Điểm Kỷ Luật / Prism Coin).',
                     'Hoàn thành <strong>100% tất cả thói quen</strong> trong ngày sẽ mở khóa trạng thái <strong>Ngày Hoàn Hảo (Perfect Day)</strong>!',
                     'Có thể đổi tháng/năm ở góc trên bên trái để xem lại lịch sử rèn luyện các tháng trước.'
+                ],
+                stepsEn: [
+                    'Click on the corresponding day box in the grid matrix to mark completion.',
+                    'Each completed habit instantly awards <strong>+10 DP</strong> (Discipline Points / Prism Coin).',
+                    'Completing <strong>100% of all habits</strong> on a day unlocks <strong>Perfect Day</strong> status!',
+                    'Switch months/years in the top left to review past training history.'
+                ],
+                stepsZh: [
+                    '点击月度矩阵表格中对应的日期单元格即可完成打卡。',
+                    '每个完成的习惯立即奖励 <strong>+10 DP</strong> 自律积分。',
+                    '当日<strong>100%完成所有习惯</strong>将点亮 <strong>完美之日 (Perfect Day)</strong> 荣耀勋章！',
+                    '可在左上方切换月份与年份，随时回溯查看过往打卡记录。'
                 ]
             },
             {
                 icon: '😊',
                 title: 'Theo Dõi Tâm Trạng & Giấc Ngủ',
+                titleEn: 'Track Mood & Sleep Hours',
+                titleZh: '情绪心情与睡眠记录',
                 badge: 'Sức Khỏe',
+                badgeEn: 'Wellness',
+                badgeZh: '身心健康',
                 steps: [
                     '<strong>Mood Tracker</strong>: Chọn biểu tượng cảm xúc mỗi ngày từ 😁 (Tuyệt vời) đến 😢 (Áp lực).',
                     '<strong>Sleep Hours</strong>: Nhập số giờ ngủ đêm qua để hệ thống tính toán năng lượng.',
                     '<strong>Daily Notes</strong>: Ghi lại bài học, cảm xúc hoặc nhật ký ngắn trong ngày.'
+                ],
+                stepsEn: [
+                    '<strong>Mood Tracker</strong>: Pick your daily mood from 😁 (Awesome) to 😢 (Stressed).',
+                    '<strong>Sleep Hours</strong>: Log your hours of sleep to help calculate vitality.',
+                    '<strong>Daily Notes</strong>: Record reflections, insights, or a brief daily journal.'
+                ],
+                stepsZh: [
+                    '<strong>心情追踪器</strong>：每日选择心境表情，从 😁（精力充沛）到 😢（疲惫焦虑）。',
+                    '<strong>睡眠时长</strong>：记录昨夜睡眠时长，系统将综合评估能量状态。',
+                    '<strong>每日随笔</strong>：随时记下今日的领悟、心得或简短日记。'
                 ]
             },
             {
                 icon: '📊',
                 title: 'Biểu Đồ Phân Tích & Bản Đồ Nhiệt (Heatmap)',
+                titleEn: 'Analytics Charts & Annual Heatmap',
+                titleZh: '数据分析图表与年度热力图',
                 badge: 'Thống Kê',
+                badgeEn: 'Stats',
+                badgeZh: '数据洞察',
                 steps: [
                     '<strong>Bar & Line Chart</strong>: Theo dõi tỷ lệ hoàn thành theo từng ngày và từng tháng.',
                     '<strong>Top 10 Habits</strong>: Xếp hạng những thói quen bạn kiên trì duy trì nhất.',
                     '<strong>Annual Heatmap</strong>: Bản đồ nhiệt cả năm thể hiện mật độ rèn luyện giống GitHub commit.'
+                ],
+                stepsEn: [
+                    '<strong>Bar & Line Chart</strong>: Monitor completion rates by day and month.',
+                    '<strong>Top 10 Habits</strong>: Rank your most consistently practiced habits.',
+                    '<strong>Annual Heatmap</strong>: Full-year heatmap showing practice intensity just like GitHub commits.'
+                ],
+                stepsZh: [
+                    '<strong>柱状与折线图</strong>：直观掌握每日与每月的完成比例走势。',
+                    '<strong>Top 10 核心习惯</strong>：盘点您坚持最久、完成度最高的核心习惯。',
+                    '<strong>年度热力图</strong>：类似 GitHub 提交记录的全年打卡热力图，见证坚持轨迹。'
                 ]
             }
         ],
-        tip: '💡 <strong>Mẹo chuyên gia:</strong> Trong 7 ngày đầu, hãy bắt đầu với 3-5 thói quen cốt lõi nhỏ để tạo đà quán tính thành công trước khi thêm nhiều thói quen mới!'
+        tip: '💡 <strong>Mẹo chuyên gia:</strong> Trong 7 ngày đầu, hãy bắt đầu với 3-5 thói quen cốt lõi nhỏ để tạo đà quán tính thành công trước khi thêm nhiều thói quen mới!',
+        tipEn: '💡 <strong>Pro Tip:</strong> During your first 7 days, start with 3-5 small core habits to build momentum before expanding!',
+        tipZh: '💡 <strong>专家建议：</strong> 在前7天内，建议从3-5个微小核心习惯起步，建立成功惯性后再逐步增加！'
     },
     'streak-rank': {
         title: 'Chuỗi Kỷ Luật (Streak) & 7 Bước 21 Cảnh Giới Rank',
+        titleEn: 'Discipline Streak & 7 Steps 21 Realms Rank',
+        titleZh: '自律连胜与七阶二十一重境界',
         desc: 'Hiểu rõ cơ chế duy trì ngọn lửa Streak, bảo vệ chuỗi và hành trình chuyển hóa tâm thức qua 7 Bước và 21 Cảnh Giới.',
+        descEn: 'Understand the Streak flame mechanics, shield protections, and mental consciousness journey through 7 Steps and 21 Realms.',
+        descZh: '全面了解连胜机制、断火保护以及跨越七阶二十一重境界的心智升华之旅。',
         icon: '🔥',
         badge: 'Cốt Lõi',
+        badgeEn: 'Core',
+        badgeZh: '核心系统',
         heroTitle: 'Ngọn Lửa Kỷ Luật & Hệ Thống 21 Cảnh Giới Chuyển Hóa',
+        heroTitleEn: 'Discipline Flame & The 21 Realms Transformation',
+        heroTitleZh: '自律圣火与二十一重境界跃迁',
         heroDesc: 'Mỗi ngày liên tiếp bạn duy trì ít nhất 1 thói quen, ngọn lửa Streak sẽ bùng cháy mạnh mẽ hơn. Tích lũy DP để thăng cấp cảnh giới từ Vô Minh đến Siêu Thoát Niết Bàn!',
+        heroDescEn: 'Every consecutive day you complete at least 1 habit, your Streak flame burns brighter. Accumulate DP to ascend realms from Ignorance to Supreme Nirvana!',
+        heroDescZh: '每天连续打卡至少1个习惯，连胜之火便愈发炽烈。累积自律点DP，由无明一路突破至超脱涅槃！',
         cards: [
             {
                 icon: '🔥',
                 title: 'Cơ Chế Chuỗi Streak Liên Tục',
+                titleEn: 'Continuous Streak Mechanics',
+                titleZh: '连胜机制与法则',
                 badge: 'Quy Tắc',
+                badgeEn: 'Rules',
+                badgeZh: '打卡规则',
                 steps: [
                     'Mỗi ngày bạn hoàn thành ít nhất 1 thói quen, chuỗi <strong>Streak +1 ngày</strong>.',
                     'Streak càng cao, bạn càng nhận được nhiều <strong>Huy hiệu & Điểm thưởng hàng tuần</strong>.',
                     'Nếu cả ngày không check-in thói quen nào, chuỗi Streak sẽ bị đứt và trở về 0.'
+                ],
+                stepsEn: [
+                    'Each day you complete at least 1 habit, your <strong>Streak +1 day</strong>.',
+                    'Higher streak unlocks prestigious <strong>Badges & Weekly Bonus DP</strong>.',
+                    'If no habit is checked in during the day, the streak resets to 0.'
+                ],
+                stepsZh: [
+                    '每日至少完成打卡1个习惯，<strong>连胜天数 +1</strong>。',
+                    '连胜天数越高，每周可领取的<strong>专属勋章与奖励点数</strong>越丰厚。',
+                    '若整日未完成任何习惯，连胜将中断归零。'
                 ]
             },
             {
                 icon: '🧊',
                 title: 'Bảo Vệ Chuỗi (Streak Freeze & Repair)',
+                titleEn: 'Streak Protection (Freeze & Repair)',
+                titleZh: '连胜保护（冻结与补签）',
                 badge: 'Bảo Hộ',
+                badgeEn: 'Shield',
+                badgeZh: '守护道具',
                 steps: [
                     '🧊 <strong>Bình Đóng Băng (Freeze)</strong>: Kích hoạt khi bận, ốm hoặc đi du lịch. Giữ nguyên chuỗi ngày mà không bị đứt. Tối đa tích trữ 3 bình trong túi.',
                     '💊 <strong>Hồi Sinh Chuỗi (Repair)</strong>: Nếu lỡ quên check-in hôm qua, hệ thống sẽ mở thông báo khẩn cấp trong <strong>24h</strong>. Dùng 150 DP để hồi sinh chuỗi!',
                     'Mở tab <strong>Bảo Vệ Chuỗi</strong> để mua thêm bình đóng băng hoặc kiểm tra số bình sẵn có.'
                 ],
-                action: { label: '🛡️ Mở Bảo Vệ Chuỗi', onClick: 'closeGuideModal(); if(window._openStreakModal)window._openStreakModal();' }
+                stepsEn: [
+                    '🧊 <strong>Freeze Bottle</strong>: Auto-activates when sick, traveling, or busy. Preserves your streak unbroken (max 3 in backpack).',
+                    '💊 <strong>Streak Repair</strong>: Missed yesterday? Emergency revive window open for <strong>24h</strong>. Use 150 DP to restore!',
+                    'Open the <strong>Streak Shield</strong> tab to purchase more or check available stock.'
+                ],
+                stepsZh: [
+                    '🧊 <strong>连胜冻结瓶</strong>：生病或出差忙碌时自动激活，锁定连胜天数不中断（背包上限3瓶）。',
+                    '💊 <strong>连胜复活丹</strong>：昨日遗漏打卡？可在<strong>24小时内</strong>消耗150 DP唤醒复活连胜！',
+                    '前往<strong>连胜保护</strong>选项卡可购买道具或查看持有数量。'
+                ],
+                action: { 
+                    label: '🛡️ Mở Bảo Vệ Chuỗi', 
+                    labelEn: '🛡️ Open Streak Shield',
+                    labelZh: '🛡️ 前往连胜保护',
+                    onClick: 'closeGuideModal(); if(window._openStreakModal)window._openStreakModal();' 
+                }
             },
             {
                 icon: '👑',
                 title: 'Hành Trình Chuyển Hóa: 7 Bước & 21 Cảnh Giới',
+                titleEn: 'Transformation: 7 Steps & 21 Realms',
+                titleZh: '境界跃迁：七阶二十一重境',
                 badge: '21 Cảnh Giới',
+                badgeEn: '21 Realms',
+                badgeZh: '21重境界',
                 steps: [
                     '<strong>Bước 1: Vô Thức (0 - 3.000 DP)</strong>: Vô minh (0-750) ➔ Mê muội (751-1.500) ➔ Thỏa hiệp (1.501-3.000)',
                     '<strong>Bước 2: Thức Tỉnh (3.001 - 9.000 DP)</strong>: Sụp đổ (3.001-4.500) ➔ Overthinking (4.501-6.500) ➔ Tri khuyết (6.501-9.000)',
@@ -11713,55 +11841,143 @@ const GUIDE_SECTIONS = {
                     '<strong>Bước 6: Siêu Nhận Thức (54.001 - 105.000 DP)</strong>: Buông bỏ (54.001-64.500) ➔ Bình tĩnh (64.501-75.000) ➔ Không hối tiếc (75.001-90.000) ➔ Tự tại (90.001-105.000)',
                     '<strong>Bước 7: Siêu Thoát, Niết Bàn (105.001+ DP)</strong>: Siêu thoát (105.001-150.000) ➔ Niết bàn (150.001+ DP)'
                 ],
-                action: { label: '🏆 Xem 21 Cảnh Giới & Khung Avatar', onClick: 'window._openRankShowcaseFromGuide()' }
+                stepsEn: [
+                    '<strong>Step 1: Unconscious (0 - 3,000 DP)</strong>: Ignorance (0-750) ➔ Delusion (751-1,500) ➔ Compromise (1,501-3,000)',
+                    '<strong>Step 2: Awakening (3,001 - 9,000 DP)</strong>: Collapse (3,001-4,500) ➔ Overthinking (4,501-6,500) ➔ Acceptance (6,501-9,000)',
+                    '<strong>Step 3: Order (9,001 - 19,500 DP)</strong>: Boundary (9,001-12,000) ➔ Independence (12,001-15,000) ➔ Discipline (15,001-19,500)',
+                    '<strong>Step 4: Accumulation (19,501 - 36,000 DP)</strong>: Mental Tempering (19,501-24,000) ➔ Patience (24,001-30,000) ➔ Perseverance (30,001-36,000)',
+                    '<strong>Step 5: Mastery (36,001 - 54,000 DP)</strong>: Focus (36,001-42,000) ➔ Flow (42,001-48,000) ➔ Intuition (48,001-54,000)',
+                    '<strong>Step 6: Metacognition (54,001 - 105,000 DP)</strong>: Letting Go (54,001-64,500) ➔ Equanimity (64,501-75,000) ➔ No Regrets (75,001-90,000) ➔ Self-Mastery (90,001-105,000)',
+                    '<strong>Step 7: Liberation & Nirvana (105,001+ DP)</strong>: Liberation (105,001-150,000) ➔ Nirvana (150,001+ DP)'
+                ],
+                stepsZh: [
+                    '<strong>第1阶：无意识（0 - 3,000 DP）</strong>：无明 (0-750) ➔ 执迷 (751-1,500) ➔ 妥协 (1,501-3,000)',
+                    '<strong>第2阶：觉醒（3,001 - 9,000 DP）</strong>：瓦解 (3,001-4,500) ➔ 过虑内耗 (4,501-6,500) ➔ 知缺 (6,501-9,000)',
+                    '<strong>第3阶：建立秩序（9,001 - 19,500 DP）</strong>：边界 (9,001-12,000) ➔ 独立 (12,001-15,000) ➔ 自律 (15,001-19,500)',
+                    '<strong>第4阶：沉淀积累（19,501 - 36,000 DP）</strong>：炼心 (19,501-24,000) ➔ 耐心 (24,001-30,000) ➔ 坚定 (30,001-36,000)',
+                    '<strong>第5阶：精通掌控（36,001 - 54,000 DP）</strong>：专注 (36,001-42,000) ➔ 心流 (42,001-48,000) ➔ 直觉 (48,001-54,000)',
+                    '<strong>第6阶：元认知（54,001 - 105,000 DP）</strong>：放下 (54,001-64,500) ➔ 泰然 (64,501-75,000) ➔ 无悔 (75,001-90,000) ➔ 自在 (90,001-105,000)',
+                    '<strong>第7阶：超脱涅槃（105,001+ DP）</strong>：超脱 (105,001-150,000) ➔ 涅槃 (150,001+ DP)'
+                ],
+                action: { 
+                    label: '🏆 Xem 21 Cảnh Giới & Khung Avatar', 
+                    labelEn: '🏆 View 21 Realms & Avatar Frames',
+                    labelZh: '🏆 查看21境界与头像框',
+                    onClick: 'window._openRankShowcaseFromGuide()' 
+                }
             },
             {
                 icon: '🖼️',
                 title: 'Khung Avatar Phát Sáng Độc Quyền',
+                titleEn: 'Exclusive Glowing Avatar Frames',
+                titleZh: '专属幻彩境界头像框',
                 badge: 'Thẩm Mỹ',
+                badgeEn: 'Aesthetics',
+                badgeZh: '境界荣耀',
                 steps: [
                     'Mỗi khi bạn vượt ngưỡng thăng cấp cảnh giới mới, hệ thống sẽ tự động mở khóa <strong>Khung Avatar tương ứng</strong>.',
                     'Khung avatar được thiết kế theo phong cách Lăng kính Ma pháp Neon cao cấp.',
                     'Bấm vào Avatar ở góc trên để mở Studio và tự do chuyển đổi giữa các khung đã mở khóa!'
                 ],
-                action: { label: '👤 Mở Hồ Sơ & Khung', onClick: 'closeGuideModal(); if(window._openProfile)window._openProfile();' }
+                stepsEn: [
+                    'Each time you cross into a new realm, your account unlocks the <strong>matching Avatar Frame</strong>.',
+                    'Frames feature handcrafted Neon Magic Prism visual shaders.',
+                    'Click your top avatar to open Studio and equip any unlocked frame!'
+                ],
+                stepsZh: [
+                    '每当您跨越门槛登临新境界，系统将自动解锁<strong>对应境界的专属头像框</strong>。',
+                    '头像框采用顶尖霓虹幻彩棱镜光效，尽显自律者荣耀。',
+                    '点击顶部头像进入头像工坊，随时切换已解锁的境界光环！'
+                ],
+                action: { 
+                    label: '👤 Mở Hồ Sơ & Khung', 
+                    labelEn: '👤 Open Profile & Frames',
+                    labelZh: '👤 进入个人档案与装扮',
+                    onClick: 'closeGuideModal(); if(window._openProfile)window._openProfile();' 
+                }
             }
         ],
-        tip: '⚡ <strong>Vé 2X Boost:</strong> Mua vé 2X Boost trong Cửa hàng để nhân đôi toàn bộ điểm DP nhận được trong vòng 24 giờ, giúp bứt phá cảnh giới thần tốc!'
+        tip: '⚡ <strong>Vé 2X Boost:</strong> Mua vé 2X Boost trong Cửa hàng để nhân đôi toàn bộ điểm DP nhận được trong vòng 24 giờ, giúp bứt phá cảnh giới thần tốc!',
+        tipEn: '⚡ <strong>2X Boost Pass:</strong> Grab a 2X Boost in the Shop to double all earned DP for 24 hours, skyrocketing through realms!',
+        tipZh: '⚡ <strong>双倍经验券：</strong> 在自律商店购买2X Boost道具，可在24小时内获得全额双倍自律点，助您飞速突破境界！'
     },
     pomodoro: {
         title: 'Trạm Tập Trung Sâu (Deep Work & Sound Mixer)',
+        titleEn: 'Deep Work Station & Sound Mixer',
+        titleZh: '深度工作专注站与多轨音效',
         desc: 'Đồng hồ Pomodoro kết hợp bộ hòa âm đa tầng 6 kênh âm thanh thiên nhiên & sóng não.',
+        descEn: 'Pomodoro timer integrated with 6-channel multilayer natural sounds & brainwaves.',
+        descZh: '科学番茄工作法结合六声道自然白噪音与脑波混音台。',
         icon: '⏱️',
         badge: 'Hiệu Suất',
+        badgeEn: 'Productivity',
+        badgeZh: '高效专注',
         heroTitle: 'Trạm Làm Việc Sâu Không Xao Nhãng',
+        heroTitleEn: 'Distraction-Free Deep Work Station',
+        heroTitleZh: '沉浸深度工作专注站',
         heroDesc: 'Áp dụng phương pháp Pomodoro chuẩn kết hợp bộ hòa âm Sound Mixer để đạt trạng thái Dòng Chảy (Flow State), làm việc hiệu quả gấp 3 lần.',
+        heroDescEn: 'Apply standard Pomodoro with 6-channel ambient sound mixer to enter Flow State and achieve 3x productivity.',
+        heroDescZh: '采用科学番茄工作法，搭配六声道环境音效混音台，轻松进入心流状态，专注效率倍增。',
         cards: [
             {
                 icon: '⏲️',
                 title: 'Chu Kỳ Hẹn Giờ Tiêu Chuẩn',
+                titleEn: 'Standard Pomodoro Cycles',
+                titleZh: '标准番茄钟节奏',
                 badge: '3 Chế Độ',
+                badgeEn: '3 Modes',
+                badgeZh: '3 种模式',
                 steps: [
                     '🚀 <strong>Focus (25 phút)</strong>: Tập trung cao độ 100% vào 1 nhiệm vụ duy nhất.',
                     '☕ <strong>Short Rest (5 phút)</strong>: Thư giãn ngắn, uống nước, giãn cơ.',
                     '🔋 <strong>Long Recharge (15 phút)</strong>: Nghỉ ngơi sâu sau khi hoàn thành 4 phiên tập trung.',
                     'Có thể gắn phiên tập trung với một thói quen cụ thể (VD: Đọc sách, Học tiếng Anh, Viết code...).'
+                ],
+                stepsEn: [
+                    '🚀 <strong>Focus (25 mins)</strong>: 100% deep concentration on a single task.',
+                    '☕ <strong>Short Rest (5 mins)</strong>: Quick break, stretch, drink water.',
+                    '🔋 <strong>Long Recharge (15 mins)</strong>: Deep recovery after completing 4 focus sessions.',
+                    'Optionally link focus sessions directly to a specific habit (Reading, Coding, Studying...).'
+                ],
+                stepsZh: [
+                    '🚀 <strong>深度专注（25分钟）</strong>：100%专注于单一重要任务。',
+                    '☕ <strong>短休放松（5分钟）</strong>：喝水、起身活动筋骨。',
+                    '🔋 <strong>长休充能（15分钟）</strong>：每完成4个番茄钟后进行一次深度放松。',
+                    '可将专注时段与具体习惯关联（如：背单词、阅读、写代码等）。'
                 ]
             },
             {
                 icon: '🎁',
                 title: 'Phần Thưởng Điểm Kỷ Luật DP',
+                titleEn: 'Discipline DP Point Rewards',
+                titleZh: '自律积分 DP 奖励',
                 badge: '+15 DP / Phiên',
+                badgeEn: '+15 DP / Session',
+                badgeZh: '+15 DP / 场',
                 steps: [
                     'Mỗi khi hoàn thành trọn vẹn 1 phiên 25 phút, hệ thống tặng ngay <strong>+15 DP</strong>.',
                     'Mỗi ngày bạn có thể nhận thưởng tối đa <strong>4 phiên (+60 DP)</strong>.',
                     'Sau 4 phiên, bạn vẫn có thể sử dụng đồng hồ và âm thanh không giới hạn để làm việc.'
+                ],
+                stepsEn: [
+                    'Every completed 25-minute session awards <strong>+15 DP</strong>.',
+                    'Earn bonuses for up to <strong>4 sessions per day (+60 DP)</strong>.',
+                    'Unlimited timer and sound mixer usage even after reaching the daily DP reward limit.'
+                ],
+                stepsZh: [
+                    '每完整完成一场 25 分钟专注，系统立即奖励 <strong>+15 DP</strong>。',
+                    '每日最多可获取 <strong>4 场奖励（共 +60 DP）</strong>。',
+                    '超出奖励场次后仍可无限次使用番茄钟与环境白噪音进行工作。'
                 ]
             },
             {
                 icon: '🎛️',
                 title: 'Bộ Hòa Âm Đa Tầng 6 Kênh (Sound Mixer)',
+                titleEn: '6-Channel Multilayer Sound Mixer',
+                titleZh: '六声道多层白噪音混音台',
                 badge: 'Âm Thanh',
+                badgeEn: 'Audio',
+                badgeZh: '环境音效',
                 steps: [
                     '🌧️ <strong>Mưa Rào (Rain)</strong>: Tiếng mưa rơi êm dịu gạt bỏ tiếng ồn.',
                     '🌊 <strong>Sóng Biển (Ocean)</strong>: Âm thanh đại dương nhịp nhàng thư thái.',
@@ -11769,216 +11985,534 @@ const GUIDE_SECTIONS = {
                     '🌲 <strong>Rừng Sâu (Forest)</strong>: Tiếng chim hót và gió rừng sinh động.',
                     '🧠 <strong>Binaural 40Hz (Brainwave)</strong>: Tần số Gamma kích hoạt trí nhớ và xử lý logic.',
                     '🎵 <strong>Lo-fi Chords</strong>: Hợp âm giai điệu trầm ấm, truyền cảm hứng sáng tạo.'
+                ],
+                stepsEn: [
+                    '🌧️ <strong>Rain</strong>: Gentle rainfall washing away background noise.',
+                    '🌊 <strong>Ocean</strong>: Rhythmic soothing ocean waves.',
+                    '🪵 <strong>Campfire</strong>: Warm crackling wood fire for comfort and peace.',
+                    '🌲 <strong>Forest</strong>: Lush wind and singing birds.',
+                    '🧠 <strong>Binaural 40Hz</strong>: Gamma frequency boosting memory and logic processing.',
+                    '🎵 <strong>Lo-fi Chords</strong>: Warm mellow chords inspiring deep creativity.'
+                ],
+                stepsZh: [
+                    '🌧️ <strong>夏日阵雨 (Rain)</strong>：绵密雨声消除环境杂音。',
+                    '🌊 <strong>静谧海浪 (Ocean)</strong>：舒缓有节奏的潮起潮落。',
+                    '🪵 <strong>篝火暖木 (Fire)</strong>：温馨柴火轻微爆裂声。',
+                    '🌲 <strong>幽谷深林 (Forest)</strong>：清风拂叶与鸟鸣幽静。',
+                    '🧠 <strong>40Hz脑电波 (Binaural)</strong>：Gamma波激活逻辑专注与记忆。',
+                    '🎵 <strong>Lo-fi 舒缓和弦</strong>：温润轻柔的低保真和弦，激发创造力。'
                 ]
             },
             {
                 icon: '⚡',
                 title: 'Gợi Ý Hòa Âm 1 Chạm (Presets)',
+                titleEn: '1-Tap Ambient Presets',
+                titleZh: '一键预设场景',
                 badge: 'Tiện Ích',
+                badgeEn: 'Presets',
+                badgeZh: '便捷预设',
                 steps: [
                     '☕ <strong>Cà Phê Mưa</strong>: Kết hợp Mưa Rào + Lo-fi Chords.',
                     '🌲 <strong>Rừng Sâu</strong>: Kết hợp Gió Rừng + Lửa Trại.',
                     '🚀 <strong>Deep Work 40Hz</strong>: Kết hợp Sóng Não 40Hz + Tiếng Mưa Rào.',
                     '🌊 <strong>Thiền Biển Đêm</strong>: Kết hợp Sóng Biển + Lo-fi nhẹ nhàng.'
                 ],
-                action: { label: '🎧 Mở Trạm Pomodoro', onClick: 'closeGuideModal(); if(window._openPomodoro)window._openPomodoro();' }
+                stepsEn: [
+                    '☕ <strong>Rainy Cafe</strong>: Rain + Lo-fi Chords.',
+                    '🌲 <strong>Deep Forest</strong>: Forest Wind + Campfire.',
+                    '🚀 <strong>Deep Work 40Hz</strong>: 40Hz Brainwave + Soft Rain.',
+                    '🌊 <strong>Night Meditation</strong>: Ocean Waves + Gentle Lo-fi.'
+                ],
+                stepsZh: [
+                    '☕ <strong>雨中咖啡馆</strong>：淅沥雨声 + Lo-fi 和弦。',
+                    '🌲 <strong>幽林夜营</strong>：森林微风 + 营火暖木。',
+                    '🚀 <strong>40Hz 深度心流</strong>：40Hz 脑电波 + 柔和雨声。',
+                    '🌊 <strong>夜海冥想</strong>：静谧海浪 + 舒缓氛围音。'
+                ],
+                action: { 
+                    label: '🎧 Mở Trạm Pomodoro', 
+                    labelEn: '🎧 Open Pomodoro Station',
+                    labelZh: '🎧 打开番茄钟',
+                    onClick: 'closeGuideModal(); if(window._openPomodoro)window._openPomodoro();' 
+                }
             }
         ],
-        tip: '🎧 <strong>Khuyên dùng:</strong> Hãy đeo tai nghe và bật Sóng não 40Hz ở mức 30-50% âm lượng kết hợp Mưa rào để loại bỏ 100% tiếng ồn xung quanh!'
+        tip: '🎧 <strong>Khuyên dùng:</strong> Hãy đeo tai nghe và bật Sóng não 40Hz ở mức 30-50% âm lượng kết hợp Mưa rào để loại bỏ 100% tiếng ồn xung quanh!',
+        tipEn: '🎧 <strong>Recommendation:</strong> Wear headphones, set 40Hz Brainwave to 30-50% volume and blend with Rain sound to eliminate 100% ambient distraction!',
+        tipZh: '🎧 <strong>推荐用法：</strong> 佩戴耳机，将40Hz脑电波音量调节至30-50%，与雨声混合播放，隔绝外界一切噪音！'
     },
     'squad-duel': {
         title: 'Tổ Đội Rèn Luyện & Đấu Trường Solo 1v1',
+        titleEn: 'Squad Guilds & 1v1 Duel Arena',
+        titleZh: '自律战队公会与 1V1 决斗擂台',
         desc: 'Cam kết kỷ luật xã hội (Social Accountability): Cùng tiến bộ với bạn bè và thách đấu leo rank.',
+        descEn: 'Social Accountability: Level up together with friends and challenge each other on ranks.',
+        descZh: '同伴监督见证机制：与好友携手并进，通过 1v1 对战激发突破潜力。',
         icon: '⚔️',
         badge: 'Đồng Đội',
+        badgeEn: 'Guild',
+        badgeZh: '战队对决',
         heroTitle: 'Đấu Trường Kỷ Luật & Bang Hội Rèn Luyện',
+        heroTitleEn: 'Discipline Arenas & Squad Guilds',
+        heroTitleZh: '战队公会与 1V1 决斗竞技场',
         heroDesc: 'Đi một mình bạn có thể đi nhanh, nhưng đi cùng đồng đội bạn sẽ đi xa. Tận dụng sức mạnh của cộng đồng và sự thi đua lành mạnh!',
+        heroDescEn: 'Go fast alone, go far together. Leverage social accountability and healthy competition!',
+        heroDescZh: '独行快，众行远。借助同伴见证与良性竞争，让自律不再孤独！',
         cards: [
             {
                 icon: '🛡️',
                 title: 'Tổ Đội Rèn Luyện (Squad Guild)',
+                titleEn: 'Discipline Squad Guild',
+                titleZh: '自律互助战队',
                 badge: 'Bang Hội',
+                badgeEn: 'Squad',
+                badgeZh: '战队公会',
                 steps: [
                     'Tạo tổ đội mới hoặc nhập Mã Tổ Đội để tham gia cùng bạn bè (tối đa 5-10 thành viên).',
                     '<strong>Phòng Chat Mật</strong>: Kênh nhắn tin nội bộ để động viên, nhắc nhở và chia sẻ tiến độ.',
                     '<strong>Quỹ Thưởng Chung</strong>: Khi tất cả thành viên cùng hoàn thành thói quen trong ngày, cả đội nhận thưởng lớn!'
+                ],
+                stepsEn: [
+                    'Create a squad or enter a Squad Code to team up with friends (up to 5-10 members).',
+                    '<strong>Private Chatroom</strong>: Dedicated channel to encourage, remind, and celebrate progress.',
+                    '<strong>Guild Reward Pot</strong>: When all members check in on the same day, everyone earns bonus rewards!'
+                ],
+                stepsZh: [
+                    '创建专属战队或输入战队邀请码与好友组队（最多5-10人）。',
+                    '<strong>战队私密频道</strong>：专属沟通互动区，相互提醒与打气。',
+                    '<strong>全员连击奖金池</strong>：当日全体队员全部完成打卡时，全队共享额外大奖！'
                 ]
             },
             {
                 icon: '⚔️',
                 title: 'Đấu Trường Solo 1v1 (Duel Arena)',
+                titleEn: '1v1 Duel Arena',
+                titleZh: '1V1 决斗擂台',
                 badge: 'Thách Đấu',
+                badgeEn: 'Duel',
+                badgeZh: '对决竞技',
                 steps: [
                     'Gửi lời mời thách đấu trực tiếp đến bạn bè qua Email/UID hoặc ghép đấu ngẫu nhiên.',
                     'Cả 2 bên cùng thống nhất đặt cược số DP (VD: 100 DP, 200 DP) trong thời hạn 3 ngày hoặc 7 ngày.',
                     'Hệ thống theo dõi tỷ lệ hoàn thành thói quen thực tế của cả 2 bên theo thời gian thực.',
                     'Hết thời hạn, người có tỷ lệ kỷ luật cao hơn sẽ ẵm trọn quỹ thưởng cược!'
                 ],
-                action: { label: '⚔️ Mở Tổ Đội & Thách Đấu', onClick: 'closeGuideModal(); if(window._openSquadHub)window._openSquadHub();' }
+                stepsEn: [
+                    'Challenge friends directly via UID/email or queue for random matchmaking.',
+                    'Both agree on a DP wager (e.g. 100 DP, 200 DP) over 3 or 7 days.',
+                    'Real-time tracking monitors actual habit completion percentage on both sides.',
+                    'When time expires, the fighter with higher discipline rate takes the entire wager pot!'
+                ],
+                stepsZh: [
+                    '通过 UID 或邮箱直接向好友下战书，或参与全服随机匹配。',
+                    '双方约定押注 DP（如 100 DP、200 DP），周期为 3 天或 7 天。',
+                    '系统实时追踪双方每日真实打卡率。',
+                    '期限截止时，完成率更高者通吃奖池内全部押注点数！'
+                ],
+                action: { 
+                    label: '⚔️ Mở Tổ Đội & Thách Đấu', 
+                    labelEn: '⚔️ Open Squads & Duels',
+                    labelZh: '⚔️ 进入战队与决斗',
+                    onClick: 'closeGuideModal(); if(window._openSquadHub)window._openSquadHub();' 
+                }
             }
         ],
-        tip: '🤝 <strong>Trách nhiệm kỷ luật:</strong> Nghiên cứu tâm lý học chứng minh rằng việc có một người bạn đồng hành theo dõi mục tiêu giúp tăng 95% tỷ lệ hoàn thành mục tiêu!'
+        tip: '🤝 <strong>Trách nhiệm kỷ luật:</strong> Nghiên cứu tâm lý học chứng minh rằng việc có một người bạn đồng hành theo dõi mục tiêu giúp tăng 95% tỷ lệ hoàn thành mục tiêu!',
+        tipEn: '🤝 <strong>Social Accountability:</strong> Psychological studies show that having a goal accountability partner increases completion rate by 95%!',
+        tipZh: '🤝 <strong>同伴监督效应：</strong> 心理学研究表明，拥有同伴监督能让目标达成率飙升 95%！'
     },
     'shop-coins': {
         title: 'Cửa Hàng DP, Rương Thần Bí & Đọc Sách',
+        titleEn: 'DP Shop, Mystery Chests & Library',
+        titleZh: '自律商城、神秘宝箱与心智藏书',
         desc: 'Hệ sinh thái Prism Nexus Coin: Mua sắm vật phẩm, mở khóa danh hiệu và đọc tài liệu tinh hoa.',
+        descEn: 'Prism Nexus Coin ecosystem: Buy items, unlock titles, and access curated master documents.',
+        descZh: '积分生态全貌：选购保护道具、解锁个性头衔并畅读高阶思维文献。',
         icon: '💎',
         badge: 'Kinh Tế',
+        badgeEn: 'Economy',
+        badgeZh: '商城系统',
         heroTitle: 'Cửa Hàng Kỷ Luật & Kho Tàng Tri Thức',
+        heroTitleEn: 'Discipline Shop & Wisdom Library',
+        heroTitleZh: '自律商城与心智精粹书库',
         heroDesc: 'Điểm Kỷ Luật DP (Prism Nexus Coin) bạn kiếm được mỗi ngày có giá trị quy đổi thành vật phẩm bảo hộ, rương báu và tài liệu phát triển bản thân.',
+        heroDescEn: 'Discipline Points (Prism Nexus Coin) earned daily can be redeemed for protection flasks, mystery chests, and personal development classics.',
+        heroDescZh: '每日自律获取的 DP 积分可自由兑换护盾道具、神秘宝箱以及精品自我提升文献。',
         cards: [
             {
                 icon: '🪙',
                 title: 'Cách Kiếm Prism Nexus Coin (DP)',
+                titleEn: 'How to Earn Coins (DP)',
+                titleZh: '如何获取自律积分 DP',
                 badge: 'Tích Lũy',
+                badgeEn: 'Earn',
+                badgeZh: '积分积累',
                 steps: [
                     'Check-in thói quen mỗi ngày: <strong>+10 DP</strong> / thói quen.',
                     'Hoàn thành Ngày Hoàn Hảo (Perfect Day): <strong>Thưởng thêm DP</strong>.',
                     'Hoàn thành phiên Deep Work 25p: <strong>+15 DP</strong>.',
                     'Làm nhiệm vụ hàng ngày, hàng tuần & thành tích: <strong>+50 đến +500 DP</strong>.',
                     'Đọc tài liệu tinh hoa: <strong>+20 DP</strong> / bài viết.'
+                ],
+                stepsEn: [
+                    'Daily habit check-in: <strong>+10 DP</strong> per habit.',
+                    'Perfect Day completion: <strong>Bonus DP</strong>.',
+                    'Complete 25m Deep Work session: <strong>+15 DP</strong>.',
+                    'Daily, weekly & achievement quests: <strong>+50 to +500 DP</strong>.',
+                    'Read wisdom library passages: <strong>+20 DP</strong> per chapter.'
+                ],
+                stepsZh: [
+                    '每日习惯打卡：每个习惯 <strong>+10 DP</strong>。',
+                    '完成完美之日（Perfect Day）：<strong>额外丰厚奖励</strong>。',
+                    '完成 25 分钟深度工作：<strong>+15 DP</strong>。',
+                    '完成日常、周常及里程碑成就任务：<strong>+50 至 +500 DP</strong>。',
+                    '在应用内阅读精品文献：每章 <strong>+20 DP</strong>。'
                 ]
             },
             {
                 icon: '🎁',
                 title: 'Rương Thần Bí (Mystery Chest)',
+                titleEn: 'Mystery Discipline Chest',
+                titleZh: '神秘自律宝箱',
                 badge: 'Vật Phẩm',
+                badgeEn: 'Items',
+                badgeZh: '开箱抽奖',
                 steps: [
                     'Mở rương may mắn với hiệu ứng 3D mở khóa thẻ bài công nghệ cực đẹp.',
                     'Cơ hội nhận ngẫu nhiên: Bình đóng băng chuỗi, Vé 2X Boost, Tiền vàng DP khủng, Danh hiệu phát sáng giới hạn.'
+                ],
+                stepsEn: [
+                    'Open mystery chests with rich 3D holographic opening animations.',
+                    'Random rewards include: Streak Freeze Flasks, 2X Boost Passes, big DP coins, and limited glowing titles.'
+                ],
+                stepsZh: [
+                    '开启炫酷 3D 悬浮卡牌开箱动效。',
+                    '随机掉落丰富大礼：连胜冻结瓶、双倍加速券、海量金币以及绝版发光头衔。'
                 ]
             },
             {
                 icon: '📖',
                 title: 'Kho Sách & Tài Liệu Tinh Hoa Tích Hợp',
+                titleEn: 'Built-in Wisdom & Classics Library',
+                titleZh: '内置心智精粹藏书阁',
                 badge: '+20 Coin',
+                badgeEn: '+20 Coins',
+                badgeZh: '+20 金币',
                 steps: [
                     'Tích hợp sẵn bộ tài liệu tinh tuyển: <em>Tuyệt mật nhân tính, Tâm lý học hành vi, Thói quen nguyên tử, Nghệ thuật tập trung...</em>',
                     'Trình đọc sách hiện đại: Tùy chỉnh cỡ chữ (A+/A-), chế độ đọc ban đêm, toàn màn hình.',
                     'Đọc xong nhấn <strong>✨ Xác Nhận Đã Đọc</strong> để nhận ngay <strong>+20 Coins</strong> thưởng!'
+                ],
+                stepsEn: [
+                    'Curated classics: <em>Human Nature Mastery, Behavioral Psychology, Atomic Habits, The Art of Focus...</em>',
+                    'Modern reader: Font resizing (A+/A-), night reading mode, full screen.',
+                    'Click <strong>✨ Confirm Read</strong> when finished to earn <strong>+20 Bonus Coins</strong>!'
+                ],
+                stepsZh: [
+                    '精选心智读物：<em>人性法则、行为心理学、原子习惯、专注力深度思考等...</em>',
+                    '现代电子书阅读器：支持字号调节 (A+/A-)、夜间护眼模式与全屏阅读。',
+                    '读完点击 <strong>✨ 确认读完</strong> 立即领取 <strong>+20 金币</strong> 奖励！'
                 ]
             },
             {
                 icon: '🎨',
                 title: 'Danh Hiệu Phát Sáng & Giao Diện Themes',
+                titleEn: 'Glowing Titles & Visual Themes',
+                titleZh: '发光专属头衔与个性主题',
                 badge: 'Cá Nhân Hóa',
+                badgeEn: 'Style',
+                badgeZh: '个性装扮',
                 steps: [
                     'Trang bị các danh hiệu danh giá hiển thị cạnh tên (VD: <em>Kẻ Hủy Diệt Trì Hoãn, Chiến Thần Kỷ Luật, Bất Khả Chiến Bại...</em>).',
                     'Đổi màu sắc giao diện theo sở thích: Dark Obsidian, Cyberpunk Neon, Sakura Hồng, Light Theme trang nhã.'
                 ],
-                action: { label: '🛒 Mở Cửa Hàng DP', onClick: 'closeGuideModal(); if(window._openShopModal)window._openShopModal();' }
+                stepsEn: [
+                    'Equip prestigious titles beside your name (e.g. <em>Procrastination Slayer, Discipline God, Invincible Warrior...</em>).',
+                    'Switch palette to your taste: Dark Obsidian, Cyberpunk Neon, Sakura Blossom, Elegant Light.'
+                ],
+                stepsZh: [
+                    '佩戴展示在名字旁的显赫头衔（如：<em>拖延症终结者、自律武圣、坚不可摧等...</em>）。',
+                    '随时切换专属视觉风格：黑曜暗夜、赛博霓虹、落樱粉白、极简明朗等。'
+                ],
+                action: { 
+                    label: '🛒 Mở Cửa Hàng DP', 
+                    labelEn: '🛒 Open DP Shop',
+                    labelZh: '🛒 前往自律商城',
+                    onClick: 'closeGuideModal(); if(window._openShopModal)window._openShopModal();' 
+                }
             }
         ],
-        tip: '📚 <strong>Thói quen đọc sách:</strong> Hãy tạo một thói quen "Đọc 1 bài tài liệu" mỗi ngày để vừa nâng cao hiểu biết vừa tích lũy coin mua vật phẩm bảo vệ chuỗi!'
+        tip: '📚 <strong>Thói quen đọc sách:</strong> Hãy tạo một thói quen "Đọc 1 bài tài liệu" mỗi ngày để vừa nâng cao hiểu biết vừa tích lũy coin mua vật phẩm bảo vệ chuỗi!',
+        tipEn: '📚 <strong>Reading Habit:</strong> Form a "Read 1 passage" habit daily to expand your mind while earning bonus coins for protection flasks!',
+        tipZh: '📚 <strong>阅读习惯：</strong> 每天建立一个“阅读1篇文章”的习惯，不仅提升认知，还能积攒金币储备防断火道具！'
     },
     'social-share': {
         title: 'Bảng Xếp Hạng, Khoe Thẻ Rank & Cộng Đồng',
+        titleEn: 'Leaderboard, Rank Share & Community',
+        titleZh: '全服排行榜、战绩分享与社群',
         desc: 'Vinh danh Top 50 toàn server, tạo ảnh thẻ Rank độ nét cao chia sẻ lên mạng xã hội.',
+        descEn: 'Server Top 50 Hall of Fame, HD Story card generator to share on social networks.',
+        descZh: '全服 Top 50 荣耀殿堂，一键导出高清 9:16 故事战绩卡晒出朋友圈。',
         icon: '🏆',
         badge: 'Lan Tỏa',
+        badgeEn: 'Social',
+        badgeZh: '社区分享',
         heroTitle: 'Bảng Vinh Danh & Lan Tỏa Động Lực',
+        heroTitleEn: 'Hall of Fame & Motivation Sharing',
+        heroTitleZh: '荣誉殿堂与自律分享',
         heroDesc: 'Kỷ luật là nguồn cảm hứng mạnh mẽ nhất. Khoe thành tích của bạn và tiếp thêm năng lượng tích cực cho những người xung quanh!',
+        heroDescEn: 'Discipline is the greatest inspiration. Share your achievements and energize everyone around you!',
+        heroDescZh: '自律是最强大的引力。展示您的努力成果，为身边的同行者注入满满正能量！',
         cards: [
             {
                 icon: '🏆',
                 title: 'Bảng Xếp Hạng Top 50 Toàn Server',
+                titleEn: 'Server-Wide Top 50 Leaderboard',
+                titleZh: '全服 Top 50 荣誉榜',
                 badge: 'Thi Đua',
+                badgeEn: 'Rankings',
+                badgeZh: '榜单荣耀',
                 steps: [
                     'Xếp hạng tự động dựa trên tổng Điểm Kỷ Luật DP và chuỗi Streak của người dùng thật.',
                     'Bục vinh quang dành cho Top 1 (Vương miện vàng), Top 2 (Bạc), Top 3 (Đồng).',
                     'Bấm nút <strong>❤️ / 👏 Kudos</strong> để gửi lời khen ngợi cổ vũ tinh thần cho các chiến binh khác.'
                 ],
-                action: { label: '🥇 Xem Bảng Xếp Hạng', onClick: 'closeGuideModal(); if(typeof openLeaderboardModal==="function")openLeaderboardModal();' }
+                stepsEn: [
+                    'Automated ranking based on total Discipline Points DP and verified continuous streaks.',
+                    'Podium honors for Top 1 (Gold Crown), Top 2 (Silver), Top 3 (Bronze).',
+                    'Send <strong>❤️ / 👏 Kudos</strong> to encourage and celebrate fellow habit warriors.'
+                ],
+                stepsZh: [
+                    '依据全服真实用户的自律点总积分与连续打卡天数实时动态排榜。',
+                    'Top 1（金冠之冠）、Top 2（银辉骑士）、Top 3（铜曜勇士）专属展台。',
+                    '随时点击 <strong>❤️ / 👏 点赞致敬</strong>，为排行榜上的自律强者喝彩鼓劲。'
+                ],
+                action: { 
+                    label: '🥇 Xem Bảng Xếp Hạng', 
+                    labelEn: '🥇 View Leaderboard',
+                    labelZh: '🥇 查看排行榜',
+                    onClick: 'closeGuideModal(); if(typeof openLeaderboardModal==="function")openLeaderboardModal();' 
+                }
             },
             {
                 icon: '📸',
                 title: 'Studio Khoe Thẻ Rank (Share Card Canvas)',
+                titleEn: 'Rank Share Card Studio (9:16 Canvas)',
+                titleZh: '排位战绩卡生成工坊 (Story 9:16)',
                 badge: 'Story 9:16',
+                badgeEn: 'Story 9:16',
+                badgeZh: '故事海报',
                 steps: [
                     'Hệ thống tự động vẽ thẻ thành tích cá nhân độ phân giải cao chuẩn Story 9:16 hoặc Vuông 1:1.',
                     'Hiển thị Avatar, Khung cảnh giới, Tên nhân vật, Cấp rank, Chuỗi Streak và Tổng DP.',
                     'Tùy chọn 3 phong cách nền nghệ thuật: <em>Cyberpunk, Gold Luxury, Sakura</em>.',
                     'Bấm <strong>📥 Tải Ảnh HD</strong> hoặc <strong>📋 Sao Chép Ảnh</strong> để đăng Story Facebook, Instagram, TikTok, Zalo!'
                 ],
-                action: { label: '🎨 Thử Tạo Thẻ Rank', onClick: 'closeGuideModal(); if(typeof openShareCardModal==="function")openShareCardModal();' }
+                stepsEn: [
+                    'Auto-renders high-definition 9:16 Story or 1:1 Square achievement cards.',
+                    'Displays Avatar, Realm Frame, User Name, Rank Step, Streak Count, and Total DP.',
+                    'Choose from 3 artistic themes: <em>Cyberpunk, Gold Luxury, Sakura</em>.',
+                    'Click <strong>📥 Download HD Image</strong> or <strong>📋 Copy Image</strong> to share on Facebook, Instagram, TikTok, or Zalo!'
+                ],
+                stepsZh: [
+                    '系统自动生成高清 9:16 快拍比例或 1:1 经典正方形战绩海报。',
+                    '完整呈现头像、境界光环、用户名、当前阶位、打卡天数与累计积分。',
+                    '内置3款主题风格：<em>赛博霓虹、耀金华彩、樱花幽香</em>。',
+                    '一键点击 <strong>📥 下载高清图片</strong> 或 <strong>📋 复制图片</strong>，即可晒出朋友圈与快拍！'
+                ],
+                action: { 
+                    label: '🎨 Thử Tạo Thẻ Rank', 
+                    labelEn: '🎨 Create Rank Card',
+                    labelZh: '🎨 制作战绩卡',
+                    onClick: 'closeGuideModal(); if(typeof openShareCardModal==="function")openShareCardModal();' 
+                }
             },
             {
                 icon: '💬',
                 title: 'Bảng Tin Cộng Đồng (Community Feed)',
+                titleEn: 'Community Feed',
+                titleZh: '自律者交流动态圈',
                 badge: 'Tương Tác',
+                badgeEn: 'Feed',
+                badgeZh: '动态互动',
                 steps: [
                     'Đăng bài viết chia sẻ suy nghĩ, kinh nghiệm rèn luyện hoặc mục tiêu mới.',
                     'Hỗ trợ đính kèm hình ảnh check-in và video thực tế.',
                     'Thả tim, bình luận và học hỏi bí quyết từ các thành viên xuất sắc.'
                 ],
-                action: { label: '🌐 Vào Bảng Tin Cộng Đồng', onClick: 'closeGuideModal(); if(typeof openCommunityModal==="function")openCommunityModal();' }
+                stepsEn: [
+                    'Publish posts sharing insights, discipline tips, or new goals.',
+                    'Attach check-in photos and media evidence.',
+                    'Like, comment, and learn from fellow outstanding achievers.'
+                ],
+                stepsZh: [
+                    '发布心得体会，交流打卡技巧或立下全新挑战目标。',
+                    '支持附加打卡实况截图与照片。',
+                    '点赞、评论互动，汲取同伴的优秀坚持方法。'
+                ],
+                action: { 
+                    label: '🌐 Vào Bảng Tin Cộng Đồng', 
+                    labelEn: '🌐 Open Community Feed',
+                    labelZh: '🌐 浏览社区动态',
+                    onClick: 'closeGuideModal(); if(typeof openCommunityModal==="function")openCommunityModal();' 
+                }
             },
             {
                 icon: '👥',
                 title: 'Nhóm Zalo Cộng Đồng & Hỗ Trợ Trực Tiếp',
+                titleEn: 'Community Group & Direct Support',
+                titleZh: '官方社群群聊与直通支持',
                 badge: 'Hỗ Trợ 1:1',
+                badgeEn: '1:1 Support',
+                badgeZh: '1对1支持',
                 steps: [
                     'Quét mã QR bên dưới để tham gia vào <strong>Nhóm Zalo Cộng Đồng Kỷ Luật Habit Mastery</strong>.',
                     'Để được <strong>hỗ trợ trực tiếp, giải đáp thắc mắc và nhận hỗ trợ kỹ thuật 1:1</strong> từ đội ngũ phát triển.',
                     'Giao lưu, kết nối bạn bè cùng rèn luyện thói quen mỗi ngày, chia sẻ kinh nghiệm và nhận các tài liệu độc quyền.',
                     '<div class="guide-zalo-box" style="text-align:center; padding:12px; background:rgba(0,0,0,0.25); border-radius:14px; border:1px solid rgba(16,185,129,0.25); margin-top:8px;"><img src="zalo-qr.png" alt="Mã QR Nhóm Zalo Cộng Đồng" style="width:160px; max-width:100%; height:auto; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.35); border:2px solid rgba(255,255,255,0.1);"><div style="font-size:12px; font-weight:700; color:var(--accent, #10b981); margin-top:8px;">📱 Quét Mã Bằng Zalo Để Tham Gia Nhóm Ngay</div></div>'
+                ],
+                stepsEn: [
+                    'Scan the QR code below to join the <strong>Official Habit Mastery Community Group</strong>.',
+                    'Receive <strong>direct assistance, answers to questions, and 1:1 technical support</strong> from the dev team.',
+                    'Connect with friends committed to daily discipline, share progress, and unlock exclusive materials.',
+                    '<div class="guide-zalo-box" style="text-align:center; padding:12px; background:rgba(0,0,0,0.25); border-radius:14px; border:1px solid rgba(16,185,129,0.25); margin-top:8px;"><img src="zalo-qr.png" alt="Official Community QR Code" style="width:160px; max-width:100%; height:auto; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.35); border:2px solid rgba(255,255,255,0.1);"><div style="font-size:12px; font-weight:700; color:var(--accent, #10b981); margin-top:8px;">📱 Scan with Zalo to Join the Community</div></div>'
+                ],
+                stepsZh: [
+                    '扫描下方二维码加入 <strong>Habit Mastery 官方自律社群</strong>。',
+                    '享受团队提供的<strong>使用答疑、建议反馈与 1 对 1 技术协助</strong>。',
+                    '结识一同精进自律的小伙伴，互励互助，获取独家精选资料。',
+                    '<div class="guide-zalo-box" style="text-align:center; padding:12px; background:rgba(0,0,0,0.25); border-radius:14px; border:1px solid rgba(16,185,129,0.25); margin-top:8px;"><img src="zalo-qr.png" alt="社群二维码" style="width:160px; max-width:100%; height:auto; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.35); border:2px solid rgba(255,255,255,0.1);"><div style="font-size:12px; font-weight:700; color:var(--accent, #10b981); margin-top:8px;">📱 扫码即可加入官方交流群</div></div>'
                 ]
             }
         ],
-        tip: '📸 <strong>Cộng đồng kỷ luật:</strong> Tham gia nhóm Zalo để được hỗ trợ trực tiếp 1:1 từ đội ngũ phát triển và cùng nhau rèn luyện kỷ luật mỗi ngày!'
+        tip: '📸 <strong>Cộng đồng kỷ luật:</strong> Tham gia nhóm Zalo để được hỗ trợ trực tiếp 1:1 từ đội ngũ phát triển và cùng nhau rèn luyện kỷ luật mỗi ngày!',
+        tipEn: '📸 <strong>Discipline Community:</strong> Join the official community to get 1:1 direct assistance from the development team!',
+        tipZh: '📸 <strong>官方社群：</strong> 加入官方社群交流群，不仅结识志同道合的战友，还能获取团队一对一技术答疑支持！'
     },
     'pwa-sync': {
         title: 'Cài App Màn Hình Chính & Sao Lưu Đám Mây',
+        titleEn: 'Install App & Cloud Sync',
+        titleZh: '安装至主屏幕与云端同步',
         desc: 'Hướng dẫn cài đặt Habit Mastery như ứng dụng Native trên iOS/Android/PC và an toàn dữ liệu.',
+        descEn: 'Install Habit Mastery as a native app on iOS, Android, PC with full cloud sync.',
+        descZh: '指引您在 iOS/Android/PC 上将应用安装至桌面，并享受云端自动同步。',
         icon: '📲',
         badge: 'Cài Đặt',
+        badgeEn: 'Install',
+        badgeZh: '客户端',
         heroTitle: 'Trải Nghiệm Mượt Mà & An Toàn Dữ Liệu',
+        heroTitleEn: 'Smooth Performance & Cloud Security',
+        heroTitleZh: '丝滑原生体验与云端安全',
         heroDesc: 'Habit Mastery là ứng dụng PWA (Progressive Web App) thế hệ mới — cài đặt trực tiếp không tốn bộ nhớ máy, hoạt động mượt mà 120Hz và tự động đồng bộ đám mây.',
+        heroDescEn: 'Habit Mastery is a modern Progressive Web App (PWA) — zero storage overhead, silky 120Hz responsiveness, and automatic cloud backup.',
+        heroDescZh: 'Habit Mastery 采用全新 PWA 技术架构 —— 无需占用庞大存储空间，支持 120Hz 丝滑交互并实时自动备份云端。',
         cards: [
             {
                 icon: '🍏',
                 title: 'Cài Đặt Trên iPhone & iPad (iOS Safari)',
+                titleEn: 'Install on iPhone & iPad (iOS Safari)',
+                titleZh: '在 iPhone 与 iPad 上安装（iOS Safari）',
                 badge: 'iPhone',
+                badgeEn: 'iPhone',
+                badgeZh: 'iPhone',
                 steps: [
                     '1. Mở trang web <strong>https://habit-mastery.com</strong> bằng trình duyệt <strong>Safari</strong>.',
                     '2. Bấm vào nút <strong>Chia Sẻ (Biểu tượng ô vuông có mũi tên hướng lên)</strong> ở thanh dưới cùng của Safari.',
                     '3. Cuộn xuống và chọn mục <strong>"Thêm vào Màn hình chính" (Add to Home Screen)</strong>.',
                     '4. Bấm <strong>"Thêm" (Add)</strong> ở góc trên bên phải. Biểu tượng Habit Mastery sẽ xuất hiện trên màn hình như app gốc!'
+                ],
+                stepsEn: [
+                    '1. Open <strong>https://habit-mastery.com</strong> in <strong>Safari</strong>.',
+                    '2. Tap the <strong>Share button (square icon with upward arrow)</strong> at the bottom bar of Safari.',
+                    '3. Scroll down and select <strong>"Add to Home Screen"</strong>.',
+                    '4. Tap <strong>"Add"</strong> in the top right corner. The Habit Mastery icon will appear on your Home Screen just like a native app!'
+                ],
+                stepsZh: [
+                    '1. 使用 <strong>Safari 浏览器</strong>打开 <strong>https://habit-mastery.com</strong>。',
+                    '2. 点击底部工具栏正中间的<strong>分享按钮（带向上箭头的方框）</strong>。',
+                    '3. 向下滚动菜单，点击 <strong>“添加到主屏幕” (Add to Home Screen)</strong>。',
+                    '4. 点击右上角的 <strong>“添加”</strong>。应用图标即刻出现在您的主屏幕上！'
                 ]
             },
             {
                 icon: '🤖',
                 title: 'Cài Đặt Trên Điện Thoại Android (Google Chrome)',
+                titleEn: 'Install on Android (Google Chrome)',
+                titleZh: '在 Android 安卓手机上安装（Google Chrome）',
                 badge: 'Android',
+                badgeEn: 'Android',
+                badgeZh: 'Android',
                 steps: [
                     '1. Mở trang web <strong>https://habit-mastery.com</strong> bằng <strong>Chrome</strong>.',
                     '2. Bấm vào biểu tượng <strong>3 chấm dọc (⋮)</strong> ở góc trên bên phải.',
                     '3. Chọn <strong>"Cài đặt ứng dụng"</strong> hoặc <strong>"Thêm vào Màn hình chính"</strong>.',
                     '4. Bấm <strong>"Cài đặt"</strong> để hoàn tất.'
+                ],
+                stepsEn: [
+                    '1. Open <strong>https://habit-mastery.com</strong> in <strong>Chrome</strong>.',
+                    '2. Tap the <strong>3 vertical dots (⋮)</strong> in the top right corner.',
+                    '3. Select <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.',
+                    '4. Tap <strong>"Install"</strong> to finish.'
+                ],
+                stepsZh: [
+                    '1. 使用 <strong>Google Chrome 浏览器</strong>访问 <strong>https://habit-mastery.com</strong>。',
+                    '2. 点击右上角的<strong>三点更多菜单 (⋮)</strong>。',
+                    '3. 选择 <strong>“安装应用”</strong> 或 <strong>“添加到主屏幕”</strong>。',
+                    '4. 确认点击 <strong>“安装”</strong> 即可。'
                 ]
             },
             {
                 icon: '💻',
                 title: 'Cài Đặt Trên Máy Tính (Windows / Mac)',
+                titleEn: 'Install on Desktop (Windows / Mac)',
+                titleZh: '在电脑端独立窗口运行（Windows / Mac）',
                 badge: 'PC / Mac',
+                badgeEn: 'PC / Mac',
+                badgeZh: '电脑版',
                 steps: [
                     'Mở Chrome hoặc Microsoft Edge trên máy tính.',
                     'Nhìn vào góc phải thanh nhập địa chỉ URL, bấm vào biểu tượng <strong>Cài đặt (Install Habit Mastery)</strong>.',
                     'Ứng dụng sẽ mở trong cửa sổ độc lập cực kỳ tiện lợi.'
+                ],
+                stepsEn: [
+                    'Open Chrome or Microsoft Edge on your computer.',
+                    'Look at the right side of the address bar and click the <strong>Install (Install Habit Mastery)</strong> icon.',
+                    'The app will launch in an independent, distraction-free desktop window.'
+                ],
+                stepsZh: [
+                    '在电脑上使用 Chrome 或 Microsoft Edge 浏览器访问。',
+                    '查看地址栏右侧，点击<strong>“安装应用”(Install Habit Mastery) 图标</strong>。',
+                    '即可作为独立免扰窗口启动，支持固定至任务栏。'
                 ]
             },
             {
                 icon: '☁️',
                 title: 'Đồng Bộ Đám Mây & Xuất Sao Lưu Dự Phòng',
+                titleEn: 'Cloud Sync & Data Backup',
+                titleZh: '实时云端同步与数据安全导出',
                 badge: 'Sao Lưu',
+                badgeEn: 'Cloud Backup',
+                badgeZh: '数据备份',
                 steps: [
                     '<strong>Đồng bộ Realtime</strong>: Mọi thói quen và điểm số được lưu tức thì vào tài khoản Google / Email của bạn trên Cloud Firestore.',
                     '<strong>Đổi thiết bị</strong>: Chỉ cần đăng nhập trên máy mới là dữ liệu hiển thị đầy đủ ngay lập tức.',
                     '<strong>Xuất Sao Lưu (Export)</strong>: Vào Menu Khám phá ➔ Bấm <strong>Xuất Sao Lưu</strong> để tải file dữ liệu JSON về máy cất giữ.'
+                ],
+                stepsEn: [
+                    '<strong>Real-time Sync</strong>: All habits, check-ins, and scores save instantly to your account on Cloud Firestore.',
+                    '<strong>Switch Devices</strong>: Simply log in on any device to restore your complete data seamlessly.',
+                    '<strong>Data Export</strong>: Open the More Menu ➔ Click <strong>Export Backup</strong> to download a portable JSON file of your entire database.'
+                ],
+                stepsZh: [
+                    '<strong>实时云端同步</strong>：所有习惯与打卡积分实时存储于云端 Firestore 数据库中。',
+                    '<strong>跨设备无缝漫游</strong>：无论更换手机还是电脑，登录账号即可秒级恢复完整数据。',
+                    '<strong>本地导出备份</strong>：进入更多菜单 ➔ 点击<strong>“导出备份”</strong>可随时将完整数据导出为 JSON 文件存储。'
                 ]
             }
         ],
-        tip: '✨ <strong>Trải nghiệm tốt nhất:</strong> Khi cài lên Màn hình chính, ứng dụng sẽ chạy ở chế độ Toàn màn hình (Full Screen), ẩn thanh địa chỉ trình duyệt giúp thao tác nhanh và mượt mà hơn rất nhiều!'
+        tip: '✨ <strong>Trải nghiệm tốt nhất:</strong> Khi cài lên Màn hình chính, ứng dụng sẽ chạy ở chế độ Toàn màn hình (Full Screen), ẩn thanh địa chỉ trình duyệt giúp thao tác nhanh và mượt mà hơn rất nhiều!',
+        tipEn: '✨ <strong>Best Experience:</strong> When installed on your Home Screen, the app runs in Full Screen mode without browser address bars for maximum speed!',
+        tipZh: '✨ <strong>最佳使用建议：</strong> 添加至主屏幕后，应用将以沉浸式全屏模式启动，隐藏浏览器地址栏，交互体验比肩原生 App！'
     }
 };
 
@@ -11998,7 +12532,7 @@ function renderGuideContent(tabKey) {
     
     curGuideTab = tabKey || 'quickstart';
     const data = GUIDE_SECTIONS[curGuideTab] || GUIDE_SECTIONS.quickstart;
-    const lang = getAppLanguage();
+    const lang = typeof getAppLanguage === 'function' ? getAppLanguage() : (typeof curLang !== 'undefined' ? curLang : 'vi');
 
     const heroTitle = lang === 'en' ? (data.heroTitleEn || data.heroTitle) : (lang === 'zh' ? (data.heroTitleZh || data.heroTitle) : data.heroTitle);
     const heroDesc = lang === 'en' ? (data.heroDescEn || data.heroDesc) : (lang === 'zh' ? (data.heroDescZh || data.heroDesc) : data.heroDesc);
@@ -12022,7 +12556,7 @@ function renderGuideContent(tabKey) {
                                 ${cBadge ? `<span class="guide-card-badge">${cBadge}</span>` : ''}
                             </div>
                             <div class="guide-steps">
-                                ${cSteps.map((st, idx) => `
+                                ${(cSteps || []).map((st, idx) => `
                                     <div class="guide-step-item">
                                         <span class="guide-step-num">${idx + 1}</span>
                                         <div>${st}</div>
