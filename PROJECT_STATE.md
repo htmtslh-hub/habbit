@@ -587,3 +587,12 @@ nên hai đường không giẫm lên nhau.
     - **Gộp bản trùng lặp**: `wrapEmailTemplate` trước đó tồn tại **2 bản giống hệt nhau** ở `api/send-email.js` và `api/_lib/emailCore.js` (đã kiểm tra: giống nhau từng ký tự, 3.863 ký tự). Nếu chỉ sửa 1 bên thì email cron nhắc nhở và email admin gửi tay sẽ lệch thiết kế theo thời gian. Đã xoá bản trong `send-email.js`, thay bằng `require("./_lib/emailCore")` — nay chỉ còn **một nguồn duy nhất**.
     - **Đồng bộ khung xem trước trong admin**: `admin.css` vẫn để mockup xem trước theo bản tối cũ, tức admin **xem một đằng nhưng gửi đi một nẻo**. Đã chỉnh 13 khối CSS (`.mockup-scroll-viewport`, `.email-branded-template`, `.email-tpl-*`, `.highlight-box`, `.gold-box`) khớp đúng email thật.
     - **Verify tương phản (đo thật bằng Playwright trên HTML email đã render, không ước lượng)**: chữ thân bài **10,31:1**, tiêu đề **17,34:1**, khung xanh **8,01:1**, khung vàng **6,84:1**, chân trang **4,67:1** — tất cả vượt chuẩn AA (4,5:1). **Bắt được 1 lỗi trong quá trình đo**: nút CTA nền `#059669` với chữ trắng chỉ đạt **3,77:1 — KHÔNG đạt chuẩn**; đã đổi sang `#047857` (**5,48:1**). Đây là lỗi mà nhìn bằng mắt rất khó phát hiện vì nút trông vẫn "khá rõ".
+
+19. ✅ **[ĐÃ XONG 16/09/2026] Triển khai bản cập nhật Auth Redesign & Đa ngôn ngữ (v5.13.8) lên Firebase Hosting & Vercel**
+    - **Nâng cấp giao diện Auth**: Thiết kế lại toàn diện trang `auth.html`, `auth.css`, `auth.js` với giao diện thẻ hiện đại, hiệu ứng Orbital Accent Rings, nút gạt 3 ngôn ngữ mượt mà (VI ⟷ EN ⟷ ZH), modal cẩm nang hướng dẫn sử dụng, modal quên mật khẩu và showcase 4 Trụ Cột Kỷ Luật.
+    - **Đồng bộ Service Worker**: Bump `CACHE_VERSION = '5.13.8'` trong `sw.js`.
+    - **Đồng bộ Git & Vercel**: Commit và push toàn bộ lên GitHub `origin main` (bao gồm các tính năng affiliate, dịch cẩm nang hướng dẫn, và auth redesign). Vercel Production tự động deploy hoàn tất (`● Ready`).
+    - **Triển khai Firebase Hosting**: Chạy `firebase deploy --only hosting --project sonnhai-2600f` thành công cho cả 2 site `habitmastery` và `sonnhai-2600f`.
+    - **Dọn dẹp bản deploy**: Chạy `node scripts/prune-hosting-versions.js --delete` giải phóng phiên bản cũ, duy trì quota lưu trữ chỉ ~0.02 GB / 10 GB.
+    - **Verify live**: Cả domain chuẩn `https://habit-mastery.com`, `https://sonnhai-2600f.web.app` và `https://habbit-opal.vercel.app/auth` đều trả `HTTP 200 OK`.
+
