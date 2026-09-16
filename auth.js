@@ -23,9 +23,12 @@ const API_BASE = window.location.hostname.endsWith('.vercel.app')
     : 'https://habbit-opal.vercel.app/api';
 
 // Register additional UI translations for the redesigned layout
-if (window.I18N && window.I18N.registerTranslations) {
-    window.I18N.registerTranslations('vi', {
-        app_nav_title: "Habit Mastery • Mobile App Experience",
+(function(){
+    const i18n = window.I18N || window.i18n;
+    if (!i18n || !i18n.registerTranslations) return;
+
+    i18n.registerTranslations('vi', {
+        app_nav_title: "Habit Mastery • Trải nghiệm Mobile App",
         auth_card_title_login: "Đăng nhập",
         auth_card_title_register: "Đăng ký",
         auth_card_sub_login: "Chào mừng bạn trở lại! Tiếp tục hành trình rèn luyện",
@@ -47,13 +50,28 @@ if (window.I18N && window.I18N.registerTranslations) {
         exp_card4_desc: "Tổ đội Squads 3-5 người cam kết, bảng xếp hạng vinh danh & kết nối chiến hữu Zalo",
         exp_book_title: "📖 Khám phá Cẩm nang 4 Trụ Cột Kỷ Luật",
         exp_btn_continue: "Bắt đầu trải nghiệm ngay",
+        util_desktop_app: "💻 Desktop App",
+        util_pricing: "💎 Bảng giá",
+        util_zalo_group: "Nhóm Zalo",
+        showcase_social_label: "Cộng Đồng Kỷ Luật",
+        showcase_zalo_pill_text: "Cộng đồng Zalo: <strong>Habit Mastery</strong> ↗",
+        book_modal_title: "4 Trụ Cột Giữ Chân Người Dùng",
+        book_modal_sub: "Hệ sinh thái rèn luyện kỷ luật gây nghiện lành mạnh của Habit Mastery",
+        book_modal_p1: "<strong style=\"color:#ffffff;\">👑 1. Hệ Thống Cảnh Giới (21 Bậc Thang Tâm Thức):</strong><br>Biến kỷ luật thành hành trình tu luyện: tích lũy điểm DP, duy trì chuỗi Streak rực lửa, thăng cấp từ Vô Minh đến Siêu Thoát Niết Bàn và mở khóa Khung Avatar danh giá.",
+        book_modal_p2: "<strong style=\"color:#ffffff;\">📚 2. Hệ Thống Tài Liệu (Thư Viện Tâm Pháp Tri Thức):</strong><br>Kho tàng tài liệu rèn luyện, triết lý Khắc Kỷ (Stoicism), tâm lý học hành vi và tóm tắt sách tinh hoa giúp củng cố nhận thức gốc rễ.",
+        book_modal_p3: "<strong style=\"color:#ffffff;\">🎧 3. Hệ Thống Tập Trung (Không Gian Deep Work & Flow):</strong><br>Bộ đếm Pomodoro chuyên sâu tích hợp Sound Mixer âm thanh đa tầng (tiếng mưa, sóng não Alpha, lửa trại) giúp đập tan xao nhãng tức thì.",
+        book_modal_p4: "<strong style=\"color:#ffffff;\">🛡️ 4. Hệ Thống Cộng Đồng (Tổ Đội & Trách Nhiệm Xã Hội):</strong><br>Thách đấu chuỗi ngày, lập tổ đội Squads 3-5 người cùng cam kết, bảng xếp hạng vinh danh và cộng đồng Zalo đồng hành mỗi ngày.",
+        book_modal_blog_btn: "Khám phá Blog ↗",
+        book_modal_understand_btn: "Đã hiểu",
+        download_modal_title: "💻 Tải Ứng Dụng Habit Mastery Cho Máy Tính",
         forgot_modal_title: "Khôi phục mật khẩu",
         forgot_modal_desc: "Nhập email tài khoản của bạn để nhận liên kết đặt lại mật khẩu an toàn.",
         btn_send_reset: "Gửi email khôi phục",
         msg_reset_sent: "Đã gửi email khôi phục mật khẩu! Vui lòng kiểm tra hộp thư đến của bạn."
     });
-    window.I18N.registerTranslations('en', {
-        app_nav_title: "Mobile App UX/UI Design",
+
+    i18n.registerTranslations('en', {
+        app_nav_title: "Habit Mastery • Mobile App Experience",
         auth_card_title_login: "Sign In",
         auth_card_title_register: "Sign Up",
         auth_card_sub_login: "Welcome back! Continue your journey",
@@ -75,12 +93,27 @@ if (window.I18N && window.I18N.registerTranslations) {
         exp_card4_desc: "Accountability squads, real-time leaderboard duels & active community support",
         exp_book_title: "📖 Explore the 4 Pillars of Discipline Guide",
         exp_btn_continue: "Start Your Journey",
+        util_desktop_app: "💻 Desktop App",
+        util_pricing: "💎 Pricing",
+        util_zalo_group: "Zalo Group",
+        showcase_social_label: "Mastery Community",
+        showcase_zalo_pill_text: "Zalo Community: <strong>Habit Mastery</strong> ↗",
+        book_modal_title: "4 Core Retention Pillars",
+        book_modal_sub: "Habit Mastery's healthy, habit-building mastery ecosystem",
+        book_modal_p1: "<strong style=\"color:#ffffff;\">👑 1. Realm Evolution System (21 Consciousness Stages):</strong><br>Transform daily discipline into spiritual ascension: accumulate DP, maintain unbroken streaks, evolve from Ignorance to Nirvana, and unlock mythic avatar frames.",
+        book_modal_p2: "<strong style=\"color:#ffffff;\">📚 2. Knowledge Library (Stoic Wisdom):</strong><br>Curated deep-discipline books, Stoic philosophies, behavioral psychology, and master summaries to solidify mental clarity.",
+        book_modal_p3: "<strong style=\"color:#ffffff;\">🎧 3. Deep Focus & Flow Space:</strong><br>Dedicated Pomodoro timer with layered binaural sound mixer (rain, alpha brainwaves, campfire) for instant flow state.",
+        book_modal_p4: "<strong style=\"color:#ffffff;\">🛡️ 4. Community & Squads (Peer Accountability):</strong><br>Streak challenges, 3-5 member mutual squads, honor leaderboards, and daily companion community.",
+        book_modal_blog_btn: "Explore Blog ↗",
+        book_modal_understand_btn: "Got it",
+        download_modal_title: "💻 Download Habit Mastery Desktop App",
         forgot_modal_title: "Reset Password",
         forgot_modal_desc: "Enter your registered email address to receive a secure password reset link.",
         btn_send_reset: "Send Reset Link",
         msg_reset_sent: "Password reset email sent! Please check your inbox."
     });
-    window.I18N.registerTranslations('zh', {
+
+    i18n.registerTranslations('zh', {
         app_nav_title: "Habit Mastery • 移动应用体验",
         auth_card_title_login: "登录",
         auth_card_title_register: "注册",
@@ -103,12 +136,26 @@ if (window.I18N && window.I18N.registerTranslations) {
         exp_card4_desc: "3-5人互助同盟战队、荣耀排行榜与同行自律圈子",
         exp_book_title: "📖 探索四大自律支柱指南",
         exp_btn_continue: "立即体验",
+        util_desktop_app: "💻 桌面端应用",
+        util_pricing: "💎 价格方案",
+        util_zalo_group: "Zalo 社群",
+        showcase_social_label: "自律社群同盟",
+        showcase_zalo_pill_text: "Zalo 社群: <strong>Habit Mastery</strong> ↗",
+        book_modal_title: "四大自律留存基石",
+        book_modal_sub: "Habit Mastery 科学高效的良性自律成长生态",
+        book_modal_p1: "<strong style=\"color:#ffffff;\">👑 1. 境界修炼体系（21重意识层级）：</strong><br>将日常自律升华为修行之旅：积累DP积分、保持不熄连击、自无明进阶至涅槃，并解锁专属神话头像框。",
+        book_modal_p2: "<strong style=\"color:#ffffff;\">📚 2. 智慧知识文库（斯多葛心法）：</strong><br>精选自律典籍、斯多葛哲学、行为心理学与大师级精华书单，筑牢底层认知基石。",
+        book_modal_p3: "<strong style=\"color:#ffffff;\">🎧 3. 深度专注空间（心流工作区）：</strong><br>沉浸式番茄钟集成多轨自然音效混音器（雨声、Alpha脑波、篝火），瞬间击碎分心。",
+        book_modal_p4: "<strong style=\"color:#ffffff;\">🛡️ 4. 战队与社群（同盟互督体系）：</strong><br>连击PK挑战、3-5人互助战队同盟、荣耀天梯榜及自律同路人每日陪伴。",
+        book_modal_blog_btn: "浏览博客 ↗",
+        book_modal_understand_btn: "知道了",
+        download_modal_title: "💻 下载 Habit Mastery 电脑桌面版",
         forgot_modal_title: "找回密码",
         forgot_modal_desc: "请输入您的注册邮箱，我们将发送重置密码的邮件链接。",
         btn_send_reset: "发送重置邮件",
         msg_reset_sent: "密码重置邮件已发送！请查收您的电子邮箱。"
     });
-}
+})();
 
 // Flag to prevent redirect during OTP credential-check
 let _otpInProgress = false;
@@ -480,10 +527,23 @@ function initTabs(){
         if (tabRegister) tabRegister.classList.remove('active');
         if (loginForm) loginForm.style.display = '';
         if (registerForm) registerForm.style.display = 'none';
-        if (authHeaderTitle) authHeaderTitle.textContent = (window.I18N ? window.I18N.t('auth_card_title_login') : 'Log In');
-        if (authHeaderSub) authHeaderSub.textContent = (window.I18N ? window.I18N.t('auth_card_sub_login') : 'Welcome back! Continue your journey');
-        if (authSwitchPrompt) authSwitchPrompt.textContent = (window.I18N ? window.I18N.t('dont_have_account') : "Don't have an account?");
-        if (authSwitchAction) authSwitchAction.textContent = (window.I18N ? window.I18N.t('link_register') : 'Sign Up');
+        const i18n = window.I18N || window.i18n;
+        if (authHeaderTitle) {
+            authHeaderTitle.setAttribute('data-i18n', 'auth_card_title_login');
+            authHeaderTitle.textContent = (i18n && typeof i18n.t === 'function' ? i18n.t('auth_card_title_login') : 'Log In');
+        }
+        if (authHeaderSub) {
+            authHeaderSub.setAttribute('data-i18n', 'auth_card_sub_login');
+            authHeaderSub.textContent = (i18n && typeof i18n.t === 'function' ? i18n.t('auth_card_sub_login') : 'Welcome back! Continue your journey');
+        }
+        if (authSwitchPrompt) {
+            authSwitchPrompt.setAttribute('data-i18n', 'dont_have_account');
+            authSwitchPrompt.textContent = (i18n && typeof i18n.t === 'function' ? i18n.t('dont_have_account') : "Don't have an account?");
+        }
+        if (authSwitchAction) {
+            authSwitchAction.setAttribute('data-i18n', 'link_register');
+            authSwitchAction.textContent = (i18n && typeof i18n.t === 'function' ? i18n.t('link_register') : 'Sign Up');
+        }
         hideMessages();
     }
 
@@ -492,12 +552,28 @@ function initTabs(){
         if (tabLogin) tabLogin.classList.remove('active');
         if (registerForm) registerForm.style.display = '';
         if (loginForm) loginForm.style.display = 'none';
-        if (authHeaderTitle) authHeaderTitle.textContent = (window.I18N ? window.I18N.t('auth_card_title_register') : 'Sign Up');
-        if (authHeaderSub) authHeaderSub.textContent = (window.I18N ? window.I18N.t('auth_card_sub_register') : 'Create an account to continue');
-        if (authSwitchPrompt) authSwitchPrompt.textContent = (window.I18N ? window.I18N.t('already_have_account') : 'Already have an account?');
-        if (authSwitchAction) authSwitchAction.textContent = (window.I18N ? window.I18N.t('link_login') : 'Log In');
+        const i18n = window.I18N || window.i18n;
+        if (authHeaderTitle) {
+            authHeaderTitle.setAttribute('data-i18n', 'auth_card_title_register');
+            authHeaderTitle.textContent = (i18n && typeof i18n.t === 'function' ? i18n.t('auth_card_title_register') : 'Sign Up');
+        }
+        if (authHeaderSub) {
+            authHeaderSub.setAttribute('data-i18n', 'auth_card_sub_register');
+            authHeaderSub.textContent = (i18n && typeof i18n.t === 'function' ? i18n.t('auth_card_sub_register') : 'Create an account to continue');
+        }
+        if (authSwitchPrompt) {
+            authSwitchPrompt.setAttribute('data-i18n', 'already_have_account');
+            authSwitchPrompt.textContent = (i18n && typeof i18n.t === 'function' ? i18n.t('already_have_account') : 'Already have an account?');
+        }
+        if (authSwitchAction) {
+            authSwitchAction.setAttribute('data-i18n', 'link_login');
+            authSwitchAction.textContent = (i18n && typeof i18n.t === 'function' ? i18n.t('link_login') : 'Log In');
+        }
         hideMessages();
     }
+
+    window.switchToLogin = switchToLogin;
+    window.switchToRegister = switchToRegister;
 
     if (tabLogin) tabLogin.onclick = switchToLogin;
     if (tabRegister) tabRegister.onclick = switchToRegister;
@@ -519,6 +595,18 @@ function initTabs(){
             switchToRegister();
         }
     });
+
+    // Check initial tab from URL query or hash
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('tab') === 'login' || window.location.hash === '#login') {
+            switchToLogin();
+        } else {
+            switchToRegister();
+        }
+    } catch (e) {
+        switchToRegister();
+    }
 }
 
 // ===== PASSWORD TOGGLE =====
@@ -1475,8 +1563,13 @@ function initLangToggleSwitch() {
     const switchBtn = document.getElementById('authLangSwitch');
     if (!switchBtn) return;
 
+    function getI18n() {
+        return window.I18N || window.i18n;
+    }
+
     function syncSwitchUI(lang) {
-        const current = lang || (window.i18n ? window.i18n.getLanguage() : null) || localStorage.getItem('hm_language') || 'vi';
+        const i18n = getI18n();
+        const current = lang || (i18n && typeof i18n.getLanguage === 'function' ? i18n.getLanguage() : null) || localStorage.getItem('hm_app_lang') || localStorage.getItem('hm_language') || 'vi';
         const validLang = ['vi', 'en', 'zh'].includes(current) ? current : 'vi';
         switchBtn.setAttribute('data-active', validLang);
         switchBtn.setAttribute('aria-label', `Ngôn ngữ hiện tại: ${validLang.toUpperCase()}`);
@@ -1496,7 +1589,8 @@ function initLangToggleSwitch() {
     switchBtn.addEventListener('click', (e) => {
         e.preventDefault();
         const slot = e.target.closest('.toggle-slot');
-        const current = (window.i18n ? window.i18n.getLanguage() : null) || localStorage.getItem('hm_language') || 'vi';
+        const i18n = getI18n();
+        const current = (i18n && typeof i18n.getLanguage === 'function' ? i18n.getLanguage() : null) || localStorage.getItem('hm_app_lang') || localStorage.getItem('hm_language') || 'vi';
         const langs = ['vi', 'en', 'zh'];
         
         let nextLang;
@@ -1507,9 +1601,10 @@ function initLangToggleSwitch() {
             nextLang = langs[(currentIdx + 1) % langs.length];
         }
 
-        if (window.i18n && window.i18n.setLanguage) {
-            window.i18n.setLanguage(nextLang);
+        if (i18n && typeof i18n.setLanguage === 'function') {
+            i18n.setLanguage(nextLang);
         } else {
+            localStorage.setItem('hm_app_lang', nextLang);
             localStorage.setItem('hm_language', nextLang);
             syncSwitchUI(nextLang);
         }
@@ -1517,12 +1612,16 @@ function initLangToggleSwitch() {
 
     // Lắng nghe sự kiện chuyển ngôn ngữ toàn cục từ i18n.js
     window.addEventListener('hmLanguageChanged', (e) => {
-        syncSwitchUI(e.detail && e.detail.lang);
+        const lang = e.detail && e.detail.lang;
+        syncSwitchUI(lang);
     });
 
-    // Đồng bộ ban đầu
+    // Đồng bộ ban đầu và dịch toàn bộ trang ngay
     syncSwitchUI();
-    setTimeout(syncSwitchUI, 100);
+    const i18n = getI18n();
+    if (i18n && typeof i18n.translateDOM === 'function') {
+        i18n.translateDOM();
+    }
 }
 
 // ===== INIT =====

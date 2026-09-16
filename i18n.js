@@ -2257,7 +2257,7 @@
 
         // 1. Kiểm tra đã lưu lựa chọn thủ công của user
         try {
-            const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_KEY);
+            const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('hm_language') || localStorage.getItem(LEGACY_KEY);
             if (saved && SUPPORTED_LANGS.includes(saved)) {
                 return saved;
             }
@@ -2358,6 +2358,7 @@
         currentLang = lang;
         try {
             localStorage.setItem(STORAGE_KEY, lang);
+            localStorage.setItem('hm_language', lang);
             localStorage.setItem(LEGACY_KEY, lang);
         } catch (e) {}
 
@@ -2593,7 +2594,7 @@
      */
     function checkGeoIpFallback() {
         // Chỉ chạy nếu người dùng chưa từng chọn ngôn ngữ thủ công
-        const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_KEY);
+        const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('hm_language') || localStorage.getItem(LEGACY_KEY);
         if (saved) return;
 
         // [SỬA 11/09/2026] Tôn trọng tham số ?lang= / ?country= trên URL.
@@ -2673,5 +2674,6 @@
         LANG_OPTIONS,
         translations
     };
+    window.i18n = window.I18N;
 
 })();

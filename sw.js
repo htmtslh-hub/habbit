@@ -1,6 +1,6 @@
 // ===== HABIT MASTERY - SERVICE WORKER =====
 // Đổi CACHE_VERSION mỗi khi deploy để buộc trình duyệt lấy bản mới.
-const CACHE_VERSION = '5.13.8';
+const CACHE_VERSION = '5.13.9';
 const CACHE_NAME = `habit-game-v${CACHE_VERSION}`;
 
 // ===== PRECACHE: CHỈ phần vỏ ứng dụng =====
