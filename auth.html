@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Habit Mastery - Đăng nhập</title>
-    <meta name="description" content="Đăng nhập Habit Mastery để theo dõi thói quen hàng ngày">
+    <title>Habit Mastery - Đăng nhập &amp; Đăng ký</title>
+    <meta name="description" content="Đăng nhập Habit Mastery để theo dõi thói quen hàng ngày, xây dựng kỷ luật và đạt mục tiêu sống">
     <!-- PWA -->
     <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#00f5a0">
+    <meta name="theme-color" content="#00d2c4">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Habit Mastery">
@@ -15,289 +15,168 @@
     <link rel="alternate icon" href="./icon-192.png">
     <link rel="apple-touch-icon" href="./icon-512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="auth.css?v=5.12.7">
-
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="auth.css?v=6.3.2">
 </head>
 <body>
-    <!-- Animated background particles -->
+    <!-- Background Canvas & Atmospheric Orbital Accent Rings -->
+    <div class="app-canvas-bg"></div>
+    <div class="orbital-ring orbital-ring-top"></div>
+    <div class="orbital-ring orbital-ring-bottom"></div>
     <canvas id="particleCanvas"></canvas>
 
-    <div class="auth-container">
-        <!-- Left: Branding -->
-        <div class="auth-brand">
-            <div class="brand-content">
-                <div class="brand-icon">✦</div>
-                <h1 class="brand-title" data-i18n="brand_title">HABIT<br>MASTERY</h1>
-                <p class="brand-subtitle" data-i18n="brand_subtitle">Theo dõi thói quen • Xây dựng kỷ luật • Đạt mục tiêu</p>
+    <!-- Top Navigation Bar -->
+    <header class="app-top-nav">
+        <!-- Circular Back Button '<' -->
+        <a href="index.html" class="btn-round-back" title="Quay lại trang chủ" id="btnTopBack">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </a>
 
-                <!-- Desktop App Download Box (Elevated to center) -->
-                <div class="desktop-download-box" id="desktopDownloadBox">
-                    <div class="desktop-download-header">
-                        <div class="desktop-download-badge" data-i18n="desktop_app_badge">💻 DESKTOP APP</div>
-                    </div>
-                    <div class="desktop-download-body">
-                        <div class="desktop-download-icon-card">
-                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                <line x1="8" y1="21" x2="16" y2="21"></line>
-                                <line x1="12" y1="17" x2="12" y2="21"></line>
-                            </svg>
-                        </div>
-                        <div class="desktop-download-text">
-                            <div class="desktop-download-headline" data-i18n="desktop_app_headline">Tải ứng dụng Máy tính (Windows & Mac)</div>
-                            <p class="desktop-download-subtext" data-i18n="desktop_app_desc">Khởi động cùng máy tính, mượt mà & thông báo chuẩn xác không cần mở trình duyệt.</p>
-                        </div>
-                    </div>
-                    <div class="desktop-download-actions">
-                        <a href="https://github.com/htmtslh-hub/habbit/releases/download/desktop-latest/HabitMastery-Setup.zip" class="btn-desktop-download" rel="noopener" title="Tải bản cài đặt Windows (.zip)">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                            <span data-i18n="btn_download_setup">Tải bản Cài đặt (.zip)</span>
-                        </a>
-                        <button type="button" class="btn-desktop-guide" onclick="window.openDownloadModal()" title="Xem bản Portable & Bản dành cho Mac">
-                            <span data-i18n="btn_download_guide">Tùy chọn & Bản cho Mac</span>
-                        </button>
-                    </div>
-                </div>
+        <!-- Top Center Title -->
+        <h1 class="nav-center-title" data-i18n="app_nav_title">Mobile App UX/UI Design</h1>
 
-                <div class="brand-features">
-                    <div class="feature-item">
-                        <span class="feature-icon">📊</span>
-                        <span data-i18n="feature_analytics">Biểu đồ phân tích chi tiết</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🔥</span>
-                        <span data-i18n="feature_streak">Streak & hệ thống thưởng</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">☁️</span>
-                        <span data-i18n="feature_cloud">Dữ liệu đồng bộ đám mây</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🌍</span>
-                        <span data-i18n="feature_multilang">Đa ngôn ngữ (VI/EN/中)</span>
-                    </div>
-                </div>
-
-                <!-- ============================================================
-                     BẢNG GIÁ CÔNG KHAI
-                     Paddle duyệt tên miền có yêu cầu: "Pricing details or a
-                     pricing page - publicly visible WITHOUT LOGIN required".
-                     Giá vốn chỉ nằm trong cửa sổ nâng cấp sau khi đăng nhập,
-                     nên người duyệt của Paddle không nhìn thấy gì -> trượt.
-                     Khối này là bản công khai, không cần tài khoản.
-
-                     Giá hiển thị theo ngôn ngữ (xem i18n.js): tiếng Việt dùng
-                     VND, tiếng Anh và tiếng Trung dùng USD quy đổi trực tiếp.
-                     ============================================================ -->
-                <div class="pricing-box" id="pricingBox">
-                    <div class="pricing-badge" data-i18n="pricing_badge">💎 BẢNG GIÁ</div>
-                    <div class="pricing-headline" data-i18n="pricing_headline">Dùng miễn phí trọn đời. Nâng cấp khi cần.</div>
-
-                    <div class="pricing-grid">
-                        <div class="pricing-card">
-                            <div class="pricing-name" data-i18n="pricing_free_name">Miễn phí</div>
-                            <div class="pricing-price" data-i18n="pricing_free_price">0đ</div>
-                            <div class="pricing-period" data-i18n="pricing_free_period">trọn đời</div>
-                        </div>
-                        <div class="pricing-card">
-                            <div class="pricing-name" data-i18n="pricing_pro_name">⚡ Pro</div>
-                            <div class="pricing-price" data-i18n="pricing_pro_price">99.000đ</div>
-                            <div class="pricing-period" data-i18n="pricing_pro_period">30 ngày</div>
-                        </div>
-                        <div class="pricing-card pricing-card-best">
-                            <div class="pricing-save" data-i18n="pricing_yearly_save">-65%</div>
-                            <div class="pricing-name" data-i18n="pricing_yearly_name">👑 Premium</div>
-                            <div class="pricing-price" data-i18n="pricing_yearly_price">399.000đ</div>
-                            <div class="pricing-period" data-i18n="pricing_yearly_period">365 ngày</div>
-                        </div>
-                    </div>
-
-                    <div class="pricing-inc-title" data-i18n="pricing_inc_title">Gói trả phí gồm có:</div>
-                    <ul class="pricing-includes">
-                        <li data-i18n="pricing_inc_1">Thống kê &amp; biểu đồ phân tích nâng cao</li>
-                        <li data-i18n="pricing_inc_2">Bản đồ nhiệt hoạt động cả năm</li>
-                        <li data-i18n="pricing_inc_3">Nhật ký ghi chú mỗi ngày</li>
-                        <li data-i18n="pricing_inc_4">Không giới hạn số thói quen</li>
-                        <li data-i18n="pricing_inc_5">Huy hiệu &amp; khung ảnh đại diện độc quyền</li>
-                    </ul>
-
-                    <p class="pricing-note" data-i18n="pricing_note">Thanh toán một lần cho mỗi kỳ, <strong>không tự động gia hạn</strong>. Hoàn tiền đầy đủ trong 14 ngày, không cần nêu lý do.</p>
-                    <p class="pricing-mor" data-i18n="pricing_mor">Đơn hàng quốc tế do <strong>Paddle.com Market Ltd</strong> xử lý với vai trò Merchant of Record.</p>
-                </div>
-
-                <!-- Zalo Community Group QR Box -->
-                <div class="zalo-community-box" id="zaloCommunityBox">
-                    <div class="zalo-qr-card" onclick="window.openQrModal()" title="Bấm để phóng to mã QR">
-                        <img src="zalo-qr.png" alt="Mã QR Nhóm Zalo Habit Mastery" class="zalo-qr-image" id="zaloQrImage">
-                        <div class="zalo-qr-overlay">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-                        </div>
-                    </div>
-                    <div class="zalo-text-block">
-                        <div class="zalo-badge" data-i18n="community_badge">💬 CỘNG ĐỒNG ZALO</div>
-                        <div class="zalo-headline" data-i18n="community_headline">Nhóm Kỷ Luật Habit Mastery</div>
-                        <p class="zalo-subtext" data-i18n="community_subtext">Quét mã QR để giao lưu, chia sẻ thói quen & nhận thông báo hỗ trợ từ Admin.</p>
-                    </div>
-                </div>
-            </div>
+        <!-- Nút gạt chuyển 3 ngôn ngữ (3-Way Toggle Switch: 🇻🇳 ⟷ 🇬🇧 ⟷ 🇨🇳) -->
+        <div class="auth-card-lang-bar">
+            <button type="button" class="lang-toggle-switch lang-toggle-3way" id="authLangSwitch" data-active="vi" role="group" aria-label="Nút gạt chuyển 3 ngôn ngữ" title="Gạt để đổi ngôn ngữ: Tiếng Việt / English / 简体中文">
+                <span class="toggle-track">
+                    <span class="toggle-slot slot-vi" data-lang="vi" title="Tiếng Việt">
+                        <svg class="toggle-flag-svg" viewBox="0 0 32 32"><use href="#icon-flag-vi"></use></svg>
+                    </span>
+                    <span class="toggle-slot slot-en" data-lang="en" title="English">
+                        <svg class="toggle-flag-svg" viewBox="0 0 32 32"><use href="#icon-flag-en"></use></svg>
+                    </span>
+                    <span class="toggle-slot slot-zh" data-lang="zh" title="简体中文">
+                        <svg class="toggle-flag-svg" viewBox="0 0 32 32"><use href="#icon-flag-zh"></use></svg>
+                    </span>
+                    <span class="toggle-knob" id="toggleKnob">
+                        <svg class="knob-flag-svg" id="knobFlagSvg" viewBox="0 0 32 32"><use href="#icon-flag-vi"></use></svg>
+                    </span>
+                </span>
+            </button>
         </div>
+    </header>
 
-        <!-- Right: Auth Form -->
-        <div class="auth-form-area">
-            <div class="auth-card">
-                <!-- In-Card Language Switcher Bar -->
-                <div class="auth-card-lang-bar">
-                    <div class="auth-lang-pills" id="authLangPills">
-                        <button type="button" class="auth-lang-pill" data-lang="vi" title="Tiếng Việt">
-                            <span class="pill-flag">🇻🇳</span> <span class="pill-name">Tiếng Việt</span>
-                        </button>
-                        <button type="button" class="auth-lang-pill" data-lang="en" title="English">
-                            <span class="pill-flag">🇬🇧</span> <span class="pill-name">English</span>
-                        </button>
-                        <button type="button" class="auth-lang-pill" data-lang="zh" title="简体中文">
-                            <span class="pill-flag">🇨🇳</span> <span class="pill-name">中文</span>
-                        </button>
-                    </div>
+    <!-- SVG SYMBOLS DEFINITIONS -->
+    <svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Round Flag Symbols for Language Selector -->
+            <clipPath id="flag-circle-clip">
+                <circle cx="16" cy="16" r="16"/>
+            </clipPath>
+            <symbol id="icon-flag-vi" viewBox="0 0 32 32">
+                <circle cx="16" cy="16" r="16" fill="#da251d"/>
+                <polygon points="16,6.2 18.2,13 25.3,13 19.6,17.2 21.8,24.2 16,20 10.2,24.2 12.4,17.2 6.7,13 13.8,13" fill="#ffff00"/>
+            </symbol>
+            <symbol id="icon-flag-en" viewBox="0 0 32 32">
+                <g clip-path="url(#flag-circle-clip)">
+                    <rect width="32" height="32" fill="#012169"/>
+                    <path d="M0,0 L32,32 M32,0 L0,32" stroke="#ffffff" stroke-width="5.4"/>
+                    <path d="M0,0 L32,32 M32,0 L0,32" stroke="#c8102e" stroke-width="2.6"/>
+                    <path d="M16,0 V32 M0,16 H32" stroke="#ffffff" stroke-width="8.4"/>
+                    <path d="M16,0 V32 M0,16 H32" stroke="#c8102e" stroke-width="5"/>
+                </g>
+            </symbol>
+            <symbol id="icon-flag-zh" viewBox="0 0 32 32">
+                <g clip-path="url(#flag-circle-clip)">
+                    <rect width="32" height="32" fill="#de2910"/>
+                    <polygon points="8.5,4.5 9.7,8.2 13.5,8.2 10.4,10.5 11.6,14.2 8.5,11.8 5.4,14.2 6.6,10.5 3.5,8.2 7.3,8.2" fill="#ffde00"/>
+                    <polygon points="15.5,5 16,6.3 17.3,6.3 16.3,7 16.7,8.3 15.5,7.5 14.3,8.3 14.7,7 13.7,6.3 15,6.3" fill="#ffde00" transform="rotate(-20 15.5 6.6)"/>
+                    <polygon points="18.5,8.5 19,9.8 20.3,9.8 19.3,10.5 19.7,11.8 18.5,11 17.3,11.8 17.7,10.5 16.7,9.8 18,9.8" fill="#ffde00" transform="rotate(10 18.5 10.1)"/>
+                    <polygon points="18.5,14 19,15.3 20.3,15.3 19.3,16 19.7,17.3 18.5,16.5 17.3,17.3 17.7,16 16.7,15.3 18,15.3" fill="#ffde00" transform="rotate(30 18.5 15.6)"/>
+                    <polygon points="15.5,18 16,19.3 17.3,19.3 16.3,20 16.7,21.3 15.5,20.5 14.3,21.3 14.7,20 13.7,19.3 15,19.3" fill="#ffde00" transform="rotate(-15 15.5 19.6)"/>
+                </g>
+            </symbol>
+            <symbol id="icon-zalo" viewBox="0 0 50 50">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M22.782 0.166H27.199C33.265 0.166 36.81 1.057 39.957 2.744C43.104 4.431 45.588 6.896 47.256 10.043C48.943 13.19 49.834 16.735 49.834 22.801V27.199C49.834 33.265 48.943 36.81 47.256 39.957C45.569 43.104 43.104 45.588 39.957 47.256C36.81 48.943 33.265 49.834 27.199 49.834H22.801C16.735 49.834 13.19 48.943 10.043 47.256C6.896 45.569 4.412 43.104 2.744 39.957C1.057 36.81 0.166 33.265 0.166 27.199V22.801C0.166 16.735 1.057 13.19 2.744 10.043C4.431 6.896 6.896 4.412 10.043 2.744C13.171 1.057 16.735 0.166 22.782 0.166Z" fill="#0068FF"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M7.779 43.589C10.102 43.846 13.006 43.184 15.068 42.183C24.023 47.132 38.02 46.895 46.492 41.473C46.821 40.98 47.128 40.468 47.413 39.936C49.106 36.778 50 33.22 50 27.132V22.718C50 16.629 49.106 13.071 47.413 9.913C45.739 6.754 43.246 4.281 40.088 2.588C36.929 0.894 33.371 0 27.283 0H22.85C17.664 0 14.298 0.653 11.47 1.899C11.315 2.037 11.164 2.178 11.015 2.321C2.717 10.32 2.087 27.659 9.123 37.078C9.131 37.092 9.139 37.106 9.149 37.12C10.233 38.719 9.187 41.515 7.551 43.152C7.284 43.399 7.379 43.551 7.779 43.589Z" fill="white"/>
+                <path d="M20.563 17H10.838V19.085H17.587L10.933 27.332C10.724 27.635 10.573 27.919 10.573 28.564V29.095H19.748C20.203 29.095 20.582 28.716 20.582 28.261V27.142H13.492L19.748 19.294C19.843 19.18 20.013 18.972 20.089 18.877L20.127 18.82C20.487 18.289 20.563 17.834 20.563 17.284V17Z" fill="#0068FF"/>
+                <path d="M32.942 29.095H34.326V17H32.24V28.393C32.24 28.773 32.544 29.095 32.942 29.095Z" fill="#0068FF"/>
+                <path d="M25.814 19.692C23.198 19.692 21.075 21.816 21.075 24.432C21.075 27.048 23.198 29.171 25.814 29.171C28.43 29.171 30.553 27.048 30.553 24.432C30.572 21.816 28.449 19.692 25.814 19.692ZM25.814 27.218C24.279 27.218 23.027 25.967 23.027 24.432C23.027 22.896 24.279 21.645 25.814 21.645C27.35 21.645 28.601 22.896 28.601 24.432C28.601 25.967 27.369 27.218 25.814 27.218Z" fill="#0068FF"/>
+                <path d="M40.487 19.616C37.852 19.616 35.71 21.758 35.71 24.393C35.71 27.029 37.852 29.171 40.487 29.171C43.122 29.171 45.264 27.029 45.264 24.393C45.264 21.758 43.122 19.616 40.487 19.616ZM40.487 27.218C38.932 27.218 37.681 25.967 37.681 24.412C37.681 22.858 38.932 21.607 40.487 21.607C42.041 21.607 43.292 22.858 43.292 24.412C43.292 25.967 42.041 27.218 40.487 27.218Z" fill="#0068FF"/>
+                <path d="M29.456 29.094H30.575V19.957H28.622V28.279C28.622 28.715 29.001 29.094 29.456 29.094Z" fill="#0068FF"/>
+            </symbol>
+        </defs>
+    </svg>
+
+    <!-- Main Dual-Card Showcase -->
+    <main class="main-wrapper">
+        <div class="auth-showcase-container">
+            <!-- ========================================================
+                 LEFT PHONE CARD: AUTHENTICATION (SIGN UP / LOG IN)
+                 ======================================================== -->
+            <div class="phone-frame auth-phone-frame" id="authPhoneCard">
+                <!-- Cyan Radial Glow Aura at Card Top -->
+                <div class="card-glow-aura"></div>
+
+                <!-- Header inside Card -->
+                <div class="card-header">
+                    <h2 class="card-main-title" id="authHeaderTitle">Sign Up</h2>
+                    <p class="card-main-sub" id="authHeaderSub">Create an account to continue</p>
                 </div>
 
-                <!-- Tab switcher -->
-                <div class="auth-tabs">
-                    <button class="auth-tab active" id="tabLogin" data-tab="login" data-i18n="tab_login">Đăng nhập</button>
-                    <button class="auth-tab" id="tabRegister" data-tab="register" data-i18n="tab_register">Đăng ký</button>
+                <!-- Capsule Tab Switcher -->
+                <div class="auth-tab-capsule">
+                    <button type="button" class="auth-tab-pill active" id="tabRegister" data-tab="register" data-i18n="tab_register">Sign Up</button>
+                    <button type="button" class="auth-tab-pill" id="tabLogin" data-tab="login" data-i18n="tab_login">Log In</button>
                 </div>
 
-                <!-- Error message -->
+                <!-- Notification Alerts -->
                 <div class="auth-error" id="authError"></div>
-                <!-- Success message -->
                 <div class="auth-success" id="authSuccess"></div>
 
-                <!-- LOGIN FORM -->
-                <form class="auth-form" id="loginForm">
-                    <!-- Step 1: Email + Password -->
-                    <div id="loginStep1">
-                        <div class="form-group">
-                            <label for="loginEmail" data-i18n="label_email">Email</label>
-                            <div class="input-wrapper">
-                                <span class="input-icon">✉️</span>
-                                <input type="email" id="loginEmail" placeholder="your@email.com" data-i18n-placeholder="placeholder_email" required autocomplete="email">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="loginPassword" data-i18n="label_password">Mật khẩu</label>
-                            <div class="input-wrapper">
-                                <span class="input-icon">🔒</span>
-                                <input type="password" id="loginPassword" placeholder="••••••••" data-i18n-placeholder="placeholder_password" required autocomplete="current-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-no-ime="true" data-form-type="other">
-                                <button type="button" class="toggle-pass" id="toggleLoginPass">👁️</button>
-                            </div>
-                            <span class="input-hint" data-i18n="hint_ime">⚠️ Tắt bộ gõ tiếng Việt (Telex/VNI) khi nhập mật khẩu</span>
-                        </div>
-                        <div class="remember-me">
-                            <label class="remember-label" for="rememberMe">
-                                <input type="checkbox" id="rememberMe" checked>
-                                <span class="checkmark"></span>
-                                <span class="remember-text" data-i18n="remember_me">Ghi nhớ đăng nhập</span>
-                            </label>
-                            <span class="remember-hint" data-i18n="remember_hint">Duy trì phiên đăng nhập trên thiết bị này</span>
-                        </div>
-                        <button type="button" class="btn-primary" id="btnLogin">
-                            <span class="btn-text" data-i18n="btn_login">Đăng nhập</span>
-                            <span class="btn-loading" style="display:none;" data-i18n="btn_processing">⏳ Đang xử lý...</span>
-                        </button>
-                    </div>
-
-                    <!-- Step 2: Login OTP Verification -->
-                    <div id="loginStep2" style="display:none;">
-                        <div class="otp-header">
-                            <div class="otp-icon">🔐</div>
-                            <h3 class="otp-title" data-i18n="otp_title_2fa">Xác thực 2 bước</h3>
-                            <p class="otp-desc" data-i18n="otp_desc_sent">Mã xác minh 6 số đã gửi đến</p>
-                            <p class="otp-email" id="loginOtpEmailDisplay"></p>
-                        </div>
-
-                        <div class="otp-inputs" id="loginOtpInputs">
-                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="0" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code">
-                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="1" inputmode="numeric" pattern="[0-9]">
-                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="2" inputmode="numeric" pattern="[0-9]">
-                            <span class="otp-dash">—</span>
-                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="3" inputmode="numeric" pattern="[0-9]">
-                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="4" inputmode="numeric" pattern="[0-9]">
-                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="5" inputmode="numeric" pattern="[0-9]">
-                        </div>
-
-                        <div class="otp-timer" id="loginOtpTimer">
-                            <span class="timer-icon">⏱️</span>
-                            <span><span data-i18n="otp_expires_prefix">Mã hết hạn sau</span> <strong id="loginOtpCountdown">5:00</strong></span>
-                        </div>
-
-                        <button type="button" class="btn-primary" id="btnVerifyLoginOtp">
-                            <span class="btn-text" data-i18n="btn_verify_login">✅ Xác minh & Đăng nhập</span>
-                            <span class="btn-loading" style="display:none;" data-i18n="btn_verifying">⏳ Đang xác minh...</span>
-                        </button>
-
-                        <div class="otp-resend">
-                            <span data-i18n="otp_not_received">Chưa nhận được mã?</span>
-                            <button type="button" class="btn-resend" id="btnResendLoginOtp" disabled>
-                                Gửi lại (<span id="loginResendCountdown">60</span>s)
-                            </button>
-                        </div>
-
-                        <button type="button" class="btn-back" id="btnBackToLogin" data-i18n="btn_back">
-                            ← Quay lại
-                        </button>
-                    </div>
-                </form>
-
                 <!-- REGISTER FORM -->
-                <form class="auth-form" id="registerForm" style="display:none;">
+                <form class="auth-form" id="registerForm">
                     <!-- Step 1: User Info -->
                     <div id="regStep1">
                         <div class="form-group">
-                            <label for="regName" data-i18n="label_fullname">Họ và tên</label>
+                            <label for="regName" data-i18n="label_fullname">Full Name</label>
                             <div class="input-wrapper">
-                                <span class="input-icon">👤</span>
-                                <input type="text" id="regName" placeholder="Nguyễn Văn A" data-i18n-placeholder="placeholder_fullname" required>
+                                <input type="text" id="regName" placeholder="Alex Lee" data-i18n-placeholder="placeholder_fullname" required autocomplete="name">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="regEmail" data-i18n="label_email">Email</label>
                             <div class="input-wrapper">
-                                <span class="input-icon">✉️</span>
-                                <input type="email" id="regEmail" placeholder="your@email.com" data-i18n-placeholder="placeholder_email" required autocomplete="email">
+                                <input type="email" id="regEmail" placeholder="example@email.com" data-i18n-placeholder="placeholder_email" required autocomplete="email">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="regPassword" data-i18n="label_password">Mật khẩu</label>
+                            <label for="regPassword" data-i18n="label_password">Set Password</label>
                             <div class="input-wrapper">
-                                <span class="input-icon">🔒</span>
-                                <input type="password" id="regPassword" placeholder="Tối thiểu 6 ký tự" data-i18n-placeholder="placeholder_reg_pass" required minlength="6" autocomplete="new-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-no-ime="true" data-form-type="other">
-                                <button type="button" class="toggle-pass" id="toggleRegPass">👁️</button>
+                                <input type="password" id="regPassword" placeholder="••••••••" data-i18n-placeholder="placeholder_reg_pass" required minlength="6" autocomplete="new-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-no-ime="true">
+                                <button type="button" class="toggle-pass" id="toggleRegPass" aria-label="Toggle Password Visibility">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                </button>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="regConfirm" data-i18n="label_confirm_password">Xác nhận mật khẩu</label>
+                        <div class="form-group" id="regConfirmWrap" style="display:none;">
+                            <label for="regConfirm" data-i18n="label_confirm_password">Confirm Password</label>
                             <div class="input-wrapper">
-                                <span class="input-icon">🔒</span>
-                                <input type="password" id="regConfirm" placeholder="Nhập lại mật khẩu" data-i18n-placeholder="placeholder_confirm_password" required minlength="6" autocomplete="new-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-no-ime="true" data-form-type="other">
+                                <input type="password" id="regConfirm" placeholder="••••••••" data-i18n-placeholder="placeholder_confirm_password" minlength="6" autocomplete="new-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-no-ime="true">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="regReferralCode"><span data-i18n="auth_ref_code_label">Mã giới thiệu (Không bắt buộc)</span> <span style="font-size:0.75rem; color:#10b981; font-weight:600;">(+100 DP)</span></label>
+                        <div class="form-group" id="regReferralWrap" style="display:none;">
+                            <label for="regReferralCode">
+                                <span data-i18n="auth_ref_code_label">Mã giới thiệu (Không bắt buộc)</span> 
+                                <span style="font-size:0.75rem; color:#00d2c4; font-weight:600;">(+100 DP)</span>
+                            </label>
                             <div class="input-wrapper">
-                                <span class="input-icon">🎁</span>
                                 <input type="text" id="regReferralCode" placeholder="Nhập mã mời hoặc ID người giới thiệu" data-i18n-placeholder="auth_ref_code_placeholder" autocomplete="off" spellcheck="false" style="text-transform:uppercase;">
                             </div>
                         </div>
-                        <button type="button" class="btn-primary" id="btnSendOtp">
-                            <span class="btn-text" data-i18n="btn_register">✨ Đăng ký tài khoản</span>
-                            <span class="btn-loading" style="display:none;" data-i18n="btn_registering">⏳ Đang tạo tài khoản...</span>
+
+                        <!-- Primary White Pill Action Button -->
+                        <button type="button" class="btn-pill-action" id="btnSendOtp">
+                            <span class="btn-text" data-i18n="btn_register">Sign Up</span>
+                            <span class="btn-loading" style="display:none;" data-i18n="btn_registering">⏳ Processing...</span>
                         </button>
                     </div>
 
-                    <!-- Step 2: OTP Verification -->
+                    <!-- Step 2: Email OTP Verification -->
                     <div id="regStep2" style="display:none;">
                         <div class="otp-header">
                             <div class="otp-icon">📬</div>
@@ -305,7 +184,6 @@
                             <p class="otp-desc" data-i18n="otp_desc_sent">Mã xác minh 6 số đã gửi đến</p>
                             <p class="otp-email" id="otpEmailDisplay"></p>
                         </div>
-
                         <div class="otp-inputs" id="otpInputs">
                             <input type="text" maxlength="1" class="otp-box" data-index="0" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code">
                             <input type="text" maxlength="1" class="otp-box" data-index="1" inputmode="numeric" pattern="[0-9]">
@@ -315,136 +193,270 @@
                             <input type="text" maxlength="1" class="otp-box" data-index="4" inputmode="numeric" pattern="[0-9]">
                             <input type="text" maxlength="1" class="otp-box" data-index="5" inputmode="numeric" pattern="[0-9]">
                         </div>
-
                         <div class="otp-timer" id="otpTimer">
-                            <span class="timer-icon">⏱️</span>
                             <span><span data-i18n="otp_expires_prefix">Mã hết hạn sau</span> <strong id="otpCountdown">5:00</strong></span>
                         </div>
-
-                        <button type="button" class="btn-primary" id="btnVerifyOtp">
-                            <span class="btn-text" data-i18n="btn_verify_reg">✅ Xác minh & Tạo tài khoản</span>
+                        <button type="button" class="btn-pill-action" id="btnVerifyOtp">
+                            <span class="btn-text" data-i18n="btn_verify_reg">Xác minh & Tạo tài khoản</span>
                             <span class="btn-loading" style="display:none;" data-i18n="btn_verifying">⏳ Đang xác minh...</span>
                         </button>
-
                         <div class="otp-resend">
                             <span id="resendText" data-i18n="otp_not_received">Chưa nhận được mã?</span>
-                            <button type="button" class="btn-resend" id="btnResendOtp" disabled>
-                                Gửi lại (<span id="resendCountdown">60</span>s)
-                            </button>
+                            <button type="button" class="btn-resend" id="btnResendOtp" disabled>Gửi lại (60s)</button>
                         </div>
-
-                        <button type="button" class="btn-back" id="btnBackToReg" data-i18n="btn_back">
-                            ← Quay lại
-                        </button>
+                        <button type="button" class="btn-back-otp" id="btnBackToReg" data-i18n="btn_back">← Quay lại</button>
                     </div>
                 </form>
 
-                <!-- Divider -->
+                <!-- LOGIN FORM -->
+                <form class="auth-form" id="loginForm" style="display:none;">
+                    <!-- Step 1: Email + Password -->
+                    <div id="loginStep1">
+                        <div class="form-group">
+                            <label for="loginEmail" data-i18n="label_email">Email</label>
+                            <div class="input-wrapper">
+                                <input type="email" id="loginEmail" placeholder="example@email.com" data-i18n-placeholder="placeholder_email" required autocomplete="email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword" data-i18n="label_password">Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="loginPassword" placeholder="••••••••" data-i18n-placeholder="placeholder_password" required autocomplete="current-password" spellcheck="false" autocorrect="off" autocapitalize="off" lang="en" data-no-ime="true">
+                                <button type="button" class="toggle-pass" id="toggleLoginPass" aria-label="Toggle Password Visibility">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                </button>
+                            </div>
+                            <div class="forgot-pass-wrap">
+                                <a href="javascript:void(0)" class="forgot-pass-link" id="linkForgotPassword" data-i18n="forgot_password">Forgot Password?</a>
+                            </div>
+                        </div>
+                        <div class="remember-me">
+                            <label class="remember-label" for="rememberMe">
+                                <input type="checkbox" id="rememberMe" checked>
+                                <span class="checkmark"></span>
+                                <span class="remember-text" data-i18n="remember_me">Ghi nhớ đăng nhập</span>
+                            </label>
+                        </div>
+                        <button type="button" class="btn-pill-action" id="btnLogin">
+                            <span class="btn-text" data-i18n="btn_login">Log In</span>
+                            <span class="btn-loading" style="display:none;" data-i18n="btn_processing">⏳ Đang xử lý...</span>
+                        </button>
+                    </div>
+
+                    <!-- Step 2: Login 2FA OTP -->
+                    <div id="loginStep2" style="display:none;">
+                        <div class="otp-header">
+                            <div class="otp-icon">🔐</div>
+                            <h3 class="otp-title" data-i18n="otp_title_2fa">Xác thực 2 bước</h3>
+                            <p class="otp-desc" data-i18n="otp_desc_sent">Mã xác minh 6 số đã gửi đến</p>
+                            <p class="otp-email" id="loginOtpEmailDisplay"></p>
+                        </div>
+                        <div class="otp-inputs" id="loginOtpInputs">
+                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="0" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code">
+                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="1" inputmode="numeric" pattern="[0-9]">
+                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="2" inputmode="numeric" pattern="[0-9]">
+                            <span class="otp-dash">—</span>
+                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="3" inputmode="numeric" pattern="[0-9]">
+                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="4" inputmode="numeric" pattern="[0-9]">
+                            <input type="text" maxlength="1" class="otp-box login-otp-box" data-index="5" inputmode="numeric" pattern="[0-9]">
+                        </div>
+                        <div class="otp-timer" id="loginOtpTimer">
+                            <span><span data-i18n="otp_expires_prefix">Mã hết hạn sau</span> <strong id="loginOtpCountdown">5:00</strong></span>
+                        </div>
+                        <button type="button" class="btn-pill-action" id="btnVerifyLoginOtp">
+                            <span class="btn-text" data-i18n="btn_verify_login">Xác minh & Đăng nhập</span>
+                            <span class="btn-loading" style="display:none;" data-i18n="btn_verifying">⏳ Đang xác minh...</span>
+                        </button>
+                        <div class="otp-resend">
+                            <span data-i18n="otp_not_received">Chưa nhận được mã?</span>
+                            <button type="button" class="btn-resend" id="btnResendLoginOtp" disabled>Gửi lại (60s)</button>
+                        </div>
+                        <button type="button" class="btn-back-otp" id="btnBackToLogin" data-i18n="btn_back">← Quay lại</button>
+                    </div>
+                </form>
+
+                <!-- Divider "Or" -->
                 <div class="auth-divider">
-                    <span data-i18n="divider_or">hoặc</span>
+                    <span data-i18n="divider_or">Or</span>
                 </div>
 
-                <!-- Google Sign In -->
-                <button class="btn-google" id="btnGoogle">
-                    <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20">
-                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                    </svg>
-                    <span data-i18n="btn_google">Đăng nhập với Google</span>
-                </button>
-
-                <!-- EXTERNAL GOOGLE LOGIN CONTAINER (For System Browser callback) -->
-                <div id="externalGoogleContainer" style="display: none; animation: otpFadeIn 0.4s ease-out;">
-                    <div class="otp-header">
-                        <div class="otp-icon" style="animation: iconFloat 3s ease-in-out infinite; color: #10b981; font-size: 32px;">✦</div>
-                        <h3 class="otp-title" data-i18n="desktop_title">Đăng nhập Habit Mastery</h3>
-                        <p class="otp-desc" style="margin-bottom: 20px;" data-i18n="desktop_desc">Bạn đang đăng nhập vào ứng dụng trên máy tính.</p>
-                    </div>
-                    
-                    <button class="btn-primary" id="btnGoogleExternal">
-                        <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20" style="margin-right: 10px; vertical-align: middle; display: inline-block;">
-                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
-                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                        </svg>
-                        <span class="btn-text" style="display: inline-block; vertical-align: middle;" data-i18n="btn_google_continue">Tiếp tục với Google</span>
-                        <span class="btn-loading" style="display:none;" data-i18n="btn_processing">⏳ Đang đăng nhập...</span>
+                <!-- Social Login Buttons -->
+                <div class="social-buttons-wrap">
+                    <!-- Google Button -->
+                    <button type="button" class="btn-social-pill" id="btnGoogle">
+                        <span class="social-icon">
+                            <svg viewBox="0 0 24 24" width="18" height="18">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                            </svg>
+                        </span>
+                        <span data-i18n="btn_google_continue">Continue with Google</span>
                     </button>
 
-                    <div class="external-status" id="externalStatus" style="margin-top: 20px; text-align: center; color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5;"></div>
-                </div>
-
-                <!-- ELECTRON WAITING CONTAINER (Show in Electron while user is in external browser) -->
-                <div id="electronWaitingContainer" style="display: none; animation: otpFadeIn 0.4s ease-out;">
-                    <div class="otp-header">
-                        <div class="otp-icon" style="animation: otpBounce 2s ease-in-out infinite;">✉️</div>
-                        <h3 class="otp-title" data-i18n="external_waiting_title">Đang chờ đăng nhập</h3>
-                        <p class="otp-desc" data-i18n="external_waiting_desc">Vui lòng hoàn tất đăng nhập trên trình duyệt hệ thống...</p>
-                    </div>
-                    <div class="otp-timer" style="border-color: var(--border-focus); background: rgba(0, 245, 160, 0.03); margin-bottom: 24px;">
-                        <span class="timer-icon">⏳</span>
-                        <span style="color: var(--accent); font-weight: 600;" data-i18n="external_check_browser">Vui lòng kiểm tra trình duyệt web của bạn</span>
-                    </div>
-                    <button type="button" class="btn-back" id="btnCancelExternalLogin" data-i18n="btn_cancel_external">
-                        ← Quay lại đăng nhập
+                    <!-- Apple Button -->
+                    <button type="button" class="btn-social-pill" id="btnApple">
+                        <span class="social-icon">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.93-2.85-.9.04-2 .6-2.64 1.35-.57.65-1.07 1.72-.94 2.74 1.01.08 2.04-.49 2.65-1.24z"/>
+                            </svg>
+                        </span>
+                        <span data-i18n="btn_apple">Continue with Apple</span>
                     </button>
                 </div>
 
-                <!-- Mobile Zalo Community Quick Banner (Shown on mobile screens) -->
-                <div class="mobile-zalo-banner" onclick="window.openQrModal()">
-                    <div class="mobile-zalo-icon">💬</div>
-                    <div class="mobile-zalo-info">
-                        <div class="mobile-zalo-title" data-i18n="community_mobile_title">Nhóm Zalo Cộng Đồng Habit Mastery</div>
-                        <div class="mobile-zalo-sub" data-i18n="community_mobile_sub">Giao lưu & nhận hỗ trợ từ Admin</div>
-                    </div>
-                    <button type="button" class="mobile-zalo-btn" data-i18n="community_mobile_btn">Xem QR</button>
+                <!-- Footer Switcher Link -->
+                <div class="auth-footer-switch" id="authSwitchWrap">
+                    <span id="authSwitchPrompt" data-i18n="already_have_account">Already have an account?</span>
+                    <a href="javascript:void(0)" id="authSwitchAction" data-i18n="link_login">Log In</a>
                 </div>
 
-                <!-- Desktop App Quick Link -->
-                <div class="auth-desktop-quick-link" onclick="window.openDownloadModal()" title="Tải ứng dụng Habit Mastery cho máy tính Windows">
-                    <div class="desktop-quick-left">
-                        <span class="desktop-quick-icon">💻</span>
-                        <span class="desktop-quick-text" data-i18n="desktop_quick_text">Dùng máy tính? Tải ứng dụng Habit Mastery cho Windows</span>
+                <!-- Desktop Gateway for Electron (Internal system browser) -->
+                <div id="externalGoogleContainer" style="display:none; padding-top:20px; text-align:center;">
+                    <button class="btn-pill-action" id="btnGoogleExternal">
+                        <span class="btn-text" data-i18n="btn_google_continue">Tiếp tục với Google</span>
+                        <span class="btn-loading" style="display:none;" data-i18n="btn_processing">⏳ Đang xử lý...</span>
+                    </button>
+                    <div class="external-status" id="externalStatus" style="margin-top:14px; font-size:0.8rem; color:var(--text-secondary);"></div>
+                </div>
+                <div id="electronWaitingContainer" style="display:none; padding-top:20px; text-align:center;">
+                    <p style="color:var(--accent); font-weight:600;" data-i18n="external_check_browser">Vui lòng kiểm tra trình duyệt web của bạn</p>
+                    <button type="button" class="btn-back-otp" id="btnCancelExternalLogin" data-i18n="btn_cancel_external">← Quay lại</button>
+                </div>
+            </div>
+
+            <!-- ========================================================
+                 RIGHT PHONE CARD: EXPERIENCE & DISCIPLINE SHOWCASE
+                 (MIMICKING THE SECOND SCREEN IN THE USER'S IMAGE)
+                 ======================================================== -->
+            <div class="phone-frame experience-phone-frame" id="expPhoneCard">
+                <!-- Cyan Radial Glow Aura -->
+                <div class="card-glow-aura"></div>
+
+                <div>
+                    <!-- Top Back Chevron -->
+                    <div class="exp-top-bar">
+                        <span class="exp-back-icon">‹</span>
                     </div>
-                    <span class="desktop-quick-arrow">⬇</span>
+
+                    <!-- Question Title -->
+                    <h3 class="exp-question-title" data-i18n="exp_header">4 Trụ Cột Kỷ Luật Giữ Chân Người Dùng</h3>
+
+                    <!-- Choice Cards List (4 Retention Pillars) -->
+                    <div class="exp-choices-list">
+                        <!-- Pillar 1: Hệ thống Cảnh Giới -->
+                        <div class="exp-choice-card" onclick="window.selectExpCard(this, 'realm')">
+                            <div class="exp-choice-name"><span data-i18n="exp_card1_title">👑 Hệ Thống Cảnh Giới</span></div>
+                            <div class="exp-choice-desc" data-i18n="exp_card1_desc">21 bậc thang tâm thức, thăng cấp theo chuỗi Streak & mở khóa Khung Avatar thần thoại</div>
+                        </div>
+
+                        <!-- Pillar 2: Hệ thống Tài Liệu -->
+                        <div class="exp-choice-card" onclick="window.selectExpCard(this, 'docs')">
+                            <div class="exp-choice-name"><span data-i18n="exp_card2_title">📚 Hệ Thống Tài Liệu</span></div>
+                            <div class="exp-choice-desc" data-i18n="exp_card2_desc">Kho tàng tri thức kỷ luật, tâm pháp khắc kỷ & cẩm nang thực chiến chuyên sâu</div>
+                        </div>
+
+                        <!-- Pillar 3: Hệ thống Tập Trung (Highlight Nebula Card) -->
+                        <div class="exp-choice-card highlight-card" onclick="window.selectExpCard(this, 'focus')">
+                            <div class="exp-choice-name"><span data-i18n="exp_card3_title">🎧 Hệ Thống Tập Trung</span></div>
+                            <div class="exp-choice-desc" data-i18n="exp_card3_desc">Đồng hồ Pomodoro kết hợp Sound Mixer sóng não đa tầng, đưa bạn vào dòng chảy Flow</div>
+                        </div>
+
+                        <!-- Pillar 4: Hệ thống Cộng Đồng -->
+                        <div class="exp-choice-card" onclick="window.selectExpCard(this, 'community')">
+                            <div class="exp-choice-name"><span data-i18n="exp_card4_title">🛡️ Hệ Thống Cộng Đồng</span></div>
+                            <div class="exp-choice-desc" data-i18n="exp_card4_desc">Tổ đội Squads 3-5 người cam kết, bảng xếp hạng vinh danh & kết nối chiến hữu Zalo</div>
+                        </div>
+                    </div>
+
+                    <!-- Book / Guide Card -->
+                    <div class="exp-book-card" onclick="window.openBookGuideModal()" title="Xem chi tiết 4 Trụ Cột Kỷ Luật">
+                        <span>📖</span>
+                        <span data-i18n="exp_book_title">Khám phá Cẩm nang 4 Trụ Cột Kỷ Luật</span>
+                    </div>
                 </div>
 
-                <!-- Footer with Policy Links -->
-                <div class="auth-footer">
-                    <div class="auth-policy-bar">
-                        <a class="auth-policy-btn" href="blog.html" style="text-decoration:none;">Blog</a>
-                        <span class="auth-policy-sep">•</span>
-                        <button type="button" class="auth-policy-btn" onclick="window.openPolicyModal('privacy')" data-i18n="policy_privacy">Quyền riêng tư</button>
-                        <span class="auth-policy-sep">•</span>
-                        <button type="button" class="auth-policy-btn" onclick="window.openPolicyModal('security')" data-i18n="policy_security">Bảo mật</button>
-                        <span class="auth-policy-sep">•</span>
-                        <button type="button" class="auth-policy-btn" onclick="window.openPolicyModal('ip')" data-i18n="policy_ip">Sở hữu trí tuệ</button>
-                        <span class="auth-policy-sep">•</span>
-                        <button type="button" class="auth-policy-btn" onclick="window.openPolicyModal('disclaimer')" data-i18n="policy_disclaimer">Miễn trừ trách nhiệm</button>
+                <div>
+                    <!-- White Pill Continue Button -->
+                    <button type="button" class="btn-pill-action" id="btnExpContinue" data-i18n="exp_btn_continue">
+                        Continue
+                    </button>
+
+                    <!-- Quick Utilities (Desktop App, Pricing, Zalo) -->
+                    <div class="exp-utilities-bar">
+                        <button type="button" class="exp-util-btn" onclick="window.openDownloadModal()" title="Tải ứng dụng máy tính">💻 Desktop App</button>
+                        <a href="pricing.html" class="exp-util-btn" style="text-decoration:none;" title="Xem bảng giá">💎 Bảng giá</a>
+                        <button type="button" class="exp-util-btn exp-zalo-btn" onclick="window.openQrModal()" title="Cộng đồng Zalo Habit Mastery">
+                            <svg class="zalo-util-icon" viewBox="0 0 50 50" width="16" height="16"><use href="#icon-zalo"></use></svg>
+                            <span>Nhóm Zalo</span>
+                        </button>
                     </div>
-                    <!-- Liên kết tới các trang pháp lý ĐỘC LẬP.
-                         Bốn nút phía trên mở modal bằng JS nên trình thu thập dữ liệu
-                         và bên duyệt hồ sơ thanh toán (Paddle) không đọc được nội dung.
-                         Hàng này là thẻ <a> thật, có URL riêng, để họ truy cập thẳng. -->
-                    <div class="auth-policy-bar">
-                        <a href="pricing.html" class="auth-policy-btn" data-i18n="policy_pricing_link">Bảng giá</a>
-                        <span class="auth-policy-sep">•</span>
-                        <a href="terms.html" class="auth-policy-btn" data-i18n="policy_terms_link">Điều khoản dịch vụ</a>
-                        <span class="auth-policy-sep">•</span>
-                        <a href="privacy.html" class="auth-policy-btn" data-i18n="policy_privacy">Quyền riêng tư</a>
-                        <span class="auth-policy-sep">•</span>
-                        <a href="refund.html" class="auth-policy-btn" data-i18n="policy_refund_link">Chính sách hoàn tiền</a>
-                    </div>
-                    <p class="auth-copyright-text" data-i18n="copyright_text">© 2026 Habit Mastery. Nền tảng rèn luyện kỷ luật bản thân.</p>
                 </div>
             </div>
         </div>
+
+        <!-- Showcase Bottom Community Bar (Matching Reference Design) -->
+        <div class="auth-showcase-footer">
+            <div class="showcase-social-item">
+                <span class="showcase-social-label">Cộng Đồng Kỷ Luật</span>
+                <a href="https://zalo.me/g/wrcfyarfbc6tljvkmgst" target="_blank" rel="noopener noreferrer" class="showcase-zalo-pill" title="Mở nhóm Zalo Habit Mastery">
+                    <svg viewBox="0 0 50 50" width="20" height="20"><use href="#icon-zalo"></use></svg>
+                    <span>Cộng đồng Zalo: <strong>Habit Mastery</strong> ↗</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- App Footer with Policy Links (Paddle & Compliance requirements) -->
+    <footer class="app-footer-bar">
+        <div class="auth-policy-bar">
+            <a class="auth-policy-btn" href="blog.html">Blog</a>
+            <span class="auth-policy-sep">•</span>
+            <button type="button" class="auth-policy-btn" onclick="window.openPolicyModal('privacy')" data-i18n="policy_privacy">Quyền riêng tư</button>
+            <span class="auth-policy-sep">•</span>
+            <button type="button" class="auth-policy-btn" onclick="window.openPolicyModal('security')" data-i18n="policy_security">Bảo mật</button>
+            <span class="auth-policy-sep">•</span>
+            <button type="button" class="auth-policy-btn" onclick="window.openPolicyModal('ip')" data-i18n="policy_ip">Sở hữu trí tuệ</button>
+            <span class="auth-policy-sep">•</span>
+            <button type="button" class="auth-policy-btn" onclick="window.openPolicyModal('disclaimer')" data-i18n="policy_disclaimer">Miễn trừ trách nhiệm</button>
+        </div>
+        <div class="auth-policy-bar">
+            <a href="pricing.html" class="auth-policy-btn" data-i18n="policy_pricing_link">Bảng giá</a>
+            <span class="auth-policy-sep">•</span>
+            <a href="terms.html" class="auth-policy-btn" data-i18n="policy_terms_link">Điều khoản dịch vụ</a>
+            <span class="auth-policy-sep">•</span>
+            <a href="privacy.html" class="auth-policy-btn" data-i18n="policy_privacy">Quyền riêng tư</a>
+            <span class="auth-policy-sep">•</span>
+            <a href="refund.html" class="auth-policy-btn" data-i18n="policy_refund_link">Chính sách hoàn tiền</a>
+        </div>
+        <p class="auth-copyright-text" data-i18n="copyright_text">© 2026 Habit Mastery. Nền tảng rèn luyện kỷ luật bản thân.</p>
+    </footer>
+
+    <!-- FORGOT PASSWORD MODAL -->
+    <div class="modal-overlay-bg" id="forgotModalBg" style="display:none;" onclick="if(event.target===this)window.closeForgotModal()">
+        <div class="modal-dialog-sheet">
+            <button type="button" class="modal-close-btn" onclick="window.closeForgotModal()" title="Đóng">✕</button>
+            <div class="card-header" style="text-align:left; margin-bottom:14px;">
+                <h3 class="card-main-title" style="font-size:1.4rem;" data-i18n="forgot_modal_title">Khôi phục mật khẩu</h3>
+                <p class="card-main-sub" data-i18n="forgot_modal_desc">Nhập email tài khoản của bạn để nhận liên kết đặt lại mật khẩu an toàn.</p>
+            </div>
+            <div class="form-group" style="margin-bottom:18px;">
+                <label for="forgotEmail" data-i18n="label_email">Email</label>
+                <div class="input-wrapper">
+                    <input type="email" id="forgotEmail" placeholder="example@email.com" required autocomplete="email">
+                </div>
+            </div>
+            <div class="auth-error" id="forgotError" style="margin-bottom:12px;"></div>
+            <div class="auth-success" id="forgotSuccess" style="margin-bottom:12px;"></div>
+            <button type="button" class="btn-pill-action" id="btnSendPasswordReset">
+                <span class="btn-text" data-i18n="btn_send_reset">Gửi email khôi phục</span>
+                <span class="btn-loading" style="display:none;" data-i18n="btn_processing">⏳ Đang xử lý...</span>
+            </button>
+        </div>
     </div>
 
-    <!-- POLICY MODAL (QUYỀN RIÊNG TƯ, BẢO MẬT, SỞ HỮU TRÍ TUỆ, MIỄN TRỪ TRÁCH NHIỆM) -->
+    <!-- POLICY MODAL -->
     <div class="policy-modal-bg" id="policyModalBg" style="display:none;" onclick="if(event.target===this)window.closePolicyModal()">
         <div class="policy-modal-sheet">
             <div class="policy-modal-header">
@@ -452,10 +464,8 @@
                     <span class="policy-title-icon">⚖️</span>
                     <span data-i18n="modal_policy_title">ĐIỀU KHOẢN & CHÍNH SÁCH DỊCH VỤ</span>
                 </div>
-                <button type="button" class="policy-modal-close" id="policyModalClose" onclick="window.closePolicyModal()" title="Đóng">✕</button>
+                <button type="button" class="policy-modal-close" onclick="window.closePolicyModal()" title="Đóng">✕</button>
             </div>
-            
-            <!-- Policy Tabs Navigation -->
             <div class="policy-tabs-nav">
                 <button type="button" class="policy-tab-btn active" data-tab="privacy" onclick="window.switchPolicyTab('privacy')">
                     <span data-i18n="policy_privacy">🔒 Quyền Riêng Tư</span>
@@ -470,163 +480,98 @@
                     <span data-i18n="policy_disclaimer">📜 Miễn Trừ Trách Nhiệm</span>
                 </button>
             </div>
-
-            <!-- Policy Content Panels -->
             <div class="policy-modal-body" id="policyModalBody">
-                
-                <!-- 1. PRIVACY POLICY -->
                 <div class="policy-panel active" id="policyPanelPrivacy">
-                    <div class="policy-sec-header">
-                        <span data-i18n="policy_sec_privacy">🔒 Chính Sách Quyền Riêng Tư (Privacy Policy)</span>
-                    </div>
-                    
                     <div class="policy-card-item">
                         <h4 data-i18n="priv_sec1_title">📌 1. Thu Thập Dữ Liệu Cá Nhân</h4>
-                        <p data-i18n="priv_sec1_desc">Habit Mastery chỉ thu thập các thông tin cần thiết tối thiểu nhằm phục vụ trải nghiệm rèn luyện của bạn:</p>
-                        <ul>
-                            <li data-i18n="priv_sec1_li1"><strong>Thông tin tài khoản:</strong> Địa chỉ Email, Tên hiển thị (DisplayName), Ảnh đại diện (Avatar).</li>
-                            <li data-i18n="priv_sec1_li2"><strong>Dữ liệu thói quen:</strong> Danh sách thói quen cá nhân, lịch sử check-in hàng ngày, điểm rèn luyện (DP), cấp bậc cảnh giới.</li>
-                            <li data-i18n="priv_sec1_li3"><strong>Dữ liệu kỹ thuật:</strong> Thời điểm đăng nhập gần nhất để duy trì phiên làm việc và bảo toàn chuỗi kỷ luật.</li>
-                        </ul>
+                        <p data-i18n="priv_sec1_desc">Habit Mastery chỉ thu thập các thông tin cần thiết tối thiểu nhằm phục vụ trải nghiệm rèn luyện của bạn.</p>
                     </div>
-
                     <div class="policy-card-item">
                         <h4 data-i18n="priv_sec2_title">🎯 2. Mục Đích Sử Dụng Dữ Liệu</h4>
-                        <p data-i18n="priv_sec2_desc">Dữ liệu của bạn được sử dụng độc quyền cho các mục đích:</p>
-                        <ul>
-                            <li data-i18n="priv_sec2_li1">Đồng bộ hóa thói quen tức thì qua đám mây giữa Web, Desktop và Mobile.</li>
-                            <li data-i18n="priv_sec2_li2">Tính toán chỉ số Streak, biểu đồ phân tích và bảng xếp hạng rèn luyện Top 50.</li>
-                            <li data-i18n="priv_sec2_li3">Gửi thông báo nhắc nhở và mã xác thực bảo mật 2 bước (OTP).</li>
-                        </ul>
-                    </div>
-
-                    <div class="policy-card-item">
-                        <h4 data-i18n="priv_sec3_title">🤝 3. Cam Kết Bảo Vệ & Không Chia Sẻ</h4>
-                        <p data-i18n="priv_sec3_desc">Chúng tôi <strong>cam kết 100% không bán, không cho thuê và không chia sẻ</strong> bất kỳ dữ liệu cá nhân hay thói quen riêng tư nào của bạn cho bất kỳ bên thứ ba hay mạng quảng cáo nào.</p>
-                    </div>
-
-                    <div class="policy-card-item">
-                        <h4 data-i18n="priv_sec4_title">🗑️ 4. Quyền Kiểm Soát Của Người Dùng</h4>
-                        <p data-i18n="priv_sec4_desc">Bạn luôn có toàn quyền xuất bản sao dữ liệu (Backup JSON) hoặc yêu cầu xóa vĩnh viễn toàn bộ tài khoản và thói quen khỏi hệ thống bất kỳ lúc nào.</p>
-                    </div>
-
-                    <div class="policy-highlight" data-i18n="priv_quote">
-                        ✨ <em>"Kỷ luật của bạn là tài sản quý giá nhất. Chúng tôi cam kết bảo vệ không gian rèn luyện của bạn an toàn và riêng tư tuyệt đối."</em>
+                        <p data-i18n="priv_sec2_desc">Đồng bộ hóa thói quen tức thì qua đám mây giữa Web, Desktop và Mobile.</p>
                     </div>
                 </div>
-
-                <!-- 2. SECURITY POLICY -->
                 <div class="policy-panel" id="policyPanelSecurity">
-                    <div class="policy-sec-header">
-                        <span data-i18n="policy_sec_security">🛡️ Chính Sách Bảo Mật Dữ Liệu (Security Policy)</span>
-                    </div>
-
                     <div class="policy-card-item">
                         <h4 data-i18n="sec_sec1_title">🔐 1. Mã Hóa Đường Truyền & Dữ Liệu</h4>
-                        <p data-i18n="sec_sec1_desc">Toàn bộ thông tin trao đổi giữa trình duyệt của bạn và máy chủ đều được mã hóa bằng giao thức <strong>SSL/TLS 256-bit cao cấp nhất</strong>.</p>
-                    </div>
-
-                    <div class="policy-card-item">
-                        <h4 data-i18n="sec_sec2_title">🔑 2. Xác Thực 2 Lớp (Two-Factor OTP)</h4>
-                        <p data-i18n="sec_sec2_desc">Hệ thống hỗ trợ xác minh mã OTP 6 số qua Email với thời hạn hiệu lực nghiêm ngặt 5 phút, ngăn chặn hoàn toàn nguy cơ bị chiếm quyền tài khoản.</p>
-                    </div>
-
-                    <div class="policy-card-item">
-                        <h4 data-i18n="sec_sec3_title">☁️ 3. Hạ Tầng Đám Mây Chuẩn Quốc Tế</h4>
-                        <p data-i18n="sec_sec3_desc">Dữ liệu được lưu trữ trên nền tảng đám mây phân tán của Google Cloud / Firebase Firestore với sao lưu liên tục, tường lửa Firewall và phân quyền Security Rules nghiêm ngặt.</p>
-                    </div>
-
-                    <div class="policy-card-item">
-                        <h4 data-i18n="sec_sec4_title">🚫 4. Phòng Chống Tấn Công & Spam</h4>
-                        <p data-i18n="sec_sec4_desc">Hệ thống tự động phát hiện và ngăn chặn các hành vi tấn công dò mật khẩu (Brute Force), giới hạn tần suất gửi yêu cầu và cô lập các phiên truy cập bất thường.</p>
-                    </div>
-
-                    <div class="policy-highlight" data-i18n="sec_quote">
-                        🛡️ <em>Hệ thống bảo mật hoạt động 24/7 để đảm bảo mọi bước tiến của bạn không bao giờ bị gián đoạn hay thất thoát.</em>
+                        <p data-i18n="sec_sec1_desc">Toàn bộ thông tin trao đổi được mã hóa bằng giao thức SSL/TLS 256-bit cao cấp nhất.</p>
                     </div>
                 </div>
-
-                <!-- 3. INTELLECTUAL PROPERTY -->
                 <div class="policy-panel" id="policyPanelIp">
-                    <div class="policy-sec-header">
-                        <span data-i18n="policy_sec_ip">💎 Quyền Sở Hữu Trí Tuệ (Intellectual Property)</span>
-                    </div>
-
                     <div class="policy-card-item">
                         <h4 data-i18n="ip_sec1_title">🏛️ 1. Bản Quyền Nền Tảng & Thiết Kế</h4>
-                        <p data-i18n="ip_sec1_desc">Mọi nội dung, giao diện đồ họa, bộ icon rune thần thoại, hệ thống 21 cảnh giới tâm thức, biểu tượng Prism Nexus Coin, Sound Mixer âm thanh đa tầng và toàn bộ mã nguồn đều thuộc quyền sở hữu trí tuệ độc quyền của <strong>Habit Mastery</strong>.</p>
-                    </div>
-
-                    <div class="policy-card-item">
-                        <h4 data-i18n="ip_sec2_title">👤 2. Quyền Của Người Dùng</h4>
-                        <p data-i18n="ip_sec2_desc">Người dùng được cấp quyền truy cập và sử dụng dịch vụ cho mục đích cá nhân phi thương mại. Bạn hoàn toàn sở hữu nội dung thói quen và ghi chú do chính mình tạo ra.</p>
-                    </div>
-
-                    <div class="policy-card-item">
-                        <h4 data-i18n="ip_sec3_title">⛔ 3. Các Hành Vi Bị Nghiêm Cấm</h4>
-                        <ul>
-                            <li data-i18n="ip_sec3_li1">Sao chép, nhân bản giao diện hoặc dịch ngược mã nguồn (Reverse Engineering).</li>
-                            <li data-i18n="ip_sec3_li2">Sử dụng hình ảnh, âm thanh hoặc tài liệu của Habit Mastery cho mục đích thương mại khi chưa có sự đồng ý bằng văn bản.</li>
-                            <li data-i18n="ip_sec3_li3">Tạo ra các sản phẩm phái sinh hoặc ứng dụng giả mạo thương hiệu Habit Mastery.</li>
-                        </ul>
-                    </div>
-
-                    <div class="policy-highlight" data-i18n="ip_quote">
-                        ⚖️ <em>Mọi hành vi xâm phạm quyền sở hữu trí tuệ sẽ được xử lý theo quy định của pháp luật hiện hành.</em>
+                        <p data-i18n="ip_sec1_desc">Toàn bộ giao diện và mã nguồn thuộc quyền sở hữu độc quyền của Habit Mastery.</p>
                     </div>
                 </div>
-
-                <!-- 4. DISCLAIMER -->
                 <div class="policy-panel" id="policyPanelDisclaimer">
-                    <div class="policy-sec-header">
-                        <span data-i18n="policy_sec_disclaimer">📜 Tuyên Bố Miễn Trừ Trách Nhiệm (Disclaimer)</span>
-                    </div>
-
                     <div class="policy-card-item">
                         <h4 data-i18n="disc_sec1_title">🎯 1. Bản Chất Của Ứng Dụng</h4>
-                        <p data-i18n="disc_sec1_desc">Habit Mastery là công cụ hỗ trợ theo dõi thói quen, xây dựng kỷ luật và truyền cảm hứng sống tích cực. Kết quả thực tế hoàn toàn phụ thuộc vào sự kiên trì, nỗ lực và hành động của chính người dùng.</p>
-                    </div>
-
-                    <div class="policy-card-item">
-                        <h4 data-i18n="disc_sec2_title">🩺 2. Không Thay Thế Lời Khuyên Chuyên Khoa</h4>
-                        <p data-i18n="disc_sec2_desc">Các nội dung trích dẫn triết học Khắc Kỷ, kiến thức tâm lý hay thói quen thể chất trong ứng dụng chỉ mang tính chất tham khảo giáo dục và <strong>không thay thế cho lời khuyên y tế, chuẩn đoán tâm lý trị liệu, tư vấn tài chính hay pháp lý chuyên nghiệp</strong>.</p>
-                    </div>
-
-                    <div class="policy-card-item">
-                        <h4 data-i18n="disc_sec3_title">🌐 3. Kết Nối Mạng & Thiết Bị</h4>
-                        <p data-i18n="disc_sec3_desc">Chúng tôi luôn nỗ lực tối đa để hệ thống hoạt động liên tục 99.9%, tuy nhiên không chịu trách nhiệm đối với các sự cố bất khả kháng xuất phát từ đường truyền internet của nhà mạng hoặc lỗi phần cứng thiết bị của người dùng.</p>
-                    </div>
-
-                    <div class="policy-highlight" data-i18n="disc_quote">
-                        🌱 <em>"Chúng tôi trao cho bạn chiếc la bàn kỷ luật, người bước đi trên hành trình chinh phục chính là bạn."</em>
+                        <p data-i18n="disc_sec1_desc">Habit Mastery là công cụ hỗ trợ theo dõi thói quen, xây dựng kỷ luật và truyền cảm hứng sống tích cực.</p>
                     </div>
                 </div>
-
             </div>
-
             <div class="policy-modal-footer">
-                <span class="policy-footer-note" data-i18n="modal_policy_last_updated">Cập nhật lần cuối: 23/08/2026 • Habit Mastery Team</span>
+                <span style="font-size:0.75rem; color:var(--text-muted);" data-i18n="modal_policy_last_updated">Cập nhật lần cuối: 2026 • Habit Mastery Team</span>
                 <button type="button" class="policy-confirm-btn" onclick="window.closePolicyModal()" data-i18n="modal_policy_btn_close">Đã Hiểu & Đóng</button>
             </div>
         </div>
     </div>
 
-    <!-- QR ZOOM MODAL (PHÓNG TO MÃ QR NHÓM ZALO) -->
+    <!-- BOOK GUIDE PHILOSOPHY MODAL -->
+    <div class="modal-overlay-bg" id="bookGuideModalBg" style="display:none;" onclick="if(event.target===this)window.closeBookGuideModal()">
+        <div class="modal-dialog-sheet" style="max-width:540px;">
+            <button type="button" class="modal-close-btn" onclick="window.closeBookGuideModal()" title="Đóng">✕</button>
+            <div class="card-header" style="text-align:left; margin-bottom:14px;">
+                <div style="font-size:1.8rem; margin-bottom:6px;">🏛️</div>
+                <h3 class="card-main-title" style="font-size:1.3rem;">4 Trụ Cột Giữ Chân Người Dùng</h3>
+                <p class="card-main-sub">Hệ sinh thái rèn luyện kỷ luật gây nghiện lành mạnh của Habit Mastery</p>
+            </div>
+            <div style="color:var(--text-secondary); font-size:0.83rem; line-height:1.5; margin-bottom:18px; display:flex; flex-direction:column; gap:10px;">
+                <div style="background:rgba(255,255,255,0.04); padding:10px 14px; border-radius:14px; border:1px solid rgba(255,255,255,0.08);">
+                    <strong style="color:#ffffff;">👑 1. Hệ Thống Cảnh Giới (21 Bậc Thang Tâm Thức):</strong><br>
+                    Biến kỷ luật thành hành trình tu luyện: tích lũy điểm DP, duy trì chuỗi Streak rực lửa, thăng cấp từ Vô Minh đến Siêu Thoát Niết Bàn và mở khóa Khung Avatar danh giá.
+                </div>
+                <div style="background:rgba(255,255,255,0.04); padding:10px 14px; border-radius:14px; border:1px solid rgba(255,255,255,0.08);">
+                    <strong style="color:#ffffff;">📚 2. Hệ Thống Tài Liệu (Thư Viện Tâm Pháp Tri Thức):</strong><br>
+                    Kho tàng tài liệu rèn luyện, triết lý Khắc Kỷ (Stoicism), tâm lý học hành vi và tóm tắt sách tinh hoa giúp củng cố nhận thức gốc rễ.
+                </div>
+                <div style="background:rgba(255,255,255,0.04); padding:10px 14px; border-radius:14px; border:1px solid rgba(255,255,255,0.08);">
+                    <strong style="color:#ffffff;">🎧 3. Hệ Thống Tập Trung (Không Gian Deep Work & Flow):</strong><br>
+                    Bộ đếm Pomodoro chuyên sâu tích hợp Sound Mixer âm thanh đa tầng (tiếng mưa, sóng não Alpha, lửa trại) giúp đập tan xao nhãng tức thì.
+                </div>
+                <div style="background:rgba(255,255,255,0.04); padding:10px 14px; border-radius:14px; border:1px solid rgba(255,255,255,0.08);">
+                    <strong style="color:#ffffff;">🛡️ 4. Hệ Thống Cộng Đồng (Tổ Đội & Trách Nhiệm Xã Hội):</strong><br>
+                    Thách đấu chuỗi ngày, lập tổ đội Squads 3-5 người cùng cam kết, bảng xếp hạng vinh danh và cộng đồng Zalo đồng hành mỗi ngày.
+                </div>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <a href="blog.html" class="btn-pill-action" style="text-decoration:none; text-align:center; flex:1;">Khám phá Blog ↗</a>
+                <button type="button" class="btn-pill-secondary" onclick="window.closeBookGuideModal()" style="flex:0 0 100px;">Đã hiểu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR ZOOM MODAL (ZALO COMMUNITY) -->
     <div class="qr-zoom-modal-bg" id="qrZoomModalBg" style="display:none;" onclick="if(event.target===this)window.closeQrModal()">
         <div class="qr-zoom-card">
             <button type="button" class="qr-zoom-close" onclick="window.closeQrModal()" title="Đóng">✕</button>
-            <div class="zalo-badge" style="margin-bottom:8px;" data-i18n="qr_badge">💬 NHÓM ZALO CHÍNH THỨC</div>
-            <h3 class="qr-zoom-title" data-i18n="qr_title">Cộng Đồng Habit Mastery</h3>
-            <p class="qr-zoom-desc" data-i18n="qr_desc">Mở ứng dụng Zalo trên điện thoại và quét mã QR bên dưới để tham gia nhóm ngay:</p>
-            
-            <div class="qr-zoom-img-box">
-                <img src="zalo-qr.png" alt="Mã QR Nhóm Zalo Habit Mastery">
+            <div class="zalo-modal-badge">
+                <svg viewBox="0 0 50 50" width="20" height="20"><use href="#icon-zalo"></use></svg>
+                <span>Cộng Đồng Zalo Habit Mastery</span>
             </div>
-
-            <p style="font-size:11.5px;color:var(--text-muted);margin-bottom:14px;" data-i18n="qr_subnote">Tham gia để kết nối cùng những người bạn đồng hành kỷ luật, chia sẻ mục tiêu & nhận quà tặng độc quyền từ Admin.</p>
-            <button type="button" class="btn-primary" onclick="window.closeQrModal()" style="margin-top:0;" data-i18n="qr_btn_done">
-                Hoàn Tất
-            </button>
+            <h3 class="zalo-modal-title" data-i18n="community_headline">Nhóm Kỷ Luật Habit Mastery</h3>
+            <p class="zalo-modal-subtext" data-i18n="community_subtext">Quét mã QR để giao lưu, chia sẻ thói quen & nhận thông báo hỗ trợ từ Admin.</p>
+            <div class="qr-zoom-img-box" onclick="window.open('https://zalo.me/g/wrcfyarfbc6tljvkmgst', '_blank')" title="Bấm để mở trực tiếp nhóm Zalo">
+                <img src="zalo-qr.png" alt="Mã QR Nhóm Zalo Habit Mastery">
+                <div class="qr-zoom-hint">📱 Quét bằng Zalo hoặc bấm vào ảnh để mở</div>
+            </div>
+            <div class="zalo-modal-actions">
+                <a href="https://zalo.me/g/wrcfyarfbc6tljvkmgst" target="_blank" rel="noopener noreferrer" class="btn-pill-action btn-zalo-direct">
+                    <svg viewBox="0 0 50 50" width="18" height="18"><use href="#icon-zalo"></use></svg>
+                    <span>1. Mở Nhóm Zalo (zalo.me) ↗</span>
+                </a>
+                <button type="button" class="btn-pill-secondary" onclick="window.closeQrModal()">Đóng</button>
+            </div>
         </div>
     </div>
 
@@ -634,125 +579,40 @@
     <div class="download-modal-bg" id="downloadAppModalBg" style="display:none;" onclick="if(event.target===this)window.closeDownloadModal()">
         <div class="download-modal-sheet">
             <div class="download-modal-header">
-                <div class="download-modal-title">
-                    <span class="download-title-icon">💻</span>
-                    <span data-i18n="modal_download_title">Tải Ứng Dụng Habit Mastery Cho Máy Tính</span>
-                </div>
-                <button type="button" class="download-modal-close" id="downloadModalClose" onclick="window.closeDownloadModal()" title="Đóng">✕</button>
+                <div class="download-modal-title">💻 Tải Ứng Dụng Habit Mastery Cho Máy Tính</div>
+                <button type="button" class="download-modal-close" onclick="window.closeDownloadModal()" title="Đóng">✕</button>
             </div>
             <div class="download-modal-body">
-                <p class="download-modal-subtitle" data-i18n="modal_download_subtitle">Trải nghiệm rèn luyện kỷ luật độc lập, mượt mà và tập trung tối đa trên Windows & macOS.</p>
-
-                <!-- OS Filter Tabs -->
+                <p style="color:var(--text-secondary); margin-bottom:14px;">Trải nghiệm rèn luyện kỷ luật độc lập, mượt mà và tập trung tối đa trên Windows & macOS.</p>
                 <div class="download-os-tabs">
-                    <button type="button" class="download-os-tab active" id="tabOsWin" onclick="window.switchDownloadOs('win')">
-                        <span data-i18n="tab_os_win">🪟 Windows</span>
-                    </button>
-                    <button type="button" class="download-os-tab" id="tabOsMac" onclick="window.switchDownloadOs('mac')">
-                        <span data-i18n="tab_os_mac">🍎 macOS (MacBook / iMac)</span>
-                    </button>
+                    <button type="button" class="download-os-tab active" id="tabOsWin" onclick="window.switchDownloadOs('win')">🪟 Windows</button>
+                    <button type="button" class="download-os-tab" id="tabOsMac" onclick="window.switchDownloadOs('mac')">🍎 macOS</button>
                 </div>
-
-                <!-- Windows Section -->
                 <div id="osWinSection">
-                    <!-- Dual Download Options -->
                     <div class="download-grid">
-                        <!-- Setup Card -->
-                        <div class="download-choice-card recommended">
-                            <div class="download-choice-badge" data-i18n="dl_badge_recommended">⭐ KHUYÊN DÙNG</div>
-                            <div class="download-choice-icon">🚀</div>
-                            <h4 class="download-choice-title" data-i18n="card_installer_title">Bản Cài Đặt (Setup .zip)</h4>
-                            <p class="download-choice-desc" data-i18n="card_installer_desc">Tự động tạo biểu tượng trên Desktop, Start Menu & tích hợp thông báo hệ thống Windows.</p>
-                            <a href="https://github.com/htmtslh-hub/habbit/releases/download/desktop-latest/HabitMastery-Setup.zip" class="btn-download-choice btn-primary-dl" rel="noopener">
-                                <span data-i18n="card_installer_btn">⬇ Tải HabitMastery-Setup.zip (86 MB)</span>
-                            </a>
-                        </div>
-
-                        <!-- Portable Card -->
                         <div class="download-choice-card">
-                            <div class="download-choice-badge portable-badge" data-i18n="dl_badge_portable">⚡ KHÔNG CẦN CÀI ĐẶT</div>
-                            <div class="download-choice-icon">💼</div>
-                            <h4 class="download-choice-title" data-i18n="card_portable_title">Bản Di Động (Portable .zip)</h4>
-                            <p class="download-choice-desc" data-i18n="card_portable_desc">Không cần cài đặt, tải về bấm chạy ngay lập tức. Thích hợp lưu trữ USB mang đi mọi nơi.</p>
-                            <a href="https://github.com/htmtslh-hub/habbit/releases/download/desktop-latest/HabitMastery-Portable.zip" class="btn-download-choice btn-secondary-dl" rel="noopener">
-                                <span data-i18n="card_portable_btn">⬇ Tải HabitMastery-Portable.zip (86 MB)</span>
-                            </a>
+                            <h4 style="color:#fff; margin-bottom:6px;">Bản Cài Đặt (Setup .zip)</h4>
+                            <p style="color:var(--text-secondary); font-size:0.78rem; margin-bottom:12px;">Tự động tạo biểu tượng trên Desktop & thông báo hệ thống Windows.</p>
+                            <a href="https://github.com/htmtslh-hub/habbit/releases/download/desktop-latest/HabitMastery-Setup.zip" class="btn-download-choice btn-primary-dl" rel="noopener">⬇ Tải Setup (.zip)</a>
                         </div>
-                    </div>
-
-                    <!-- 3-step Guide for Windows SmartScreen -->
-                    <div class="download-guide-box">
-                        <div class="guide-box-header">
-                            <span class="guide-box-icon">💡</span>
-                            <span class="guide-box-title" data-i18n="guide_sec_title">Hướng dẫn mở lần đầu nếu Windows cảnh báo:</span>
-                        </div>
-                        <div class="guide-steps-list">
-                            <div class="guide-step-row">
-                                <span class="step-num">1</span>
-                                <span class="step-text" data-i18n="guide_step1">Tải về mở file .zip và chạy file cài đặt. Nếu xuất hiện <em>"Windows protected your PC"</em>: Bấm <strong>"More info" (Thông tin thêm)</strong> → Chọn <strong>"Run anyway" (Vẫn chạy)</strong>.</span>
-                            </div>
-                            <div class="guide-step-row">
-                                <span class="step-num">2</span>
-                                <span class="step-text" data-i18n="guide_step2">Nếu file tải về bị chặn: Chuột phải vào file → chọn <strong>Properties</strong> → tick ô <strong>Unblock</strong> ở dưới cùng → bấm OK.</span>
-                            </div>
-                            <div class="guide-step-row">
-                                <span class="step-num">3</span>
-                                <span class="step-text" data-i18n="guide_step3">Đăng nhập tài khoản của bạn để đồng bộ ngay lập tức toàn bộ thói quen và dữ liệu từ web!</span>
-                            </div>
-                        </div>
-                        <div class="guide-file-link">
-                            <a href="downloads/Huong-Dan-Cai-Dat.txt" download="Huong-Dan-Cai-Dat.txt" class="btn-guide-txt">
-                                <span data-i18n="guide_txt_btn">📄 Tải file hướng dẫn chi tiết (.txt)</span>
-                            </a>
+                        <div class="download-choice-card">
+                            <h4 style="color:#fff; margin-bottom:6px;">Bản Di Động (Portable .zip)</h4>
+                            <p style="color:var(--text-secondary); font-size:0.78rem; margin-bottom:12px;">Không cần cài đặt, tải về bấm chạy ngay lập tức từ USB hoặc ổ cứng.</p>
+                            <a href="https://github.com/htmtslh-hub/habbit/releases/download/desktop-latest/HabitMastery-Portable.zip" class="btn-download-choice btn-secondary-dl" rel="noopener">⬇ Tải Portable (.zip)</a>
                         </div>
                     </div>
                 </div>
-
-                <!-- macOS Section -->
                 <div id="osMacSection" style="display:none;">
                     <div class="download-grid">
-                        <!-- PWA Add to Dock Card -->
-                        <div class="download-choice-card recommended">
-                            <div class="download-choice-badge" data-i18n="dl_badge_mac_rec">⭐ KHUYÊN DÙNG TRÊN MAC</div>
-                            <div class="download-choice-icon">🍎</div>
-                            <h4 class="download-choice-title" data-i18n="card_mac_pwa_title">Cài Đặt Nhanh Vào Dock (Khuyên dùng)</h4>
-                            <p class="download-choice-desc" data-i18n="card_mac_pwa_desc">Không cần tải file nặng. Safari: Menu File ➔ Add to Dock. Chrome/Edge: bấm biểu tượng Cài đặt trên thanh URL.</p>
-                            <button type="button" class="btn-download-choice btn-primary-dl" onclick="window.showMacPwaTip()">
-                                <span data-i18n="card_mac_pwa_btn">⭐ Xem cách cài vào Dock Mac (1 nhấp)</span>
-                            </button>
-                        </div>
-
-                        <!-- Packaged DMG Card -->
                         <div class="download-choice-card">
-                            <div class="download-choice-badge portable-badge" data-i18n="dl_badge_mac_dmg">⚡ FILE CÀI .DMG</div>
-                            <div class="download-choice-icon">📦</div>
-                            <h4 class="download-choice-title" data-i18n="card_mac_dmg_title">Bản Đóng Gói Cài Đặt (.dmg)</h4>
-                            <p class="download-choice-desc" data-i18n="card_mac_dmg_desc">Bản cài độc lập cho chip Apple Silicon (M1/M2/M3/M4) và chip Intel x64 thông qua GitHub Releases.</p>
-                            <a href="https://github.com/htmtslh-hub/habbit/releases" target="_blank" rel="noopener noreferrer" class="btn-download-choice btn-secondary-dl">
-                                <span data-i18n="card_mac_dmg_btn">⬇ Tải Bản .DMG (GitHub Releases)</span>
-                            </a>
+                            <h4 style="color:#fff; margin-bottom:6px;">Cài Đặt Vào Dock (Khuyên dùng)</h4>
+                            <p style="color:var(--text-secondary); font-size:0.78rem; margin-bottom:12px;">Safari: Menu File ➔ Add to Dock. Hoặc Chrome: bấm Cài đặt trên thanh URL.</p>
+                            <button type="button" class="btn-download-choice btn-primary-dl" onclick="window.showMacPwaTip()">⭐ Xem cách cài vào Dock</button>
                         </div>
-                    </div>
-
-                    <!-- macOS 3-step Guide -->
-                    <div class="download-guide-box">
-                        <div class="guide-box-header">
-                            <span class="guide-box-icon">💡</span>
-                            <span class="guide-box-title" data-i18n="mac_guide_title">Hướng dẫn mở lần đầu nếu macOS chặn file .dmg:</span>
-                        </div>
-                        <div class="guide-steps-list">
-                            <div class="guide-step-row">
-                                <span class="step-num">1</span>
-                                <span class="step-text" data-i18n="mac_guide_step1">Mở file .dmg và kéo biểu tượng Habit Mastery vào thư mục <strong>Applications</strong>.</span>
-                            </div>
-                            <div class="guide-step-row">
-                                <span class="step-num">2</span>
-                                <span class="step-text" data-i18n="mac_guide_step2">Nếu hiện cảnh báo nhà phát triển chưa xác định: Nhấn giữ phím <strong>Control</strong> + click vào app (hoặc chuột phải) ➔ Chọn <strong>Open</strong> ➔ Bấm <strong>Open</strong>.</span>
-                            </div>
-                            <div class="guide-step-row">
-                                <span class="step-num">3</span>
-                                <span class="step-text" data-i18n="mac_guide_step3">Hoặc vào <strong>Cài đặt hệ thống (System Settings)</strong> ➔ <strong>Quyền riêng tư & Bảo mật</strong> ➔ cuộn xuống chọn <strong>Open Anyway</strong>.</span>
-                            </div>
+                        <div class="download-choice-card">
+                            <h4 style="color:#fff; margin-bottom:6px;">Bản Đóng Gói Cài Đặt (.dmg)</h4>
+                            <p style="color:var(--text-secondary); font-size:0.78rem; margin-bottom:12px;">Bản cài độc lập cho chip Apple Silicon & Intel x64 qua GitHub Releases.</p>
+                            <a href="https://github.com/htmtslh-hub/habbit/releases" target="_blank" rel="noopener noreferrer" class="btn-download-choice btn-secondary-dl">⬇ Tải .DMG Releases</a>
                         </div>
                     </div>
                 </div>
@@ -760,13 +620,7 @@
         </div>
     </div>
 
-        <!-- Firebase SDK — ĐẶT Ở CUỐI BODY CÓ CHỦ Ý.
-         Trước đây nằm trong <head> không kèm defer, nên trình duyệt
-         phải tải xong 147 KB SDK mới vẽ được trang. Chuyển xuống đây
-         thì HTML hiện trước. KHÔNG dùng defer vì các script bên dưới
-         không defer sẽ chạy trước, làm app.js gọi firebase khi SDK
-         chưa nạp xong. -->
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK (compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -782,31 +636,42 @@
         };
         firebase.initializeApp(firebaseConfig);
     </script>
+    <script>
+        window.openBookGuideModal = function() {
+            const modal = document.getElementById('bookGuideModalBg');
+            if (modal) modal.style.display = 'flex';
+        };
+        window.closeBookGuideModal = function() {
+            const modal = document.getElementById('bookGuideModalBg');
+            if (modal) modal.style.display = 'none';
+        };
+        window.openQrModal = function() {
+            const modal = document.getElementById('qrZoomModalBg');
+            if (modal) modal.style.display = 'flex';
+        };
+        window.closeQrModal = function() {
+            const modal = document.getElementById('qrZoomModalBg');
+            if (modal) modal.style.display = 'none';
+        };
+        window.openDownloadModal = function() {
+            const modal = document.getElementById('downloadAppModalBg');
+            if (modal) modal.style.display = 'flex';
+        };
+        window.closeDownloadModal = function() {
+            const modal = document.getElementById('downloadAppModalBg');
+            if (modal) modal.style.display = 'none';
+        };
+    </script>
     <script src="hm-dialog.js?v=5.12.2"></script>
     <script src="i18n.js?v=5.13.4"></script>
     <script src="gotiengviet.js?v=5.0.8"></script>
-    <script src="auth.js?v=5.13.4"></script>
+    <script src="auth.js?v=6.3.2"></script>
     <script>
     (function(){
       if (!('serviceWorker' in navigator)) return;
       navigator.serviceWorker.register('./sw.js').then(reg => {
-        console.log('SW registered:', reg.scope);
-        // If a new SW is waiting, auto-activate (auth page doesn't need user prompt)
         if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
-        reg.addEventListener('updatefound', () => {
-          const installing = reg.installing;
-          if (!installing) return;
-          installing.addEventListener('statechange', () => {
-            if (installing.state === 'installed' && navigator.serviceWorker.controller) {
-              installing.postMessage({ type: 'SKIP_WAITING' });
-            }
-          });
-        });
       }).catch(e => console.warn('SW failed:', e));
-      let _r = false;
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (_r) return; _r = true; window.location.reload();
-      });
     })();
     </script>
 </body>

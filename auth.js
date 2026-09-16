@@ -22,6 +22,93 @@ const API_BASE = window.location.hostname.endsWith('.vercel.app')
     ? '/api'
     : 'https://habbit-opal.vercel.app/api';
 
+// Register additional UI translations for the redesigned layout
+if (window.I18N && window.I18N.registerTranslations) {
+    window.I18N.registerTranslations('vi', {
+        app_nav_title: "Habit Mastery • Mobile App Experience",
+        auth_card_title_login: "Đăng nhập",
+        auth_card_title_register: "Đăng ký",
+        auth_card_sub_login: "Chào mừng bạn trở lại! Tiếp tục hành trình rèn luyện",
+        auth_card_sub_register: "Tạo tài khoản để bắt đầu rèn luyện kỷ luật",
+        forgot_password: "Quên mật khẩu?",
+        btn_apple: "Tiếp tục với Apple",
+        already_have_account: "Đã có tài khoản?",
+        dont_have_account: "Chưa có tài khoản?",
+        link_login: "Đăng nhập",
+        link_register: "Đăng ký",
+        exp_header: "4 Trụ Cột Kỷ Luật Giữ Chân Người Dùng",
+        exp_card1_title: "👑 Hệ Thống Cảnh Giới",
+        exp_card1_desc: "21 bậc thang tâm thức, thăng cấp theo chuỗi Streak & mở khóa Khung Avatar thần thoại",
+        exp_card2_title: "📚 Hệ Thống Tài Liệu",
+        exp_card2_desc: "Kho tàng tri thức kỷ luật, tâm pháp khắc kỷ & cẩm nang thực chiến chuyên sâu",
+        exp_card3_title: "🎧 Hệ Thống Tập Trung",
+        exp_card3_desc: "Đồng hồ Pomodoro kết hợp Sound Mixer sóng não đa tầng, đưa bạn vào dòng chảy Flow",
+        exp_card4_title: "🛡️ Hệ Thống Cộng Đồng",
+        exp_card4_desc: "Tổ đội Squads 3-5 người cam kết, bảng xếp hạng vinh danh & kết nối chiến hữu Zalo",
+        exp_book_title: "📖 Khám phá Cẩm nang 4 Trụ Cột Kỷ Luật",
+        exp_btn_continue: "Bắt đầu trải nghiệm ngay",
+        forgot_modal_title: "Khôi phục mật khẩu",
+        forgot_modal_desc: "Nhập email tài khoản của bạn để nhận liên kết đặt lại mật khẩu an toàn.",
+        btn_send_reset: "Gửi email khôi phục",
+        msg_reset_sent: "Đã gửi email khôi phục mật khẩu! Vui lòng kiểm tra hộp thư đến của bạn."
+    });
+    window.I18N.registerTranslations('en', {
+        app_nav_title: "Mobile App UX/UI Design",
+        auth_card_title_login: "Sign In",
+        auth_card_title_register: "Sign Up",
+        auth_card_sub_login: "Welcome back! Continue your journey",
+        auth_card_sub_register: "Create an account to continue",
+        forgot_password: "Forgot Password?",
+        btn_apple: "Continue with Apple",
+        already_have_account: "Already have an account?",
+        dont_have_account: "Don't have an account?",
+        link_login: "Log In",
+        link_register: "Sign Up",
+        exp_header: "4 Core Retention Pillars of Mastery",
+        exp_card1_title: "👑 Realm Evolution System",
+        exp_card1_desc: "21 conscious stages, ascend via Streak discipline & unlock mythic avatar frames",
+        exp_card2_title: "📚 Knowledge & Library System",
+        exp_card2_desc: "Stoic mastery guides, mental models & curated deep-learning library",
+        exp_card3_title: "🎧 Deep Focus & Flow System",
+        exp_card3_desc: "Integrated Pomodoro timer with multi-layered ambient sound mixer for deep work",
+        exp_card4_title: "🛡️ Community & Squad System",
+        exp_card4_desc: "Accountability squads, real-time leaderboard duels & active community support",
+        exp_book_title: "📖 Explore the 4 Pillars of Discipline Guide",
+        exp_btn_continue: "Start Your Journey",
+        forgot_modal_title: "Reset Password",
+        forgot_modal_desc: "Enter your registered email address to receive a secure password reset link.",
+        btn_send_reset: "Send Reset Link",
+        msg_reset_sent: "Password reset email sent! Please check your inbox."
+    });
+    window.I18N.registerTranslations('zh', {
+        app_nav_title: "Habit Mastery • 移动应用体验",
+        auth_card_title_login: "登录",
+        auth_card_title_register: "注册",
+        auth_card_sub_login: "欢迎回来！继续自律修行之旅",
+        auth_card_sub_register: "创建账号以开始自律训练",
+        forgot_password: "忘记密码？",
+        btn_apple: "通过 Apple 继续",
+        already_have_account: "已有账号？",
+        dont_have_account: "还没有账号？",
+        link_login: "立即登录",
+        link_register: "注册新账号",
+        exp_header: "Habit Mastery 四大核心留存基石",
+        exp_card1_title: "👑 境界修炼体系",
+        exp_card1_desc: "21重意识层级，连击打卡进阶并解锁专属神话头像框",
+        exp_card2_title: "📚 智慧知识文库",
+        exp_card2_desc: "斯多葛哲学、自律心法及大师级深度阅读专栏",
+        exp_card3_title: "🎧 深度专注系统",
+        exp_card3_desc: "集成番茄钟与多轨自然白噪音混音器，极速进入心流",
+        exp_card4_title: "🛡️ 战队与社群系统",
+        exp_card4_desc: "3-5人互助同盟战队、荣耀排行榜与同行自律圈子",
+        exp_book_title: "📖 探索四大自律支柱指南",
+        exp_btn_continue: "立即体验",
+        forgot_modal_title: "找回密码",
+        forgot_modal_desc: "请输入您的注册邮箱，我们将发送重置密码的邮件链接。",
+        btn_send_reset: "发送重置邮件",
+        msg_reset_sent: "密码重置邮件已发送！请查收您的电子邮箱。"
+    });
+}
 
 // Flag to prevent redirect during OTP credential-check
 let _otpInProgress = false;
@@ -383,35 +470,83 @@ function initTabs(){
     const tabRegister = document.getElementById('tabRegister');
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
+    const authHeaderTitle = document.getElementById('authHeaderTitle');
+    const authHeaderSub = document.getElementById('authHeaderSub');
+    const authSwitchPrompt = document.getElementById('authSwitchPrompt');
+    const authSwitchAction = document.getElementById('authSwitchAction');
 
-    tabLogin.onclick = () => {
-        tabLogin.classList.add('active');
-        tabRegister.classList.remove('active');
-        loginForm.style.display = '';
-        registerForm.style.display = 'none';
+    function switchToLogin() {
+        if (tabLogin) tabLogin.classList.add('active');
+        if (tabRegister) tabRegister.classList.remove('active');
+        if (loginForm) loginForm.style.display = '';
+        if (registerForm) registerForm.style.display = 'none';
+        if (authHeaderTitle) authHeaderTitle.textContent = (window.I18N ? window.I18N.t('auth_card_title_login') : 'Log In');
+        if (authHeaderSub) authHeaderSub.textContent = (window.I18N ? window.I18N.t('auth_card_sub_login') : 'Welcome back! Continue your journey');
+        if (authSwitchPrompt) authSwitchPrompt.textContent = (window.I18N ? window.I18N.t('dont_have_account') : "Don't have an account?");
+        if (authSwitchAction) authSwitchAction.textContent = (window.I18N ? window.I18N.t('link_register') : 'Sign Up');
         hideMessages();
-    };
-    tabRegister.onclick = () => {
-        tabRegister.classList.add('active');
-        tabLogin.classList.remove('active');
-        registerForm.style.display = '';
-        loginForm.style.display = 'none';
+    }
+
+    function switchToRegister() {
+        if (tabRegister) tabRegister.classList.add('active');
+        if (tabLogin) tabLogin.classList.remove('active');
+        if (registerForm) registerForm.style.display = '';
+        if (loginForm) loginForm.style.display = 'none';
+        if (authHeaderTitle) authHeaderTitle.textContent = (window.I18N ? window.I18N.t('auth_card_title_register') : 'Sign Up');
+        if (authHeaderSub) authHeaderSub.textContent = (window.I18N ? window.I18N.t('auth_card_sub_register') : 'Create an account to continue');
+        if (authSwitchPrompt) authSwitchPrompt.textContent = (window.I18N ? window.I18N.t('already_have_account') : 'Already have an account?');
+        if (authSwitchAction) authSwitchAction.textContent = (window.I18N ? window.I18N.t('link_login') : 'Log In');
         hideMessages();
-    };
+    }
+
+    if (tabLogin) tabLogin.onclick = switchToLogin;
+    if (tabRegister) tabRegister.onclick = switchToRegister;
+    if (authSwitchAction) {
+        authSwitchAction.onclick = () => {
+            if (loginForm && loginForm.style.display !== 'none') {
+                switchToRegister();
+            } else {
+                switchToLogin();
+            }
+        };
+    }
+
+    // Keep active text in sync on language change
+    window.addEventListener('hmLanguageChanged', () => {
+        if (loginForm && loginForm.style.display !== 'none') {
+            switchToLogin();
+        } else {
+            switchToRegister();
+        }
+    });
 }
 
 // ===== PASSWORD TOGGLE =====
 function initPassToggle(){
-    document.getElementById('toggleLoginPass').onclick = function(){
-        const inp = document.getElementById('loginPassword');
-        inp.type = inp.type === 'password' ? 'text' : 'password';
-        this.textContent = inp.type === 'password' ? '👁️' : '🙈';
-    };
-    document.getElementById('toggleRegPass').onclick = function(){
-        const inp = document.getElementById('regPassword');
-        inp.type = inp.type === 'password' ? 'text' : 'password';
-        this.textContent = inp.type === 'password' ? '👁️' : '🙈';
-    };
+    const eyeSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+    const eyeOffSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+
+    const toggleLogin = document.getElementById('toggleLoginPass');
+    if (toggleLogin) {
+        toggleLogin.onclick = function(){
+            const inp = document.getElementById('loginPassword');
+            if (inp) {
+                inp.type = inp.type === 'password' ? 'text' : 'password';
+                this.innerHTML = inp.type === 'password' ? eyeSvg : eyeOffSvg;
+            }
+        };
+    }
+
+    const toggleReg = document.getElementById('toggleRegPass');
+    if (toggleReg) {
+        toggleReg.onclick = function(){
+            const inp = document.getElementById('regPassword');
+            if (inp) {
+                inp.type = inp.type === 'password' ? 'text' : 'password';
+                this.innerHTML = inp.type === 'password' ? eyeSvg : eyeOffSvg;
+            }
+        };
+    }
 
     // Disable Vietnamese IME on password fields
     disableVietnameseIME('loginPassword');
@@ -975,6 +1110,120 @@ function initGoogle(){
     }
 }
 
+// ===== APPLE SIGN-IN =====
+function initApple() {
+    const btnApple = document.getElementById('btnApple');
+    if (!btnApple) return;
+    btnApple.onclick = async () => {
+        hideMessages();
+        try {
+            const provider = new firebase.auth.OAuthProvider('apple.com');
+            provider.addScope('email');
+            provider.addScope('name');
+            const result = await auth.signInWithPopup(provider);
+            const isNew = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
+            await createUserProfile(result.user, isNew);
+            showSuccess(window.I18N ? window.I18N.t('msg_login_success') : 'Đăng nhập thành công! Đang chuyển hướng...');
+            setTimeout(() => { window.location.href = 'index.html'; }, 800);
+        } catch (err) {
+            console.warn('Apple Auth notice:', err);
+            if (err.code === 'auth/operation-not-supported-in-this-environment' || err.code === 'auth/configuration-not-found') {
+                showError('Tính năng Đăng nhập bằng Apple đang được đồng bộ. Vui lòng đăng nhập bằng Google hoặc Email!');
+            } else if (err.code !== 'auth/popup-closed-by-user') {
+                showError(translateFirebaseError(err.code));
+            }
+        }
+    };
+}
+
+// ===== FORGOT PASSWORD =====
+function initForgotPassword() {
+    const linkForgot = document.getElementById('linkForgotPassword');
+    const modalBg = document.getElementById('forgotModalBg');
+    const btnSend = document.getElementById('btnSendPasswordReset');
+    const inputEmail = document.getElementById('forgotEmail');
+    const errEl = document.getElementById('forgotError');
+    const succEl = document.getElementById('forgotSuccess');
+
+    window.closeForgotModal = function() {
+        if (modalBg) modalBg.style.display = 'none';
+        if (errEl) errEl.style.display = 'none';
+        if (succEl) succEl.style.display = 'none';
+    };
+
+    if (linkForgot) {
+        linkForgot.onclick = () => {
+            const loginEmailVal = (document.getElementById('loginEmail')?.value || '').trim();
+            if (inputEmail && loginEmailVal) inputEmail.value = loginEmailVal;
+            if (modalBg) modalBg.style.display = 'flex';
+        };
+    }
+
+    if (btnSend && inputEmail) {
+        btnSend.onclick = async () => {
+            const email = inputEmail.value.trim();
+            if (!email) {
+                if (errEl) { errEl.textContent = (window.I18N ? window.I18N.t('err_enter_email') : 'Vui lòng nhập email'); errEl.style.display = 'block'; }
+                return;
+            }
+            setLoading(btnSend, true);
+            if (errEl) errEl.style.display = 'none';
+            if (succEl) succEl.style.display = 'none';
+
+            try {
+                await auth.sendPasswordResetEmail(email);
+                if (succEl) {
+                    succEl.textContent = (window.I18N ? window.I18N.t('msg_reset_sent') : 'Đã gửi email khôi phục mật khẩu! Vui lòng kiểm tra hộp thư.');
+                    succEl.style.display = 'block';
+                }
+            } catch (err) {
+                if (errEl) {
+                    errEl.textContent = translateFirebaseError(err.code);
+                    errEl.style.display = 'block';
+                }
+            } finally {
+                setLoading(btnSend, false);
+            }
+        };
+    }
+}
+
+// ===== EXPERIENCE SHOWCASE (RIGHT PHONE FRAME) =====
+window.selectExpCard = function(el, key) {
+    document.querySelectorAll('.exp-choice-card').forEach(card => card.classList.remove('highlight-card'));
+    if (el) el.classList.add('highlight-card');
+    window._selectedExp = key;
+};
+
+function initExpShowcase() {
+    const btnContinue = document.getElementById('btnExpContinue');
+    if (btnContinue) {
+        btnContinue.onclick = () => {
+            const authCard = document.getElementById('authPhoneCard');
+            if (authCard) {
+                authCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            const regName = document.getElementById('regName');
+            const regEmail = document.getElementById('regEmail');
+            const loginEmail = document.getElementById('loginEmail');
+            const target = (regName && regName.offsetParent !== null) ? regName : ((regEmail && regEmail.offsetParent !== null) ? regEmail : loginEmail);
+            if (target) {
+                target.focus();
+            }
+            const pillarNames = {
+                realm: '👑 Hệ Thống Cảnh Giới',
+                docs: '📚 Hệ Thống Tài Liệu',
+                focus: '🎧 Hệ Thống Tập Trung',
+                community: '🛡️ Hệ Thống Cộng Đồng'
+            };
+            const currentPillar = pillarNames[window._selectedExp || 'focus'] || '4 Trụ Cột Kỷ Luật';
+            if (typeof showSuccess === 'function') {
+                showSuccess(`✨ Khám phá ${currentPillar}! Hãy tạo tài khoản để trải nghiệm toàn bộ hệ thống.`);
+            }
+        };
+    }
+}
+
 // ===== DESKTOP GATEWAY FOR SYSTEM BROWSER =====
 function initDesktopGateway() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -982,18 +1231,24 @@ function initDesktopGateway() {
     const port = urlParams.get('port');
     
     if (mode === 'desktop') {
-        const tabs = document.querySelector('.auth-tabs');
+        const tabs = document.querySelector('.auth-tabs') || document.querySelector('.auth-tab-capsule');
         const loginForm = document.getElementById('loginForm');
         const registerForm = document.getElementById('registerForm');
         const divider = document.querySelector('.auth-divider');
         const btnGoogle = document.getElementById('btnGoogle');
+        const btnApple = document.getElementById('btnApple');
+        const switchWrap = document.getElementById('authSwitchWrap');
         const externalGoogleContainer = document.getElementById('externalGoogleContainer');
+        const expPhoneCard = document.getElementById('expPhoneCard');
         
         if (tabs) tabs.style.display = 'none';
         if (loginForm) loginForm.style.display = 'none';
         if (registerForm) registerForm.style.display = 'none';
         if (divider) divider.style.display = 'none';
         if (btnGoogle) btnGoogle.style.display = 'none';
+        if (btnApple) btnApple.style.display = 'none';
+        if (switchWrap) switchWrap.style.display = 'none';
+        if (expPhoneCard) expPhoneCard.style.display = 'none';
         if (externalGoogleContainer) externalGoogleContainer.style.display = 'block';
         
         const btnGoogleExternal = document.getElementById('btnGoogleExternal');
@@ -1090,7 +1345,17 @@ async function checkAuth(){
     });
 }
 
-// ===== POLICY & QR MODALS =====
+// ===== POLICY, BOOK GUIDE & QR MODALS =====
+window.openBookGuideModal = function() {
+    const modal = document.getElementById('bookGuideModalBg');
+    if (modal) modal.style.display = 'flex';
+};
+
+window.closeBookGuideModal = function() {
+    const modal = document.getElementById('bookGuideModalBg');
+    if (modal) modal.style.display = 'none';
+};
+
 window.openPolicyModal = function(tabName = 'privacy') {
     const modal = document.getElementById('policyModalBg');
     if (modal) {
@@ -1200,8 +1465,65 @@ document.addEventListener('keydown', function(e) {
         window.closePolicyModal();
         window.closeQrModal();
         window.closeDownloadModal();
+        if (typeof window.closeBookGuideModal === 'function') window.closeBookGuideModal();
+        if (typeof window.closeForgotModal === 'function') window.closeForgotModal();
     }
 });
+
+// ===== LANGUAGE TOGGLE SWITCH 3-WAY (NÚT GẠT CHUYỂN 3 NGÔN NGỮ: VI ⟷ EN ⟷ ZH) =====
+function initLangToggleSwitch() {
+    const switchBtn = document.getElementById('authLangSwitch');
+    if (!switchBtn) return;
+
+    function syncSwitchUI(lang) {
+        const current = lang || (window.i18n ? window.i18n.getLanguage() : null) || localStorage.getItem('hm_language') || 'vi';
+        const validLang = ['vi', 'en', 'zh'].includes(current) ? current : 'vi';
+        switchBtn.setAttribute('data-active', validLang);
+        switchBtn.setAttribute('aria-label', `Ngôn ngữ hiện tại: ${validLang.toUpperCase()}`);
+        
+        const knobUse = switchBtn.querySelector('#knobFlagSvg use');
+        if (knobUse) {
+            const flagMap = {
+                'vi': '#icon-flag-vi',
+                'en': '#icon-flag-en',
+                'zh': '#icon-flag-zh'
+            };
+            knobUse.setAttribute('href', flagMap[validLang] || '#icon-flag-vi');
+        }
+    }
+
+    // Xử lý khi click vào nút gạt hoặc click trực tiếp vào slot cờ
+    switchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const slot = e.target.closest('.toggle-slot');
+        const current = (window.i18n ? window.i18n.getLanguage() : null) || localStorage.getItem('hm_language') || 'vi';
+        const langs = ['vi', 'en', 'zh'];
+        
+        let nextLang;
+        if (slot && slot.getAttribute('data-lang')) {
+            nextLang = slot.getAttribute('data-lang');
+        } else {
+            const currentIdx = langs.indexOf(current);
+            nextLang = langs[(currentIdx + 1) % langs.length];
+        }
+
+        if (window.i18n && window.i18n.setLanguage) {
+            window.i18n.setLanguage(nextLang);
+        } else {
+            localStorage.setItem('hm_language', nextLang);
+            syncSwitchUI(nextLang);
+        }
+    });
+
+    // Lắng nghe sự kiện chuyển ngôn ngữ toàn cục từ i18n.js
+    window.addEventListener('hmLanguageChanged', (e) => {
+        syncSwitchUI(e.detail && e.detail.lang);
+    });
+
+    // Đồng bộ ban đầu
+    syncSwitchUI();
+    setTimeout(syncSwitchUI, 100);
+}
 
 // ===== INIT =====
 function init(){
@@ -1212,7 +1534,11 @@ function init(){
     initLogin();
     initRegister();
     initGoogle();
+    initApple();
+    initForgotPassword();
+    initExpShowcase();
     initDesktopGateway();
+    initLangToggleSwitch();
     checkAuth();
     
     // Capture Viral Deep Links (?joinSquad=SQxxx / ?ref=UID / ?invite=CODE)
